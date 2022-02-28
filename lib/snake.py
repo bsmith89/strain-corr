@@ -52,6 +52,7 @@ def resource_calculator(
     attempt_base=1,
     input_size_exponent=None,
     agg=None,
+    bad_inputs='replace',
     **input_size_multipliers
 ):
     if agg is None:
@@ -71,6 +72,23 @@ def resource_calculator(
                 input_sizes[k] = getattr(input, k).size / 1024 / 1024
             elif hasattr(wildcards, k):
                 input_sizes[k] = float(getattr(wildcards, k))
+
+            # FIXME: Can't find a way to get around the `TypeError: '>' not supported between instances of 'TBDString' and 'int'` problem...
+            # if not isinstance(input_sizes[k], (int, float)):
+            #     if bad_inputs == 'fail':
+            #         raise ValueError(f"Size of input '{k}' is invalid: {input_sizes[k]}")
+            #     elif bad_inputs == 'warn':
+            #         warn(f"Size of input '{k}' is invalid: {input_sizes[k]}")
+            #     elif bad_inputs == 'ignore':
+            #         pass
+            #     elif bad_inputs == 'replace':
+            #         warn(f"Size of input '{k}' is invalid: {input_sizes[k]}. Replacing with 1")
+            #         input_sizes[k] = 1
+            #     else:
+            #         raise ValueError(f"{bad_inputs} is not a valid option for *bad_inputs*.")
+            # else:
+            #     print(input_sizes[k], file=sys.stderr)
+
             # # print(type(getattr(input, k).size))
             # try:
             # except AttributeError as err:
