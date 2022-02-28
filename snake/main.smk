@@ -15,7 +15,7 @@ from lib.snake import (
     nested_defaultdict,
     nested_dictlookup,
 )
-from lib.pandas import idxwhere
+from lib.pandas_util import idxwhere
 import pandas as pd
 import math
 from itertools import product
@@ -94,6 +94,10 @@ else:
         )
     )
     config["mgen_group"] = {}
+
+config['figures']['submission'] = [
+]
+
 
 # {{{2 Sub-pipelines
 
