@@ -3,9 +3,9 @@ from datetime import datetime
 from functools import reduce
 
 
-def info(*msg):
+def info(*msg, **kwargs):
     now = datetime.now()
-    print(f"[{now}]", *msg, file=sys.stderr, flush=True)
+    print(f"[{now}]", *msg, file=sys.stderr, flush=True, **kwargs)
 
 
 def _mul(x, y):
