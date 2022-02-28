@@ -26,9 +26,11 @@ drmaa: " -cwd \
         -pe smp {threads} \
         -l h_rt={resources.walltime_hr}:{resources.walltime_min}:{resources.walltime_sec} \
         -l mem_free={resources.pmem}M \
-        -o {resources.outdir} \
-        -q gpu.q -l gpu_mem={resources.gpu_mem_mb}M \
+        -l gpu_mem={resources.gpu_mem_mb}M \
         -j yes \
         -terse \
+        -o {resources.outdir} \
+        -b n \
+        -q gpu.q \
         "
 jobname: '{name}.{jobid}.snkjb'

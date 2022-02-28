@@ -1,4 +1,6 @@
 #!/bin/sh
+#
+#$ -clear
 # properties = {properties}
 #
 # ## Pre-job summary, if running as a job
