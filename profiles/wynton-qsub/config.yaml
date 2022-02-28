@@ -12,9 +12,8 @@ conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: "--bind /pollard/ --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith"
-config: ['MAX_THREADS=24', 'USE_CUDA=1', 'jupyter_port=8828']
-cluster-config: 'profiles/qsub/cluster.yaml'
-jobscript: 'profiles/qsub/jobscript.sh'
+config: ['MAX_THREADS=24', 'USE_CUDA=0']
+jobscript: 'profiles/wynton-qsub/jobscript.sh'
 drmaa: " -cwd \
         -v PATH \
         -pe smp {cluster.procs} \
