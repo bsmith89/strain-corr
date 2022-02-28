@@ -1,11 +1,18 @@
 notemp: true
 local-cores: 6
-latency-wait: 60
+latency-wait: 180
 max-jobs-per-second: 10
-printshellcmds: true
 keep-going: true
+printshellcmds: true
 resources: 'network_connections=3'
-default-resources: ['pmem=8192', 'mem_mb=8192', 'disk_mb=100000', 'walltime_hr=0', 'walltime_min=29', 'walltime_sec=59']
+default-resources:
+  - 'pmem=8192'
+  - 'disk_mb=100000'
+  - 'walltime_hr=0'
+  - 'walltime_min=29'
+  - 'walltime_sec=59'
+  - 'outdir="log/"'
+  - 'device="cpu"'
 use-conda: true
 conda-frontend: 'mamba'
 conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
@@ -14,13 +21,13 @@ singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: "--bind /pollard/ --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith"
 config: ['MAX_THREADS=24', 'USE_CUDA=0']
 jobscript: 'profiles/wynton-qsub/jobscript.sh'
-drmaa: " -cwd \
+cluster: "qsub -cwd \
         -v PATH \
-        -pe smp {cluster.procs} \
-        -l h_rt={cluster.walltime},mem_free={cluster.pmem}M \
-        -o {cluster.outdir} \
-        {cluster.extra_qsub_flags} \
+        -pe smp {threads} \
+        -l h_rt={resources.walltime_hr}:{resources.walltime_min}:{resources.walltime_sec} \
+        -l mem_free={resources.pmem}M \
         -j yes \
         -terse \
+        -o {resources.outdir} \
         "
 jobname: '{name}.{jobid}.snkjb'
