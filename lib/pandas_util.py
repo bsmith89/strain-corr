@@ -1,5 +1,7 @@
-def idxwhere(condition):
-    return list(condition[condition].index)
+def idxwhere(condition, x=None):
+    if x is None:
+        x = condition
+    return list(x[condition].index)
 
 
 def normalize_rows(df):
