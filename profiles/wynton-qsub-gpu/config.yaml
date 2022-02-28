@@ -14,10 +14,10 @@ default-resources:
   - 'outdir="log/"'
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/pollard/home/bsmith/.snakemake/conda'
+conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-args: "--bind /pollard/ --nv --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith"
-singularity-prefix: "/pollard/home/bsmith/.snakemake/singularity"
+singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 config: ['MAX_THREADS=24', 'USE_CUDA=1']
 jobscript: 'profiles/wynton-qsub-gpu/jobscript.sh'
 drmaa: " -cwd \
