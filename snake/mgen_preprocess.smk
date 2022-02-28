@@ -170,7 +170,7 @@ rule trim_adapters:
         "log/{stem}.scythe.log",
     threads: 2
     resources:
-        walltime_hr=2
+        walltime_hr=2,
     shell:
         dd(
             """
@@ -192,7 +192,7 @@ rule quality_trim_reads:
         qual_type="sanger",
         qual_thresh=20,
     resources:
-        walltime_hr=3
+        walltime_hr=3,
     shell:
         dd(
             """

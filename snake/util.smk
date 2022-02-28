@@ -87,7 +87,7 @@ rule config_debug:
     output:
         "config_debug.{config_key}",
     params:
-        meta=lambda w: nested_dictlookup(config, *w.config_key.split('.'))
+        meta=lambda w: nested_dictlookup(config, *w.config_key.split(".")),
     shell:
         """
         echo "{wildcards.config_key}"

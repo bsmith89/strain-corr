@@ -1,8 +1,9 @@
 rule sort_bib_from_raw:
-    output: 'doc/bibliography.bib'
+    output:
+        "doc/bibliography.bib",
     input:
-        script='scripts/sort_bib.py',
-        bib=['doc/bibliography_raw.bib'],
+        script="scripts/sort_bib.py",
+        bib=["doc/bibliography_raw.bib"],
     shell:
         "{input.script} {input.bib} > {output}"
 
@@ -19,6 +20,7 @@ rule render_figure_to_png:
         inkscape {input} --export-width={params.width} --export-filename {output}
         """
 
+
 rule render_pdf_to_png_imagemagick:
     output:
         "fig/{stem}.dpi{dpi}.png",
@@ -30,6 +32,7 @@ rule render_pdf_to_png_imagemagick:
         """
         convert -units PixelsPerInch -density {params.dpi} {input} {output}
         """
+
 
 rule render_pdf_to_tiff_imagemagick:
     output:
@@ -43,15 +46,21 @@ rule render_pdf_to_tiff_imagemagick:
         convert -units PixelsPerInch -density {params.dpi} {input} {output}
         """
 
+
 rule link_static_pdf_figure:
-    output: 'fig/{stem}_figure.pdf'
-    input: 'doc/static/{stem}_figure.pdf'
+    output:
+        "fig/{stem}_figure.pdf",
+    input:
+        "doc/static/{stem}_figure.pdf",
     shell:
         alias_recipe
 
+
 rule pdf_to_eps:
-    output: 'fig/{stem}.eps'
-    input: 'fig/{stem}.pdf'
+    output:
+        "fig/{stem}.eps",
+    input:
+        "fig/{stem}.pdf",
     shell:
         """
         cd fig
@@ -59,6 +68,7 @@ rule pdf_to_eps:
         ps2eps {wildcards.stem}.ps
         rm {wildcards.stem}.ps
         """
+
 
 rule render_figure_to_pdf:
     output:
@@ -70,6 +80,7 @@ rule render_figure_to_pdf:
         inkscape {input} --export-filename {output}
         """
 
+
 rule build_submission_docx:
     output:
         "build/{stem}.docx",
@@ -78,7 +89,7 @@ rule build_submission_docx:
         bib="doc/bibliography.bib",
         template="doc/static/example_style.docx",
         csl="doc/citestyle.csl",
-        figures=lambda w: config['figures'][w.stem],
+        figures=lambda w: config["figures"][w.stem],
     shell:
         """
         pandoc --from markdown --to docx \
@@ -99,7 +110,7 @@ rule build_submission_pdf:
         source="doc/{stem}.md",
         bib="doc/bibliography.bib",
         csl="doc/citestyle.csl",
-        figures=lambda w: config['figures'][w.stem],
+        figures=lambda w: config["figures"][w.stem],
     shell:
         """
         pandoc --from markdown --to pdf \
