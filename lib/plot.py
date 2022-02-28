@@ -101,25 +101,83 @@ def nmds_ordination(
             index=data.index,
             columns=data.index,
         )
-    init = MDS(
-        n_components=2,
+
+    _mds_kwargs = dict(
         max_iter=3000,
         eps=1e-9,
         random_state=1,
         dissimilarity="precomputed",
         n_jobs=1,
-        **mds_kwargs,
-    ).fit_transform(dmat)
-    nmds = MDS(
+    )
+    _mds_kwargs.update(mds_kwargs)
+    init = MDS(
         n_components=2,
-        metric=False,
+        **_mds_kwargs,
+    ).fit_transform(dmat)
+
+    _nmds_kwargs = dict(
         max_iter=3000,
         eps=1e-12,
         dissimilarity="precomputed",
         random_state=1,
         n_jobs=1,
         n_init=1,
-        **nmds_kwargs,
+    )
+    _nmds_kwargs.update(nmds_kwargs)
+    nmds = MDS(
+        metric=False,
+        n_components=2,
+        **_nmds_kwargs,
+    )
+    d1 = nmds.fit_transform(dmat, init=init)
+
+    d1 = pd.DataFrame(
+        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+    )
+    frac_explained = pd.Series(np.nan, index=d1.columns)
+    return d1, frac_explained, {"dmat": dmat}
+
+def nmds2_ordination(
+    data, is_dmat=False, pca_kwargs=None, nmds_kwargs=None, pdist_kwargs=None
+):
+    # PCoA  # TODO: Modularize out?
+    if pca_kwargs is None:
+        pca_kwargs = {}
+    if nmds_kwargs is None:
+        nmds_kwargs = {}
+    if pdist_kwargs is None:
+        pdist_kwargs = {}
+
+    if is_dmat:
+        dmat = data.loc[:, data.index]  # Ensure symmetric
+    else:
+        dmat = pd.DataFrame(
+            squareform(pdist(data, **pdist_kwargs)),
+            index=data.index,
+            columns=data.index,
+        )
+
+    _pca_kwargs = dict(
+        tol=1e-9,
+        random_state=1,
+    )
+    _pca_kwargs.update(pca_kwargs)
+    pca = PCA(**_pca_kwargs).fit(data)
+    init = pca.transform(data)
+
+    _nmds_kwargs = dict(
+        max_iter=3000,
+        eps=1e-12,
+        dissimilarity="precomputed",
+        random_state=1,
+        n_jobs=1,
+        n_init=1,
+    )
+    _nmds_kwargs.update(nmds_kwargs)
+    nmds = MDS(
+        metric=False,
+        n_components=2,
+        **_nmds_kwargs,
     )
     d1 = nmds.fit_transform(dmat, init=init)
 
@@ -179,6 +237,7 @@ def scatterplot(
     y,
     data,
     subset=None,
+    showby="__none__",
     colorby="__none__",
     color_palette=None,
     colorby_order=None,
@@ -186,8 +245,8 @@ def scatterplot(
     marker_palette=None,
     markerby_order=None,
     markersizeby="__none__",
-    markersize_palette=None,
-    markersizeby_order=None,
+    # markersize_palette=None,
+    # markersizeby_order=None,
     edgecolorby="__none__",
     edgecolor_palette=None,
     edgecolorby_order=None,
@@ -221,10 +280,10 @@ def scatterplot(
             k: v for k, v in zip(markerby_order, cycle(DEFAULT_MARKER_LIST))
         }
 
-    if markersizeby_order is None:
-        markersizeby_order = data[markersizeby].sort_values().unique()
-    if markersize_palette is None:
-        markersize_palette = {k: v for k, v in zip(markersizeby_order, cycle([None]))}
+    # if markersizeby_order is None:
+    #     markersizeby_order = data[markersizeby].sort_values().unique()
+    # if markersize_palette is None:
+    #     markersize_palette = {k: v for k, v in zip(markersizeby_order, cycle([None]))}
 
     if edgecolorby_order is None:
         edgecolorby_order = data[edgecolorby].sort_values().unique()
@@ -246,27 +305,33 @@ def scatterplot(
 
     for (
         (
+            feat_show,
             feat_color,
             feat_marker,
-            feat_markersize,
             feat_edgecolor,
             feat_edgestyle,
             feat_zorder,
         ),
         d,
     ) in data.groupby(
-        [colorby, markerby, markersizeby, edgecolorby, edgestyleby, zorderby]
+        [showby, colorby, markerby, edgecolorby, edgestyleby, zorderby]
     ):
         if (
-            (feat_color not in colorby_order)
+            (not feat_show)
+            or (feat_color not in colorby_order)
             or (feat_marker not in markerby_order)
             or (feat_edgecolor not in edgecolorby_order)
             or (feat_edgestyle not in edgestyleby_order)
-            or (feat_markersize not in markersizeby_order)
         ):
             continue
+
         if feat_zorder == "__none__":
             feat_zorder = 0
+        if markersizeby == "__none__":
+            feat_markersize = None
+        else:
+            feat_markersize = d[markersizeby]
+
         ax.scatter(
             x,
             y,
@@ -276,7 +341,7 @@ def scatterplot(
             label="__nolegend__",
             edgecolor=[edgecolor_palette[feat_edgecolor]],
             linestyle=edgestyle_palette[feat_edgestyle],
-            s=markersize_palette[feat_markersize],
+            s=feat_markersize,
             zorder=feat_zorder,
             **scatter_kws_,
         )
@@ -300,16 +365,16 @@ def scatterplot(
                 label=feat_marker,
                 **scatter_kws_,
             )
-        for feat_markersize in markersizeby_order:
-            ax.scatter(
-                [],
-                [],
-                marker="o",
-                s=markersize_palette[feat_markersize],
-                c="grey",
-                label=feat_markersize,
-                **scatter_kws_,
-            )
+        # for feat_markersize in markersizeby_order:
+        #     ax.scatter(
+        #         [],
+        #         [],
+        #         marker="o",
+        #         s=markersize_palette[feat_markersize],
+        #         c="grey",
+        #         label=feat_markersize,
+        #         **scatter_kws_,
+        #     )
         for feat_edgecolor in edgecolorby_order:
             ax.scatter(
                 [],
