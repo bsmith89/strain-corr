@@ -1,1 +1,1 @@
-doc/template.md
+doc/notes.md
