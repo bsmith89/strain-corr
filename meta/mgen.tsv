@@ -1,3 +1,0 @@
-mgen_id	sample_id	filename_r1	filename_r2	mgen_notes	sra_accession
-test_1	test_1	mgen/test-data/test_1.r1.fq.gz	mgen/test-data/test_1.r2.fq.gz		
-test_2	test_2	mgen/test-data/test_2.r1.fq.gz	mgen/test-data/test_2.r2.fq.gz		
