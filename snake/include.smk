@@ -1,2 +1,2 @@
-include: "snake/mgen_preprocess.smk"
+include: "mgen_preprocess.smk"
 # include: "snake/sfacts.smk"
