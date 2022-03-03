@@ -1,1 +1,1 @@
-container: 'docker://bsmith89/compbio@sha256:0470df05fdce636ea3f6c1b9b39457380538474ae373135389610368a56cb848'
+container: 'docker://bsmith89/compbio2:41cb510c9cbccc31155a6a79f44115d8eeb161cd'
