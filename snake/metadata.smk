@@ -39,5 +39,21 @@
 #     )
 #     config["mgen_group"] = {}
 
-config['figures']['submission'] = [
-]
+config["figures"]["submission"] = []
+
+
+rule process_hmp2_metadata:
+    output:
+        subject="meta/subject.tsv",
+        visit="meta/visit.tsv",
+        stool="meta/stool.tsv",
+        preparation="meta/preparation.tsv",
+        mgen="meta/mgen.tsv",
+        mtab="meta/mtab.tsv",
+    input:
+        script="scripts/parse_hmp2_metadata_tables.py",
+        raw="raw/hmp2_metadata_2018-08-20.csv",
+    shell:
+        """
+        cat {input.raw} | {input.script} {output.subject} {output.visit} {output.stool} {output.preparation} {output.mgen} {output.mtab}
+        """
