@@ -45,7 +45,7 @@ if path.exists(local_config_path):
 
 if "container" in config:
 
-    container: config["container"]
+    container: config["container"]["default"]
 
 
 if "MAX_THREADS" in config:

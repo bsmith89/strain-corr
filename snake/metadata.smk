@@ -1,5 +1,21 @@
 # {{{2 Data Configuration
 
+config["mgen"] = (
+    pd.read_table("meta/mgen.tsv")
+    .rename(columns={"library_id": "mgen_id", "external_id": "stem"})
+    .set_index("mgen_id")
+    .assign(
+        r1=lambda x: f"hmp2/" + x.stem + "_R1.fastq.gz",
+        r2=lambda x: f"hmp2/" + x.stem + "_R2.fastq.gz",
+    )[["r1", "r2"]]
+)
+
+config["mgen_group"] = (
+    pd.read_table("meta/mgen_group.tsv")
+    .groupby("mgen_group_id")
+    .apply(lambda d: d.mgen_id.to_list())
+)
+
 
 # _mgen_meta = "meta/mgen.tsv"
 # if path.exists(_mgen_meta):

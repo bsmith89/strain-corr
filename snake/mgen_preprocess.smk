@@ -77,9 +77,9 @@ rule dummy_raw_read_source:
 
 rule alias_raw_read_r1:
     output:
-        "sdata/{mgen}.r1.fq.gz",
+        "data/{mgen}.r1.fq.gz",
     input:
-        lambda wildcards: "sraw/mgen/{}".format(config["mgen"][wildcards.mgen]["r1"]),
+        lambda wildcards: "raw/mgen/{}".format(config["mgen"]["r1"][wildcards.mgen]),
     shell:
         alias_recipe
 
@@ -90,9 +90,9 @@ localrules:
 
 rule alias_raw_read_r2:
     output:
-        "sdata/{mgen}.r2.fq.gz",
+        "data/{mgen}.r2.fq.gz",
     input:
-        lambda wildcards: "sraw/mgen/{}".format(config["mgen"][wildcards.mgen]["r2"]),
+        lambda wildcards: "raw/mgen/{}".format(config["mgen"]["r2"][wildcards.mgen]),
     shell:
         alias_recipe
 
@@ -143,6 +143,16 @@ rule qc_processed_reads:
         fastqc -t {threads} -o {output} {input}
         """
         )
+
+
+# Useful for when no additional processing is necessary.
+rule dummy_operation_on_reads:
+    output:
+        temp("{stemA}.{stemB}noop.fq.gz"),
+    input:
+        "{stemA}.{stemB}fq.gz",
+    shell:
+        alias_recipe
 
 
 rule deduplicate_reads:
@@ -240,7 +250,7 @@ rule alias_cleaned_reads:
     output:
         "data/{stem}.proc.fq.gz",
     input:
-        "data/{stem}.hfilt.dedup.deadapt.qtrim.fq.gz",
+        f"data/{{stem}}.{config['proc']}.fq.gz",
     shell:
         alias_recipe
 
