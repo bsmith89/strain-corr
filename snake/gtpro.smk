@@ -1,3 +1,7 @@
+rule start_gtpro_shell:
+    container: config['container']['gtpro']
+    shell: "bash"
+
 rule download_gtpro_reference_core_snps:
     output:
         "raw/gtpro_refs/variation_in_species/{species_id}/core_snps.vcf.gz",
