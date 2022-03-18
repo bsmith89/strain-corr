@@ -23,7 +23,8 @@ rule run_gtpro:
         mem_mb=60000,
         pmem=60000 // 8,
         walltime_hr=4,
-    container: config['container']['default']  # FIXME: Why does gtpro not work here?? File writing is just fine in the other rule...
+    container:
+        config["container"]["default"]  # FIXME: Why does gtpro not work here?? File writing is just fine in the other rule...
     shell:
         dd(
             """
@@ -43,7 +44,8 @@ rule gtpro_finish_processing_reads:
     params:
         db="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
         script="/src/gt-pro/scripts/gtp_parse.py",
-    container: config['container']['gtpro']
+    container:
+        config["container"]["gtpro"]
     shell:
         dd(
             """
