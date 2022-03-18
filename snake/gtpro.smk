@@ -22,10 +22,10 @@ rule run_gtpro:
         db_l=32,
         db_m=36,
         db_name="ref/gtpro/20190723_881species",
-    threads: 8
+    threads: 4
     resources:
         mem_mb=60000,
-        pmem=60000 // 8,
+        pmem=60000 // 4,
         walltime_hr=4,
     container:
         config["container"]["default"]  # FIXME: Why does gtpro not work here?? File writing is just fine in the other rule...
