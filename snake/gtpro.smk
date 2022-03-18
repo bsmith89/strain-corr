@@ -47,13 +47,12 @@ rule gtpro_finish_processing_reads:
         gtpro="{stem}.gtpro_raw.gz",
     params:
         db="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
-        script="/src/gt-pro/scripts/gtp_parse.py",
     container:
         config["container"]["gtpro"]
     shell:
         dd(
             """
-        python3 {params.script} --dict {params.db} --in <(zcat {input.gtpro}) \
+        GT_Pro parse --dict {params.db} --in <(zcat {input.gtpro}) \
                 | bzip2 -c \
             > {output}
         """
