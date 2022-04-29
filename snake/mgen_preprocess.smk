@@ -148,9 +148,9 @@ rule qc_processed_reads:
 # Useful for when no additional processing is necessary.
 rule dummy_operation_on_reads:
     output:
-        temp("{stemA}.{stemB}noop.fq.gz"),
+        temp("{stem}.noop.fq.gz"),
     input:
-        "{stemA}.{stemB}fq.gz",
+        "{stem}.fq.gz",
     shell:
         alias_recipe
 
