@@ -6,3 +6,5 @@ container:
 proc: 'noop'
 software-dev-path:
   sfacts: '/pollard/home/bsmith/Projects/StrainFacts'
+MAX_THREADS: 4
+USE_CUDA: 0

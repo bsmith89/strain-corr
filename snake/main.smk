@@ -48,15 +48,6 @@ if "container" in config:
     container: config["container"]["default"]
 
 
-if "MAX_THREADS" in config:
-    MAX_THREADS = config["MAX_THREADS"]
-else:
-    MAX_THREADS = 99
-if "USE_CUDA" in config:
-    USE_CUDA = config["USE_CUDA"]
-else:
-    USE_CUDA = 0
-
 # {{{2 Sub-pipelines
 
 

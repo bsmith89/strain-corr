@@ -28,7 +28,7 @@ rule start_ipython_sfacts:
 
 
 # rule start_jupyter_sfacts:
-#     threads: MAX_THREADS
+#     threads: config['MAX_THREADS']
 #     params:
 #         sfacts_dev_path=config["software-dev-path"]["sfacts"],
 #         port=config["jupyter_port"],
@@ -42,7 +42,7 @@ rule start_ipython_sfacts:
 
 
 rule start_jupyter_sfacts:
-    threads: MAX_THREADS
+    threads: config['MAX_THREADS']
     params:
         sfacts_dev_path=config["software-dev-path"]["sfacts"],
         port=config["jupyter_port"],
