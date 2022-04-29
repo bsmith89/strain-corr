@@ -38,56 +38,112 @@ rule run_gtpro:
         )
 
 
-# NOTE: Comment-out this rule after files have been completed to
-# save DAG processing time.
-rule gtpro_finish_processing_reads:
+rule load_gtpro_snp_dict:
     output:
-        "{stem}.gtpro_parse.tsv.bz2",
+        "ref/gtpro.snp_dict.db",
     input:
-        gtpro="{stem}.gtpro_raw.gz",
-    params:
-        db="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
-    container:
-        config["container"]["gtpro"]
+        "ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
     shell:
         dd(
             """
-        GT_Pro parse --dict {params.db} --in <(zcat {input.gtpro}) \
-                | bzip2 -c \
-            > {output}
+        rm -f {output}.tmp
+        sqlite3 {output}.tmp <<EOF
+        CREATE TABLE snp (
+          species TEXT
+          , global_pos INT
+          , contig TEXT
+          , local_pos INT
+          , ref_allele VARCHAR(1)
+          , alt_allele VARCHAR(1)
+          , PRIMARY KEY (species_id, snp_index)
+        );
+        EOF
+        cat {input} \
+            | tqdm --unit-scale 1 \
+            | sqlite3 -separator '\t' {output}.tmp '.import /dev/stdin snp'
+        mv {output}.tmp {output}
         """
         )
 
+
+# Helper rule that pre-formats paths from library_id to r1 and r2 paths.
+rule count_species_lines_from_both_reads_helper:
+    output:
+        temp("data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args"),
+    run:
+        with open(output[0], "w") as f:
+            for mgen in config["mgen_group"][wildcards.group]:
+                print(
+                    mgen,
+                    f"data/{mgen}.r1.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    f"data/{mgen}.r2.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    sep="\t",
+                    file=f,
+                )
+
+rule count_species_lines_from_both_reads:
+    output: 'data/{group}.a.r.{stem}.gtpro_species_tally.tsv',
+    input:
+        script='scripts/tally_gtpro_species_lines.sh',
+        r1=lambda w: [
+            f"data/{mgen}.r1.{{stem}}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        r2=lambda w: [
+            f"data/{mgen}.r2.{{stem}}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        helper="data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args",
+    threads: 24
+    shell:
+        r"""
+        parallel --colsep='\t' --bar -j {threads} \
+                bash {input.script} :::: {input.helper} \
+            > {output}
+
+        """
+
+rule estimate_all_species_horizontal_coverage:
+    output: 'data/{stem}.gtpro.horizontal_coverage.tsv'
+    input:
+        script='scripts/estimate_all_species_horizontal_coverage_from_position_tally.py',
+        snps="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
+        r='data/{stem}.gtpro_species_tally.tsv',
+    shell:
+        "{input.script} {input.snps} {input.r} {output}"
+
+
+# Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
+rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
+    output:
+        temp("data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args"),
+    run:
+        with open(output[0], "w") as f:
+            for mgen in config["mgen_group"][wildcards.group]:
+                print(
+                    mgen, f"data/{mgen}.{wildcards.stem}.gtpro_parse.tsv.bz2", sep="\t", file=f
+                )
 
 # NOTE: Comment out this rule to speed up DAG evaluation.
 # Selects a single species from every file and concatenates.
 rule concatenate_mgen_group_one_read_count_data_from_one_species:
     output:
-        "data/{group}.a.{stem}.sp-{species}.gtpro_combine.tsv.bz2",
+        "data/sp-{species}.{group}.a.{stem}.gtpro_combine.tsv.bz2",
     input:
         script="scripts/select_gtpro_species_lines.sh",
         gtpro=lambda w: [
             f"data/{mgen}.{{stem}}.gtpro_parse.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
         ],
+        helper="data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args"
     params:
         species=lambda w: w.species,
-        args=lambda w: "\n".join(
-            [
-                f"{mgen}\tdata/{mgen}.{w.stem}.gtpro_parse.tsv.bz2"
-                for mgen in config["mgen_group"][w.group]
-            ]
-        ),
     threads: 6
     shell:
         dd(
             """
-        tmp=$(mktemp)
-        cat >$tmp <<EOF
-        {params.args}
-        EOF
         parallel --colsep='\t' --bar -j {threads} \
-                {input.script} {params.species} :::: $tmp \
+                {input.script} {params.species} :::: {input.helper} \
             | bzip2 -c \
             > {output}
         """
@@ -96,38 +152,39 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
 
 rule merge_both_reads_species_count_data:
     output:
-        "data/{group}.a.{stem}.gtpro.sp-{species}.metagenotype.nc",
+        "data/{group_stem}.a.r.{stem}.gtpro_combine.tsv.bz2",
     input:
-        script="scripts/merge_both_gtpro_reads_to_netcdf.py",
-        r1="data/{group}.a.r1.{stem}.sp-{species}.gtpro_combine.tsv.bz2",
-        r2="data/{group}.a.r2.{stem}.sp-{species}.gtpro_combine.tsv.bz2",
-    threads: 4
+        script='scripts/sum_merged_gtpro_tables.py',
+        r1="data/{group_stem}.a.r1.{stem}.gtpro_combine.tsv.bz2",
+        r2="data/{group_stem}.a.r2.{stem}.gtpro_combine.tsv.bz2",
     resources:
         mem_mb=100000,
         pmem=lambda w, threads: 100000 // threads,
     shell:
-        "{input.script} {input.r1} {input.r2} {output}"
+        """
+        {input.script} {input.r1} {input.r2} {output}
+        """
 
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
-rule estimate_all_species_coverage_from_metagenotype:
+rule estimate_all_species_depth_from_metagenotype:
     output:
-        touch("data/{stem}.species_cvrg.tsv"),
+        "data/{stem}.species_depth.tsv",
     input:
-        script="scripts/estimate_species_coverage_from_metagenotype.py",
-        mgt=[
-            f"data/{{stem}}.sp-{species}.metagenotype.nc"
+        script="scripts/estimate_species_depth_from_metagenotype.py",
+        mgen=[
+            f"data/sp-{species}.{{stem}}.mgen.nc"
             for species in config["species_list"]
         ],
     params:
         trim=0.05,
-        mgt=[
-            f"{species}=data/{{stem}}.sp-{species}.metagenotype.nc"
+        mgen=[
+            f"{species}=data/sp-{species}.{{stem}}.mgen.nc"
             for species in config["species_list"]
         ],
     shell:
-        "{input.script} {params.trim} {params.mgt} > {output}"
+        "{input.script} {params.trim} {params.mgen} > {output}"
 
 
 rule gather_mgen_group_for_all_species:
