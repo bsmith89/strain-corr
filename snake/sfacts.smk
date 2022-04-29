@@ -42,7 +42,7 @@ rule start_ipython_sfacts:
 
 
 rule start_jupyter_sfacts:
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     params:
         sfacts_dev_path=config["software-dev-path"]["sfacts"],
         port=config["jupyter_port"],
@@ -94,9 +94,6 @@ rule filter_metagenotype:
         """
 
 
-
-
-
 rule fit_sfacts_strategy1:
     output:
         "{stem}.fit-sfacts1-s{nstrain}-g{nposition}-seed{seed}.world.nc",
@@ -139,6 +136,7 @@ rule fit_sfacts_strategy1:
                 -- {input} {output}
         """
 
+
 rule fit_sfacts_strategy2:
     output:
         "{stem}.fit-sfacts2-s{nstrain}-g{nposition}-seed{seed}.world.nc",
@@ -180,6 +178,8 @@ rule fit_sfacts_strategy2:
                 --hyperparameters rho_hyper={params.rho_hyper} \
                 -- {input} {output}
         """
+
+
 rule fit_sfacts_strategy_old:
     output:
         fit="{stem}.fit-sfacts-s{nstrain}-g{nposition}-seed{seed}.world.nc",

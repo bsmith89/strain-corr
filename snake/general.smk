@@ -197,7 +197,7 @@ rule make_diamond_db:
         "ref/{db}.dmnd",
     input:
         "ref/{db}.fa",
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     shell:
         dd(
             """
@@ -214,7 +214,7 @@ rule diamond_search_fn:
         db="ref/{db}.dmnd",
     params:
         db="ref/{db}",
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     shell:
         dd(
             """
@@ -231,7 +231,7 @@ rule diamond_search_fa:
         db="ref/{db}.dmnd",
     params:
         db="ref/{db}",
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     shell:
         dd(
             """

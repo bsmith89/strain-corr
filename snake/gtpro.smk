@@ -1,6 +1,9 @@
 rule start_gtpro_shell:
-    container: config['container']['gtpro']
-    shell: "bash"
+    container:
+        config["container"]["gtpro"]
+    shell:
+        "bash"
+
 
 rule download_gtpro_reference_core_snps:
     output:
@@ -81,10 +84,12 @@ rule count_species_lines_from_both_reads_helper:
                     file=f,
                 )
 
+
 rule count_species_lines_from_both_reads:
-    output: 'data/{group}.a.r.{stem}.gtpro_species_tally.tsv',
+    output:
+        "data/{group}.a.r.{stem}.gtpro_species_tally.tsv",
     input:
-        script='scripts/tally_gtpro_species_lines.sh',
+        script="scripts/tally_gtpro_species_lines.sh",
         r1=lambda w: [
             f"data/{mgen}.r1.{{stem}}.gtpro_parse.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
@@ -103,12 +108,14 @@ rule count_species_lines_from_both_reads:
 
         """
 
+
 rule estimate_all_species_horizontal_coverage:
-    output: 'data/{stem}.gtpro.horizontal_coverage.tsv'
+    output:
+        "data/{stem}.gtpro.horizontal_coverage.tsv",
     input:
-        script='scripts/estimate_all_species_horizontal_coverage_from_position_tally.py',
+        script="scripts/estimate_all_species_horizontal_coverage_from_position_tally.py",
         snps="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
-        r='data/{stem}.gtpro_species_tally.tsv',
+        r="data/{stem}.gtpro_species_tally.tsv",
     shell:
         "{input.script} {input.snps} {input.r} {output}"
 
@@ -121,8 +128,12 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
         with open(output[0], "w") as f:
             for mgen in config["mgen_group"][wildcards.group]:
                 print(
-                    mgen, f"data/{mgen}.{wildcards.stem}.gtpro_parse.tsv.bz2", sep="\t", file=f
+                    mgen,
+                    f"data/{mgen}.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    sep="\t",
+                    file=f,
                 )
+
 
 # NOTE: Comment out this rule to speed up DAG evaluation.
 # Selects a single species from every file and concatenates.
@@ -135,7 +146,7 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
             f"data/{mgen}.{{stem}}.gtpro_parse.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
         ],
-        helper="data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args"
+        helper="data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args",
     params:
         species=lambda w: w.species,
     threads: 6
@@ -154,7 +165,7 @@ rule merge_both_reads_species_count_data:
     output:
         "data/{group_stem}.a.r.{stem}.gtpro_combine.tsv.bz2",
     input:
-        script='scripts/sum_merged_gtpro_tables.py',
+        script="scripts/sum_merged_gtpro_tables.py",
         r1="data/{group_stem}.a.r1.{stem}.gtpro_combine.tsv.bz2",
         r2="data/{group_stem}.a.r2.{stem}.gtpro_combine.tsv.bz2",
     resources:
@@ -174,8 +185,7 @@ rule estimate_all_species_depth_from_metagenotype:
     input:
         script="scripts/estimate_species_depth_from_metagenotype.py",
         mgen=[
-            f"data/sp-{species}.{{stem}}.mgen.nc"
-            for species in config["species_list"]
+            f"data/sp-{species}.{{stem}}.mgen.nc" for species in config["species_list"]
         ],
     params:
         trim=0.05,

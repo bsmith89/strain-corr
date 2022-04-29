@@ -115,7 +115,7 @@ rule qc_raw_reads:
         r2=lambda w: [
             f"sdata/{mgen}.r2.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     shell:
         dd(
             """
@@ -135,7 +135,7 @@ rule qc_processed_reads:
         r2=lambda w: [
             f"data/{mgen}.r2.proc.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
-    threads: config['MAX_THREADS']
+    threads: config["MAX_THREADS"]
     shell:
         dd(
             """
