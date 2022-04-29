@@ -194,7 +194,7 @@ rule estimate_all_species_depth_from_metagenotype:
             for species in config["species_list"]
         ],
     shell:
-        "{input.script} {params.trim} {params.mgen} > {output}"
+        "{input.script} {params.trim} {params.mgen} {output}"
 
 
 rule gather_mgen_group_for_all_species:
