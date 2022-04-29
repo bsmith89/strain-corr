@@ -60,12 +60,12 @@ else:
 # {{{2 Sub-pipelines
 
 
+include: "snake/metadata.smk"
 include: "snake/template.smk"
 include: "snake/util.smk"
 include: "snake/general.smk"
 include: "snake/docs.smk"
 include: "snake/include.smk"
-include: "snake/metadata.smk"
 
 
 if path.exists("snake/local.smk"):
