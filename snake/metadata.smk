@@ -16,6 +16,9 @@ config["mgen_group"] = (
     .apply(lambda d: d.mgen_id.to_list())
 )
 
+config["species_list"] = pd.read_table(
+    "meta/species_group.tsv", names=["species_id", "species_group_id"]
+).species_id.unique()
 
 # _mgen_meta = "meta/mgen.tsv"
 # if path.exists(_mgen_meta):
