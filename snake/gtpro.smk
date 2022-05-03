@@ -193,6 +193,49 @@ rule estimate_all_species_horizontal_coverage:
         "{input.script} {input.snps} {input.r} {output}"
 
 
+checkpoint select_species_with_greater_max_coverage_gtpro:
+    output:
+        "data/{group}.a.{stem}.gtpro.horizontal_coverage.filt-{cvrg_thresh}.list",
+    input:
+        "data/{group}.a.{stem}.gtpro.horizontal_coverage.tsv",
+    params:
+        cvrg_thresh=lambda w: float(w.cvrg_thresh) / 100,
+    run:
+        horizontal_coverage = (
+            pd.read_table(
+                input[0],
+                names=["sample_id", "species_id", "horizontal_coverage"],
+                index_col=["sample_id", "species_id"],
+            )
+            .squeeze()
+            .unstack(fill_value=0)
+        )
+        with open(output[0], "w") as f:
+            # Select species with >=2 libraries with more coverage than the threshold
+            for species_id in idxwhere(
+                (horizontal_coverage >= params.cvrg_thresh).sum() >= 2
+            ):
+                print(species_id, file=f)
+
+
+def checkpoint_select_species_with_greater_max_coverage_gtpro(
+    group, stem, cvrg_thresh, require_in_species_group=False
+):
+    potential_species = set(config["species_group"][group])
+    cvrg_thresh = int(cvrg_thresh * 100)
+    with open(
+        checkpoints.select_species_with_greater_max_coverage_gtpro.get(
+            group=group, stem=stem, cvrg_thresh=cvrg_thresh
+        ).output[0]
+    ) as f:
+        if require_in_species_group:
+            return list(
+                set([l.strip() for l in f]) & set(config["species_group"][group])
+            )
+        else:
+            return [l.strip() for l in f]
+
+
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
@@ -236,11 +279,11 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
 
 rule merge_both_reads_species_count_data:
     output:
-        "data/{group_stem}.a.r.{stem}.gtpro_combine.tsv.bz2",
+        "data/{stemA}.r.{stemB}.gtpro_combine.tsv.bz2",
     input:
         script="scripts/sum_merged_gtpro_tables.py",
-        r1="data/{group_stem}.a.r1.{stem}.gtpro_combine.tsv.bz2",
-        r2="data/{group_stem}.a.r2.{stem}.gtpro_combine.tsv.bz2",
+        r1="data/{stemA}.r1.{stemB}.gtpro_combine.tsv.bz2",
+        r2="data/{stemA}.r2.{stemB}.gtpro_combine.tsv.bz2",
     resources:
         mem_mb=100000,
         pmem=lambda w, threads: 100000 // threads,
@@ -254,29 +297,34 @@ rule merge_both_reads_species_count_data:
 # once it has been run for the focal group.
 rule estimate_all_species_depth_from_metagenotype:
     output:
-        "data/{stem}.species_depth.tsv",
+        "data/{group}.a.{stem}.gtpro.species_depth.tsv",
     input:
         script="scripts/estimate_species_depth_from_metagenotype.py",
-        mgen=[
-            f"data/sp-{species}.{{stem}}.mgen.nc" for species in config["species_list"]
+        mgen=lambda w: [
+            f"data/sp-{species}.{w.group}.a.{w.stem}.gtpro.mgen.nc"
+            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group, stem=w.stem, cvrg_thresh=0.2
+            )
         ],
     params:
         trim=0.05,
-        mgen=[
-            f"{species}=data/sp-{species}.{{stem}}.mgen.nc"
-            for species in config["species_list"]
+        mgen=lambda w: [
+            f"{species}=data/sp-{species}.{w.group}.a.{w.stem}.gtpro.mgen.nc"
+            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group, stem=w.stem, cvrg_thresh=0.2
+            )
         ],
     shell:
-        "{input.script} {params.trim} {params.mgen} {output}"
+        "{input.script} {params.trim} {output} {params.mgen}"
 
 
 rule gather_mgen_group_for_all_species:
     output:
-        touch("data/{group}.a.{stemA}.ALL_SPECIES.{stemB}.flag"),
+        touch("data/ALL_SPECIES.{group}.a.{stem}.flag"),
     input:
-        [
-            f"data/{{group}}.a.{{stemA}}.sp-{species}.{{stemB}}"
-            for species in config["species_list"]
+        lambda w: [
+            f"data/sp-{species}.{w.group}.a.{w.stem}"
+            for species in config["species_group"][w.group]
         ],
     shell:
         "touch {output}"

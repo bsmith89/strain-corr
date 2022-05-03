@@ -94,6 +94,49 @@ rule filter_metagenotype:
         """
 
 
+rule fit_sfacts_strategy0:
+    output:
+        "{stem}.fit-sfacts0-s{nstrain}-g{nposition}-seed{seed}.world.nc",
+    input:
+        "{stem}.mgen.nc",
+    wildcard_constraints:
+        nstrain="[0-9]+",
+        seed="[0-9]+",
+        nposition="[0-9]+",
+    params:
+        nstrain=lambda w: int(w.nstrain),
+        nposition=lambda w: int(w.nposition),
+        rho_hyper=1.0,
+        gamma_hyper=1e-10,
+        pi_hyper=0.5,
+        seed=lambda w: int(w.seed),
+        model_name="model2",
+        sfacts_dev_path=config["software-dev-path"]["sfacts"],
+    resources:
+        walltime_hr=36,
+        pmem=5_000,
+        mem_mb=5_000,
+        device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
+        gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+    container:
+        config["container"]["mambaforge"]
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        export PYTHONPATH="{params.sfacts_dev_path}"
+        python3 -m sfacts fit -m {params.model_name}  \
+                --verbose --device {resources.device} \
+                --random-seed {params.seed} \
+                --num-strains {params.nstrain} --num-positions {params.nposition} \
+                --no-nmf-init \
+                --hyperparameters gamma_hyper={params.gamma_hyper} \
+                --hyperparameters pi_hyper={params.pi_hyper} \
+                --hyperparameters rho_hyper={params.rho_hyper} \
+                -- {input} {output}
+        """
+
+
 rule fit_sfacts_strategy1:
     output:
         "{stem}.fit-sfacts1-s{nstrain}-g{nposition}-seed{seed}.world.nc",
@@ -228,4 +271,46 @@ rule fit_sfacts_strategy_old:
                 --max-iter 1_000_000 --lag1 {params.lag1} --lag2 {params.lag2} \
                 {input.data} \
                 {output.fit}
+        """
+
+rule export_sfacts_comm:
+    output: '{stem}.comm.tsv'
+    input: '{stem}.world.nc'
+    params:
+        sfacts_dev_path=config["software-dev-path"]["sfacts"],
+    container:
+        config["container"]["mambaforge"]
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        export PYTHONPATH="{params.sfacts_dev_path}"
+        python3 -m sfacts dump --community {output} {input}
+        """
+
+
+# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
+# once it has been run for the focal group.
+rule calculate_all_strain_depths:
+    output:
+        "data/{group}.a.{proc_stem}.gtpro.filt-{filt_stem}.fit-{fit_stem}.strain_depth.tsv"
+    input:
+        script="scripts/merge_all_strains_depth.py",
+        species="data/{group}.a.{proc_stem}.gtpro.species_depth.tsv",
+        strains=lambda w: [
+            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.filt-{w.filt_stem}.fit-{w.fit_stem}.comm.tsv"
+            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+            )
+        ],
+    params:
+        args=lambda w: [
+            f"{species}=data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.filt-{w.filt_stem}.fit-{w.fit_stem}.comm.tsv"
+            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+            )
+        ],
+    shell:
+        """
+        {input.script} {input.species} {output} {params.args}
         """

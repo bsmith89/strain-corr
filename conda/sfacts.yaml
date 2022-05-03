@@ -1,0 +1,24 @@
+name: sfacts
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch
+  - ipython
+  - jupyterlab
+  - xarray
+  - netCDF4
+  - matplotlib
+  - pyro-ppl
+  - pandas
+  - seaborn
+  - tqdm
+  - scipy
+  - numpy
+  - scikit-learn
+  - scikit-bio
+  - line_profiler
+  - memory_profiler
+  - pip

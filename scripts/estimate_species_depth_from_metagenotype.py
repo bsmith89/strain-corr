@@ -11,9 +11,9 @@ import sys
 
 if __name__ == "__main__":
     trim_frac = float(sys.argv[1])
-    outpath = sys.argv[3]
+    outpath = sys.argv[2]
     cvrg = {}
-    pbar = tqdm(sys.argv[2:])
+    pbar = tqdm(sys.argv[3:])
     for arg in pbar:
         species_id, path = arg.split("=")
         pbar.set_postfix({"species_id": species_id})
@@ -22,10 +22,10 @@ if __name__ == "__main__":
         if is_empty(species_data):
             continue
         cvrg[species_id] = (
-            species_data.sel(species_id=species_id)
+            species_data
             .sum("allele")
             .to_pandas()
             .apply(lambda x: sp.stats.trim_mean(x, trim_frac), axis=1)
         )
-    cvrg = pd.DataFrame(cvrg).rename_axis(index="mgen_id", columns="species_id")
-    cvrg.stack()[lambda x: x > 0].rename("coverage").to_csv(outpath, sep="\t")
+    cvrg = pd.DataFrame(cvrg).rename_axis(index="sample", columns="species_id")
+    cvrg.stack()[lambda x: x > 0].rename("depth").to_csv(outpath, sep="\t")

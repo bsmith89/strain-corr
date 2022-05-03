@@ -1,3 +1,9 @@
+species_id	species_group_id
+100187	not_core
+100979	not_core
+102948	not_core
+103696	not_core
+104018	not_core
 100002	core
 100003	core
 100008	core
@@ -87,7 +93,6 @@
 100183	core
 100185	core
 100186	core
-100187	core
 100189	core
 100190	core
 100193	core
@@ -285,7 +290,6 @@
 100956	core
 100968	core
 100974	core
-100979	core
 100980	core
 100986	core
 100989	core
@@ -683,7 +687,6 @@
 102930	core
 102932	core
 102933	core
-102948	core
 102955	core
 102969	core
 102990	core
@@ -759,7 +762,6 @@
 103693	core
 103694	core
 103695	core
-103696	core
 103697	core
 103702	core
 103703	core
@@ -807,7 +809,6 @@
 104006	core
 104014	core
 104016	core
-104018	core
 104019	core
 104036	core
 104038	core
