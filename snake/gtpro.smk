@@ -193,6 +193,14 @@ rule estimate_all_species_horizontal_coverage:
         "{input.script} {input.snps} {input.r} {output}"
 
 
+# TODO: Test whether this rule will work without the '.gtpro.' anchor point in the middle
+# That's there so that rules that have more stem than '.a.{stem}.gtpro.' have a clear
+# dividing line between _this_ stem and the later stem.
+# That's necessary because a 'stem=' parameter has to be passed to
+# checkpoint_select_species_with_greater_max_coverage_gtpro(...)
+# in order for it to pull up the correct file.
+# Perhaps there's a way to instead pass the input-filename this function
+# and have it extract the correct wildcards... :-/
 checkpoint select_species_with_greater_max_coverage_gtpro:
     output:
         "data/{group}.a.{stem}.gtpro.horizontal_coverage.filt-{cvrg_thresh}.list",
@@ -318,13 +326,13 @@ rule estimate_all_species_depth_from_metagenotype:
         "{input.script} {params.trim} {output} {params.mgen}"
 
 
-rule gather_mgen_group_for_all_species:
+rule construct_files_for_all_select_species:
     output:
-        touch("data/ALL_SPECIES.{group}.a.{stem}.flag"),
+        touch("data/{group}.a.{proc_stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.stem}"
-            for species in config["species_group"][w.group]
+            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.suffix}"
+            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+            )
         ],
-    shell:
-        "touch {output}"
