@@ -4460,8 +4460,6 @@ DS0044_010		metagenomics	DS0044_010
 DS0044_011		metagenomics	DS0044_011
 SS01172		metagenomics	SS01172
 SS01185		metagenomics	SS01185
-SS01008		metagenomics	SS01008
-SS01013		metagenomics	SS01013
 SS01020		metagenomics	SS01020
 SS01032		metagenomics	SS01032
 SS01034		metagenomics	SS01034
@@ -4470,13 +4468,9 @@ SS01043		metagenomics	SS01043
 SS01046		metagenomics	SS01046
 SS01062		metagenomics	SS01062
 SS01093		metagenomics	SS01093
-SS01117		metagenomics	SS01117
-SS01120		metagenomics	SS01120
-SS01126		metagenomics	SS01126
 SS01067		metagenomics	SS01067
 SS01070		metagenomics	SS01070
 SS01089		metagenomics	SS01089
-SS01093		metagenomics	SS01093
 SS01109		metagenomics	SS01109
 SS01119		metagenomics	SS01119
 SS01124		metagenomics	SS01124
@@ -4491,7 +4485,6 @@ SS01181		metagenomics	SS01181
 SS01182		metagenomics	SS01182
 SS01183		metagenomics	SS01183
 SS01184		metagenomics	SS01184
-SS01185		metagenomics	SS01185
 SS01188		metagenomics	SS01188
 SS01191		metagenomics	SS01191
 SS01194		metagenomics	SS01194
