@@ -83,34 +83,34 @@ wildcard_constraints:
 
 rule all:
     input:
-        ["sdata/database.db"],
+        config["ALL"]
 
 
 # {{{1 Database
 
 
-database_inputs = [
-    # Metadata
-    DatabaseInput("subject", "smeta/subject.tsv", True),
-    DatabaseInput("sample", "meta/sample.tsv", True),
-    # Metagenomes
-    DatabaseInput("mgen", "meta/mgen.tsv", True),
-    DatabaseInput("mgen_x_mgen_group", "meta/mgen_x_mgen_group.tsv", True),
-]
-
-
-rule build_db:
-    output:
-        "sdata/database.db",
-    input:
-        script="scripts/build_db.py",
-        schema="schema.sql",
-        inputs=[entry.path for entry in database_inputs],
-    params:
-        args=[entry.to_arg() for entry in database_inputs],
-    shell:
-        dd(
-            r"""
-        {input.script} {output} {input.schema} {params.args}
-        """
-        )
+# database_inputs = [
+#     # Metadata
+#     DatabaseInput("subject", "smeta/subject.tsv", True),
+#     DatabaseInput("sample", "meta/sample.tsv", True),
+#     # Metagenomes
+#     DatabaseInput("mgen", "meta/mgen.tsv", True),
+#     DatabaseInput("mgen_x_mgen_group", "meta/mgen_x_mgen_group.tsv", True),
+# ]
+#
+#
+# rule build_db:
+#     output:
+#         "sdata/database.db",
+#     input:
+#         script="scripts/build_db.py",
+#         schema="schema.sql",
+#         inputs=[entry.path for entry in database_inputs],
+#     params:
+#         args=[entry.to_arg() for entry in database_inputs],
+#     shell:
+#         dd(
+#             r"""
+#         {input.script} {output} {input.schema} {params.args}
+#         """
+#         )

@@ -8,3 +8,5 @@ software-dev-path:
   sfacts: '/pollard/home/bsmith/Projects/StrainFacts'
 MAX_THREADS: 4
 USE_CUDA: 0
+ALL:
+  - data/core.a.r.proc.gtpro.filt-poly05-cvrg05.fit-sfacts2-s200-g10000-seed0.collapse-10.strain_depth.tsv
