@@ -51,6 +51,7 @@ if __name__ == "__main__":
         pd.concat(sotu_cv.values())
         .unstack("sotu", fill_value=0)
         .join(motu_cv_missing)
+        .rename_axis(columns='strain')
     )
     # FIXME: Some of the '-other' strains are < 0 because of rounding error.
     sotu_cv[(sotu_cv < 0)] = 0
@@ -59,4 +60,4 @@ if __name__ == "__main__":
     assert sotu_cv.columns.is_unique
     assert (sotu_cv >= 0).all().all()
 
-    sotu_cv.stack()[lambda x: x > 0].to_csv(outpath, sep="\t", header=True)
+    sotu_cv.stack().rename('depth')[lambda x: x > 0].to_csv(outpath, sep="\t", header=True)
