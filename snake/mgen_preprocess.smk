@@ -79,7 +79,7 @@ rule alias_raw_read_r1:
     output:
         "data/{mgen}.r1.fq.gz",
     input:
-        lambda wildcards: "raw/mgen/{}".format(config["mgen"]["r1"][wildcards.mgen]),
+        lambda w: config["mgen"]["r1"][w.mgen],
     shell:
         alias_recipe
 
@@ -92,7 +92,7 @@ rule alias_raw_read_r2:
     output:
         "data/{mgen}.r2.fq.gz",
     input:
-        lambda wildcards: "raw/mgen/{}".format(config["mgen"]["r2"][wildcards.mgen]),
+        lambda w: config["mgen"]["r2"][w.mgen],
     shell:
         alias_recipe
 

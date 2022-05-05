@@ -2,12 +2,15 @@
 
 config["mgen"] = (
     pd.read_table("meta/mgen.tsv")
-    .rename(columns={"library_id": "mgen_id", "external_id": "stem"})
-    .set_index("mgen_id")
-    .assign(
-        r1=lambda x: f"hmp2/" + x.stem + "_R1.fastq.gz",
-        r2=lambda x: f"hmp2/" + x.stem + "_R2.fastq.gz",
-    )[["r1", "r2"]]
+    .rename(
+        columns={
+            "library_id": "mgen_id",
+            "external_id": "stem",
+            "r1_path": "r1",
+            "r2_path": "r2",
+        }
+    )
+    .set_index("mgen_id")[["r1", "r2"]]
 )
 
 config["mgen_group"] = (
