@@ -199,7 +199,7 @@ rule fit_sfacts_strategy2:
         model_name="model2",
         sfacts_dev_path=config["software-dev-path"]["sfacts"],
     resources:
-        walltime_hr=36,
+        walltime_hr=2,
         pmem=5_000,
         mem_mb=5_000,
         device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
