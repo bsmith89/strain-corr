@@ -69,77 +69,77 @@ rule load_gtpro_snp_dict:
         )
 
 
-# # NOTE: Comment-out this rule after files have been completed to
-# # save DAG processing time.
-# rule gtpro_finish_processing_reads:
-#     output:
-#         "{stem}.gtpro_parse.tsv.bz2",
-#     input:
-#         raw="{stem}.gtpro_raw.gz",
-#         db="ref/gtpro.snp_dict.db",
-#     shell:
-#         dd(
-#             """
-#         rm -f {output}.tmp
-#         sqlite3 {output}.tmp <<EOF
-#
-#         CREATE TABLE _gtpro_tally (
-#             snv_id TEXT
-#           , tally INT
-#         );
-#
-#         EOF
-#         zcat {input.raw} \
-#             | tqdm --unit-scale 1 \
-#             | sqlite3 -separator '\t' {output}.tmp '.import /dev/stdin _gtpro_tally'
-#         (
-#         sqlite3 -header -separator '\t' {output}.tmp <<EOF
-#
-#         ATTACH DATABASE '{input.db}' AS ref;
-#
-#         CREATE TEMPORARY VIEW gtpro_tally AS
-#         SELECT
-#           snv_id
-#         , substr(snv_id, 1, 6) AS species
-#         , substr(snv_id, 7, 1) AS snv_type
-#         , substr(snv_id, 8) AS global_pos
-#         , tally
-#         FROM _gtpro_tally
-#         ;
-#
-#         CREATE TEMPORARY VIEW snp_hit AS
-#         SELECT *
-#         , CASE snv_type
-#             WHEN '0' THEN tally
-#             WHEN '1' THEN 0
-#         END AS ref_count
-#         , CASE snv_type
-#             WHEN '0' THEN 0
-#             WHEN '1' THEN tally
-#         END AS alt_count
-#         FROM gtpro_tally
-#         JOIN ref.snp USING (species, global_pos)
-#         ;
-#
-#         SELECT
-#             species
-#             , global_pos
-#             , contig
-#             , local_pos
-#             , ref_allele
-#             , alt_allele
-#             , SUM(ref_count) AS ref_count
-#             , SUM(alt_count) AS alt_count
-#         FROM snp_hit
-#         GROUP BY species, global_pos
-#         ORDER BY CAST(species AS INT), CAST(global_pos AS INT)
-#         ;
-#
-#         EOF
-#         ) | bzip2 -c > {output}
-#         rm {output}.tmp
-#         """
-#         )
+# NOTE: Comment-out this rule after files have been completed to
+# save DAG processing time.
+rule gtpro_finish_processing_reads:
+    output:
+        "{stem}.gtpro_parse.tsv.bz2",
+    input:
+        raw="{stem}.gtpro_raw.gz",
+        db="ref/gtpro.snp_dict.db",
+    shell:
+        dd(
+            """
+        rm -f {output}.tmp
+        sqlite3 {output}.tmp <<EOF
+
+        CREATE TABLE _gtpro_tally (
+            snv_id TEXT
+          , tally INT
+        );
+
+        EOF
+        zcat {input.raw} \
+            | tqdm --unit-scale 1 \
+            | sqlite3 -separator '\t' {output}.tmp '.import /dev/stdin _gtpro_tally'
+        (
+        sqlite3 -header -separator '\t' {output}.tmp <<EOF
+
+        ATTACH DATABASE '{input.db}' AS ref;
+
+        CREATE TEMPORARY VIEW gtpro_tally AS
+        SELECT
+          snv_id
+        , substr(snv_id, 1, 6) AS species
+        , substr(snv_id, 7, 1) AS snv_type
+        , substr(snv_id, 8) AS global_pos
+        , tally
+        FROM _gtpro_tally
+        ;
+
+        CREATE TEMPORARY VIEW snp_hit AS
+        SELECT *
+        , CASE snv_type
+            WHEN '0' THEN tally
+            WHEN '1' THEN 0
+        END AS ref_count
+        , CASE snv_type
+            WHEN '0' THEN 0
+            WHEN '1' THEN tally
+        END AS alt_count
+        FROM gtpro_tally
+        JOIN ref.snp USING (species, global_pos)
+        ;
+
+        SELECT
+            species
+            , global_pos
+            , contig
+            , local_pos
+            , ref_allele
+            , alt_allele
+            , SUM(ref_count) AS ref_count
+            , SUM(alt_count) AS alt_count
+        FROM snp_hit
+        GROUP BY species, global_pos
+        ORDER BY CAST(species AS INT), CAST(global_pos AS INT)
+        ;
+
+        EOF
+        ) | bzip2 -c > {output}
+        rm {output}.tmp
+        """
+        )
 
 
 # Helper rule that pre-formats paths from library_id to r1 and r2 paths.
