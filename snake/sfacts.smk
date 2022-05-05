@@ -75,9 +75,9 @@ rule load_metagenotype_from_merged_gtpro:
 
 rule filter_metagenotype:
     output:
-        "data/{stem}.filt-poly{poly}-cvrg{cvrg}.mgen.nc",
+        "{stem}.filt-poly{poly}-cvrg{cvrg}.mgen.nc",
     input:
-        "data/{stem}.mgen.nc",
+        "{stem}.mgen.nc",
     wildcard_constraints:
         poly="[0-9]+",
         cvrg="[0-9]+",
@@ -293,19 +293,19 @@ rule export_sfacts_comm:
 # once it has been run for the focal group.
 rule calculate_all_strain_depths:
     output:
-        "data/{group}.a.{proc_stem}.gtpro.filt-{filt_stem}.fit-{fit_stem}.strain_depth.tsv"
+        "data/{group}.a.{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv"
     input:
         script="scripts/merge_all_strains_depth.py",
         species="data/{group}.a.{proc_stem}.gtpro.species_depth.tsv",
         strains=lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.filt-{w.filt_stem}.fit-{w.fit_stem}.comm.tsv"
+            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
             )
         ],
     params:
         args=lambda w: [
-            f"{species}=data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.filt-{w.filt_stem}.fit-{w.fit_stem}.comm.tsv"
+            f"{species}=data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
             )
