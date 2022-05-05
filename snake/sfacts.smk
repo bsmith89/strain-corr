@@ -316,6 +316,23 @@ rule fit_sfacts_strategy_old:
                 {output.fit}
         """
 
+
+rule collapse_similar_strains:
+    output: '{stem}.collapse-{thresh}.world.nc'
+    input: '{stem}.world.nc'
+    params:
+        thresh=lambda w: float(w.thresh) / 100,
+        sfacts_dev_path=config["software-dev-path"]["sfacts"],
+    container:
+        config["container"]["mambaforge"]
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        export PYTHONPATH="{params.sfacts_dev_path}"
+        python3 -m sfacts collapse_strains {params.thresh} {input} {output}
+        """
+
 rule export_sfacts_comm:
     output: '{stem}.comm.tsv'
     input: '{stem}.world.nc'
