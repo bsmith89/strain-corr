@@ -223,6 +223,49 @@ rule fit_sfacts_strategy2:
         """
 
 
+rule fit_sfacts_strategy3:
+    output:
+        "{stem}.fit-sfacts3-s{strain_exponent}-g{nposition}-seed{seed}.world.nc",
+    input:
+        "{stem}.mgen.nc",
+    wildcard_constraints:
+        strain_exponent="[0-9]+",
+        seed="[0-9]+",
+        nposition="[0-9]+",
+    params:
+        strain_exponent=lambda w: float(w.strain_exponent) / 100,
+        nposition=lambda w: int(w.nposition),
+        rho_hyper=0.9,
+        gamma_hyper=1e-10,
+        pi_hyper=0.4,
+        seed=lambda w: int(w.seed),
+        model_name="model2",
+        sfacts_dev_path=config["software-dev-path"]["sfacts"],
+    resources:
+        walltime_hr=2,
+        pmem=5_000,
+        mem_mb=5_000,
+        device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
+        gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+    container:
+        config["container"]["mambaforge"]
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        export PYTHONPATH="{params.sfacts_dev_path}"
+        python3 -m sfacts fit -m {params.model_name}  \
+                --verbose --device {resources.device} \
+                --random-seed {params.seed} \
+                --strain-sample-exponent {params.strain_exponent} --num-positions {params.nposition} \
+                --no-nmf-init \
+                --hyperparameters gamma_hyper={params.gamma_hyper} \
+                --hyperparameters pi_hyper={params.pi_hyper} \
+                --hyperparameters rho_hyper={params.rho_hyper} \
+                -- {input} {output}
+        """
+
+
 rule fit_sfacts_strategy_old:
     output:
         fit="{stem}.fit-sfacts-s{nstrain}-g{nposition}-seed{seed}.world.nc",
