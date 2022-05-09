@@ -412,7 +412,7 @@ rule collapse_similar_strains:
     shell:
         """
         export PYTHONPATH="{params.sfacts_dev_path}"
-        python3 -m sfacts collapse_strains {params.thresh} {input} {output}
+        python3 -m sfacts collapse_strains --discretized {params.thresh} {input} {output}
         """
 
 rule export_sfacts_comm:
