@@ -30,5 +30,5 @@ cluster: "qsub -cwd \
         -terse \
         -o {resources.outdir} \
         "
-cluster-cancel: '/opt/sge/bin/lx-amd64/qdel '
+cluster-cancel: '/opt/sge/bin/lx-amd64/qdel'
 jobname: '{name}.{jobid}.snkjb'
