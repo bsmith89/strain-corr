@@ -53,7 +53,7 @@ rule start_jupyter_sfacts:
     shell:
         """
         export PYTHONPATH="{params.sfacts_dev_path}"
-        jupyter lab --port={params.port}
+        jupyter lab --port={params.port} --notebook-dir nb/
         """
 
 
@@ -70,6 +70,22 @@ rule load_metagenotype_from_merged_gtpro:
         """
         export PYTHONPATH="{params.sfacts_dev_path}"
         python3 -m sfacts load --gtpro-metagenotype {input} {output}
+        """
+
+
+rule start_jupyter_sfacts2:
+    threads: config["MAX_THREADS"]
+    params:
+        sfacts_dev_path=config["software-dev-path"]["sfacts"],
+        port=config["jupyter_port"],
+    container:
+        config["container"]["mambaforge"]
+    conda:
+        "conda/sfacts2.yaml"
+    shell:
+        """
+        export PYTHONPATH="{params.sfacts_dev_path}"
+        jupyter lab --port={params.port} --notebook-dir nb/
         """
 
 
