@@ -90,7 +90,6 @@ rule start_jupyter_sfacts3:
         "conda/sfacts3.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         jupyter lab --port="{config[jupyter_port]}" --notebook-dir nb/
         """
 
