@@ -7,6 +7,6 @@ use-conda: true
 conda-frontend: 'mamba'
 conda-prefix: '/pollard/home/bsmith/.snakemake/conda'
 use-singularity: true
-singularity-args: "--bind /pollard/ --bind $TMPDIR"
+singularity-args: "--env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs --bind /pollard/ --bind $TMPDIR"
 singularity-prefix: '/pollard/home/bsmith/.snakemake/singularity'
 config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']
