@@ -1,0 +1,215 @@
+visit_id	subject_id	visit_type	visit_type_specific	days_post_fmt	status_stool_frequency	status_mayo_score_stool_frequency	status_mayo_score_rectal_bleeding	status_mayo_score_endoscopy_mucosa	status_mayo_score_global_physician_rating	donor_sample_id	visit_notes
+S001V01	S0001	initial_fmt	colonoscopy_1	0	7.5	3	1	2	2	DS0097_001	
+S001V02	S0001	maintenance	maintenance_1	7	5	2	0			DS0097_002	
+S001V03	S0001	maintenance	maintenance_2	14	6	2	1			DS0097_003	
+S001V04	S0001	maintenance	maintenance_3	22	5	2	0			DS0097_004	
+S001V05	S0001	maintenance	maintenance_4	28	4	1	0			DS0097_005	
+S001V06	S0001	maintenance	maintenance_5	34	4	1	0			DS0097_006	
+S001V07	S0001	maintenance	maintenance_6	42	5	2	0			DS0097_X01	
+S001V08	S0001	followup	colonoscopy_2	56	4	1	0	2	1		
+S001V09	S0001	followup	followup_1_month	90	5	2	0				
+S001V10	S0001	followup	followup_3_month	154	6	2	0				
+S004V01	S0004	initial_fmt	colonoscopy_1	0	2	1	1	1	1	DS0097_007	
+S004V02	S0004	maintenance	maintenance_1	6	2	1	0			DS0097_008	
+S004V03	S0004	maintenance	maintenance_2	13	1	0	0			DS0097_009	
+S004V04	S0004	maintenance	maintenance_3	20	1	0	1			DS0097_010	
+S004V05	S0004	maintenance	maintenance_4	27	1	0	0			DS0097_011	
+S004V06	S0004	maintenance	maintenance_5	33	1	0	0			DS0097_012	
+S004V07	S0004	maintenance	maintenance_6	41	1	0	0			DS0097_013	
+S004V08	S0004	followup	colonoscopy_2	56	1	0	0	0	0		
+S004V09	S0004	followup	followup_1_month	95	1	0	0				
+S004V10	S0004	followup	followup_3_month	152	1.5	0.5	0				status_mayo_score_stool_frequency recorded as '0-1';
+S0059V07	S0059	maintenance	maintenance_6	40	3.5	1	1			DS0044_X	
+S0060V07	S0060	maintenance	maintenance_6	36	9.5	3	2			DS0044_X	
+S0061V07	S0061	maintenance	maintenance_6	39	4	2	0			DS0044_X	
+S0062V07	S0062	maintenance	maintenance_6	40	3.5	1	0			DS0485_X	
+S0063V07	S0063	maintenance	maintenance_6	46	3.5	2	0			DS0065_X	
+S0064V07	S0064	maintenance	maintenance_6							DS0485_X	marked as 'ongoing'
+S007V01	S0007	initial_fmt	colonoscopy_1	0	4.5	2	0	2	2	DS0485_001	
+S007V02	S0007	maintenance	maintenance_1	6	4	2	0			DS0485_X01	
+S007V03	S0007	maintenance	maintenance_2	14	5.5	2	0			DS0485_X02	
+S007V04	S0007	maintenance	maintenance_3	21	7	3	0			DS0485_X03	
+S007V05	S0007	maintenance	maintenance_4	28	5	2	0			DS0485_X04	
+S007V06	S0007	maintenance	maintenance_5	35	5.5	2	0			DS0485_X05	
+S007V07	S0007	maintenance	maintenance_6	42	5.5	2	0			DS0485_X06	
+S007V08	S0007	followup	colonoscopy_2	56	7	3	0	2	2		
+S007V09	S0007	followup	followup_1_month	93	5	2	0				
+S007V10	S0007	followup	followup_3_month	160							recorded as 'N, but have 5M: 4-5BM, no bood';
+S008V01	S0008	initial_fmt	colonoscopy_1	0	2.5	1	0	2	2	DS0485_002	
+S008V02	S0008	maintenance	maintenance_1	7	2	1	0			DS0485_X07	
+S008V03	S0008	maintenance	maintenance_2	13	1	0	0			DS0485_X08	
+S008V04	S0008	maintenance	maintenance_3	21	4	2	0			DS0485_X09	
+S008V05	S0008	maintenance	maintenance_4	28	3	1	0			DS0485_X10	
+S008V06	S0008	maintenance	maintenance_5	35	4	2	0			DS0485_X11	
+S008V07	S0008	maintenance	maintenance_6	42	2.5	1	0			DS0485_X12	
+S008V08	S0008	followup	colonoscopy_2	53	1.5	0	0	0	1		
+S008V09	S0008	followup	followup_1_month	112	1.5	0	0				recorded as '(2mo)';
+S008V10	S0008	followup	followup_3_month	197	2	1	0				recorded as '(5mo)';
+S013V01	S0013	initial_fmt	colonoscopy_1	0	2	1	0	1	2	DS0097_014	
+S013V02	S0013	maintenance	maintenance_1	7	2	1	0			DS0097_015	
+S013V03	S0013	maintenance	maintenance_2	16	2	1	0			DS0097_X02	
+S013V04	S0013	maintenance	maintenance_3	23	2	1	0			DS0097_X03	
+S013V05	S0013	maintenance	maintenance_4	29	1.5	1	0			DS0097_X04	
+S013V06	S0013	maintenance	maintenance_5	36	2	1	0			DS0097_016	
+S013V07	S0013	maintenance	maintenance_6	41	2	1	0			DS0097_017	
+S013V08	S0013	followup	colonoscopy_2	56	2	1	0	1	1		
+S013V09	S0013	followup	followup_1_month	103	1.5	0	0				
+S013V10	S0013	followup	followup_3_month	184	1.5	0	0				recorded as '(4mo)';
+S017V01	S0017	initial_fmt	colonoscopy_1	0	2	0	1	2	2	DS0097_018	
+S017V02	S0017	maintenance	maintenance_1	7	2.5	0	1			DS0097_X05	
+S017V03	S0017	maintenance	maintenance_2	14	2.5	0	1			DS0097_019	
+S017V04	S0017	maintenance	maintenance_3	21	2.5	0	2.5			DS0097_020	status_mayo_score_rectal_bleeding recorded as 2-3;
+S017V05	S0017	maintenance	maintenance_4	28	2.5	0	2				enema skipped this week due to health problems; donor sample marked as DS0097_021 (original ID DFS.017.E4) but not clear what this is because dosage marked as skipped;
+S017V06	S0017	maintenance	maintenance_5	35	2	0	3			DS0097_X06	
+S017V08	S0017	followup	colonoscopy_2	42	0	0	3	3	3		this is 6wk after initial FMT;
+S017V09	S0017	followup	followup_1_month	71	3	0	1				
+S021V01	S0021	initial_fmt	colonoscopy_1	0	1.5	0	0	2	2	DS0097_022	
+S021V02	S0021	maintenance	maintenance_1	6	5	2	0			DS0097_023	
+S021V03	S0021	maintenance	maintenance_2	14	1.5	1	0			DS0097_024	
+S021V04	S0021	maintenance	maintenance_3	20	1	0	0			DS0097_025	
+S021V05	S0021	maintenance	maintenance_4	27	3	1	1			DS0097_026	
+S021V06	S0021	maintenance	maintenance_5	36	3.5	2	2			DS0097_027	
+S021V08	S0021	followup	colonoscopy_2	49	5	2	2	2	2		
+S021V09	S0021	followup	followup_1_month	102	2.5	1	0				recorded as '(2mo)';
+S024V01	S0024	initial_fmt	colonoscopy_1	0	4	2	0	2	2	DS0097_028	
+S024V02	S0024	maintenance	maintenance_1	7	4	2	0			DS0097_029	
+S024V03	S0024	maintenance	maintenance_2	12	3	1	0			DS0097_030	
+S024V04	S0024	maintenance	maintenance_3	21	2	1	0			DS0097_031	
+S024V05	S0024	maintenance	maintenance_4	28	3	1	0			DS0097_032	not clear if DS0097_32 or DS0097_33 was used to dose this subject; either way it was the same donor stool;
+S024V06	S0024	maintenance	maintenance_5	35	8	3	0			DS0097_034	
+S024V07	S0024	maintenance	maintenance_6	42	4	2	0			DS0097_035	
+S024V08	S0024	followup	colonoscopy_2	56	4	2	0	1	1		
+S024V09	S0024	followup	followup_1_month	87	4	2	0				
+S024V10	S0024	followup	followup_3_month	153	6	3	0				
+S027V01	S0027	initial_fmt	colonoscopy_1	0	4	1	1	2	1	DS0097_036	
+S027V02	S0027	maintenance	maintenance_1	5	3	1	2			DS0097_X07	baseline_stool_frequency recorded as '3 (on immodium)';
+S027V03	S0027	maintenance	maintenance_2	10	5	2	2			DS0097_X08	
+S027V04	S0027	maintenance	maintenance_3	17	3	1	1			DS0097_X09	
+S027V05	S0027	maintenance	maintenance_4	24	3	1	1			DS0097_X10	
+S027V06	S0027	maintenance	maintenance_5	31	3	1	0			DS0097_X11	
+S027V07	S0027	maintenance	maintenance_6	38	3	1	0			DS0097_X12	
+S027V08	S0027	followup	colonoscopy_2	56	2	0	0	0	0		
+S027V09	S0027	followup	followup_1_month	95	1	0	0				
+S027V10	S0027	followup	followup_3_month	216	1.5	0	0				
+S029V01	S0029	initial_fmt	colonoscopy_1	0	4	2	1	1	1	DS0097_037	
+S029V02	S0029	maintenance	maintenance_1	8	2	1	1			DS0097_038	
+S029V03	S0029	maintenance	maintenance_2	13	2	1	1			DS0097_039	
+S029V04	S0029	maintenance	maintenance_3	21	1	0	0			DS0097_040	
+S029V05	S0029	maintenance	maintenance_4	28	2	1	1			DS0097_041	
+S029V06	S0029	maintenance	maintenance_5	35	1	0	1			DS0097_042	
+S029V09	S0029	followup	followup_1_month	97	1	0	1				
+S029V10	S0029	followup	followup_3_month	127	2	1	1				recorded as '(2mo)';
+S031V01	S0031	initial_fmt	colonoscopy_1	0	1.5	0	2	2	2	DS0485_003	
+S031V02	S0031	maintenance	maintenance_1	7	2	1	0			DS0485_X13	
+S031V03	S0031	maintenance	maintenance_2	13	2	1	1			DS0485_X14	
+S031V04	S0031	maintenance	maintenance_3	21	1	0	1			DS0485_004	
+S031V08	S0031	followup	colonoscopy_2	54	1	0	0				recorded as 'not done'; survey collected on 2019-01-24; associated stool collected on 2018-01-22
+S031V10	S0031	followup	followup_3_month	126	1	0	0				
+S037V01	S0037	initial_fmt	colonoscopy_1	0	6	3	1	2	2	DS0485_005	
+S037V02	S0037	maintenance	maintenance_1	7	8	3	1			DS0485_X15	
+S037V03	S0037	maintenance	maintenance_2	14	6	3	1			DS0485_X16	
+S037V04	S0037	maintenance	maintenance_3	21	10	3	2			DS0485_X17	
+S037V05	S0037	maintenance	maintenance_4	35							visit not found in db; inferred from stool sample; date inferred from sample date; date assumed to be 1 day after sample; marked as 'cancelled due to AE';
+S037V06	S0037	maintenance	maintenance_5	61	20	3	2				recorded as 'not done'; date assumed to be 1 day after sample;
+S037V09	S0037	followup	followup_1_month	91							date not recorded; date assumed to be 1 month after maintenance_5; no stool sample in db; why do I have this entry?
+S041V01	S0041	initial_fmt	colonoscopy_1	0	5	2	1	2	2	DS0044_002	
+S041V02	S0041	maintenance	maintenance_1	7	6	3	1			DS0485_X18	
+S041V03	S0041	maintenance	maintenance_2	14	5	2	1			DS0485_X19	
+S041V04	S0041	maintenance	maintenance_3	21	5	2	1			DS0485_X20	
+S041V05	S0041	maintenance	maintenance_4	28	4	2	1			DS0485_X21	
+S041V06	S0041	maintenance	maintenance_5	35	4.5	2	1			DS0485_X22	
+S041V07	S0041	maintenance	maintenance_6	42	4.5	2	1			DS0485_X23	
+S041V08	S0041	followup	colonoscopy_2	47	4	2	1	2	1		
+S041V09	S0041	followup	followup_1_month	89	3	1	1				
+S041V10	S0041	followup	followup_3_month	115	3	1	0				recorded as '(2.5mo)';
+S043V01	S0043	initial_fmt	colonoscopy_1	0	17	3	2	3	2	DS0097_043	
+S043V02	S0043	maintenance	maintenance_1	6	16	3	1			DS0097_044	
+S043V03	S0043	maintenance	maintenance_2	15	16	3	2			DS0044_001	maintenance with donor 44 instead of 97 unintentionally;
+S043V04	S0043	maintenance	maintenance_3	20	15	3	2			DS0097_046	
+S043V05	S0043	maintenance	maintenance_4	27	12	3	2			DS0097_047	
+S043V06	S0043	maintenance	maintenance_5	35	12	3	2			DS0097_048	
+S043V07	S0043	maintenance	maintenance_6	42							recorded as 'discontinued, pt starts remicade'; assumed no fmt received; date not recorded; date inferred from sample date; date assumed to be same day as sample;
+S047V01	S0047	initial_fmt	colonoscopy_1	0	3	0	0	2	2	DS0044_004	
+S047V02	S0047	maintenance	maintenance_1	6	4	1	0			DS0044_X07	
+S047V03	S0047	maintenance	maintenance_2	13	3.5	1	0			DS0044_X08	
+S047V04	S0047	maintenance	maintenance_3	20	3	1	0			DS0485_X24	maintenance with donor D0485 instead of D0044 unintentionally;
+S047V05	S0047	maintenance	maintenance_4	27	4	1	0			DS0485_X25	maintenance with donor D0485 instead of D0044 unintentionally;
+S047V06	S0047	maintenance	maintenance_5	33	3.5	1	0			DS0044_X09	
+S047V07	S0047	maintenance	maintenance_6	41	3	1	0			DS0044_X10	
+S047V08	S0047	followup	colonoscopy_2	84	4.5	1	0	0	0		recorded as '(4 wks late)';
+S047V09	S0047	followup	followup_1_month	118	3.5	1	0				
+S053V01	S0053	initial_fmt	colonoscopy_1	0	10	3	0	1	2	DS0044_003	
+S053V02	S0053	maintenance	maintenance_1	4	6	3	1			DS0044_X01	
+S053V03	S0053	maintenance	maintenance_2	11	5	2	0			DS0044_X02	
+S053V04	S0053	maintenance	maintenance_3	18	4	2	0			DS0044_X03	
+S053V05	S0053	maintenance	maintenance_4	25	3	1	0			DS0044_X04	
+S053V06	S0053	maintenance	maintenance_5	32	5	2	0			DS0044_X05	
+S053V07	S0053	maintenance	maintenance_6	39	5	2	0			DS0044_X06	
+S053V08	S0053	followup	colonoscopy_2	61	2	1	0	0	0		
+S053V09	S0053	followup	followup_1_month	105	3	1	0				
+S053V10	S0053	followup	followup_3_month	153							noted: 'looking';
+S055V01	S0055	initial_fmt	colonoscopy_1	0	4	2	2	3	2	DS0044_005	
+S055V02	S0055	maintenance	maintenance_1	7	6	3	2			DS0044_X11	
+S055V03	S0055	maintenance	maintenance_2	14	6	3	2			DS0044_X12	
+S055V04	S0055	maintenance	maintenance_3	21	4	2	2			DS0044_X13	
+S055V05	S0055	maintenance	maintenance_4	29	5	2	2			DS0044_X14	
+S055V06	S0055	maintenance	maintenance_5	36	3	1	1			DS0044_X15	
+S055V07	S0055	maintenance	maintenance_6	42	3	1	1			DS0044_X16	TODO check confidence that fmt was received;
+S055V08	S0055	followup	colonoscopy_2	56	3	1	2	3	2		
+S055V09	S0055	followup	followup_1_month	91	5	2	2				
+S055V10	S0055	followup	followup_3_month	153	3	1	0				antibiotic treatment due to staph (per dermatologist), started xeljanz in Apr 2019.
+S056V01	S0056	initial_fmt	colonoscopy_1	0	3	1	2	2	2	DS0044_006	
+S056V03	S0056	maintenance	maintenance_1	5	3.5	2	2			DS0044_007	
+S056V04	S0056	maintenance	maintenance_2	12	3.5	2	2			DS0044_X	
+S056V05	S0056	maintenance	maintenance_3	19	3.5	2	2			DS0044_008	
+S056V06	S0056	maintenance	maintenance_4	28	3.5	2	2			DS0044_009	
+S056V07	S0056	maintenance	maintenance_5	33	3.5	2	2			DS0044_010	
+S056V08	S0056	maintenance	maintenance_6	39	3	1	2			DS0044_011	
+S056V09	S0056	followup	colonoscopy_2	56	1.5	1	2	3	2		
+S056V10	S0056	followup	followup_1_month	94	1	0	0				
+S058V01	S0058	initial_fmt	colonoscopy_1	0	10	3	2	2	2	DS0044_X	
+S059V01	S0059	initial_fmt	colonoscopy_1	0	5	2	1	2	2	DS0044_X	
+S059V02	S0059	maintenance	maintenance_1	6	4	2	1			DS0044_X	
+S059V03	S0059	maintenance	maintenance_2	12	3.5	1	1			DS0044_X	
+S059V04	S0059	maintenance	maintenance_3	21	3.5	1	1			DS0044_X	
+S059V05	S0059	maintenance	maintenance_4	27	3.5	1	1			DS0044_X	
+S059V06	S0059	maintenance	maintenance_5	34	3.5	1	1			DS0044_X	
+S059V08	S0059	followup	colonoscopy_2	54	3	1	0	1	1		
+S060V01	S0060	initial_fmt	colonoscopy_1	-1	4	1	1	2	2	DS0044_X	
+S060V02	S0060	maintenance	maintenance_1	4	7	3	1			DS0044_X	
+S060V03	S0060	maintenance	maintenance_2	11	7	3	1			DS0044_X	
+S060V04	S0060	maintenance	maintenance_3	18	8	3	1			DS0044_X	
+S060V05	S0060	maintenance	maintenance_4	22	8	3	2			DS0044_X	
+S060V06	S0060	maintenance	maintenance_5	29	9	3	2			DS0044_X	
+S060V08	S0060	followup	colonoscopy_2	48	8	3	1	2	2		
+S060V09	S0060	followup	followup_1_month	104	2.5	1	0				noted: '(2mo), started prednisone end of June, will start biologic in August'
+S061V01	S0061	initial_fmt	colonoscopy_1	0	3.5	1	1	2	2	DS0044_X	
+S061V02	S0061	maintenance	maintenance_1	4	4	2	1			DS0044_X	
+S061V03	S0061	maintenance	maintenance_2	11	4	2	1			DS0044_X	
+S061V04	S0061	maintenance	maintenance_3	19	4	2	1			DS0044_X	
+S061V05	S0061	maintenance	maintenance_4	25	4	2	1			DS0044_X	
+S061V06	S0061	maintenance	maintenance_5	32	4	2	0			DS0044_X	
+S061V08	S0061	followup	colonoscopy_2	56	4	2	0	1	1		
+S061V09	S0061	followup	followup_1_month	88	3	1	0				
+S062V01	S0062	initial_fmt	colonoscopy_1	0	4.5	2	2	2	2	DS0485_X	
+S062V02	S0062	maintenance	maintenance_1	7	4	1	1			DS0485_X	
+S062V03	S0062	maintenance	maintenance_2	14	3.5	1	1			DS0485_X	
+S062V04	S0062	maintenance	maintenance_3	21	3.5	1	1			DS0485_X	
+S062V05	S0062	maintenance	maintenance_4	28	3	1	1			DS0485_X	
+S062V06	S0062	maintenance	maintenance_5	35	3.5	1	0			DS0485_X	
+S062V08	S0062	followup	colonoscopy_2	49	3.5	1	0	0	0		
+S062V09	S0062	followup	followup_1_month	87	3	1	0				
+S063V01	S0063	initial_fmt	colonoscopy_1	0	4.5	2	1	1	1	DS0065_X	
+S063V02	S0063	maintenance	maintenance_1	4	3.5	2	0			DS0065_X	
+S063V03	S0063	maintenance	maintenance_2	13	3.5	2	0			DS0065_X	
+S063V04	S0063	maintenance	maintenance_3	20	2.5	1	0			DS0065_X	
+S063V05	S0063	maintenance	maintenance_4	27	2.5	1	0			DS0065_X	
+S063V06	S0063	maintenance	maintenance_5	34	4	2	0			DS0065_X	
+S063V08	S0063	followup	colonoscopy_2	56	4	2	0	0	0		
+S064V01	S0064	initial_fmt	colonoscopy_1	0	1.5	1	1	2	2	DS0485_X	
+S064V02	S0064	maintenance	maintenance_1	4	3.5	2	0			DS0485_X	
+S064V03	S0064	maintenance	maintenance_2	16	3	1	0			DS0485_X	
+S064V04	S0064	maintenance	maintenance_3	23	3	1	0			DS0485_X	
+S064V05	S0064	maintenance	maintenance_4	28	3	1	0			DS0485_X	
+S064V06	S0064	maintenance	maintenance_5	37	2	1	0			DS0485_X	
+S064V08	S0064	followup	colonoscopy_2	51	1.5	1	0	1	0		

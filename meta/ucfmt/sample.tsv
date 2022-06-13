@@ -1,0 +1,304 @@
+sample_id	subject_id	collection_days_post_fmt	received_days_post_fmt	sample_type	sample_type_specific	dna_extraction_days_post_fmt	dna_sequencing_days_post_fmt	plate_well	sample_weight	source_sample_id	sample_notes	biosample
+DS0044_001	D0044			donor	donor_enema					DFS.043.E2	not clear which donor samples used; MZ says this dose was from D0044;	SAMN19715323
+DS0044_002	D0044			donor	donor_initial					DFS.041.C1	not clear which donor samples used;	SAMN19715324
+DS0044_003	D0044			donor	donor_initial					DFS.053.C1	not clear which donor samples used;	SAMN19715325
+DS0044_004	D0044			donor	donor_initial					DFS.047.C1	not clear which donor samples used;	SAMN19715326
+DS0044_005	D0044			donor	donor_initial					DFS.055.C1	not clear which donor samples used;	SAMN19715327
+DS0044_006	D0044			donor	donor_initial					DFS.056.C1	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715328
+DS0044_007	D0044			donor	donor_enema					DFS.056.E1	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715329
+DS0044_008	D0044			donor	donor_enema					DFS.056.E3	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715330
+DS0044_009	D0044			donor	donor_enema					DFS.056.E4	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715331
+DS0044_010	D0044			donor	donor_enema					DFS.056.E5	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715332
+DS0044_011	D0044			donor	donor_enema					DFS.056.E6	not clear which donor samples used; assumed same as other samples for S0056; 	SAMN19715333
+DS0044_X01	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X02	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X03	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X04	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X05	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X06	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X07	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X08	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X09	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X10	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X11	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X12	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X13	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X14	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X15	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0044_X16	D0044			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_001	D0097			donor	donor_initial			2.A6	0.1186	DFS.001.C1	0097-0231-02	SAMN19715334
+DS0097_002	D0097			donor	donor_enema			2.A9	0.1219	DFS.001.E1	0097-0222-01, 0097-0221-03	SAMN19715335
+DS0097_003	D0097			donor	donor_enema			2.A10	0.2459	DFS.001.E2	0097-0211-04,0097-0214-01	SAMN19715336
+DS0097_004	D0097			donor	donor_enema			2.B2	0.123	DFS.001.E3	0097-0219-09, 0097-0221-05	SAMN19715337
+DS0097_005	D0097			donor	donor_enema			2.B4	0.1215	DFS.001.E4	0097-0220-05, 0097-0210-02	SAMN19715338
+DS0097_006	D0097			donor	donor_enema			2.B6	0.1207	DFS.001.E5	0097-0213-06, 0097-0213-03	SAMN19715339
+DS0097_007	D0097			donor	donor_initial			2.A4	0.1152	DFS.004.C1	0097-0231-04	SAMN19715340
+DS0097_008	D0097			donor	donor_enema			2.A5	0.1143	DFS.004.E1	0097-0221-01, 0097-0218-02	SAMN19715341
+DS0097_009	D0097			donor	donor_enema			2.A7	0.1217	DFS.004.E2	0097-0213-04, 0097-0219-02	SAMN19715342
+DS0097_010	D0097			donor	donor_enema			2.A8	0.1266	DFS.004.E3	0097-0218-04, 0097-0212-02	SAMN19715343
+DS0097_011	D0097			donor	donor_enema			2.A11	0.1235	DFS.004.E4	0097-0220-03, 0097-0219-05	SAMN19715344
+DS0097_012	D0097			donor	donor_enema			2.B1	0.1248	DFS.004.E5	0097-0222-05, 0097-0219-03	SAMN19715345
+DS0097_013	D0097			donor	donor_enema			2.B5	0.1226	DFS.004.E6	0097-0213-01, 0097-0211-05	SAMN19715346
+DS0097_014	D0097			donor	donor_initial			2.B3	0.1176	DFS.013.C1	0097-0231-05	SAMN19715347
+DS0097_015	D0097			donor	donor_enema			2.B7	0.1248	DFS.013.E1	0097-0213-05, 0097-0210-03	SAMN19715348
+DS0097_016	D0097			donor	donor_enema			2.B12	0.1202	DFS.013.E5	0097-0220-01, 0097-0212-01	SAMN19715349
+DS0097_017	D0097			donor	donor_enema			2.C1	0.1253	DFS.013.E6	0097-0221-04, 0097-0219-06	SAMN19715350
+DS0097_018	D0097			donor	donor_initial			2.B9	0.1223	DFS.017.C1	0097-0231-03	SAMN19715351
+DS0097_019	D0097			donor	donor_enema			2.B10	0.1228	DFS.017.E2	0097-0222-02, 0097-0219-01	SAMN19715352
+DS0097_020	D0097			donor	donor_enema			2.B11	0.1853	DFS.017.E3	0097-0219-04, 0097-0212-03	SAMN19715353
+DS0097_021	D0097			donor	donor_enema			2.C2	0.1206	DFS.017.E4	0097-0222-04, 0097-0211-07	SAMN19715354
+DS0097_022	D0097			donor	donor_initial			2.C12	0.1193	DFS.021.C1	0097-0204-01	SAMN19715355
+DS0097_023	D0097			donor	donor_enema			2.D2	0.1258	DFS.021.E1	0097-0253-06, 0097-0254-03	SAMN19715356
+DS0097_024	D0097			donor	donor_enema			2.D6	0.1168	DFS.021.E2	0097-0256-03,0097-0255-05	SAMN19715357
+DS0097_025	D0097			donor	donor_enema			2.D8	0.1205	DFS.021.E3	0097-0251-13, 0097-0255-02	SAMN19715358
+DS0097_026	D0097			donor	donor_enema			2.D10	0.1232	DFS.021.E4	0097-0252-02, 0097-0258-02	SAMN19715359
+DS0097_027	D0097			donor	donor_enema			2.D11	0.1239	DFS.021.E5	0097-0257-06, 0097-0256-06	SAMN19715360
+DS0097_028	D0097			donor	donor_initial			2.C6	0.1226	DFS.024.C1	0097-0204-02	SAMN19715361
+DS0097_029	D0097			donor	donor_enema			2.C8	0.1253	DFS.024.E1	0097-0218-01, 0097-0210-01	SAMN19715362
+DS0097_030	D0097			donor	donor_enema			2.C10	0.1236	DFS.024.E2	0097-0253-03, 0097-0255-01	SAMN19715363
+DS0097_031	D0097			donor	donor_enema			2.D1	0.1239	DFS.024.E3	0097-0257-01, 0097-0254-05	SAMN19715364
+DS0097_032	D0097			donor	donor_enema			2.D4	0.1244	DFS.024.E4	0097-0258-01, 0097-0253-05	SAMN19715365
+DS0097_033	D0097			donor	donor_enema			2.E5	0.1237	DFS.024.E4	0097-0258-01, 0097-0253-05; is this identical to DS0097_32?;	SAMN19715366
+DS0097_034	D0097			donor	donor_enema			2.D7	0.108	DFS.024.E5	0097-0255-07, 0097-0255-06	SAMN19715367
+DS0097_035	D0097			donor	donor_enema			2.D9	0.1235	DFS.024.E6	0097-0253-01, 0097-0253-07	SAMN19715368
+DS0097_036	D0097			donor	donor_initial			2.D12	0.1202	DFS.027.C1	0097-0207-01	SAMN19715369
+DS0097_037	D0097			donor	donor_initial			2.C5	0.1231	DFS.029.C1	0097-0204-03	SAMN19715370
+DS0097_038	D0097			donor	donor_enema			2.C7	0.1228	DFS.029.E1	0097-0211-01, 0097-0210-06	SAMN19715371
+DS0097_039	D0097			donor	donor_enema			2.C9	0.1258	DFS.029.E2	0097-0257-05, 0097-0252-01	SAMN19715372
+DS0097_040	D0097			donor	donor_enema			2.C11	0.1266	DFS.029.E3	0097-0255-10, 0097-0253-04	SAMN19715373
+DS0097_041	D0097			donor	donor_enema			2.D3	0.1223	DFS.029.E4	0097-0251-12, 0097-0253-02	SAMN19715374
+DS0097_042	D0097			donor	donor_enema			2.D5	0.1236	DFS.029.E5	0097-0256-01, 0097-0257-03	SAMN19715375
+DS0097_043	D0097			donor	donor_initial			2.E2	0.1511	DFS.043.C1	0097-0206-05	SAMN19715376
+DS0097_044	D0097			donor	donor_enema			2.E3	0.0695	DFS.043.E1	0097-0254-04, 0097-0255-13	SAMN19715377
+DS0097_046	D0097			donor	donor_enema					DFS.043.E3	not clear which donor samples used; assumed same as other samples for S0043; 	SAMN19715378
+DS0097_047	D0097			donor	donor_enema					DFS.043.E4	not clear which donor samples used; assumed same as other samples for S0043; 	SAMN19715379
+DS0097_048	D0097			donor	donor_enema					DFS.043.E5	not clear which donor samples used; assumed same as other samples for S0043; 	SAMN19715380
+DS0097_X01	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X02	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X03	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X04	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X05	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X06	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X07	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X08	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X09	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X10	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X11	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0097_X12	D0097			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_001	D0485			donor	donor_initial			2.B8	0.1191	DFS.007.C1	0485-0124-03	SAMN19715381
+DS0485_002	D0485			donor	donor_initial			2.C4	0.1214	DFS.008.C1	0485-0123-03	SAMN19715382
+DS0485_003	D0485			donor	donor_initial			2.C3	0.113	DFS.031.C1	0485-0122-10	SAMN19715383
+DS0485_004	D0485			donor	donor_capsule			2.E4	0.1618	DFS.031.e3.cap	0485.013.001	SAMN19715384
+DS0485_005	D0485			donor	donor_initial			2.E1	0.1213	DFS.037.C1	0485-0122-04	SAMN19715385
+DS0485_006	D0485			donor	donor_capsule			2.E6	0.1746	DFS.031.e3.cap.2	does this sample have a serial code?; same serial as DS0485_004?; DS0485_006 assigned by BJS as an unused sample_id;	
+DS0485_X01	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X02	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X03	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X04	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X05	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X06	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X07	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X08	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X09	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X10	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X11	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X12	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X13	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X14	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X15	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X16	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X17	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X18	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X19	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X20	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X21	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X22	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X23	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record;	
+DS0485_X24	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record; MZ says this dose was from D0485;	
+DS0485_X25	D0485			donor	donor_capsule						placeholder stool for recorded visit without donor sample record; MZ says this dose was from D0485;	
+SS00999	S0017	71		followup	followup_2	210	240			DFS.0999	"1M; recorded as ""no number""; SS00999 assigned by BJS as an unused sample_id;"	SAMN19715386
+SS01000	S0004	-11		baseline	baseline	264	294	1.A1	0.1359	DFS.1000	Baseline	SAMN19715387
+SS01001	S0004	-2		post_antibiotic	post_antibiotic	264	294	1.A2	0.2183	DFS.1001	Post-antibiotic	SAMN19715388
+SS01002	S0001	-1		baseline	baseline	251	281	1.A5	0.2179	DFS.1002	Baseline	SAMN19715389
+SS01004	S0004	6		maintenance	pre_maintenance_1	264	294	1.A3	0.2066	DFS.1004	pre-e1	SAMN19715390
+SS01005	S0004	11		maintenance	pre_maintenance_2	264	294	1.A4	0.2385	DFS.1005	pre-e2	SAMN19715391
+SS01006	S0004	19		maintenance	pre_maintenance_3	264	294	1.A7	0.2673	DFS.1006	pre-e3	SAMN19715392
+SS01007	S0001	7		maintenance	pre_maintenance_1	251	281	1.A6	0.2531	DFS.1007	pre-e1	SAMN19715393
+SS01008	S0001	14		maintenance	pre_maintenance_2	251	281	1.A9	0.2342	DFS.1008	pre-e2	SAMN19715394
+SS01009	S0004	26		maintenance	pre_maintenance_4	264	294	1.A8	0.2687	DFS.1009	pre-e4	SAMN19715395
+SS01011	S0004	32		maintenance	pre_maintenance_5	264	294	1.A10	0.185	DFS.1011	pre-e5; collection date originally recorded as 2017-09-27, but this is the same as pre_maintenance_4 (a.k.a. pre-e4) sample; date updated based on maintenance_5 visit date;	SAMN19715396
+SS01012	S0001	22		maintenance	pre_maintenance_3	251	281	1.B1	0.2469	DFS.1012	pre-e3	SAMN19715397
+SS01013	S0013	-7		baseline	baseline	224	254	1.A11	0.156	DFS.1013	Baseline	SAMN19715398
+SS01015	S0004	40		maintenance	pre_maintenance_6	264	294	1.B2	0.235	DFS.1015	pre-e6	SAMN19715399
+SS01016	S0001	28		maintenance	pre_maintenance_4	251	281	1.B3	0.2668	DFS.1016	pre-e4	SAMN19715400
+SS01017	S0013	7		maintenance	pre_maintenance_1	224	254	1.B5	0.2024	DFS.1017	pre-e1	SAMN19715401
+SS01018	S0004	48		followup	followup_1	264	294	1.B8	0.2029	DFS.1018	pre-fup	SAMN19715402
+SS01019	S0001	34		maintenance	pre_maintenance_5	251	281	1.B4	0.1714	DFS.1019	pre-e5	SAMN19715403
+SS01020	S0007	-1		baseline	baseline	210	240	1.B7	0.1709	DFS.1020	Baseline	SAMN19715404
+SS01021	S0017	-2		baseline	baseline	210	240	1.B6	0.3027	DFS.1021	Baseline	SAMN19715405
+SS01022	S0001	42		maintenance	pre_maintenance_6	251	281	1.B9	0.2319	DFS.1022	pre-e6	SAMN19715406
+SS01023	S0013	16		maintenance	pre_maintenance_2	224	254	1.B10	0.2328	DFS.1023	pre-e2	SAMN19715407
+SS01025	S0017	7		maintenance	pre_maintenance_1	210	240	1.B11	0.222	DFS.1025	pre-e1	SAMN19715408
+SS01026	S0001	55		followup	followup_1	251	281	1.C2	0.2981	DFS.1026	pre-fup	SAMN19715409
+SS01027	S0013	23		maintenance	pre_maintenance_3	224	254	1.B12	0.2314	DFS.1027	pre-e3	SAMN19715410
+SS01029	S0017	14		maintenance	pre_maintenance_2	210	240	1.C1	0.3105	DFS.1029	pre-e2	SAMN19715411
+SS01030	S0013	28		maintenance	pre_maintenance_4	224	254	1.C3	0.2797	DFS.1030	pre-e4	SAMN19715412
+SS01031	S0017	21		maintenance	pre_maintenance_3	210	240	1.C4	0.1792	DFS.1031	pre-e3	SAMN19715413
+SS01032	S0007	20		maintenance	pre_maintenance_3	210	240	1.C5	0.1878	DFS.1032	pre-e3	SAMN19715414
+SS01033	S0013	35		maintenance	pre_maintenance_5	224	254	1.C6	0.2629	DFS.1033	pre-e5	SAMN19715415
+SS01034	S0007	27		maintenance	pre_maintenance_4	210	240	1.C8	0.2881	DFS.1034	pre-e4	SAMN19715416
+SS01035	S0017	35		maintenance	pre_maintenance_5	210	240	1.C11	0.2904	DFS.1035	pre-e4	SAMN19715417
+SS01036	S0013	41		maintenance	pre_maintenance_6	224	254	1.C7	0.2142	DFS.1036	pre-e6	SAMN19715418
+SS01037	S0013	54		followup	followup_1	224	254	1.C12	0.1828	DFS.1037	pre-fup	SAMN19715419
+SS01038	S0008	0		baseline	baseline	167	197	1.D2	0.2529	DFS.1038	Baseline	SAMN19715420
+SS01039	S0007	34		maintenance	pre_maintenance_5	210	240	1.C10	0.2284	DFS.1039	pre-e5	SAMN19715421
+SS01041	S0031	-4		baseline	baseline	173	203	1.C9	0.2122	DFS.1041	Baseline	SAMN20172480
+SS01042	S0004	95		followup	followup_2	264	294	1.D3	0.2559	DFS.1042	1M	SAMN19715422
+SS01043	S0007	42		maintenance	pre_maintenance_6	210	240	1.E3	0.0736	DFS.1043	pre-e6	SAMN19715423
+SS01045	S0031	5		maintenance	pre_maintenance_1	173	203	1.D4	0.2486	DFS.1045	pre-e1	SAMN19715424
+SS01046	S0007	55		followup	followup_1	210	240	1.E8	0.1133	DFS.1046	pre-fup	SAMN19715425
+SS01047	S0008	13		maintenance	pre_maintenance_2	167	197	1.D7	0.0286	DFS.1047	pre-e2	SAMN19715426
+SS01048	S0001	90		followup	followup_2	251	281	1.D5	0.1963	DFS.1048	1M	SAMN19715427
+SS01049	S0031	13		maintenance	pre_maintenance_2	173	203	1.D6	0.2472	DFS.1049	pre-e2; pt stopped treatment after 3 capsule sessions due to mild AE; 	SAMN19715428
+SS01050	S0031	19		maintenance	pre_maintenance_3	173	203	1.E9	0.1554	DFS.1050	pre-e3	SAMN19715429
+SS01052	S0008	28		maintenance	pre_maintenance_4	167	197	1.D8	0.1605	DFS.1052	pre-e4	SAMN19715430
+SS01053	S0013	103		followup	followup_2	224	254	1.E6	0.2075	DFS.1053	1M	SAMN19715431
+SS01054	S0008	20		maintenance	pre_maintenance_3	167	197	1.E7	0.1771	DFS.1054	pre-e3	SAMN19715432
+SS01055	S0008	34		maintenance	pre_maintenance_5	167	197	1.D10	0.1608	DFS.1055	pre-e5	SAMN19715433
+SS01056	S0024	-2		post_antibiotic	post_antibiotic	124	154	1.E2	0.2056	DFS.1056	Post-antibiotic	SAMN19715434
+SS01057	S0024	-6		baseline	baseline	124	154	1.E1	0.1224	DFS.1057	Baseline	SAMN19715435
+SS01058	S0029	-1		baseline	baseline	126	156	1.D11	0.1897	DFS.1058	Baseline	SAMN19715436
+SS01059	S0008	42		maintenance	pre_maintenance_6	167	197	1.D12	0.1498	DFS.1059	pre-e6	SAMN19715437
+SS01060	S0024	5		maintenance	pre_maintenance_1	124	154	1.E10	0.1999	DFS.1060	Pre-E1	SAMN19715438
+SS01061	S0031	52		followup	followup_1	173	203	1.E5	0.1971	DFS.1061	week 9	SAMN19715439
+SS01062	S0007	93		followup	followup_2	210	240	1.E12	0.1965	DFS.1062	1M	SAMN19715440
+SS01063	S0008	52		followup	followup_1	167	197	1.F1	0.1462	DFS.1063	pre-fup	SAMN19715441
+SS01064	S0029	8		maintenance	pre_maintenance_1	126	156	1.E11	0.1729	DFS.1064	pre-e1	SAMN19715442
+SS01065	S0029	13		maintenance	pre_maintenance_2	126	156	1.F2	0.2066	DFS.1065	pre-e2	SAMN19715443
+SS01066	S0024	11		maintenance	pre_maintenance_2	124	154	1.F3	0.183	DFS.1066	Pre-E2	SAMN19715444
+SS01067	S0004	152		followup	followup_3	264	294	1.F4	0.2148	DFS.1067	3M	SAMN19715445
+SS01068	S0021	-7		baseline	baseline	104	134	1.F5	0.1864	DFS.1068	Baseline	SAMN19715446
+SS01069	S0021	-1		post_antibiotic	post_antibiotic	104	134	1.F6	0.22	DFS.1069	post-antibiotic	SAMN19715447
+SS01070	S0001	154		followup	followup_3	251	281	1.F11	0.231	DFS.1070	3M	SAMN19715448
+SS01071	S0029	28		maintenance	pre_maintenance_4	126	156	1.F9	0.2178	DFS.1071	pre-e4; pt no fu col	SAMN19715449
+SS01072	S0021	5		maintenance	pre_maintenance_1	104	134	1.F8	0.2205	DFS.1072	pre-e1	SAMN19715450
+SS01073	S0024	19		maintenance	pre_maintenance_3	124	154	1.F7	0.2062	DFS.1073	Pre-E3	SAMN19715451
+SS01075	S0024	26		maintenance	pre_maintenance_4	124	154	1.F10	0.1849	DFS.1075	pre-e4	SAMN19715452
+SS01076	S0021	14		maintenance	pre_maintenance_2	104	134	1.F12	0.247	DFS.1076	pre-e2	SAMN19715453
+SS01078	S0024	33		maintenance	pre_maintenance_5	124	154	1.G1	0.2899	DFS.1078	pre-e5	SAMN19715454
+SS01080	S0021	19		maintenance	pre_maintenance_3	104	134	1.G3	0.168	DFS.1080	pre-e3	SAMN19715455
+SS01081	S0024	40		maintenance	pre_maintenance_6	124	154	1.G4	0.2056	DFS.1081	pre-e6	SAMN19715456
+SS01083	S0021	26		maintenance	pre_maintenance_4	104	134	1.E4	0.1873	DFS.1083	pre-e4	SAMN19715457
+SS01084	S0021	36		maintenance	pre_maintenance_5	104	134	1.G5	0.1907	DFS.1084	pre-e5	SAMN19715458
+SS01086	S0021	48		followup	followup_1	104	134	1.H1	0.1224	DFS.1086	pre-fup	SAMN19715459
+SS01087	S0008	112		followup	followup_2	167	197	1.G8	0.2566	DFS.1087	1M	SAMN19715460
+SS01088	S0024	52		followup	followup_1	124	154	1.G2	0.2171	DFS.1088	pre-fup	SAMN19715461
+SS01089	S0013	179		followup	followup_3	224	254	1.G7	0.171	DFS.1089	3M	SAMN19715462
+SS01090	S0027	-7		baseline	baseline	61	91	1.G10	0.1958	DFS.1090	Baseline	SAMN19715463
+SS01091	S0027	-2		post_antibiotic	post_antibiotic	61	91	1.G11	0.16	DFS.1091	post-antibiotic	SAMN19715464
+SS01092	S0027	11		maintenance	pre_maintenance_2	61	91	1.H3	0.2048	DFS.1092	pre-e2; tube broken, remained in biohazard bag. Occupies two slots in the box, i.e. B5 and C5.	SAMN19715465
+SS01093	S0007	160		followup	followup_3	210	240	1.G9	0.2192	DFS.1093	3M	SAMN19715466
+SS01094	S0027	16		maintenance	pre_maintenance_3	61	91	1.G6	0.1273	DFS.1094	pre-e3	SAMN19715467
+SS01095	S0037	-6		baseline	baseline	33	63	1.H5	0.2467	DFS.1095	Baseline	SAMN19715468
+SS01096	S0037	-2		post_antibiotic	post_antibiotic	33	63	1.H6	0.2042	DFS.1096	Post-antibiotic	SAMN19715469
+SS01097	S0027	23		maintenance	pre_maintenance_4	61	91	1.G12	0.1551	DFS.1097	pre-e4	SAMN19715470
+SS01098	S0024	87		followup	followup_2	124	154	1.H4	0.1948	DFS.1098	1M	SAMN19715471
+SS01099	S0043	-10		baseline	baseline	28	58	1.H2	0.2005	DFS.1099	Baseline	SAMN19715472
+SS01100	S0027	30		maintenance	pre_maintenance_5	61	91	1.H7	0.1595	DFS.1100	pre-e5	SAMN19715473
+SS01101	S0043	-1		post_antibiotic	post_antibiotic	28	58	1.H9	0.1729	DFS.1101	Post-antibiotic	SAMN19715474
+SS01103	S0027	37		maintenance	pre_maintenance_6	61	91	1.H11	0.1557	DFS.1103	pre-e6	SAMN19715475
+SS01104	S0037	5		maintenance	pre_maintenance_1	33	63	1.H10	0.204	DFS.1104	pre-e1	SAMN19715476
+SS01105	S0021	102		followup	followup_2	104	134	2.E11	0.174	DFS.1105	1M	SAMN19715477
+SS01106	S0029	96	97	followup	followup_2	126	156	1.H8	0.1967	DFS.1106	1M; approximate date collected assumed based on date received	SAMN19715478
+SS01107	S0043	6		maintenance	pre_maintenance_1	28	58	2.A1	0.2562	DFS.1107	pre-e1	SAMN19715479
+SS01108	S0027	46	48	followup	followup_1	61	91	2.E9	0.1011	DFS.1108	pre-fup	SAMN19715480
+SS01109	S0043	15		maintenance	pre_maintenance_2	28	58	2.E8	0.1608	DFS.1109	pre-e2	SAMN19715481
+SS01109a	S0060	36	36	maintenance	pre_maintenance_6					DFS.1109	PRE-E6;  renamed from SS01109 due to name collision; maybe this was intended to be named DFS.1209;	
+SS01110	S0037	13		maintenance	pre_maintenance_2	33	63	2.A2	0.2378	DFS.1110	pre-e2	SAMN19715482
+SS01111	S0037	20		maintenance	pre_maintenance_3	33	63	2.E10	0.1432	DFS.1111	pre-e3	SAMN19715483
+SS01113	S0043	27		maintenance	pre_maintenance_4	337				DFS.1113	PRE-E4	SAMN19715484
+SS01114	S0037	34		maintenance	pre_maintenance_4	342				DFS.1114	PRE-C5	SAMN19715485
+SS01115	S0043	20		maintenance	pre_maintenance_3	337				DFS.1115	PRE-E3	SAMN19715486
+SS01116	S0043	35		maintenance	pre_maintenance_5	337				DFS.1116	PRE-E5	SAMN19715487
+SS01117	S0041	-1		baseline	baseline	293				DFS.1117	BASELINE	SAMN19715488
+SS01118	S0043	42		maintenance	pre_maintenance_6	337				DFS.1118	W9	SAMN19715489
+SS01119	S0008	196		followup	followup_3	476				DFS.1119	3M	SAMN19715490
+SS01120	S0041	6	7	maintenance	pre_maintenance_1	293				DFS.1120	PRE-C1; approximate date collected assumed based on date received	SAMN19715491
+SS01122	S0037	60		maintenance	pre_maintenance_5	342				DFS.1122	W9	SAMN19715492
+SS01123	S0041	13		maintenance	pre_maintenance_2	293				DFS.1123	PRE-C2	SAMN19715493
+SS01124	S0024	153		followup	followup_3	433				DFS.1124	3M	SAMN19715494
+SS01125	S0027	95		followup	followup_2	370				DFS.1125	1M	SAMN19715495
+SS01126	S0041	20		maintenance	pre_maintenance_3	293				DFS.1126	PRE-C3	SAMN19715496
+SS01127	S0041	28		maintenance	pre_maintenance_4	293				DFS.1127	PRE-C4	SAMN19715497
+SS01128	S0041	35		maintenance	pre_maintenance_5	293				DFS.1128	PRE-C5	SAMN19715498
+SS01130	S0041	42		maintenance	pre_maintenance_6	293				DFS.1130	PRE-C6	SAMN19715499
+SS01131	S0041	46		followup	followup_1	293				DFS.1131	PRE-FUP	SAMN19715500
+SS01132	S0027	152		followup	followup_3	370				DFS.1132	3M	SAMN19715501
+SS01133	S0041	89		followup	followup_2	293				DFS.1133	1M	SAMN19715502
+SS01134	S0053	-15		baseline	baseline	167				DFS.1134	BASELINE	SAMN19715503
+SS01135	S0047	-8		baseline	baseline	160				DFS.1135	BASELINE	SAMN19715504
+SS01136	S0047	-2		post_antibiotic	post_antibiotic	160				DFS.1136	POST-ABX	SAMN19715505
+SS01137	S0053	-1		post_antibiotic	post_antibiotic	167				DFS.1137	POST-ABX	SAMN19715506
+SS01138	S0053	4		maintenance	pre_maintenance_1	167				DFS.1138	PRE-C1	SAMN19715507
+SS01139	S0053	11		maintenance	pre_maintenance_2	167				DFS.1139	PRE-C2	SAMN19715508
+SS01140	S0047	6		maintenance	pre_maintenance_1	160				DFS.1140	PRE-C1	SAMN19715509
+SS01141	S0053	18		maintenance	pre_maintenance_3	167				DFS.1141	PRE-C3	SAMN19715510
+SS01142	S0053	25		maintenance	pre_maintenance_4	167				DFS.1142	PRE-C4	SAMN19715511
+SS01145	S0053	32		maintenance	pre_maintenance_5	167				DFS.1145	PRE-C5	SAMN19715512
+SS01146	S0047	27		maintenance	pre_maintenance_4	160				DFS.1146	PRE-C4	SAMN19715513
+SS01147	S0047	33		maintenance	pre_maintenance_5	160				DFS.1147	PRE-C5	SAMN19715514
+SS01148	S0053	60		followup	followup_1	167				DFS.1148	PRE-FUP; there was some naming confusion for this sample, please see commit history of DFS.1158, SS01158, SS01158a, SS01158b, also see entries for DFS.053.Post.7 in 'DFS_NovaSeq_Set1_sample-manifest-QB3.xlsx' and DFS.1148 in 'UCSF-02-19MD CDT.xlsx';	SAMN19715515
+SS01149	S0047	20		maintenance	pre_maintenance_3	160				DFS.1149	PRE-C3	SAMN19715516
+SS01150	S0055	-2		baseline	baseline	120				DFS.1150	BASELINE	SAMN19715517
+SS01151	S0053	39		maintenance	pre_maintenance_6	167				DFS.1151	PRE-C6	SAMN19715518
+SS01153	S0047	82		followup	followup_1	160				DFS.1153	PRE-FUP (COL2 done later than normally)	SAMN19715519
+SS01154	S0055	5		maintenance	pre_maintenance_1	120				DFS.1154	PRE-C1	SAMN19715520
+SS01155	S0055	12		maintenance	pre_maintenance_2	120				DFS.1155	PRE-C2	SAMN19715521
+SS01156	S0055	19		maintenance	pre_maintenance_3	120				DFS.1156	PRE-C3	SAMN19715522
+SS01157	S0055	35		maintenance	pre_maintenance_5	120				DFS.1157	PRE-C5	SAMN19715523
+SS01158	S0055	40		maintenance	pre_maintenance_6	120				DFS.1158	PRE-C6;	SAMN19715524
+SS01160	S0055	29		maintenance	pre_maintenance_4	120				DFS.1160	PRE-C4	SAMN19715525
+SS01161	S0055	55		followup	followup_1	120				DFS.1161	PRE-FUP	SAMN19715526
+SS01162	S0053	102		followup	followup_2	167				DFS.1162	1M	SAMN19715527
+SS01163	S0056	5		maintenance	pre_maintenance_1	55				DFS.1163	PRE-E1	SAMN19715528
+SS01164	S0056	-1		baseline	baseline	55				DFS.1164	BASELINE	SAMN19715529
+SS01165	S0047	118	123	followup	followup_2	160				DFS.1165	1M	SAMN19715530
+SS01166	S0055	92		followup	followup_2	120				DFS.1166	1M	SAMN19715531
+SS01167	S0056	28		maintenance	pre_maintenance_4	55				DFS.1167	PRE-E4	SAMN19715532
+SS01168	S0056	19		maintenance	pre_maintenance_3	55				DFS.1168	PRE-E3	SAMN19715533
+SS01169	S0056	11	12	maintenance	pre_maintenance_2	55				DFS.1169	PRE-E2; approximate date collected assumed based on date received	SAMN19715534
+SS01170	S0056	33		maintenance	pre_maintenance_5	55				DFS.1170	PRE-E5	SAMN19715535
+SS01171	S0056	41		maintenance	pre_maintenance_6	55				DFS.1171	PRE-E6	SAMN19715536
+SS01172	S0056	56		followup	followup_1	76				DFS.1172	PRE-FUP	SAMN19715537
+SS01173	S0059	-4		baseline	baseline	6				DFS.1173	BASELINE	SAMN20172481
+SS01175	S0053	153		followup	followup_3	167				DFS.1175	3M	SAMN19715538
+SS01176	S0059	5	6	maintenance	pre_maintenance_1					DFS.1176	PRE-C1; approximate date collected assumed based on date received	
+SS01177	S0059	12	12	maintenance	pre_maintenance_2					DFS.1177	PRE-C2	
+SS01178	S0058	-3	-2	baseline	baseline					DFS.1178	BASELINE	
+SS01179	S0061	-4	-3	baseline	baseline					DFS.1179	BASELINE	
+SS01180	S0060	-8	-7	baseline	baseline					DFS.1180	BASELINE	
+SS01181	S0055	153	155	followup	followup_3					DFS.1181	3M	SAMN19715539
+SS01182	S0059	19	21	maintenance	pre_maintenance_3					DFS.1182	PRE-C3	
+SS01183	S0060	4	4	maintenance	pre_maintenance_1					DFS.1183	PRE-E1	
+SS01184	S0060	-1		post_antibiotic	post_antibiotic					DFS.1184	POST-ABX; approximate date collected assumed based on date received	
+SS01185	S0056	95		followup	followup_2					DFS.1185	1M	SAMN19715540
+SS01187	S0058	11	12	maintenance	pre_maintenance_2					DFS.1187	PRE-E2	
+SS01188	S0060	11	11	maintenance	pre_maintenance_2					DFS.1188	PRE-E2	
+SS01189	S0058	17	18	maintenance	pre_maintenance_3					DFS.1189	PRE-E3	
+SS01191	S0061	10	12	maintenance	pre_maintenance_2					DFS.1191	PRE-E2	
+SS01194	S0060	18	18	maintenance	pre_maintenance_3					DFS.1194	PRE-E3	
+SS01195	S0060	22	22	maintenance	pre_maintenance_4					DFS.1195	PRE-E4	
+SS01196	S0058	25	26	maintenance	pre_maintenance_4					DFS.1196	"PRE-E6; recorded as ""DFS.1196&1190""; recorded as stored in Box 8, cells ""A1+""; does this mean that two stools were submitted but not fully identified?"	
+SS01197	S0061	18	19	maintenance	pre_maintenance_3					DFS.1197	PRE-E3	
+SS01198	S0062	-2	-2	baseline	baseline					DFS.1198	BASELINE	
+SS01199	S0059	53	54	followup	followup_1					DFS.1199	PRE-FU	
+SS01200	S0059	32	33	maintenance	pre_maintenance_5					DFS.1200	PRE-C5	
+SS01201	S0062	7	7	maintenance	pre_maintenance_1					DFS.1201	PRE-E1	
+SS01203	S0061	24	26	maintenance	pre_maintenance_4					DFS.1203	PRE-E4	
+SS01204	S0060	29	36	maintenance	pre_maintenance_5					DFS.1204	"PRE-E5; recorded with ""(IT WAS KEPT IN PT. FREEZER)"";"	
+SS01205	S0062	14	14	maintenance	pre_maintenance_2					DFS.1205	PRE-E2	
+SS01206	S0061	38	39	maintenance	pre_maintenance_6					DFS.1206	PRE-E6	
+SS01207	S0060	47	48	followup	followup_1					DFS.1207	PRE-FU	
+SS01208	S0061	31	31	maintenance	pre_maintenance_5					DFS.1208	PRE-E5	
+SS01210	S0062	20	21	maintenance	pre_maintenance_3					DFS.1210	PRE-E3; approximate date collected assumed based on date received	
+SS01211	S0062	27	28	maintenance	pre_maintenance_4					DFS.1211	PRE-E4; approximate date collected assumed based on date received	
