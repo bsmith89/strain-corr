@@ -302,3 +302,34 @@ SS01207	S0060	47	48	followup	followup_1					DFS.1207	PRE-FU
 SS01208	S0061	31	31	maintenance	pre_maintenance_5					DFS.1208	PRE-E5	
 SS01210	S0062	20	21	maintenance	pre_maintenance_3					DFS.1210	PRE-E3; approximate date collected assumed based on date received	
 SS01211	S0062	27	28	maintenance	pre_maintenance_4					DFS.1211	PRE-E4; approximate date collected assumed based on date received	
+SS01212	S0062				pre_maintenance_5							
+SS01213	S0062				followup_2							
+SS01214	S0061				followup_1							
+SS01216	S0062				pre_maintenance_6							
+SS01217	S0062				followup_1							
+SS01218	S0060				followup_2							
+SS01219	S0061				followup_2							
+SS01220	S0063				baseline							
+SS01221	S0063				post_antibiotic							
+SS01222	S0063				pre_maintenance_1							
+SS01223	S0064				baseline							
+SS01224	S0063				pre_maintenance_2							
+SS01225	S0063				pre_maintenance_3							
+SS01226	S0064				pre_maintenance_1							
+SS01227	S0064				post_antibiotic							
+SS01228	S0063											
+SS01229	S0064				pre_maintenance_2							
+SS01230	S0063				pre_maintenance_4							
+SS01231	S0063				pre_maintenance_5							
+SS01232	S0064				pre_maintenance_3							
+SS01234	S0064				pre_maintenance_4							
+SS01236	S0063				pre_maintenance_6							
+SS01239	S0064				pre_maintenance_6							
+SS01240	S0062				followup_3							
+SS01241	S0061				followup_3							
+SS01242	S0064				followup_1							
+SS01247	S0063				followup_2							
+SS01248	S0064				followup_2							
+SS01252	S0063				followup_3							
+SS01255	S0064				pre_maintenance_5							
+SS01260	S0064				followup_3							
