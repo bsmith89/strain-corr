@@ -1,7 +1,7 @@
 # {{{2 Data Configuration
 
 config["mgen"] = (
-    pd.read_table("meta/mgen.tsv")
+    pd.read_table("meta/hmp2/mgen.tsv")
     .rename(
         columns={
             "library_id": "mgen_id",
@@ -14,13 +14,13 @@ config["mgen"] = (
 )
 
 config["mgen_group"] = (
-    pd.read_table("meta/mgen_group.tsv")
+    pd.read_table("meta/hmp2/mgen_group.tsv")
     .groupby("mgen_group_id")
     .apply(lambda d: d.mgen_id.to_list())
 )
 
 config["species_group"] = (
-    pd.read_table("meta/species_group.tsv", dtype=str)
+    pd.read_table("meta/hmp2/species_group.tsv", dtype=str)
     .groupby("species_group_id")
     .apply(lambda d: d.species_id.to_list())
 )
