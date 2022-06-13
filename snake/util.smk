@@ -1,10 +1,38 @@
+# Install Jupyter Kernels
+
+rule install_jupyter_kernel_default:
+    container:
+        config["container"]["mambaforge"]
+    params:
+        name='default'
+    conda: 'conda/default.yaml'
+    shell:
+        """
+        python -m ipykernel install --user --name={params.name}
+        """
+
+# Any conda environment spec can be installed for Jupyter use
+# just like the below:
+use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
+    params:
+        name='sfacts'
+    conda: 'conda/sfacts.yaml'
+# And then run `snakemake -j1 install_jupyter_kernel_sfacts3`.
+
+use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
+    params:
+        name='pymc'
+    conda: 'conda/pymc.yaml'
+
 rule start_jupyter:
-    threads: config["MAX_THREADS"]
     params:
         port=config["jupyter_port"],
+    threads: config["MAX_THREADS"]
+    container:
+        config["container"]["mambaforge"]
+    conda: "conda/default.yaml"
     shell:
         "jupyter lab --port={params.port} --notebook-dir nb/"
-
 
 rule start_ipython:
     threads: config["MAX_THREADS"]

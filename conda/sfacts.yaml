@@ -1,4 +1,4 @@
-name: sfacts
+name: sfacts3
 channels:
   - pytorch
   - conda-forge
@@ -21,4 +21,7 @@ dependencies:
   - scikit-bio
   - line_profiler
   - memory_profiler
+  - conda-forge::pymc
   - pip
+  - pip:
+    - -e /pollard/home/bsmith/Projects/strain-corr/include/StrainFacts
