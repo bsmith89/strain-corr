@@ -71,12 +71,18 @@ rule filter_metagenotype:
         "conda/sfacts.yaml"
     shell:
         """
-        python3 -m sfacts filter_mgen --min-minor-allele-freq {params.poly} --min-horizontal-cvrg {params.cvrg} {input} {output}
+        python3 -m sfacts filter_mgen \
+                --min-minor-allele-freq {params.poly} \
+                --min-horizontal-cvrg {params.cvrg} \
+                {input} {output}
         """
 
+
 rule subset_metagenotype:
-    output: '{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgen.nc'
-    input: '{stem}.mgen.nc'
+    output:
+        "{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgen.nc",
+    input:
+        "{stem}.mgen.nc",
     params:
         seed=lambda w: int(w.seed),
         num_positions=lambda w: int(w.num_positions),
@@ -93,9 +99,12 @@ rule subset_metagenotype:
                 {output}
         """
 
+
 rule sfacts_nmf_approximation:
-    output: '{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc'
-    input: '{stem}.mgen.nc'
+    output:
+        "{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc",
+    input:
+        "{stem}.mgen.nc",
     params:
         seed=lambda w: int(w.seed),
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
@@ -112,9 +121,12 @@ rule sfacts_nmf_approximation:
                 {output}
         """
 
+
 rule sfacts_clust_approximation:
-    output: '{stem}.approx-clust-thresh{thresh}-s{strain_exponent}-seed{seed}.world.nc'
-    input: '{stem}.mgen.nc'
+    output:
+        "{stem}.approx-clust-thresh{thresh}-s{strain_exponent}-seed{seed}.world.nc",
+    input:
+        "{stem}.mgen.nc",
     params:
         seed=lambda w: int(w.seed),
         thresh=lambda w: float(w.thresh) / 100,
@@ -132,10 +144,11 @@ rule sfacts_clust_approximation:
                 {output}
         """
 
+
 rule fit_sfacts_strategy11:
     output:
         fit="{stem}.fit-sfacts11-s{strain_exponent}-seed{seed}.world.nc",
-        hist="{stem}.fit-sfacts11-s{strain_exponent}-seed{seed}.loss_history"
+        hist="{stem}.fit-sfacts11-s{strain_exponent}-seed{seed}.loss_history",
     input:
         mgen="{stem}.mgen.nc",
         # init='{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc',
@@ -176,8 +189,10 @@ rule fit_sfacts_strategy11:
         """
 
 rule collapse_similar_strains:
-    output: '{stem}.collapse-{thresh}.world.nc'
-    input: '{stem}.world.nc'
+    output:
+        "{stem}.collapse-{thresh}.world.nc",
+    input:
+        "{stem}.world.nc",
     params:
         thresh=lambda w: float(w.thresh) / 100,
     conda:
@@ -188,9 +203,12 @@ rule collapse_similar_strains:
         python3 -m sfacts collapse_strains --discretized {params.thresh} {input} {output}
         """
 
+
 rule export_sfacts_comm:
-    output: '{stem}.comm.tsv'
-    input: '{stem}.world.nc'
+    output:
+        "{stem}.comm.tsv",
+    input:
+        "{stem}.world.nc",
     conda:
         "conda/sfacts.yaml"
     shell:
@@ -204,21 +222,27 @@ rule export_sfacts_comm:
 # once it has been run for the focal group.
 rule calculate_all_strain_depths:
     output:
-        "data/{group}.a.{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv"
+        "data/{group}.a.{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv",
     input:
         script="scripts/merge_all_strains_depth.py",
         species="data/{group}.a.{proc_stem}.gtpro.species_depth.tsv",
         strains=lambda w: [
             f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+                group=w.group,
+                stem=w.proc_stem,
+                cvrg_thresh=0.2,
+                require_in_species_group=True,
             )
         ],
     params:
         args=lambda w: [
             f"{species}=data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+                group=w.group,
+                stem=w.proc_stem,
+                cvrg_thresh=0.2,
+                require_in_species_group=True,
             )
         ],
     shell:
