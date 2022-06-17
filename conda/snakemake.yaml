@@ -1,4 +1,4 @@
-name: default
+name: snakemake
 channels:
   - conda-forge
   - bioconda
@@ -11,6 +11,7 @@ dependencies:
   - xarray
   - netCDF4
   - matplotlib
+  - patsy
   - pandas
   - seaborn
   - tqdm
@@ -22,3 +23,7 @@ dependencies:
   - line_profiler
   - memory_profiler
   - pip
+  - black
+  - snakefmt
+  - pip:
+    - daff
