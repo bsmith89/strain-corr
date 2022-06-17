@@ -10,6 +10,7 @@ rule start_ipython_sfacts:
         """
 
 
+# FIXME: Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgen.nc",
@@ -20,6 +21,38 @@ rule load_metagenotype_from_merged_gtpro:
     shell:
         """
         python3 -m sfacts load --gtpro-metagenotype {input} {output}
+        """
+
+
+rule compile_species_variation_from_vcf:
+    output:
+        "data/sp-{species}.gtpro_ref.mgen.nc",
+    input:
+        script="scripts/vcf_to_sfacts.py",
+        gtpro_snp_dict="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
+        vcf="raw/gtpro_refs/variation_in_species/{species}/core_snps.vcf.gz",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        {input.script} {input.gtpro_snp_dict} {input.vcf} {wildcards.species} {output}
+        """
+
+
+rule concatenate_gtpro_refs:
+    output:
+        "data/sp-{species}.{group}.a.{stem}.plus_refs.mgen.nc",
+    input:
+        script="scripts/stack_mgen_with_refs.py",
+        mgen="data/sp-{species}.{group}.a.{stem}.mgen.nc",
+        ref="data/sp-{species}.gtpro_ref.mgen.nc",
+    params:
+        multi=100,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        {input.script} {input.mgen} {input.ref} {params.multi} {output}
         """
 
 
