@@ -2,13 +2,10 @@
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
 rule start_ipython_sfacts:
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         ipython
         """
 
@@ -17,18 +14,13 @@ rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgen.nc",
     input:
-        "{stem}.gtpro_combine.tsv.bz2",
-    params:
-        sfacts_dev_path=config["software-dev-path"]["sfacts"],
-    container:
-        config["container"]["sfacts"]
+        "{stem}.gtpro.tsv.bz2",
+    conda:
+        "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{params.sfacts_dev_path}"
         python3 -m sfacts load --gtpro-metagenotype {input} {output}
         """
-
-
 
 
 rule filter_metagenotype:
@@ -42,11 +34,10 @@ rule filter_metagenotype:
     params:
         poly=lambda w: float(w.poly) / 100,
         cvrg=lambda w: float(w.cvrg) / 100,
-    container:
-        config["container"]["sfacts"]
+    conda:
+        "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         python3 -m sfacts filter_mgen --min-minor-allele-freq {params.poly} --min-horizontal-cvrg {params.cvrg} {input} {output}
         """
 
@@ -57,13 +48,10 @@ rule subset_metagenotype:
         seed=lambda w: int(w.seed),
         num_positions=lambda w: int(w.num_positions),
         block_number=lambda w: int(w.block_number),
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         python3 -m sfacts sample_mgen \
                 --random-seed {params.seed} \
                 --num-positions {params.num_positions} \
@@ -79,13 +67,10 @@ rule sfacts_nmf_approximation:
         seed=lambda w: int(w.seed),
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
         alpha_genotype=0.1,
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         python3 -m sfacts nmf_init \
                 --random-seed {params.seed} \
                 --strain-sample-exponent {params.strain_exponent} \
@@ -101,13 +86,10 @@ rule sfacts_clust_approximation:
         seed=lambda w: int(w.seed),
         thresh=lambda w: float(w.thresh) / 100,
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         python3 -m sfacts clust_init \
                 --verbose \
                 --random-seed {params.seed} \
@@ -142,13 +124,10 @@ rule fit_sfacts_strategy11:
         mem_mb=5_000,
         device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
         gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
         python3 -m sfacts fit -m {params.model_name}  \
                 --verbose --device {resources.device} \
                 --random-seed {params.seed} \
@@ -168,8 +147,6 @@ rule collapse_similar_strains:
     input: '{stem}.world.nc'
     params:
         thresh=lambda w: float(w.thresh) / 100,
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
@@ -181,8 +158,6 @@ rule collapse_similar_strains:
 rule export_sfacts_comm:
     output: '{stem}.comm.tsv'
     input: '{stem}.world.nc'
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
