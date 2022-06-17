@@ -2,15 +2,13 @@
 
 
 rule install_jupyter_kernel_default:
-    container:
-        config["container"]["mambaforge"]
     params:
         name="default",
     conda:
         "conda/default.yaml"
     shell:
         """
-        python -m ipykernel install --user --name={params.name}
+        python -m ipykernel install --user --name={params.name} --env PATH $PATH
         """
 
 
@@ -36,10 +34,6 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
 rule start_jupyter:
     params:
         port=config["jupyter_port"],
-    threads: config["MAX_THREADS"]
-    container:
-        config["container"]["mambaforge"]
-    conda: "conda/default.yaml"
     shell:
         "jupyter lab --port={params.port} --notebook-dir nb/"
 
@@ -51,6 +45,8 @@ rule start_ipython:
 
 
 rule start_shell:
+    container:
+        config["container"]["toolz"]
     shell:
         "bash"
 
