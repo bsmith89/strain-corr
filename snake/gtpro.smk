@@ -247,13 +247,13 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
-        temp("data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args"),
+        temp("data/{group}.a.{r12}.{stem}.gtpro.tsv.bz2.args"),
     run:
         with open(output[0], "w") as f:
             for mgen in config["mgen_group"][wildcards.group]:
                 print(
                     mgen,
-                    f"data/{mgen}.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    f"data/{mgen}.{wildcards.r12}.{wildcards.stem}.gtpro_parse.tsv.bz2",
                     sep="\t",
                     file=f,
                 )
@@ -263,14 +263,16 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
 # Selects a single species from every file and concatenates.
 rule concatenate_mgen_group_one_read_count_data_from_one_species:
     output:
-        "data/sp-{species}.{group}.a.{stem}.gtpro_combine.tsv.bz2",
+        "data/sp-{species}.{group}.a.{r12}.{stem}.gtpro.tsv.bz2",
     input:
         script="scripts/select_gtpro_species_lines.sh",
         gtpro=lambda w: [
-            f"data/{mgen}.{{stem}}.gtpro_parse.tsv.bz2"
+            f"data/{mgen}.{{r12}}.{{stem}}.gtpro_parse.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
         ],
-        helper="data/{group}.a.{stem}.gtpro_combine.tsv.bz2.args",
+        helper="data/{group}.a.{r12}.{stem}.gtpro.tsv.bz2.args",
+    wildcard_constraints:
+        r12="r[12]",
     params:
         species=lambda w: w.species,
     threads: 6
@@ -287,11 +289,11 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
 
 rule merge_both_reads_species_count_data:
     output:
-        "data/{stemA}.r.{stemB}.gtpro_combine.tsv.bz2",
+        "data/{stemA}.r.{stemB}.gtpro.tsv.bz2",
     input:
         script="scripts/sum_merged_gtpro_tables.py",
-        r1="data/{stemA}.r1.{stemB}.gtpro_combine.tsv.bz2",
-        r2="data/{stemA}.r2.{stemB}.gtpro_combine.tsv.bz2",
+        r1="data/{stemA}.r1.{stemB}.gtpro.tsv.bz2",
+        r2="data/{stemA}.r2.{stemB}.gtpro.tsv.bz2",
     resources:
         mem_mb=100000,
         pmem=lambda w, threads: 100000 // threads,
