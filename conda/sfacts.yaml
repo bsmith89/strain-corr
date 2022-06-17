@@ -1,10 +1,10 @@
-name: sfacts3
+name: sfacts
 channels:
   - pytorch
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9
+  - python=3.10
   - pytorch
   - ipython
   - jupyterlab
@@ -24,4 +24,4 @@ dependencies:
   - conda-forge::pymc
   - pip
   - pip:
-    - -e /pollard/home/bsmith/Projects/strain-corr/include/StrainFacts
+    - git+https://github.com/bsmith89/StrainFacts
