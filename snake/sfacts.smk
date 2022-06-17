@@ -114,6 +114,7 @@ rule sfacts_nmf_approximation:
     shell:
         """
         python3 -m sfacts nmf_init \
+                --verbose \
                 --random-seed {params.seed} \
                 --strain-sample-exponent {params.strain_exponent} \
                 --alpha-genotype {params.alpha_genotype} \
