@@ -335,6 +335,9 @@ rule construct_files_for_all_select_species:
         lambda w: [
             f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.suffix}"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.proc_stem, cvrg_thresh=0.2, require_in_species_group=True,
+                group=w.group,
+                stem=w.proc_stem,
+                cvrg_thresh=0.2,
+                require_in_species_group=True,
             )
         ],

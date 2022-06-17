@@ -83,12 +83,10 @@ wildcard_constraints:
 
 rule all:
     input:
-        config["ALL"]
+        config["ALL"],
 
 
 # {{{1 Database
-
-
 # database_inputs = [
 #     # Metadata
 #     DatabaseInput("subject", "smeta/subject.tsv", True),
