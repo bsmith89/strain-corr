@@ -1,89 +1,16 @@
 # {{{2 Data Configuration
 
-_mgen_meta_hmp2 = (
-    pd.read_table("meta/hmp2/mgen.tsv")
-    .rename(
-        columns={
-            "library_id": "mgen_id",
-            "external_id": "stem",
-            "r1_path": "r1",
-            "r2_path": "r2",
-        }
-    )
-    .set_index("mgen_id")[["r1", "r2"]]
-)
-_mgen_meta_ucfmt = (
-    pd.read_table("meta/ucfmt/mgen.tsv")
-    .rename(
-        columns={
-            "r1_path": "r1",
-            "r2_path": "r2",
-        }
-    )
-    .set_index("mgen_id")[["r1", "r2"]]
-)
-
-config["mgen"] = pd.concat([_mgen_meta_hmp2, _mgen_meta_ucfmt])
-
-
-_mgen_group_meta_hmp2 = (
-    pd.read_table("meta/hmp2/mgen_group.tsv")
-    .groupby("mgen_group_id")
-    .apply(lambda d: d.mgen_id.to_list())
-)
-_mgen_group_meta_ucfmt = (
-    pd.read_table("meta/ucfmt/mgen_x_mgen_group.tsv")
-    .groupby("mgen_group_id")
-    .apply(lambda d: d.mgen_id.to_list())
-)
-
-config["mgen"] = pd.concat([_mgen_group_meta_hmp2, _mgen_group_meta_ucfmt])
-
 config["species_group"] = (
     pd.read_table("meta/species_group.tsv", dtype=str)
     .groupby("species_group_id")
     .apply(lambda d: d.species_id.to_list())
 )
 
-# _mgen_meta = "meta/mgen.tsv"
-# if path.exists(_mgen_meta):
-#     # FIXME: library_id should be mgen_id
-#     _mgen = pd.read_table(_mgen_meta, index_col="library_id")
-#     config["mgen"] = {}
-#     for mgen_id, row in _mgen.iterrows():
-#         config["mgen"][mgen_id] = {}
-#         # FIXME: filename_r* should be in the table
-#         # config["mgen"][mgen_id]["r1"] = row["filename_r1"]
-#         # config["mgen"][mgen_id]["r2"] = row["filename_r2"]
-# else:
-#     warn(
-#         dd(
-#             f"""
-#             Could not load config from `{_mgen_meta}`.
-#             Check that path is defined and file exists.
-#             """
-#         )
-#     )
-#     config["mgen"] = {}
-#
-# _mgen_x_mgen_group_meta = "meta/mgen_x_mgen_group.tsv"
-# if path.exists(_mgen_x_mgen_group_meta):
-#     _mgen_x_mgen_group = pd.read_table(_mgen_x_mgen_group_meta)
-#     config["mgen_group"] = {}
-#     for mgen_group, d in _mgen_x_mgen_group.groupby("mgen_group"):
-#         config["mgen_group"][mgen_group] = d.mgen_id.tolist()
-# else:
-#     warn(
-#         dd(
-#             f"""
-#             Could not load config from `{_mgen_x_mgen_group_meta}`.
-#             Check that path is defined and file exists.
-#             """
-#         )
-#     )
-#     config["mgen_group"] = {}
-
-config["figures"]["submission"] = []
+config["mgen"] = pd.read_table("meta/mgen_to_reads.tsv", index_col="mgen_id")
+_mgen_group = pd.read_table("meta/mgen_group.tsv")
+config["mgen_group"] = {}
+for mgen_group, d in _mgen_group.groupby("mgen_group"):
+    config["mgen_group"][mgen_group] = d.mgen_id.tolist()
 
 
 rule process_hmp2_metadata:
