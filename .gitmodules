@@ -1,0 +1,3 @@
+[submodule "include/StrainFacts"]
+	path = include/StrainFacts
+	url = git@github.com:bsmith89/StrainFacts.git
