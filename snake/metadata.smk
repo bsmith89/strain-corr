@@ -1,6 +1,6 @@
 # {{{2 Data Configuration
 
-config["mgen"] = (
+_mgen_meta_hmp2 = (
     pd.read_table("meta/hmp2/mgen.tsv")
     .rename(
         columns={
@@ -12,15 +12,35 @@ config["mgen"] = (
     )
     .set_index("mgen_id")[["r1", "r2"]]
 )
+_mgen_meta_ucfmt = (
+    pd.read_table("meta/ucfmt/mgen.tsv")
+    .rename(
+        columns={
+            "r1_path": "r1",
+            "r2_path": "r2",
+        }
+    )
+    .set_index("mgen_id")[["r1", "r2"]]
+)
 
-config["mgen_group"] = (
+config["mgen"] = pd.concat([_mgen_meta_hmp2, _mgen_meta_ucfmt])
+
+
+_mgen_group_meta_hmp2 = (
     pd.read_table("meta/hmp2/mgen_group.tsv")
     .groupby("mgen_group_id")
     .apply(lambda d: d.mgen_id.to_list())
 )
+_mgen_group_meta_ucfmt = (
+    pd.read_table("meta/ucfmt/mgen_x_mgen_group.tsv")
+    .groupby("mgen_group_id")
+    .apply(lambda d: d.mgen_id.to_list())
+)
+
+config["mgen"] = pd.concat([_mgen_group_meta_hmp2, _mgen_group_meta_ucfmt])
 
 config["species_group"] = (
-    pd.read_table("meta/hmp2/species_group.tsv", dtype=str)
+    pd.read_table("meta/species_group.tsv", dtype=str)
     .groupby("species_group_id")
     .apply(lambda d: d.species_id.to_list())
 )
