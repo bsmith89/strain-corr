@@ -39,9 +39,8 @@ rule start_jupyter:
 
 
 rule start_ipython:
-    threads: config["MAX_THREADS"]
     shell:
-        limit_numpy_procs + "ipython"
+        "ipython"
 
 
 rule start_shell:
