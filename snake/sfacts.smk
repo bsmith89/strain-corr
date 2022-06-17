@@ -1,15 +1,3 @@
-# rule start_ipython_sfacts:
-#     params:
-#         sfacts_dev_path=config["software-dev-path"]["sfacts"],
-#     container:
-#         config["container"]["sfacts"]
-#     shell:
-#         """
-#         export PYTHONPATH="{params.sfacts_dev_path}"
-#         ipython
-#         """
-
-
 # Same as sfacts, but with an environment defined by conda/sfacts.yaml
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
@@ -22,35 +10,6 @@ rule start_ipython_sfacts:
         """
         export PYTHONPATH="{config[software-dev-path][sfacts]}"
         ipython
-        """
-
-
-# rule start_jupyter_sfacts:
-#     threads: config['MAX_THREADS']
-#     params:
-#         sfacts_dev_path=config["software-dev-path"]["sfacts"],
-#         port=config["jupyter_port"],
-#     container:
-#         config["container"]["sfacts"]
-#     shell:
-#         """
-#         export PYTHONPATH="{params.sfacts_dev_path}"
-#         jupyter lab --port={params.port}
-#         """
-
-
-rule start_jupyter_sfacts:
-    threads: config["MAX_THREADS"]
-    params:
-        port=config["jupyter_port"],
-    container:
-        config["container"]["mambaforge"]
-    conda:
-        "conda/sfacts.yaml"
-    shell:
-        """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
-        jupyter lab --port={params.port} --notebook-dir nb/
         """
 
 
@@ -70,28 +29,7 @@ rule load_metagenotype_from_merged_gtpro:
         """
 
 
-rule start_jupyter_sfacts2:
-    threads: config["MAX_THREADS"]
-    container:
-        config["container"]["mambaforge"]
-    conda:
-        "conda/sfacts2.yaml"
-    shell:
-        """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
-        jupyter lab --port="{config[jupyter_port]}" --notebook-dir nb/
-        """
 
-rule start_jupyter_sfacts3:
-    threads: config["MAX_THREADS"]
-    container:
-        config["container"]["mambaforge"]
-    conda:
-        "conda/sfacts3.yaml"
-    shell:
-        """
-        jupyter lab --port="{config[jupyter_port]}" --notebook-dir nb/
-        """
 
 rule filter_metagenotype:
     output:
