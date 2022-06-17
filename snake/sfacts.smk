@@ -189,6 +189,48 @@ rule fit_sfacts_strategy11:
                 -- {input.mgen} {output.fit}
         """
 
+
+rule fit_sfacts_strategy12:
+    output:
+        fit="{stem}.fit-sfacts12-s{strain_exponent}-seed{seed}.world.nc",
+        hist="{stem}.fit-sfacts12-s{strain_exponent}-seed{seed}.loss_history",
+    input:
+        mgen="{stem}.mgen.nc",
+        # init='{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc',
+    wildcard_constraints:
+        strain_exponent="[0-9]+",
+        nposition="[0-9]+",
+    params:
+        strain_exponent=lambda w: float(w.strain_exponent) / 100,
+        gamma_hyper=1e-5,
+        pi_hyper=0.2,
+        pi_hyper2=0.01,
+        model_name="model6",
+        seed=lambda w: int(w.seed),
+    resources:
+        walltime_hr=2,
+        pmem=5_000,
+        mem_mb=5_000,
+        device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
+        gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts fit -m {params.model_name}  \
+                --verbose --device {resources.device} \
+                --random-seed {params.seed} \
+                --strain-sample-exponent {params.strain_exponent} \
+                --optimizer-learning-rate 0.05 \
+                --min-optimizer-learning-rate 1e-3 \
+                --hyperparameters gamma_hyper={params.gamma_hyper} \
+                    pi_hyper={params.pi_hyper} \
+                    pi_hyper2={params.pi_hyper2} \
+                --history-outpath {output.hist} \
+                -- {input.mgen} {output.fit}
+        """
+
+
 rule collapse_similar_strains:
     output:
         "{stem}.collapse-{thresh}.world.nc",
