@@ -31,7 +31,7 @@ rule run_gtpro:
         pmem=60000 // 4,
         walltime_hr=4,
     container:
-        config["container"]["default"]  # FIXME: Why does gtpro not work here?? File writing is just fine in the other rule...
+        config["container"]["gtpro"]
     shell:
         dd(
             """
