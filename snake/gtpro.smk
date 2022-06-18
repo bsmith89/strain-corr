@@ -1,4 +1,4 @@
-rule start_gtpro_shell:
+rule start_shell_gtpro:
     container:
         config["container"]["gtpro"]
     shell:
