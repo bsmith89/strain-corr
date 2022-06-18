@@ -18,7 +18,7 @@ rule download_gtpro_reference_core_snps:
 
 rule run_gtpro:
     output:
-        "{stem}.gtpro_raw.gz",
+        temp("{stem}.gtpro_raw.gz"),
     input:
         "{stem}.fq.gz",
     params:
