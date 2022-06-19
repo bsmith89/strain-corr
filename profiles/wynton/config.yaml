@@ -4,8 +4,8 @@ keep-going: true
 resources: ['network_connections=3', 'mem_mb=500000']
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/pollard/home/bsmith/.snakemake/conda'
+conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
-singularity-args: "--env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs --bind /pollard --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith --bind $TMPDIR"
-singularity-prefix: '/pollard/home/bsmith/.snakemake/singularity'
+singularity-args: "--env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs --bind /pollard --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith --bind $TMPDIR --bind /wynton/scratch/bsmith"
+singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']
