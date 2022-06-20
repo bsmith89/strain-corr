@@ -294,6 +294,8 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         )
 
 
+# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
+# once it has been run for the focal group/species.
 rule merge_both_reads_species_count_data:
     output:
         "data/{stemA}.r.{stemB}.gtpro.tsv.bz2",

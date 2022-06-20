@@ -18,7 +18,7 @@ rule start_shell_sfacts:
         """
 
 
-# FIXME: Comment out this rule to speed up DAG-building time
+# NOTE: Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgen.nc",
