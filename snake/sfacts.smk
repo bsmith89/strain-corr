@@ -164,6 +164,7 @@ rule fit_sfacts_strategy11:
     wildcard_constraints:
         strain_exponent="[0-9]+",
         nposition="[0-9]+",
+        seed="[0-9]+"
     params:
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
         rho_hyper=1.0,
