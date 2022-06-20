@@ -250,6 +250,11 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
         temp("data/{group}.a.{r12}.{stem}.gtpro.tsv.bz2.args"),
+    input:
+        gtpro=lambda w: [
+            f"data/{mgen}.{{r12}}.{{stem}}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
     run:
         with open(output[0], "w") as f:
             for mgen in config["mgen_group"][wildcards.group]:
