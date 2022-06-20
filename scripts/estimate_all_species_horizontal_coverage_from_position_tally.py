@@ -36,8 +36,8 @@ if __name__ == "__main__":
             tally_path,
             names=["sample_id", "species_id", "tally"],
             index_col=["sample_id", "species_id"],
-            squeeze=True,
         )
+        .squeeze()
         .unstack("species_id")
         .fillna(0)
         .astype(int)
