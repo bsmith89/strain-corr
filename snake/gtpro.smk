@@ -146,9 +146,11 @@ rule gtpro_finish_processing_reads:
 rule count_species_lines_from_both_reads_helper:
     output:
         temp("data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args"),
+    params:
+        mgen=lambda w: config["mgen_group"][w.group]
     run:
         with open(output[0], "w") as f:
-            for mgen in config["mgen_group"][wildcards.group]:
+            for mgen in params.mgen:
                 print(
                     mgen,
                     f"data/{mgen}.r1.{wildcards.stem}.gtpro_parse.tsv.bz2",
