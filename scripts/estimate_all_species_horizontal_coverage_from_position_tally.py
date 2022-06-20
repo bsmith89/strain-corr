@@ -3,11 +3,16 @@
 import sys
 import pandas as pd
 
+def info(*msg):
+    print(*msg, file=sys.stderr)
+
+
 if __name__ == "__main__":
     snp_dict_path = sys.argv[1]
     tally_path = sys.argv[2]
     outpath = sys.argv[3]
 
+    info("Loading reference table.")
     ref_species_snp_count = (
         pd.read_table(
             snp_dict_path,
@@ -25,6 +30,7 @@ if __name__ == "__main__":
         .rename("tally")
     )
 
+    info("Loading data.")
     species_snp_count = (
         pd.read_table(
             tally_path,
@@ -36,10 +42,13 @@ if __name__ == "__main__":
         .fillna(0)
         .astype(int)
     )
+
+    info("Calculating horizontal coverage.")
     horizontal_coverage = (
         (species_snp_count / ref_species_snp_count)
         .stack()
         .rename("horizontal_coverage")
     )
 
+    info("Writing output.")
     horizontal_coverage.to_csv(outpath, header=False, sep="\t")
