@@ -259,8 +259,7 @@ rule collapse_similar_strains:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
-        python3 -m sfacts collapse_strains --discretized {params.thresh} {input} {output}
+        sfacts collapse_strains --discretized {params.thresh} {input} {output}
         """
 
 
@@ -273,8 +272,7 @@ rule export_sfacts_comm:
         "conda/sfacts.yaml"
     shell:
         """
-        export PYTHONPATH="{config[software-dev-path][sfacts]}"
-        python3 -m sfacts dump --community {output} {input}
+        sfacts dump --community {output} {input}
         """
 
 
