@@ -13,6 +13,9 @@ for mgen_group, d in _mgen_group.groupby("mgen_group"):
     config["mgen_group"][mgen_group] = d.mgen_id.tolist()
 
 
+# config["species_group"] = pd.read_table("meta/species_group.tsv").squeeze().groupby('species_group_id').apply(list)
+
+
 rule process_hmp2_metadata:
     output:
         subject="meta/subject.tsv",
