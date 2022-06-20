@@ -17,6 +17,14 @@ rule start_shell_sfacts:
         bash
         """
 
+rule start_shell_sfacts_dev:
+    conda:
+        "conda/sfacts_dev.yaml"
+    shell:
+        """
+        bash
+        """
+
 
 # NOTE: Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
