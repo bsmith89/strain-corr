@@ -18,7 +18,13 @@ conda-frontend: 'mamba'
 conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
-singularity-args: "--env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs --bind /pollard --nv --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith --bind $TMPDIR --bind /wynton/scratch/bsmith"
+singularity-args: >-
+  --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
+  --nv
+  --bind $TMPDIR
+  --bind /salilab/diva1/home/anaconda/anaconda3
+  --bind /pollard
+  --bind /wynton
 config: ['MAX_THREADS=24', 'USE_CUDA=1']
 jobscript: 'profiles/wynton-qsub-gpu/jobscript.sh'
 cluster: "qsub -cwd \

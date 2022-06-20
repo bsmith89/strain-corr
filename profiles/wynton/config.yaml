@@ -6,6 +6,11 @@ use-conda: true
 conda-frontend: 'mamba'
 conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
-singularity-args: "--env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs --bind /pollard --bind /salilab/diva1/home/anaconda/anaconda3 --bind /wynton/home/pollard/bsmith --bind $TMPDIR --bind /wynton/scratch/bsmith"
+singularity-args: >-
+  --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
+  --bind $TMPDIR
+  --bind /salilab/diva1/home/anaconda/anaconda3
+  --bind /pollard
+  --bind /wynton
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']
