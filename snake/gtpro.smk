@@ -289,7 +289,8 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         parallel --colsep='\t' --bar -j {threads} \
                 {input.script} {params.species} :::: {input.helper} \
             | bzip2 -c \
-            > {output}
+            > {output}.tmp
+        mv {output}.tmp {output}
         """
         )
 
