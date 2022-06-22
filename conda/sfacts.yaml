@@ -24,4 +24,4 @@ dependencies:
   - conda-forge::pymc
   - pip
   - pip:
-    - git+https://github.com/bsmith89/StrainFacts@73b51ee4c76422cd61f1f79db423ff0ae7a04c5b
+    - git+https://github.com/bsmith89/StrainFacts
