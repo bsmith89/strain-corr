@@ -8,12 +8,17 @@ config["species_group"] = (
 
 config["mgen"] = pd.read_table("meta/mgen_to_reads.tsv", index_col="mgen_id")
 _mgen_group = pd.read_table("meta/mgen_group.tsv")
+
 config["mgen_group"] = {}
 for mgen_group, d in _mgen_group.groupby("mgen_group"):
     config["mgen_group"][mgen_group] = d.mgen_id.tolist()
 
-
-# config["species_group"] = pd.read_table("meta/species_group.tsv").squeeze().groupby('species_group_id').apply(list)
+config["species_group"] = (
+    pd.read_table("meta/species_group.tsv")
+    .astype(str)
+    .groupby("species_group_id")
+    .species_id.apply(list)
+)
 
 
 rule process_hmp2_metadata:
