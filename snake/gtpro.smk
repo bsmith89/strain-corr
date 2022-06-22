@@ -312,30 +312,41 @@ rule merge_both_reads_species_count_data:
         {input.script} {input.r1} {input.r2} {output}
         """
 
+rule estimate_species_depth_from_metagenotype:
+    output: "data/sp-{species}.{stem}.gtpro.species_depth.tsv"
+    input:
+        script="scripts/estimate_species_depth_from_metagenotype.py",
+        mgen="data/sp-{species}.{stem}.gtpro.mgen.nc"
+    params:
+        trim=0.05,
+    shell:
+        "{input.script} {params.trim} {output} {wildcards.species}={input.mgen}"
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
-rule estimate_all_species_depth_from_metagenotype:
+rule concatenate_all_species_depths:
     output:
         "data/{group}.a.{stem}.gtpro.species_depth.tsv",
     input:
-        script="scripts/estimate_species_depth_from_metagenotype.py",
-        mgen=lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.stem}.gtpro.mgen.nc"
+        species=lambda w: [
+            f"data/sp-{species}.{w.group}.a.{w.stem}.gtpro.species_depth.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.stem, cvrg_thresh=0.2
+                group=w.group, stem=w.stem, cvrg_thresh=0.2,
+                require_in_species_group=True,
             )
         ],
     params:
-        trim=0.05,
-        mgen=lambda w: [
-            f"{species}=data/sp-{species}.{w.group}.a.{w.stem}.gtpro.mgen.nc"
-            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.stem, cvrg_thresh=0.2
-            )
-        ],
+        header="sample	species_id	depth"
     shell:
-        "{input.script} {params.trim} {output} {params.mgen}"
+        """
+        echo "{params.header}" > {output}.tmp
+        for file in {input.species}
+        do
+            echo $file >&2
+            sed '1,1d' $file
+        done >> {output}.tmp
+        mv {output}.tmp {output}
+        """
 
 
 rule construct_files_for_all_select_species:
