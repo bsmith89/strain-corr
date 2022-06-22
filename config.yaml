@@ -1,6 +1,6 @@
 container:
-  default: 'docker://bsmith89/compbio2:abb5bce0835262bd946772656e89a589f30c741b'
-  toolz: 'docker://bsmith89/compbio2:abb5bce0835262bd946772656e89a589f30c741b'
+  default: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
+  toolz: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
   gtpro: 'docker://bsmith89/gtpro:87767c1292df1c04cd5cebde9e88aa418ab9b7fe'
   mambaforge: 'docker://condaforge/mambaforge:4.11.0-4'
 proc: 'noop'
