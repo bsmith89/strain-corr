@@ -179,7 +179,8 @@ rule count_species_lines_from_both_reads:
         r"""
         parallel --colsep='\t' --bar -j {threads} \
                 bash {input.script} :::: {input.helper} \
-            > {output}
+            > {output}.tmp
+        mv {output}.tmp {output}
 
         """
 
