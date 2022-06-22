@@ -13,5 +13,6 @@ singularity-args: >-
   --bind /salilab/diva1/home/anaconda/anaconda3
   --bind /pollard
   --bind /wynton
+  --bind /scratch
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']

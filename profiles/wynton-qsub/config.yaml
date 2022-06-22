@@ -24,8 +24,8 @@ singularity-args: >-
   --bind $TMPDIR
   --bind /salilab/diva1/home/anaconda/anaconda3
   --bind /pollard
-  --bind /wynton/home/pollard/bsmith
-  --bind /wynton/scratch/bsmith
+  --bind /wynton
+  --bind /scratch
 config: ['MAX_THREADS=24', 'USE_CUDA=0']
 jobscript: 'profiles/wynton-qsub/jobscript.sh'
 cluster: "qsub -cwd \

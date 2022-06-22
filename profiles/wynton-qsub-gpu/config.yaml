@@ -26,6 +26,7 @@ singularity-args: >-
   --bind /salilab/diva1/home/anaconda/anaconda3
   --bind /pollard
   --bind /wynton
+  --bind /scratch
 config: ['MAX_THREADS=24', 'USE_CUDA=1']
 jobscript: 'profiles/wynton-qsub-gpu/jobscript.sh'
 cluster: "qsub -cwd \
