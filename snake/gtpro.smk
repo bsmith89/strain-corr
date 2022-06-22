@@ -239,12 +239,12 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
         ).output[0]
     ) as f:
         if require_in_species_group:
-            return list(
+            out = list(
                 set([l.strip() for l in f]) & set(config["species_group"][group])
             )
         else:
-            return [l.strip() for l in f]
-
+            out = [l.strip() for l in f]
+    return out
 
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
