@@ -14,8 +14,8 @@ if __name__ == "__main__":
 
     # Load species level coverage.
     motu_cv = pd.read_table(
-        species_path, index_col=["sample", "species_id"], squeeze=True,
-    ).unstack("species_id", fill_value=0)
+        species_path, index_col=["sample", "species_id"],
+    ).squeeze().unstack("species_id", fill_value=0)
     motu_cv.columns = motu_cv.columns.astype(str)
     assert motu_cv.index.is_unique
     assert motu_cv.columns.is_unique
