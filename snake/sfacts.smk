@@ -250,16 +250,32 @@ rule fit_sfacts_strategy12:
 
 rule collapse_similar_strains:
     output:
-        "{stem}.collapse-{thresh}.world.nc",
+        "{stem}.collapse-{diss}.world.nc",
     input:
         "{stem}.world.nc",
     params:
-        thresh=lambda w: float(w.thresh) / 100,
+        diss=lambda w: float(w.diss) / 100,
     conda:
         "conda/sfacts.yaml"
     shell:
         """
-        sfacts collapse_strains --discretized {params.thresh} {input} {output}
+        sfacts cleanup_fit --dissimilarity {params.diss} --discretized {input} {output}
+        """
+
+rule cleanup_fit:
+    output:
+        "{stem}.clean-diss{diss}-abund{abund}-entr{entr}.world.nc",
+    input:
+        "{stem}.world.nc",
+    params:
+        diss=lambda w: float(w.diss) / 100,
+        abund=lambda w: float(w.abund) / 100,
+        entr=lambda w: float(w.entr) / 10,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts cleanup_fit --dissimilarity {params.diss} --discretized --abundance {params.abund} --entropy {params.entr} {input} {output}
         """
 
 
