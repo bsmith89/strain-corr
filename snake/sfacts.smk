@@ -154,25 +154,19 @@ rule sfacts_clust_approximation:
         """
 
 
-rule fit_sfacts_strategy11:
+rule fit_sfacts:
     output:
-        fit="{stem}.fit-sfacts11-s{strain_exponent}-seed{seed}.world.nc",
-        hist="{stem}.fit-sfacts11-s{strain_exponent}-seed{seed}.loss_history",
+        fit="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.world.nc",
+        hist="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.loss_history",
     input:
         mgen="{stem}.mgen.nc",
-        # init='{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc',
+        strategy="meta/sfacts/strategy{strategy}.args",
     wildcard_constraints:
         strain_exponent="[0-9]+",
         nposition="[0-9]+",
-        seed="[0-9]+"
+        seed="[0-9]+",
     params:
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
-        rho_hyper=1.0,
-        rho_hyper2=1.0,
-        gamma_hyper=1e-5,
-        pi_hyper=0.2,
-        pi_hyper2=0.2,
-        model_name="model4",
         seed=lambda w: int(w.seed),
     resources:
         walltime_hr=2,
@@ -184,57 +178,11 @@ rule fit_sfacts_strategy11:
         "conda/sfacts.yaml"
     shell:
         """
-        python3 -m sfacts fit -m {params.model_name}  \
+        python3 -m sfacts fit \
+                @{input.strategy} \
                 --verbose --device {resources.device} \
                 --random-seed {params.seed} \
                 --strain-sample-exponent {params.strain_exponent} \
-                --optimizer-learning-rate 0.5 \
-                --min-optimizer-learning-rate 1e-2 \
-                --hyperparameters gamma_hyper={params.gamma_hyper} \
-                    pi_hyper={params.pi_hyper} pi_hyper2={params.pi_hyper2} \
-                    rho_hyper={params.rho_hyper} rho_hyper2={params.rho_hyper2} \
-                --anneal-steps 2000 --anneal-wait 1000 --anneal-hyperparameters pi_hyper=1e-3 pi_hyper2=1e-3 \
-                --history-outpath {output.hist} \
-                -- {input.mgen} {output.fit}
-        """
-
-
-rule fit_sfacts_strategy12:
-    output:
-        fit="{stem}.fit-sfacts12-s{strain_exponent}-seed{seed}.world.nc",
-        hist="{stem}.fit-sfacts12-s{strain_exponent}-seed{seed}.loss_history",
-    input:
-        mgen="{stem}.mgen.nc",
-        # init='{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc',
-    wildcard_constraints:
-        strain_exponent="[0-9]+",
-        nposition="[0-9]+",
-    params:
-        strain_exponent=lambda w: float(w.strain_exponent) / 100,
-        gamma_hyper=1e-5,
-        pi_hyper=0.2,
-        pi_hyper2=0.01,
-        model_name="model6",
-        seed=lambda w: int(w.seed),
-    resources:
-        walltime_hr=2,
-        pmem=5_000,
-        mem_mb=5_000,
-        device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
-        gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
-    conda:
-        "conda/sfacts.yaml"
-    shell:
-        """
-        python3 -m sfacts fit -m {params.model_name}  \
-                --verbose --device {resources.device} \
-                --random-seed {params.seed} \
-                --strain-sample-exponent {params.strain_exponent} \
-                --optimizer-learning-rate 0.05 \
-                --min-optimizer-learning-rate 1e-3 \
-                --hyperparameters gamma_hyper={params.gamma_hyper} \
-                    pi_hyper={params.pi_hyper} \
-                    pi_hyper2={params.pi_hyper2} \
                 --history-outpath {output.hist} \
                 -- {input.mgen} {output.fit}
         """
@@ -254,9 +202,28 @@ rule collapse_similar_strains:
         sfacts cleanup_fit --dissimilarity {params.diss} --discretized {input} {output}
         """
 
+
+rule assign_plurality_strain:
+    output:
+        "{stem}.top_strain_only.world.nc",
+    input:
+        script="scripts/assign_plurality_strain.py",
+        data="{stem}.world.nc",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        {input.script} {input.data} {output}
+        """
+
+
 rule cleanup_fit:
     output:
         "{stem}.clean-diss{diss}-abund{abund}-entr{entr}.world.nc",
+    wildcard_constraints:
+        diss=noperiod_wc,
+        abund=noperiod_wc,
+        entr=noperiod_wc,
     input:
         "{stem}.world.nc",
     params:
@@ -267,7 +234,7 @@ rule cleanup_fit:
         "conda/sfacts.yaml"
     shell:
         """
-        sfacts cleanup_fit --dissimilarity {params.diss} --discretized --abundance {params.abund} --entropy {params.entr} {input} {output}
+        sfacts cleanup_fit --dissimilarity {params.diss} --abundance {params.abund} --entropy {params.entr} {input} {output}
         """
 
 
