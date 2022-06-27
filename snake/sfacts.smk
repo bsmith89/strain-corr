@@ -9,6 +9,7 @@ rule start_ipython_sfacts:
         ipython
         """
 
+
 rule start_shell_sfacts:
     conda:
         "conda/sfacts.yaml"
