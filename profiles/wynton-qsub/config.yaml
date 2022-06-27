@@ -22,6 +22,7 @@ singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --bind $TMPDIR
+  --bind $PWD/include:/include
   --bind /salilab/diva1/home/anaconda/anaconda3
   --bind /pollard
   --bind /wynton
