@@ -1,3 +1,4 @@
+rerun-triggers: ['mtime']
 notemp: true
 printshellcmds: true
 keep-going: true
@@ -15,5 +16,13 @@ conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 conda-frontend: 'mamba'
 use-singularity: true
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
-singularity-args: "--bind /pollard/ --nv --bind /salilab/diva1/home/anaconda/anaconda3 --bind /scratch/bsmith --bind /scratch/bsmith:/tmp --bind /wynton/home/pollard/bsmith"
+singularity-args: >-
+  --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
+  --nv
+  --bind $TMPDIR
+  --bind $PWD/include:/include
+  --bind /salilab/diva1/home/anaconda/anaconda3
+  --bind /pollard
+  --bind /wynton
+  --bind /scratch
 config: ['MAX_THREADS=24', 'USE_CUDA=1', 'jupyter_port=8828']
