@@ -1,0 +1,25 @@
+name: pymc
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - gxx
+  - ipython
+  - jupyterlab
+  - xarray
+  - netCDF4
+  - matplotlib
+  - pandas
+  - seaborn
+  - tqdm
+  - scipy
+  - numpy
+  - scikit-learn
+  - line_profiler
+  - memory_profiler
+  - conda-forge::pymc
+  - pip
+  - pip:
+    - numpyro
+    - blackjax
