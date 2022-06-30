@@ -1,1 +1,2 @@
-container: 'docker://bsmith89/compbio2:41cb510c9cbccc31155a6a79f44115d8eeb161cd'
+container:
+  default: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
