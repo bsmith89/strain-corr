@@ -136,8 +136,9 @@ rule gtpro_finish_processing_reads:
         ;
 
         EOF
-        ) | bzip2 -c > {output}
+        ) | bzip2 -c > {output}.tmp2
         rm {output}.tmp
+        mv {output}.tmp2 {output}
         """
         )
 
@@ -185,6 +186,7 @@ rule count_species_lines_from_both_reads:
         """
 
 
+# NOTE: Comment out this rule to speed up DAG evaluation.
 rule estimate_all_species_horizontal_coverage:
     output:
         "data/{stem}.gtpro.horizontal_coverage.tsv",
