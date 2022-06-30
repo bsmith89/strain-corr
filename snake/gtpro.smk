@@ -351,6 +351,17 @@ rule concatenate_all_species_depths:
         mv {output}.tmp {output}
         """
 
+rule gather_mgen_group_for_all_species:
+    output:
+        touch("data/ALL_SPECIES.{group}.a.{stem}.flag"),
+    input:
+        lambda w: [
+            f"data/sp-{species}.{w.group}.a.{w.stem}"
+            for species in config["species_group"][w.group]
+        ],
+    shell:
+        "touch {output}"
+
 
 rule construct_files_for_all_select_species:
     output:
