@@ -8,9 +8,7 @@ from lib.snake import (
     noperiod_wc,
     integer_wc,
     single_param_wc,
-    limit_numpy_procs_to_1,
     curl_recipe,
-    limit_numpy_procs,
     resource_calculator,
     nested_defaultdict,
     nested_dictlookup,
@@ -34,6 +32,7 @@ snakemake.utils.min_version("6.7")
 
 config = nested_defaultdict()
 
+
 configfile: "config.yaml"
 
 
@@ -47,24 +46,16 @@ if "container" in config:
 
     container: config["container"]["default"]
 
-if "MAX_THREADS" in config:
-    MAX_THREADS = config["MAX_THREADS"]
-else:
-    MAX_THREADS = 99
-if "USE_CUDA" in config:
-    USE_CUDA = config["USE_CUDA"]
-else:
-    USE_CUDA = 0
 
 # {{{2 Sub-pipelines
 
 
+include: "snake/metadata.smk"
 include: "snake/template.smk"
 include: "snake/util.smk"
 include: "snake/general.smk"
 include: "snake/docs.smk"
 include: "snake/include.smk"
-include: "snake/metadata.smk"
 
 
 if path.exists("snake/local.smk"):

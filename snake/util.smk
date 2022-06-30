@@ -1,5 +1,4 @@
 rule start_jupyter:
-    threads: MAX_THREADS
     params:
         port=config["jupyter_port"],
     shell:
@@ -7,9 +6,8 @@ rule start_jupyter:
 
 
 rule start_ipython:
-    threads: MAX_THREADS
     shell:
-        limit_numpy_procs + "ipython"
+        "ipython"
 
 
 rule start_shell:
