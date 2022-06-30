@@ -61,20 +61,6 @@ ruleorder: alias_GRCh38_index_file > bowtie_index_build
 # {{{1 Organize raw data
 
 
-# # This rule is intended to enable debugging on platforms without the raw data present.
-# # It should always fail if actually run.
-# rule dummy_raw_read_source:
-#     output:
-#         "raw/mgen/{raw_mgen_filename}",
-#     shell:
-#         dd(
-#             """
-#         echo Raw data file {output} does not exist on this computer.  This is a dummy rule.
-#         false
-#         """
-#         )
-
-
 rule alias_raw_read_r1:
     output:
         "data/{mgen}.r1.fq.gz",
