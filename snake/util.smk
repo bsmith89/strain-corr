@@ -1,8 +1,34 @@
+# Install Jupyter Kernels
+
+
+rule install_jupyter_kernel_default:
+    params:
+        name="default",
+    conda:
+        "conda/default.yaml"
+    shell:
+        """
+        python -m ipykernel install --user --name={params.name} --env PATH $PATH
+        """
+
+
+# Any conda environment spec can be installed for Jupyter use
+# just like the below:
+use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
+    params:
+        name="pymc",
+    conda:
+        "conda/pymc.yaml"
+
+
+# And then run `snakemake -j1 install_jupyter_kernel_pymc`.
+
+
 rule start_jupyter:
     params:
         port=config["jupyter_port"],
     shell:
-        "jupyter lab --port={params.port}"
+        "jupyter lab --port={params.port} --notebook-dir nb/"
 
 
 rule start_ipython:
