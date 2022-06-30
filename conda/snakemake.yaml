@@ -1,0 +1,30 @@
+name: snakemake
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - snakemake
+  - jupyterlab
+  - matplotlib
+  - ipython
+  - xarray
+  - netCDF4
+  - matplotlib
+  - patsy
+  - pandas
+  - seaborn
+  - tqdm
+  - numpy
+  - scipy
+  - scikit-learn
+  - scikit-bio
+  - statsmodels
+  - line_profiler
+  - memory_profiler
+  - pip
+  - black
+  - snakefmt
+  - pip:
+    - daff
+    - panoptes-ui
