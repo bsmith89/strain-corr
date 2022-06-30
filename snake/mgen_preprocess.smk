@@ -65,9 +65,9 @@ ruleorder: alias_GRCh38_index_file > bowtie_index_build
 
 rule alias_raw_read_r1:
     output:
-        "sdata/{mgen}.r1.fq.gz",
+        "data/{mgen}.r1.fq.gz",
     input:
-        lambda wildcards: "sraw/mgen/{}".format(config["mgen"][wildcards.mgen]["r1"]),
+        lambda w: config["mgen"]["r1"][w.mgen],
     shell:
         alias_recipe
 
@@ -78,9 +78,9 @@ localrules:
 
 rule alias_raw_read_r2:
     output:
-        "sdata/{mgen}.r2.fq.gz",
+        "data/{mgen}.r2.fq.gz",
     input:
-        lambda wildcards: "sraw/mgen/{}".format(config["mgen"][wildcards.mgen]["r2"]),
+        lambda w: config["mgen"]["r2"][w.mgen],
     shell:
         alias_recipe
 
