@@ -21,7 +21,7 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
         "conda/sfacts.yaml"
 
 
-# And then run `snakemake -j1 install_jupyter_kernel_sfacts3`.
+# And then run `snakemake -j1 install_jupyter_kernel_sfacts`.
 
 
 use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
