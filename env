@@ -17,13 +17,13 @@ for dir in `ls -d profiles/*/`
 do
     profile=$(basename $dir)
     alias smake-$profile='snakemake --profile profiles/${profile}'
-    complete -o bashdefault -C snakemake-bash-completion smake-${profile}
+    # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
     alias smake-$profile-xargs='xargs snakemake --profile profiles/${profile}'
-    complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
+    # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
 # Extra-convenient alias for the default profile
 alias smake='snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
-complete -o bashdefault -C snakemake-bash-completion smake
+# complete -o bashdefault -C snakemake-bash-completion smake
 alias smake-xargs='xargs snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
-complete -o bashdefault -C snakemake-bash-completion smake-xargs
+# complete -o bashdefault -C snakemake-bash-completion smake-xargs
