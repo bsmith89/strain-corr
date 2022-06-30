@@ -1,2 +1,3 @@
 container:
   default: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
+proc: 'hfilt.dedup.dadapt.qtrim'
