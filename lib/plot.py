@@ -25,7 +25,7 @@ DEFAULT_COLOR_LIST = [
 DEFAULT_LINESTYLE_LIST = ["-", "--", "-.", ":"]
 
 
-def construct_ordered_pallete(x, cm="Spectral", other="grey"):
+def construct_ordered_palette(x, cm="Spectral", other="grey"):
     labels = pd.Series(x).unique()
     cm = mpl.cm.get_cmap(cm)
     colormap = defaultdict(lambda: other)
@@ -34,8 +34,15 @@ def construct_ordered_pallete(x, cm="Spectral", other="grey"):
     return colormap
 
 
-def demo_pallete(pallete):
-    df = pd.DataFrame(pallete)
+def construct_ordered_palette_from_list(x, colors=[], other="grey"):
+    labels = pd.Series(x).unique()
+    colormap = defaultdict(lambda: other)
+    for i, c in zip(labels, colors):
+        colormap[i] = c
+    return colormap
+
+def demo_palette(palette):
+    df = pd.DataFrame(palete)
     print(df)
 
 
