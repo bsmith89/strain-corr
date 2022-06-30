@@ -5,20 +5,25 @@ then
     source ./env_local
 fi
 
+# Set default profile name to default if not already set.
+# (Setting this environmental variable in e.g. ~/.bashrc allows me to
+# differentiate my systems.)
+: ${DEFAULT_SNAKEMAKE_PROFILE:=default}
+
 `snakemake --bash-completion`  # Should be: complete -o bashdefault -C snakemake-bash-completion snakemake
 
 # Aliases for each profile
 for dir in `ls -d profiles/*/`
 do
     profile=$(basename $dir)
-    alias smake-$profile="snakemake --profile profiles/${profile}"
-    complete -o bashdefault -C snakemake-bash-completion smake-${profile}
-    alias smake-$profile-xargs="xargs snakemake --profile profiles/${profile}"
-    complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
+    alias smake-$profile='snakemake --profile profiles/${profile}'
+    # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
+    alias smake-$profile-xargs='xargs snakemake --profile profiles/${profile}'
+    # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
 # Extra-convenient alias for the default profile
-alias smake="snakemake --profile profiles/default"
-complete -o bashdefault -C snakemake-bash-completion smake
-alias smake-xargs="xargs snakemake --profile profiles/default"
-complete -o bashdefault -C snakemake-bash-completion smake-xargs
+alias smake='snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+# complete -o bashdefault -C snakemake-bash-completion smake
+alias smake-xargs='xargs snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+# complete -o bashdefault -C snakemake-bash-completion smake-xargs
