@@ -21,38 +21,51 @@ rule download_midasdb_uhgg_all_group_species:
         """
 
 
-rule run_midas_genes:
-    output:
-        directory("data_temp/{group}.a.r.{stem}.midas_output/{mgen}/genes"),
+rule build_midas_one_species_pangenome_index:
+    output: directory("ref_temp/midasdb_uhgg_indexes/{species}/pangenomes"),
     input:
         midasdb=ancient("ref_temp/midasdb_uhgg"),
-        midasdb_downloaded_flag="data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
-        r1="data/{mgen}.r1.{stem}.fq.gz",
-        r2="data/{mgen}.r2.{stem}.fq.gz",
-        species_coverage="data/{group}.a.r.proc.gtpro.horizontal_coverage.tsv",
-    params:
-        outdir=lambda w: f"data_temp/{w.group}.a.r.{w.stem}.midas_output",
-        thresh=0.2,
+        # # FIXME: This means that the species must be in the list for {group}.
+        # # It would be better if we could ensure that each individual species
+        # # had been downloaded.
+        # midasdb_downloaded_flag="data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
     conda:
         "conda/midas.yaml"
-    threads: 4
-    resources:
-        walltime_hr=24,
-        pmem=int(3.2e3 / 1),
+    threads: 12
     shell:
         """
-        tmp=$(mktemp)
-        awk \
-                -v mgen={wildcards.mgen} \
-                -v thresh={params.thresh} \
-                '$1==mgen && $3 >= thresh {{print $2}}' \
-                < {input.species_coverage} \
-            | tr '\\n' ',' | sed 's:,$::'\
-            > $tmp
+        midas2 build_bowtie2db \
+                --midasdb_name uhgg --midasdb_dir {input.midasdb} \
+                --species_list {wildcards.species} --select_threshold=-1 \
+                --bt2_indexes_name pangenomes --bt2_indexes_dir {output} \
+                --num_cores {threads}
+        """
+
+
+rule run_midas_genes_one_species:
+    output:
+        directory("data_temp/sp-{species}.{group}.a.r.{stem}.midas_output/{mgen}/genes"),
+    input:
+        midasdb=ancient("ref_temp/midasdb_uhgg"),
+        bt2_dir="ref_temp/midasdb_uhgg_indexes/{species}/pangenomes",
+        r1="data/{mgen}.r1.{stem}.fq.gz",
+        r2="data/{mgen}.r2.{stem}.fq.gz",
+    params:
+        outdir=lambda w: f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
+    conda:
+        "conda/midas.yaml"
+    threads: 1
+    resources:
+        walltime_hr=24,
+        mem_mb=2_000,
+        pmem=2_000,
+    shell:
+        """
         midas2 run_genes --sample_name {wildcards.mgen} \
                 -1 {input.r1} -2 {input.r2} \
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
-                --species_list $(cat $tmp) --select_threshold=-1 \
+                --prebuilt_bowtie2_indexes {input.bt2_dir}/pangenomes --prebuilt_bowtie2_species {input.bt2_dir}/pangenomes.species \
+                --select_threshold=-1 \
                 --num_cores {threads} {params.outdir}
         """
 
@@ -72,11 +85,11 @@ rule build_mgen_group_midas_manifest:
 
 rule merge_midas_genes:
     output:
-        directory("data_temp/{group}.a.r.{stem}.midas_merge/genes"),
+        directory("data_temp/sp-{species}.{group}.a.r.{stem}.midas_merge/genes"),
     input:
         manifest="data_temp/{group}.a.r.{stem}.midas_manifest.tsv",
         genes=lambda w: [
-            f"data_temp/{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
+            f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
     shell:
