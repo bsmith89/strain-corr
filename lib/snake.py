@@ -23,6 +23,8 @@ integer_wc = "[0-9]+"
 float_noperiod_wc = "[0-9]+(e[0-9]+)?"
 single_param_wc = "[^.-]+"
 params_wc = noperiod_wc
+endswith_period_wc = ".*\."
+endswith_period_or_slash_wc = ".*[./]"
 
 
 def nested_defaultdict():

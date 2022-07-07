@@ -8,6 +8,7 @@ from lib.snake import (
     noperiod_wc,
     integer_wc,
     single_param_wc,
+    endswith_period_or_slash_wc,
     curl_recipe,
     resource_calculator,
     nested_defaultdict,

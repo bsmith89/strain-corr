@@ -117,6 +117,8 @@ rule build_mgen_group_midas_manifest:
             f"{w.stemA}{w.group}.a.r.{w.stemB}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
+    wildcard_constraints:
+        stemA=endswith_period_or_slash_wc,
     params:
         mgen_list=lambda w: config["mgen_group"][w.group],
         outdir=lambda w: f"{w.stemA}{w.group}.a.r.{w.stemB}.midas_output",
