@@ -148,7 +148,7 @@ rule count_species_lines_from_both_reads_helper:
     output:
         temp("data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args"),
     params:
-        mgen=lambda w: config["mgen_group"][w.group]
+        mgen=lambda w: config["mgen_group"][w.group],
     run:
         with open(output[0], "w") as f:
             for mgen in params.mgen:
@@ -249,6 +249,7 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
             out = [l.strip() for l in f]
     return out
 
+
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
@@ -315,15 +316,18 @@ rule merge_both_reads_species_count_data:
         {input.script} {input.r1} {input.r2} {output}
         """
 
+
 rule estimate_species_depth_from_metagenotype:
-    output: "data/sp-{species}.{stem}.gtpro.species_depth.tsv"
+    output:
+        "data/sp-{species}.{stem}.gtpro.species_depth.tsv",
     input:
         script="scripts/estimate_species_depth_from_metagenotype.py",
-        mgen="data/sp-{species}.{stem}.gtpro.mgen.nc"
+        mgen="data/sp-{species}.{stem}.gtpro.mgen.nc",
     params:
         trim=0.05,
     shell:
         "{input.script} {params.trim} {output} {wildcards.species}={input.mgen}"
+
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
@@ -334,12 +338,14 @@ rule concatenate_all_species_depths:
         species=lambda w: [
             f"data/sp-{species}.{w.group}.a.{w.stem}.gtpro.species_depth.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group, stem=w.stem, cvrg_thresh=0.2,
+                group=w.group,
+                stem=w.stem,
+                cvrg_thresh=0.2,
                 require_in_species_group=True,
             )
         ],
     params:
-        header="sample	species_id	depth"
+        header="sample	species_id	depth",
     shell:
         """
         echo "{params.header}" > {output}.tmp
@@ -350,6 +356,7 @@ rule concatenate_all_species_depths:
         done >> {output}.tmp
         mv {output}.tmp {output}
         """
+
 
 rule gather_mgen_group_for_all_species:
     output:

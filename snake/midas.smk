@@ -22,7 +22,8 @@ rule download_midasdb_uhgg_all_group_species:
 
 
 rule build_midas_one_species_pangenome_index:
-    output: directory("ref_temp/midasdb_uhgg_indexes/{species}/pangenomes"),
+    output:
+        directory("ref_temp/midasdb_uhgg_indexes/{species}/pangenomes"),
     input:
         midasdb=ancient("ref_temp/midasdb_uhgg"),
         # # FIXME: This means that the species must be in the list for {group}.
@@ -40,6 +41,7 @@ rule build_midas_one_species_pangenome_index:
                 --bt2_indexes_name pangenomes --bt2_indexes_dir {output} \
                 --num_cores {threads}
         """
+
 
 rule run_midas_genes:
     output:
@@ -75,6 +77,7 @@ rule run_midas_genes:
                 --species_list $(cat $tmp) --select_threshold=-1 \
                 --num_cores {threads} {params.outdir}
         """
+
 
 rule run_midas_genes_one_species:
     output:
@@ -152,6 +155,7 @@ rule merge_midas_genes_one_species:
                 {params.outdir}
         """
 
+
 rule merge_midas_genes:
     output:
         directory("data_temp/{group}.a.r.{stem}.midas_merge/genes"),
@@ -162,7 +166,7 @@ rule merge_midas_genes:
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        species_list=','.join(['102506']),  # FIXME: Read this from checkpoint for the group
+        species_list=",".join(["102506"]),  # FIXME: Read this from checkpoint for the group
         outdir="data_temp/{group}.a.r.{stem}.midas_merge",
         midasdb="ref_temp/midasdb_uhgg",
     conda:
