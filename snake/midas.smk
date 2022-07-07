@@ -74,10 +74,15 @@ rule run_midas_genes_one_species:
 
 rule build_mgen_group_midas_manifest:
     output:
-        "data_temp/{group}.a.r.{stem}.midas_manifest.tsv",
+        "data_temp/sp-{species}.{group}.a.r.{stem}.midas_manifest.tsv",
+    input:
+        genes=lambda w: [
+            f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
+            for mgen in config["mgen_group"][w.group]
+        ],
     params:
         mgen_list=lambda w: config["mgen_group"][w.group],
-        outdir=lambda w: f"data_temp/{w.group}.a.r.{w.stem}.midas_output",
+        outdir=lambda w: f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
     run:
         with open(output[0], "w") as f:
             print("sample_name", "midas_outdir", sep="\t", file=f)
@@ -89,12 +94,35 @@ rule merge_midas_genes:
     output:
         directory("data_temp/sp-{species}.{group}.a.r.{stem}.midas_merge/genes"),
     input:
-        manifest="data_temp/{group}.a.r.{stem}.midas_manifest.tsv",
+        manifest="data_temp/sp-{species}.{group}.a.r.{stem}.midas_manifest.tsv",
         genes=lambda w: [
             f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
+    params:
+        outdir="data_temp/sp-{species}.{group}.a.r.{stem}.midas_merge",
+        midasdb="ref_temp/midasdb_uhgg",
+    conda:
+        "conda/midas.yaml"
+    threads: 24
     shell:
         """
-        midas2 merge_species --samples_list {input.manifest} {output}
+        midas2 merge_genes \
+                --num_cores {threads} \
+                --samples_list {input.manifest} \
+                --species_list {wildcards.species} \
+                --midasdb_name uhgg \
+                --midasdb_dir {params.midasdb} \
+                --genome_depth 1e-3 \
+                --cluster_pid 99 \
+                {params.outdir}
         """
+
+
+rule unzip_and_relocate_midas_merge_genes_output:
+    output:
+        "data_temp/sp-{species}.{stem}.midas_genes.{out_type}.tsv",
+    input:
+        "data_temp/sp-{species}.{stem}.midas_merge/genes/{species}/{species}.genes_{out_type}.tsv.lz4",
+    shell:
+        "lz4cat {input} > {output}"
