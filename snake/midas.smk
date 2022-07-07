@@ -52,6 +52,7 @@ rule run_midas_genes_one_species:
         r2="data/{mgen}.r2.{stem}.fq.gz",
     params:
         outdir=lambda w: f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
+        min_reads=0,
     conda:
         "conda/midas.yaml"
     threads: 1
@@ -66,6 +67,7 @@ rule run_midas_genes_one_species:
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
                 --prebuilt_bowtie2_indexes {input.bt2_dir}/pangenomes --prebuilt_bowtie2_species {input.bt2_dir}/pangenomes.species \
                 --select_threshold=-1 \
+                --read_depth {params.min_reads} \
                 --num_cores {threads} {params.outdir}
         """
 
