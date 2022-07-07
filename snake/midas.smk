@@ -55,7 +55,7 @@ rule run_midas_genes_one_species:
         min_reads=0,
     conda:
         "conda/midas.yaml"
-    threads: 1
+    threads: 4
     resources:
         walltime_hr=24,
         mem_mb=2_000,
