@@ -16,9 +16,9 @@ fi
 for dir in `ls -d profiles/*/`
 do
     profile=$(basename $dir)
-    alias smake-$profile='snakemake --profile profiles/${profile}'
+    alias smake-$profile="snakemake --profile profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
-    alias smake-$profile-xargs='xargs snakemake --profile profiles/${profile}'
+    alias smake-$profile-xargs="xargs snakemake --profile profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
