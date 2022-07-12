@@ -266,6 +266,7 @@ rule calculate_all_strain_depths:
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],
@@ -276,6 +277,7 @@ rule calculate_all_strain_depths:
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],

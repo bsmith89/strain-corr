@@ -208,11 +208,12 @@ rule estimate_all_species_horizontal_coverage:
 # and have it extract the correct wildcards... :-/
 checkpoint select_species_with_greater_max_coverage_gtpro:
     output:
-        "data/{group}.a.{stem}.gtpro.horizontal_coverage.filt-{cvrg_thresh}.list",
+        "data_temp/{group}.a.{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
     input:
         "data/{group}.a.{stem}.gtpro.horizontal_coverage.tsv",
     params:
         cvrg_thresh=lambda w: float(w.cvrg_thresh) / 100,
+        num_samples=lambda w: int(w.num_samples),
     run:
         horizontal_coverage = (
             pd.read_table(
@@ -226,7 +227,7 @@ checkpoint select_species_with_greater_max_coverage_gtpro:
         with open(output[0], "w") as f:
             # Select species with >=2 libraries with more coverage than the threshold
             for species_id in idxwhere(
-                (horizontal_coverage >= params.cvrg_thresh).sum() >= 2
+                (horizontal_coverage >= params.cvrg_thresh).sum() >= params.num_samples
             ):
                 print(species_id, file=f)
 
@@ -238,7 +239,10 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
     cvrg_thresh = int(cvrg_thresh * 100)
     with open(
         checkpoints.select_species_with_greater_max_coverage_gtpro.get(
-            group=group, stem=stem, cvrg_thresh=cvrg_thresh
+            group=group,
+            stem=stem,
+            cvrg_thresh=cvrg_thresh,
+            num_samples=num_samples,
         ).output[0]
     ) as f:
         if require_in_species_group:
@@ -341,6 +345,7 @@ rule concatenate_all_species_depths:
                 group=w.group,
                 stem=w.stem,
                 cvrg_thresh=0.2,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],
@@ -380,6 +385,7 @@ rule construct_files_for_all_select_species:
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],

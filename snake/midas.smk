@@ -10,13 +10,16 @@ rule download_midasdb_uhgg_all_group_species:
         "data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
     input:
         midasdb=ancient("ref_temp/midasdb_uhgg"),
-        species_list="data/hmp2.a.r.proc.gtpro.horizontal_coverage.filt-20.list",
+        species_list="data_temp/hmp2.a.r.proc.gtpro.horizontal_coverage.filt-h20-n1.list",
     conda:
         "conda/midas.yaml"
     threads: 64
     shell:
         """
-        midas2 database --download --debug --num_cores {threads} --midasdb_name uhgg --midasdb_dir {input.midasdb} --species_list {input.species_list}
+        midas2 database --download \
+                --debug --num_cores {threads} \
+                --midasdb_name uhgg --midasdb_dir {input.midasdb} \
+                --species_list {input.species_list}
         touch {output}
         """
 
