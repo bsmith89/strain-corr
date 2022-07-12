@@ -60,10 +60,9 @@ rule run_midas_genes:
         thresh=0.2,
     conda:
         "conda/midas.yaml"
-    threads: 4
+    threads: 8
     resources:
-        walltime_hr=24,
-        pmem=int(3.2e3 / 1),
+        walltime_hr=48,
     shell:
         """
         tmp=$(mktemp)
