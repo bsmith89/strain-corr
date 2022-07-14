@@ -75,6 +75,8 @@ rule run_midas_genes:
                 < {input.species_coverage} \
             | tr '\\n' ',' | sed 's:,$::'\
             > $tmp
+        [ -s "$tmp" ] || echo 102506 > $tmp
+        cat $tmp
         midas2 run_genes --sample_name {wildcards.mgen} \
                 -1 {input.r1} -2 {input.r2} \
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
