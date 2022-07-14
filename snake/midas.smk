@@ -58,6 +58,8 @@ rule run_midas_genes:
     params:
         outdir=lambda w: f"data_temp/{w.group}.a.r.{w.stem}.midas_output",
         thresh=0.2,
+        min_reads=0,
+        min_mapq=0,
     conda:
         "conda/midas.yaml"
     threads: 8
@@ -77,6 +79,7 @@ rule run_midas_genes:
                 -1 {input.r1} -2 {input.r2} \
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
                 --species_list $(cat $tmp) --select_threshold=-1 \
+                --read_depth {params.min_reads} --aln_mapq {params.min_mapq} \
                 --num_cores {threads} {params.outdir}
         """
 
@@ -92,6 +95,7 @@ rule run_midas_genes_one_species:
     params:
         outdir=lambda w: f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
         min_reads=0,
+        min_mapq=0,
     conda:
         "conda/midas.yaml"
     threads: 4
@@ -106,7 +110,7 @@ rule run_midas_genes_one_species:
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
                 --prebuilt_bowtie2_indexes {input.bt2_dir}/pangenomes --prebuilt_bowtie2_species {input.bt2_dir}/pangenomes.species \
                 --select_threshold=-1 \
-                --read_depth {params.min_reads} \
+                --read_depth {params.min_reads} --aln_mapq {params.min_mapq} \
                 --num_cores {threads} {params.outdir}
         """
 
