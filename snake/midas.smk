@@ -176,9 +176,17 @@ rule merge_midas_genes:
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        species_list=",".join(["102506"]),  # FIXME: Read this from checkpoint for the group
         outdir="data_temp/{group}.a.r.{stem}.midas_merge",
         midasdb="ref_temp/midasdb_uhgg",
+        species=lambda w: ','.join(
+            checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group,
+                stem=w.stem,
+                cvrg_thresh=0.2,
+                num_samples=1,
+                require_in_species_group=True,
+            )
+        )
     conda:
         "conda/midas.yaml"
     threads: 24
@@ -187,7 +195,7 @@ rule merge_midas_genes:
         midas2 merge_genes \
                 --num_cores {threads} \
                 --samples_list {input.manifest} \
-                --species_list {wildcards.species} \
+                --species_list {params.species} \
                 --midasdb_name uhgg \
                 --midasdb_dir {params.midasdb} \
                 --genome_depth 1e-3 \
