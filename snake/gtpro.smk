@@ -233,7 +233,7 @@ checkpoint select_species_with_greater_max_coverage_gtpro:
 
 
 def checkpoint_select_species_with_greater_max_coverage_gtpro(
-    group, stem, cvrg_thresh, require_in_species_group=False
+    group, stem, cvrg_thresh, num_samples, require_in_species_group=False
 ):
     potential_species = set(config["species_group"][group])
     cvrg_thresh = int(cvrg_thresh * 100)
