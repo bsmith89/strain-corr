@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
-remote='HOST_NAME'
-project='Projects/THIS_PROJECT'
+remote=${PROJECT_REMOTE_HOST:-TODO}
+project=${REMOTE_PROJECT_DIR:-TODO}
 
-for path in $@
+echo "Pulling files from $remote:$project"
+
+for pattern in $@
 do
-    dirname=$(dirname $path)
-    basename=$(basename $path)
-    mkdir -p "$dirname"
-
-    # Use rsync --partial for restartable transfers.
-    partialdir=$TMPDIR/rsync-tmpdir/"$project"/"$dirname"
-    mkdir -p "$partialdir"
-
-    rsync -hravz -P --partial-dir="$partialdir" $remote:"$project/$path" "$dirname"
+    rsync -hravz \
+        --progress --partial --prune-empty-dirs --copy-dirlinks --relative \
+        $remote:"$project/./$pattern" .
 done
