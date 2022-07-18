@@ -317,7 +317,7 @@ SS01224	S0063			maintenance	pre_maintenance_2			9.A1		DFS.1224
 SS01225	S0063			maintenance	pre_maintenance_3			9.A2		DFS.1225	"Sample type labeled as ""PRE-CAPS 3?"" in source spreadsheet"	
 SS01226	S0064			maintenance	pre_maintenance_1			9.B2		DFS.1226		
 SS01227	S0064			post_antibiotic	post_antibiotic			9.B1		DFS.1227		
-SS01228	S0063							9.C2		DFS.1228	"Sample type labeled as ""?"" in source spreadsheet"	
+SS01228	S0063			followup	followup_1			9.C2		DFS.1228	"Sample type labeled as ""?"" in source spreadsheet"	
 SS01229	S0064			maintenance	pre_maintenance_2			9.B3		DFS.1229		
 SS01230	S0063			maintenance	pre_maintenance_4			9.A3		DFS.1230	"Sample type labeled as ""PRE-CAPS 4?"" in source spreadsheet"	
 SS01231	S0063			maintenance	pre_maintenance_5			9.A4		DFS.1231	"Sample type labeled as ""PRE-CAPS 5?"" in source spreadsheet"	
