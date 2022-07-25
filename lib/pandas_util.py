@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def idxwhere(condition, x=None):
     if x is None:
         x = condition
@@ -10,14 +11,14 @@ def normalize_rows(df):
     return df.divide(df.sum(1), axis=0)
 
 
-def align_indexes(*args):
+def align_indexes(*args, axis="index"):
     a0, *aa = args
-    idx = set(a0.index)
+    idx = set(getattr(a0, axis))
     for a in aa:
-        idx &= set(a.index)
+        idx &= set(getattr(a, axis))
 
     assert idx
-    return [a.reindex(idx) for a in args]
+    return [a.reindex(idx, axis=axis) for a in args]
 
 
 def repeated(df, subset=None):
