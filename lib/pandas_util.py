@@ -24,5 +24,7 @@ def align_indexes(*args, axis="index"):
 def repeated(df, subset=None):
     if subset is None:
         subset = df.columns
-    out = pd.Series((df[subset].values[1:] == df[subset].values[:-1]).all(1), index=df.index[1:])
+    out = pd.Series(
+        (df[subset].values[1:] == df[subset].values[:-1]).all(1), index=df.index[1:]
+    )
     return out.reindex(df.index, fill_value=False)
