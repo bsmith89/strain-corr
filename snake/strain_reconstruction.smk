@@ -82,13 +82,15 @@ rule calculate_strain_specific_correlation_of_genes:
         gene_depth="data_temp/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
     params:
         strain_frac_thresh=0.95,
-        species_depth_thresh=0.01,
+        species_depth_thresh_abs=0.01,
+        species_depth_thresh_pres=2.0,
         transformation_root=3,
     shell:
         """
         {input.script} \
                 {input.species_depth} \
-                {params.species_depth_thresh} \
+                {params.species_depth_thresh_abs} \
+                {params.species_depth_thresh_pres} \
                 {input.strain_frac} \
                 {params.strain_frac_thresh} \
                 {input.gene_depth} \
