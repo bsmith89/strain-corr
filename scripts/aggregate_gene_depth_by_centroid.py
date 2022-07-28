@@ -22,7 +22,11 @@ if __name__ == "__main__":
         .loc[depth.gene_id]
     )
     info("Aggregating gene depth.")
-    depth = depth.groupby(meta[aggregate_genes_by].to_xarray()).sum()
+    depth = (
+        depth.groupby(meta[aggregate_genes_by].to_xarray())
+        .sum()
+        .rename({aggregate_genes_by: "gene_id"})
+    )
     info("Writing output.")
     depth.to_dataset(name="depth").to_netcdf(
         outpath, encoding=dict(depth=dict(zlib=True, complevel=5))

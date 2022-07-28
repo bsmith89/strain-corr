@@ -10,17 +10,20 @@ from tqdm import tqdm
 
 if __name__ == "__main__":
     species_depth_inpath = sys.argv[1]
-    species_depth_thresh = float(sys.argv[2])
-    strain_frac_inpath = sys.argv[3]
-    strain_frac_thresh = float(sys.argv[4])
-    gene_depth_inpath = sys.argv[5]
-    transformation_root = float(sys.argv[6])
-    outpath = sys.argv[7]
+    species_depth_thresh_abs = float(sys.argv[2])
+    species_depth_thresh_pres = float(sys.argv[3])
+    strain_frac_inpath = sys.argv[4]
+    strain_frac_thresh = float(sys.argv[5])
+    gene_depth_inpath = sys.argv[6]
+    transformation_root = float(sys.argv[7])
+    outpath = sys.argv[8]
 
     info("Loading input data.")
     info("Loading species depth.")
     species_depth = (
-        pd.read_table(species_depth_inpath, names=["sample", "depth"], index_col="sample")
+        pd.read_table(
+            species_depth_inpath, names=["sample", "depth"], index_col="sample"
+        )
         .squeeze()
         .to_xarray()
     )
@@ -45,8 +48,9 @@ if __name__ == "__main__":
     info("Identifying strain-pure samples.")
     homogenous_samples = idxwhere(
         (strain_frac > strain_frac_thresh).any("strain").to_series()
+        & (species_depth.to_series() > species_depth_thresh_pres)
     )
-    no_species_samples = idxwhere(species_depth.to_series() < species_depth_thresh)
+    no_species_samples = idxwhere(species_depth.to_series() < species_depth_thresh_abs)
     strain_total_depth = (
         strain_frac.sel(sample=homogenous_samples)
         * species_depth.sel(sample=homogenous_samples)
