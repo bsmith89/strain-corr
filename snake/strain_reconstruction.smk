@@ -118,3 +118,32 @@ rule calculate_strain_specific_gene_depth_ratio:
                 {input.gene_depth} \
                 {output}
         """
+
+
+rule pick_strain_gene_correlation_threshold:
+    output:
+        "data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation_threshold.tsv",
+    input:
+        script="scripts/pick_strain_gene_correlation_threshold.py",
+        species_corr="data_temp/sp-{species}.{stemA}.midas_gene75.species_correlation.tsv",  # NOTE: gene75-based estimates
+        strain_corr="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
+        strain_depth="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
+        meta="ref_temp/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+    params:
+        aggregate_genes_by="centroid_75",  # NOTE: Must match the species_corr aggregation.
+        species_corr_threshold=0.95,
+        strain_corr_quantile=0.95,
+        trim_frac=0.2,
+    shell:
+        """
+        {input.script} \
+                {input.species_corr} \
+                {input.strain_corr} \
+                {input.strain_depth} \
+                {input.meta} \
+                {params.aggregate_genes_by} \
+                {params.species_corr_threshold} \
+                {params.strain_corr_quantile} \
+                {params.trim_frac} \
+                {output}
+        """

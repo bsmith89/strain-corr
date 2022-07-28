@@ -24,6 +24,20 @@ rule download_midasdb_uhgg_all_group_species:
         """
 
 
+rule download_midasdb_species_gene_annotations:
+    output:
+        "data_temp/sp-{species}.download_uhgg_gene_annotations.flag",
+    params:
+        url="s3://microbiome-pollardlab/uhgg_v1/gene_annotations/{species}",
+        outdir="ref_temp/midasdb_uhgg_gene_annotations/{species}",
+    conda:
+        "conda/midas.yaml"
+    shell:
+        """
+        aws s3 cp --no-sign-request --recursive --exclude "*" --include "*.tsv.lz4" {params.url} {params.outdir}
+        """
+
+
 rule build_midas_one_species_pangenome_index:
     output:
         directory("ref_temp/midasdb_uhgg_indexes/{species}/pangenomes"),
