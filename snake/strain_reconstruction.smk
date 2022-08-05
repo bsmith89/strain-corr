@@ -147,3 +147,10 @@ rule pick_strain_gene_correlation_threshold:
                 {params.trim_frac} \
                 {output}
         """
+
+
+rule download_cog_metadata:
+    output: 'ref/cog-20.meta.tsv'
+    params:
+        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/cog-20.def.tab"
+    shell: "curl {params.url} | iconv -c -f LATIN1 -t UTF8 > {output}"

@@ -28,3 +28,12 @@ def repeated(df, subset=None):
         (df[subset].values[1:] == df[subset].values[:-1]).all(1), index=df.index[1:]
     )
     return out.reindex(df.index, fill_value=False)
+
+def invert_mapping(x):
+    assert not x.duplicated().any()
+    assert x.index.is_unique
+
+    x_value_name = x.name
+    x_index_name = x.index.name
+
+    return x.reset_index().set_index(x_value_name)[x_index_name]
