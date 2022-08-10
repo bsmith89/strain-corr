@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import xarray as xr
 from scipy.spatial.distance import cdist
-from lib.pandas_util import align_indexes, idxwhere
+from lib.pandas_util import idxwhere
 from lib.util import info
 from scipy.stats import trim_mean
 
@@ -16,11 +16,13 @@ if __name__ == "__main__":
     # gene_meta_inpath = sys.argv[4]
     # aggregate_genes_by = sys.argv[5]
     transformation_root = float(sys.argv[4])
-    corr_thresh = float(sys.argv[5])
+    n_marker_genes = int(sys.argv[5])
+    # corr_thresh = float(sys.argv[5])
     trim_frac = float(sys.argv[6])
     corr_outpath = sys.argv[7]
     sample_depth_outpath = sys.argv[8]
     gene_depth_outpath = sys.argv[9]
+    threshold_outpath = sys.argv[10]
 
     info("Loading input data.")
     info("Loading species depth.")
@@ -40,13 +42,13 @@ if __name__ == "__main__":
 
     info("Transforming input data.")
     info("Aligning indexes.")
-    sample_list = list(
-        set(gene_depth.sample.values) & set(species_depth.sample.values)
-    )
+    sample_list = list(set(gene_depth.sample.values) & set(species_depth.sample.values))
     species_depth = species_depth.sel(sample=sample_list)
     gene_depth = gene_depth.sel(sample=sample_list)
 
-    info("Calculating correlation.")
+    n_genes = len(gene_depth.gene_id)
+    n_samples = len(gene_depth.sample)
+    info(f"Calculating correlation among {n_genes} genes across {n_samples} samples.")
     trnsfm = lambda x: x ** (1 / transformation_root)
     corr = pd.Series(
         1
@@ -58,10 +60,11 @@ if __name__ == "__main__":
         index=gene_depth.gene_id,
     )
 
-    info(f"Identifying highly correlated genes (> {corr_thresh}).")
+    info(f"Identifying top {n_marker_genes} highly correlated genes.")
+    corr_thresh = corr.sort_values(ascending=False).head(n_marker_genes + 1).min()
     gene_hits = idxwhere(corr > corr_thresh)
     nhits = len(gene_hits)
-    info(f"Found {nhits} highly correlated genes.")
+    info(f"Found {nhits} highly correlated genes (cosine similarity > {corr_thresh}).")
     info("Calculating mean depth of samples.")
     sample_mean_depth = xr.apply_ufunc(
         trim_mean,
@@ -79,3 +82,6 @@ if __name__ == "__main__":
     sample_mean_depth.to_series().to_csv(sample_depth_outpath, sep="\t", header=False)
     info("Writing gene mean depth.")
     gene_mean_depth.to_series().to_csv(gene_depth_outpath, sep="\t", header=False)
+    info("Writing species correlation threshold.")
+    with open(threshold_outpath, "w") as f:
+        print(corr_thresh, file=f)

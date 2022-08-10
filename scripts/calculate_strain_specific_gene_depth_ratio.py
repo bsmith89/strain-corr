@@ -22,7 +22,9 @@ if __name__ == "__main__":
         .to_xarray()
     )
     species_depth = (
-        pd.read_table(species_depth_inpath, names=["sample", "depth"], index_col="sample")
+        pd.read_table(
+            species_depth_inpath, names=["sample", "depth"], index_col="sample"
+        )
         .squeeze()
         .to_xarray()
     )
@@ -40,31 +42,33 @@ if __name__ == "__main__":
     homogenous_samples = idxwhere(
         (strain_frac > strain_frac_thresh).any("strain").to_series()
     )
-    strain_total_depth = (
-        strain_frac.sel(sample=homogenous_samples)
-        * species_depth.sel(sample=homogenous_samples)
-    ).sum("sample")
-    strain_sample_tally = (
-        strain_frac.sel(sample=homogenous_samples) > strain_frac_thresh
-    ).sum("sample")
-    strain_list = idxwhere(
-        ((strain_total_depth > 1.0) & (strain_sample_tally >= 2)).to_series()
-    )
-    strain_order = (
-        strain_sample_tally.to_series()
-        .loc[strain_list]
-        .sort_values(ascending=False)
-        .index.to_list()
-    )
-    nstrains = len(strain_order)
-    info(f"Found {nstrains} strains with total depth > 1.0 and pure in >= 2 samples.")
-
+    # strain_total_depth = (
+    #     strain_frac.sel(sample=homogenous_samples)
+    #     * species_depth.sel(sample=homogenous_samples)
+    # ).sum("sample")
+    # strain_sample_tally = (
+    #     strain_frac.sel(sample=homogenous_samples) > strain_frac_thresh
+    # ).sum("sample")
+    # strain_list = idxwhere(
+    #     ((strain_total_depth > 1.0) & (strain_sample_tally >= 2)).to_series()
+    # )
+    # strain_order = (
+    #     strain_sample_tally.to_series()
+    #     .loc[strain_list]
+    #     .sort_values(ascending=False)
+    #     .index.to_list()
+    # )
+    # nstrains = len(strain_order)
+    # info(f"Found {nstrains} strains with total depth > 1.0 and pure in >= 2 samples.")
+    #
     info("Iterating strains.")
     depth_ratio = {}
-    for strain in tqdm(strain_order):
+    for strain in tqdm(strain_frac.strain.to_series().to_list()):
         strain_pure_samples = idxwhere(
             (strain_frac.sel(strain=strain) > strain_frac_thresh).to_series()
         )
+        if not strain_pure_samples:
+            continue
         depth_ratio[strain] = (
             gene_depth.sel(sample=strain_pure_samples).sum("sample")
             / species_depth.sel(sample=strain_pure_samples).sum()

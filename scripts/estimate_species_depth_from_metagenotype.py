@@ -22,8 +22,7 @@ if __name__ == "__main__":
         if is_empty(species_data):
             continue
         cvrg[species_id] = (
-            species_data
-            .sum("allele")
+            species_data.sum("allele")
             .to_pandas()
             .apply(lambda x: sp.stats.trim_mean(x, trim_frac), axis=1)
         )

@@ -8,24 +8,29 @@ from lib.pandas_util import idxwhere
 from scipy.spatial.distance import cdist
 from tqdm import tqdm
 
+
 if __name__ == "__main__":
-    species_depth_inpath = sys.argv[1]
-    species_depth_thresh_abs = float(sys.argv[2])
-    species_depth_thresh_pres = float(sys.argv[3])
-    strain_frac_inpath = sys.argv[4]
-    strain_frac_thresh = float(sys.argv[5])
-    gene_depth_inpath = sys.argv[6]
-    transformation_root = float(sys.argv[7])
-    outpath = sys.argv[8]
+    all_species_depth_inpath = sys.argv[1]
+    species_id = sys.argv[2]
+    species_depth_thresh_abs = float(sys.argv[3])
+    species_depth_thresh_pres = float(sys.argv[4])
+    strain_frac_inpath = sys.argv[5]
+    strain_frac_thresh = float(sys.argv[6])
+    gene_depth_inpath = sys.argv[7]
+    transformation_root = float(sys.argv[8])
+    outpath = sys.argv[9]
 
     info("Loading input data.")
     info("Loading species depth.")
-    species_depth = (
+    all_species_depth = (
         pd.read_table(
-            species_depth_inpath, names=["sample", "depth"], index_col="sample"
+            all_species_depth_inpath,
+            dtype={"sample": str, "species_id": str, "depth": float},
+            index_col=["sample", "species_id"],
         )
         .squeeze()
         .to_xarray()
+        .fillna(0)
     )
     info("Loading strain fractions.")
     strain_frac = (
@@ -37,23 +42,28 @@ if __name__ == "__main__":
     gene_depth = xr.load_dataarray(gene_depth_inpath)
     info("Aligning indexes.")
     shared_samples = list(
-        set(species_depth.sample.values) & set(gene_depth.sample.values)
+        set(all_species_depth.sample.values)
+        & set(strain_frac.sample.values)
+        & set(gene_depth.sample.values)
     )
-    species_depth = species_depth.sel(sample=shared_samples)
+    all_species_depth = all_species_depth.sel(sample=shared_samples)
+    strain_frac = strain_frac.sel(sample=shared_samples)
     gene_depth = gene_depth.sel(sample=shared_samples)
-
-    # TODO: Do I need to filter the homogenous samples bit by strain_frac??
-    # strain_frac = strain_frac.sel(sample=shared_samples)
 
     info("Identifying strain-pure samples.")
     homogenous_samples = idxwhere(
         (strain_frac > strain_frac_thresh).any("strain").to_series()
-        & (species_depth.to_series() > species_depth_thresh_pres)
+        & (
+            all_species_depth.sel(species_id=species_id) > species_depth_thresh_pres
+        ).to_series()
     )
-    no_species_samples = idxwhere(species_depth.to_series() < species_depth_thresh_abs)
+    no_species_samples = idxwhere(
+        all_species_depth.sel(species_id=species_id).to_series()
+        < species_depth_thresh_abs
+    )
     # strain_total_depth = (
     #     strain_frac.sel(sample=homogenous_samples)
-    #     * species_depth.sel(sample=homogenous_samples)
+    #     * all_species_depth.sel(species_id=species_id, sample=homogenous_samples)
     # ).sum("sample")
     # strain_sample_tally = (
     #     strain_frac.sel(sample=homogenous_samples) > strain_frac_thresh
@@ -69,37 +79,41 @@ if __name__ == "__main__":
     # )
     # nstrains = len(strain_order)
     # info(f"Found {nstrains} strains with total depth > 1.0 and pure in >= 2 samples.")
-
+    #
     info("Transforming depths.")
     trnsfm = lambda x: x ** (1 / transformation_root)
     gene_depth = trnsfm(gene_depth)
-    species_depth = trnsfm(species_depth)
+    all_species_depth = trnsfm(all_species_depth)
     info("Iterating strains.")
     corr = {}
     for strain in tqdm(strain_frac.strain.to_series().to_list()):
         strain_pure_samples = idxwhere(
             strain_frac.sel(strain=strain).to_series() > strain_frac_thresh
         )
-        if not strain_pure_samples:
-            continue
         focal_samples = strain_pure_samples + no_species_samples
         y = gene_depth.sel(sample=focal_samples)
-        x = species_depth.sel(sample=focal_samples)
-        corr[strain] = pd.Series(
-            1
-            - cdist(
-                x.expand_dims(dict(_=1)),
-                y,
-                metric="cosine",
-            )[0],
-            index=gene_depth.gene_id,
+        x = all_species_depth.sel(sample=focal_samples)
+        corr[strain] = (
+            pd.DataFrame(
+                1
+                - cdist(
+                    x.T,
+                    y,
+                    metric="cosine",
+                ),
+                columns=gene_depth.gene_id,
+                index=all_species_depth.species_id,
+            )
+            .fillna(0)
+            .stack()
         )
     info("Compiling correlations table.")
     corr = (
         pd.DataFrame(corr)
-        .rename_axis(index="gene_id", columns="strain")
+        .rename_axis(index=["species_id", "gene_id"], columns="strain")
         .stack()
         .rename("correlation")
     )
-    info("Writing output.")
-    corr.to_csv(outpath, sep="\t")
+    corr.to_xarray().to_dataset(name="correlation").to_netcdf(
+        outpath, encoding=dict(correlation=dict(zlib=True, complevel=5))
+    )
