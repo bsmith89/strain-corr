@@ -104,7 +104,9 @@ if __name__ == "__main__":
         if max_value < np.iinfo(dtype).max:
             break
     else:
-        raise ValueError(f"Largest count is too big for all dtypes checked (final: {dtype})")
+        raise ValueError(
+            f"Largest count is too big for all dtypes checked (final: {dtype})"
+        )
     info(f"Casting to {dtype}")
     data = data.astype(dtype)
 
