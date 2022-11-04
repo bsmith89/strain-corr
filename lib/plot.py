@@ -78,7 +78,9 @@ def pca_ordination(data):
     d1 = pca.transform(data)
 
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(pca.explained_variance_ratio_, index=d1.columns)
     return d1, frac_explained, {}
@@ -110,7 +112,9 @@ def mds_ordination(data, is_dmat=False, mds_kwargs=None, pdist_kwargs=None):
     ).fit_transform(dmat)
 
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(np.nan, index=d1.columns)
     return d1, frac_explained, {"dmat": dmat}
@@ -166,10 +170,13 @@ def nmds_ordination(
     d1 = nmds.fit_transform(dmat, init=init)
 
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(np.nan, index=d1.columns)
     return d1, frac_explained, {"dmat": dmat}
+
 
 def nmds2_ordination(
     data, is_dmat=False, pca_kwargs=None, nmds_kwargs=None, pdist_kwargs=None
@@ -216,7 +223,9 @@ def nmds2_ordination(
     d1 = nmds.fit_transform(dmat, init=init)
 
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(np.nan, index=d1.columns)
     return d1, frac_explained, {"dmat": dmat}
@@ -233,12 +242,16 @@ def tsne_ordination(data, is_dmat=False, tsne_kwargs=None, pdist_kwargs=None):
         dmat = data.loc[:, data.index]  # Ensure symmetric
     else:
         dmat = pd.DataFrame(
-            squareform(pdist(data, **kwargs)), index=data.index, columns=data.index,
+            squareform(pdist(data, **kwargs)),
+            index=data.index,
+            columns=data.index,
         )
     d1 = TSNE(n_components=2, metric="precomputed", **tsne_kwargs).fit_transform(dmat)
 
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(np.nan, index=d1.columns)
     return d1, frac_explained, {"dmat": dmat}
@@ -260,7 +273,9 @@ def isomap_ordination(data, is_dmat=False, ordin_kwargs=None, pdist_kwargs=None)
 
     d1 = Isomap(metric="precomputed", **ordin_kwargs).fit_transform(dmat)
     d1 = pd.DataFrame(
-        d1, index=data.index, columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
+        d1,
+        index=data.index,
+        columns=[f"PC{i}" for i in np.arange(d1.shape[1]) + 1],
     )
     frac_explained = pd.Series(np.nan, index=d1.columns)
     return d1, frac_explained, {"dmat": dmat}
@@ -347,9 +362,7 @@ def scatterplot(
             feat_zorder,
         ),
         d,
-    ) in data.groupby(
-        [showby, colorby, markerby, edgecolorby, edgestyleby, zorderby]
-    ):
+    ) in data.groupby([showby, colorby, markerby, edgecolorby, edgestyleby, zorderby]):
         if (
             (not feat_show)
             or (feat_color not in colorby_order)

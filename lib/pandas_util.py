@@ -29,6 +29,7 @@ def repeated(df, subset=None):
     )
     return out.reindex(df.index, fill_value=False)
 
+
 def invert_mapping(x):
     assert not x.duplicated().any()
     assert x.index.is_unique

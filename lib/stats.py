@@ -9,6 +9,7 @@ from scipy.spatial.distance import pdist, squareform
 
 def clr(rabund, pad=1e-10):
     from skbio.stats.composition import clr as _clr
+
     return pd.DataFrame(_clr(rabund + pad), index=rabund.index, columns=rabund.columns)
 
 
@@ -79,6 +80,7 @@ def wilcoxon(x, y, data):
 def anosim(dmat, groups, subset=None, n=999):
     from skbio.stats.distance import anosim as skb_anosim
     from skbio.stats.distance import DistanceMatrix
+
     if subset is not None:
         dmat = dmat.loc[subset, subset]
     groups = groups.loc[dmat.index]
@@ -98,5 +100,7 @@ def pdist_matrix(df, axis=0, *args, **kwargs):
     else:
         index = range(df.shape[0])
 
-    out = pd.DataFrame(squareform(pdist(df, *args, **kwargs)), index=index, columns=index)
+    out = pd.DataFrame(
+        squareform(pdist(df, *args, **kwargs)), index=index, columns=index
+    )
     return out

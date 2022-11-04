@@ -44,8 +44,8 @@ def resource_calculator(
     attempt_base=1,
     input_size_exponent=None,
     agg=None,
-    bad_inputs='replace',
-    **input_size_multipliers
+    bad_inputs="replace",
+    **input_size_multipliers,
 ):
     if agg is None:
         agg = sum
@@ -59,7 +59,9 @@ def resource_calculator(
         input_sizes = {}
         for k in input_size_multipliers:
             if hasattr(wildcards, k) and hasattr(input, k):
-                warn(f"{k} is both a wildcard and an input file. Input file size takes precedence.")
+                warn(
+                    f"{k} is both a wildcard and an input file. Input file size takes precedence."
+                )
             if hasattr(input, k):
                 input_sizes[k] = getattr(input, k).size / 1024 / 1024
             elif hasattr(wildcards, k):
@@ -87,12 +89,13 @@ def resource_calculator(
             #     warn(str(err))
             #     input_sizes[k] = 0
         base_estimate = agg(
-            [baseline] + [
+            [baseline]
+            + [
                 input_size_multipliers[k] * input_sizes[k] ** input_size_exponent[k]
                 for k in input_size_multipliers
             ]
         )
-        outvalue = base_estimate * threads ** threads_exponent * attempt_base ** attempt
+        outvalue = base_estimate * threads**threads_exponent * attempt_base**attempt
         # print(weighted_input_size, threads, threads_exponent, attempt_base, attempt, outvalue)
         return ceil(outvalue)
 
