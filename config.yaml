@@ -8,4 +8,4 @@ proc: 'hfilt.dedup.dadapt.qtrim'
 MAX_THREADS: 4
 USE_CUDA: 0
 ALL:
-  - ''
+  - 'TODO'
