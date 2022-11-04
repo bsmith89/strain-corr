@@ -1,8 +1,10 @@
 # Source this script first before working in the project.
 
-if [ -f ./env_local ]
+export PROJECT_ROOT=$(dirname $(realpath $BASH_SOURCE))
+
+if [ -f ${PROJECT_ROOT}/env_local ]
 then
-    source ./env_local
+    source ${PROJECT_ROOT}/env_local
 fi
 
 # Set default profile name to default if not already set.
@@ -13,17 +15,17 @@ fi
 `snakemake --bash-completion`  # Should be: complete -o bashdefault -C snakemake-bash-completion snakemake
 
 # Aliases for each profile
-for dir in `ls -d profiles/*/`
+for dir in `ls -d ${PROJECT_ROOT}/profiles/*/`
 do
     profile=$(basename $dir)
-    alias smake-$profile="snakemake --profile profiles/${profile}"
+    alias smake-$profile="snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
-    alias smake-$profile-xargs="xargs snakemake --profile profiles/${profile}"
+    alias smake-$profile-xargs="xargs snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
 # Extra-convenient alias for the default profile
-alias smake='snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake='snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake
-alias smake-xargs='xargs snakemake --profile profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake-xargs='xargs snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake-xargs
