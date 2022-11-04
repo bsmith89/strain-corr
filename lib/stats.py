@@ -1,15 +1,15 @@
 import patsy
 import scipy as sp
 import numpy as np
-from skbio.stats.composition import clr as _clr
 import pandas as pd
-from skbio.stats.distance import anosim as skb_anosim
-from skbio.stats.distance import DistanceMatrix
 from dataclasses import dataclass
 from warnings import warn
+from scipy.spatial.distance import pdist, squareform
 
 
 def clr(rabund, pad=1e-10):
+    from skbio.stats.composition import clr as _clr
+
     return pd.DataFrame(_clr(rabund + pad), index=rabund.index, columns=rabund.columns)
 
 
@@ -78,7 +78,29 @@ def wilcoxon(x, y, data):
 
 
 def anosim(dmat, groups, subset=None, n=999):
+    from skbio.stats.distance import anosim as skb_anosim
+    from skbio.stats.distance import DistanceMatrix
+
     if subset is not None:
         dmat = dmat.loc[subset, subset]
     groups = groups.loc[dmat.index]
     return skb_anosim(DistanceMatrix(dmat), groups, permutations=n)
+
+
+def pdist_matrix(df, axis=0, *args, **kwargs):
+    if axis == 0:
+        pass
+    elif axis == 1:
+        df = df.T
+    else:
+        raise ValueError("The axis parameter must be 0 (index) or 1 (columns).")
+
+    if hasattr(df, index):
+        index = df.index
+    else:
+        index = range(df.shape[0])
+
+    out = pd.DataFrame(
+        squareform(pdist(df, *args, **kwargs)), index=index, columns=index
+    )
+    return out

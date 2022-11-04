@@ -103,6 +103,8 @@ rule qc_raw_reads:
         r2=lambda w: [
             f"sdata/{mgen}.r2.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
+    container:
+        config["container"]["toolz"]
     threads: config["MAX_THREADS"]
     shell:
         dd(
@@ -123,6 +125,8 @@ rule qc_processed_reads:
         r2=lambda w: [
             f"data/{mgen}.r2.proc.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
+    container:
+        config["container"]["toolz"]
     threads: config["MAX_THREADS"]
     shell:
         dd(
@@ -154,6 +158,8 @@ rule deduplicate_reads:
     resources:
         mem_mb=resource_calculator(r1=5, input_size_exponent=dict(r1=1.1)),
         walltime_min=resource_calculator(r1=0.01),
+    container:
+        config["container"]["toolz"]
     shell:
         "{input.script} {input.r1} {input.r2} {output.r1} {output.r2}"
 
@@ -166,6 +172,8 @@ rule trim_adapters:
         fq="{stem}.fq.gz",
     log:
         "log/{stem}.scythe.log",
+    container:
+        config["container"]["toolz"]
     threads: 2
     resources:
         walltime_hr=2,
@@ -189,6 +197,8 @@ rule quality_trim_reads:
     params:
         qual_type="sanger",
         qual_thresh=20,
+    container:
+        config["container"]["toolz"]
     resources:
         walltime_hr=3,
     shell:
@@ -223,6 +233,8 @@ rule filter_out_host:
         ],
     params:
         index="ref/GRCh38",
+    container:
+        config["container"]["toolz"]
     threads: 8
     shell:
         dd(
