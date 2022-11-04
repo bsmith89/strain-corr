@@ -1,3 +1,36 @@
+# Install Jupyter Kernels
+
+
+rule install_jupyter_kernel_native:
+    params:
+        name="native",
+    shell:
+        """
+        python -m ipykernel install --user --name={params.name} --env PATH $PATH
+        """
+
+
+rule install_jupyter_kernel_default:
+    params:
+        name="default",
+    conda:
+        "conda/default.yaml"
+    shell:
+        """
+        python -m ipykernel install --user --name={params.name} --env PATH $PATH
+        """
+
+
+use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
+    params:
+        name="pymc",
+    conda:
+        "conda/pymc.yaml"
+
+
+# And then run `snakemake -j1 install_jupyter_kernel_pymc`.
+
+
 rule start_jupyter:
     threads: MAX_THREADS
     params:
