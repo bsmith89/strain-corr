@@ -132,13 +132,13 @@ rule sfacts_nmf_approximation:
         """
 
 
-rule sfacts_clust_approximation:
+# FIXME: Seed parameterized filename is not really a parameter.
+rule sfacts_clust_initialization:
     output:
-        "{stem}.approx-clust-thresh{thresh}-s{strain_exponent}-seed{seed}.world.nc",
+        "{stem}.approx-clust-thresh{thresh}-s{strain_exponent}-seed0.world.nc",
     input:
         "{stem}.mgen.nc",
     params:
-        seed=lambda w: int(w.seed),
         thresh=lambda w: float(w.thresh) / 100,
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
     conda:
@@ -147,7 +147,6 @@ rule sfacts_clust_approximation:
         """
         python3 -m sfacts clust_init \
                 --verbose \
-                --random-seed {params.seed} \
                 --strain-sample-exponent {params.strain_exponent} \
                 --thresh {params.thresh} \
                 {input} \
