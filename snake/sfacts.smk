@@ -153,6 +153,38 @@ rule sfacts_clust_initialization:
                 {output}
         """
 
+rule sfacts_clust_approximation:
+    output:
+        "data_temp/{stem}.approx-clust2-thresh{thresh}-s{strain_exponent}.world.nc",
+    input:
+        "data/{stem}.mgen.nc",
+    params:
+        thresh=lambda w: float(w.thresh) / 100,
+        strain_exponent=lambda w: float(w.strain_exponent) / 100,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts clust_init \
+                --verbose \
+                --strain-sample-exponent {params.strain_exponent} \
+                --thresh {params.thresh} \
+                --frac 1.0 \
+                --pseudo 0.0 \
+                {input} \
+                {output}
+        """
+
+rule calculate_metagenotype_pdist:
+    output: '{stem}.mgen.pdist.nc'
+    input:
+        mgen='{stem}.mgen.nc',
+    conda:
+        "conda/sfacts.yaml"
+    resources:
+        walltime_hr=5,
+    shell:
+        "sfacts mgen_diss --verbose {input.mgen} {output}"
 
 rule fit_sfacts:
     output:
@@ -185,6 +217,34 @@ rule fit_sfacts:
                 --strain-sample-exponent {params.strain_exponent} \
                 --history-outpath {output.hist} \
                 -- {input.mgen} {output.fit}
+        """
+
+rule refit_genotypes_sfacts:
+    output:
+        fit="data_temp/{stemA}.fit-{stemB}.refit-sfacts{strategy}-seed{seed}.world.nc",
+    input:
+        fit="data_temp/{stemA}.fit-{stemB}.world.nc",
+        mgen="data/{stemA}.mgen.nc",
+        strategy="meta/sfacts/strategy{strategy}.args",
+    wildcard_constraints:
+        seed="[0-9]+",
+    params:
+        seed=lambda w: int(w.seed),
+    resources:
+        walltime_hr=2,
+        pmem=5_000,
+        mem_mb=5_000,
+        device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
+        gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts fit_geno \
+                @{input.strategy} \
+                --debug --device {resources.device} \
+                --random-seed {params.seed} \
+                -- {input.fit} {input.mgen} {output.fit}
         """
 
 
