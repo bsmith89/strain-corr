@@ -49,7 +49,6 @@ def construct_ordered_palette_from_list(x, colors=[], other="grey", extend=None)
         colormap[s] = c
     return colormap
 
-
 def subplots_grid(ncols, naxes, ax_width=3, ax_height=2.5, **kwargs):
     nrows = int(np.ceil(naxes / ncols))
     fig, axs = plt.subplots(
