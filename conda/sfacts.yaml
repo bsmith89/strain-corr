@@ -18,6 +18,7 @@ dependencies:
   - scipy
   - numpy
   - scikit-learn
+  - umap-learn
   - scikit-bio
   - line_profiler
   - memory_profiler
