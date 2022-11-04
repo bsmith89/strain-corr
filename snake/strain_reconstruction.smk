@@ -88,7 +88,7 @@ rule calculate_species_correlation_of_genes:
         species_depth="data/{stem}.gtpro.species_depth.tsv",
         gene_depth="data_temp/sp-{species}.{stem}.midas_gene{centroid}.depth.nc",
     params:
-        transformation_root=1,
+        transformation_root=0.33,
         n_marker_genes=1000,
         trim_frac=0.05,
     shell:
@@ -118,8 +118,8 @@ rule calculate_strain_specific_correlation_of_genes:
     params:
         strain_frac_thresh=0.95,
         species_depth_thresh_abs=0.0001,
-        species_depth_thresh_pres=2.0,
-        transformation_root=1,
+        species_depth_thresh_pres=0.5,
+        transformation_root=0.33,
     shell:
         """
         {input.script} \
@@ -144,8 +144,8 @@ rule calculate_cross_species_strain_specific_correlation_of_genes:
     params:
         strain_frac_thresh=0.95,
         species_depth_thresh_abs=0.0001,
-        species_depth_thresh_pres=2.0,
-        transformation_root=1,
+        species_depth_thresh_pres=0.5,
+        transformation_root=0.33,
     shell:
         """
         {input.script} \
@@ -191,8 +191,10 @@ rule pick_strain_gene_thresholds:
         strain_corr="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
         strain_depth="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
     params:
-        strain_corr_quantile=0.01,
-        strain_depth_quantile=0.01,
+        strain_corr_quantile_strict=0.1,
+        strain_corr_quantile_moderate=0.05,
+        strain_corr_quantile_lenient=0.01,
+        strain_depth_quantile=0.05,
         species_corr_threshold=0.98,
     shell:
         """
@@ -200,7 +202,9 @@ rule pick_strain_gene_thresholds:
                 {input.species_corr} \
                 {params.species_corr_threshold} \
                 {input.strain_corr} \
-                {params.strain_corr_quantile} \
+                {params.strain_corr_quantile_strict} \
+                {params.strain_corr_quantile_moderate} \
+                {params.strain_corr_quantile_lenient} \
                 {input.strain_depth} \
                 {params.strain_depth_quantile} \
                 {output}
