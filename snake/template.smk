@@ -52,6 +52,12 @@ rule initialize_project_config:
         git config --local diff.daff-csv.command "daff.py diff --git"
         git config --local merge.daff-csv.name "daff.py tabular merge"
         git config --local merge.daff-csv.driver "daff.py merge --output %A %O %A %B"
+        git config --local alias.l "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit"
+        git config --local alias.wdiff "diff --color-words"
+        git config --local alias.s "status -uno"
+        git config --local alias.ls-other "ls-files --other --exclude-standard"
+        git config --local alias.grep-other "!git ls-other | git grep -f -"
+        git config --local pull.ff only
         echo 'Add local configuration to {input.local_config_files}'
         echo 'Or by creating/relinking profile/default/'
         echo 'Remember to symlink data directories to the correct fs. (e.g. raw/, ref/, data/, etc.)'
