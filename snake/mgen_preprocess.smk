@@ -61,8 +61,6 @@ ruleorder: alias_GRCh38_index_file > bowtie_index_build
 # {{{1 Organize raw data
 
 
-
-
 rule alias_raw_read_r1:
     output:
         "data/{mgen}.r1.fq.gz",
