@@ -24,6 +24,7 @@ dependencies:
   - memory_profiler
   - pip
   - black
+  - drmaa
   - snakefmt
   - pip:
     - daff
