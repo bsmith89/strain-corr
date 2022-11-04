@@ -58,7 +58,7 @@ rule load_gtpro_snp_dict:
           , local_pos INT
           , ref_allele VARCHAR(1)
           , alt_allele VARCHAR(1)
-          , PRIMARY KEY (species_id, snp_index)
+          , PRIMARY KEY (species, global_pos)
         );
         EOF
         cat {input} \
