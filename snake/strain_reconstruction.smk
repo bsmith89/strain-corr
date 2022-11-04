@@ -1,7 +1,8 @@
 rule combine_midasdb_all_gene_annotations:
-    output: 'ref_temp/midasdb_uhgg.sp-{species}.gene_annotations.tsv'
+    output:
+        "ref_temp/midasdb_uhgg.sp-{species}.gene_annotations.tsv",
     input:
-        flag="data_temp/sp-{species}.download_uhgg_gene_annotations_all_tsv.flag"
+        flag="data_temp/sp-{species}.download_uhgg_gene_annotations_all_tsv.flag",
     shell:
         """
         find ref_temp/midasdb_uhgg/gene_annotations/{wildcards.species}/ -name '*.tsv.lz4' \
@@ -10,13 +11,15 @@ rule combine_midasdb_all_gene_annotations:
             > {output}
         """
 
+
 rule filter_midasdb_all_gene_annotations_by_centroid:
-    output: 'ref_temp/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv'
+    output:
+        "ref_temp/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv",
     input:
         annot="ref_temp/midasdb_uhgg.sp-{species}.gene_annotations.tsv",
-        centroids_list="ref_temp/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4"
+        centroids_list="ref_temp/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
     params:
-        col=lambda w: {'99': 2, '95': 3, '90': 4, '85': 5, '80': 6, '75': 7}[w.centroid],
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     shell:
         """
         grep -Ff \
@@ -30,6 +33,7 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
             {input.annot} \
             > {output}
         """
+
 
 rule convert_genes_tally_to_cluster_depth:
     output:
@@ -133,6 +137,7 @@ rule calculate_strain_specific_correlation_of_genes:
                 {output}
         """
 
+
 rule calculate_cross_species_strain_specific_correlation_of_genes:
     output:
         "data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_by_species_correlation.nc",
@@ -222,7 +227,8 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
 
 
 rule collect_files_for_strain_assessment:
-    output: 'data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_files.flag',
+    output:
+        "data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_files.flag",
     input:
         sfacts="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.world.nc",
         strain_correlation="data_temp/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
@@ -236,4 +242,5 @@ rule collect_files_for_strain_assessment:
         gene_annotations="ref_temp/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv",
         midas_depth="data_temp/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
         reference_copy_number="data_temp/sp-{species}.midas_gene{centroid}.reference_copy_number.nc",
-    shell: "echo {input} | tee {output}"
+    shell:
+        "echo {input} | tee {output}"

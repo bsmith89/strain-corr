@@ -39,6 +39,7 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
     conda:
         "conda/sfacts.yaml"
 
+
 # And then run `snakemake -j1 install_jupyter_kernel_sfacts`.
 
 

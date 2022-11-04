@@ -36,3 +36,6 @@ rule process_hmp2_metadata:
         """
         cat {input.raw} | {input.script} {output.subject} {output.visit} {output.stool} {output.preparation} {output.mgen} {output.mtab}
         """
+
+
+config["figures"]["submission"] = []

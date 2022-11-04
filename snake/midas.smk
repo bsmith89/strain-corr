@@ -206,7 +206,7 @@ rule merge_midas_genes:
     params:
         outdir="data_temp/{group}.a.r.{stem}.midas_merge",
         midasdb="ref_temp/midasdb_uhgg",
-        species=lambda w: ','.join(
+        species=lambda w: ",".join(
             checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
                 stem=w.stem,
@@ -214,7 +214,7 @@ rule merge_midas_genes:
                 num_samples=1,
                 require_in_species_group=True,
             )
-        )
+        ),
     conda:
         "conda/midas.yaml"
     threads: 24

@@ -153,6 +153,7 @@ rule sfacts_clust_initialization:
                 {output}
         """
 
+
 rule sfacts_clust_approximation:
     output:
         "data_temp/{stem}.approx-clust2-thresh{thresh}-s{strain_exponent}.world.nc",
@@ -175,16 +176,19 @@ rule sfacts_clust_approximation:
                 {output}
         """
 
+
 rule calculate_metagenotype_pdist:
-    output: '{stem}.mgen.pdist.nc'
+    output:
+        "{stem}.mgen.pdist.nc",
     input:
-        mgen='{stem}.mgen.nc',
+        mgen="{stem}.mgen.nc",
     conda:
         "conda/sfacts.yaml"
     resources:
         walltime_hr=5,
     shell:
         "sfacts mgen_diss --verbose {input.mgen} {output}"
+
 
 rule fit_sfacts:
     output:
@@ -218,6 +222,7 @@ rule fit_sfacts:
                 --history-outpath {output.hist} \
                 -- {input.mgen} {output.fit}
         """
+
 
 rule refit_genotypes_sfacts:
     output:
