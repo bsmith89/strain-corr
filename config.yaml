@@ -1,2 +1,10 @@
-container: 'docker://bsmith89/compbio2:41cb510c9cbccc31155a6a79f44115d8eeb161cd'
+container:
+  default: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
+  toolz: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
+  gtpro: 'docker://bsmith89/gtpro:87767c1292df1c04cd5cebde9e88aa418ab9b7fe'
+  gtpro_old: 'docker://bsmith89/compbio:latest'
+  mambaforge: 'docker://condaforge/mambaforge:4.11.0-4'
 proc: 'noop'
+MAX_THREADS: 4
+USE_CUDA: 0
+ALL:
