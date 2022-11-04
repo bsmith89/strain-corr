@@ -25,17 +25,51 @@ DEFAULT_COLOR_LIST = [
 DEFAULT_LINESTYLE_LIST = ["-", "--", "-.", ":"]
 
 
-def construct_ordered_pallete(x, cm="Spectral", other="grey"):
+def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None):
     labels = pd.Series(x).unique()
     cm = mpl.cm.get_cmap(cm)
     colormap = defaultdict(lambda: other)
+    if extend:
+        colormap.update(extend)
     for i, s in enumerate(labels):
+        if s in colormap:
+            continue
         colormap[s] = cm(i / len(labels))
     return colormap
 
 
-def demo_pallete(pallete):
-    df = pd.DataFrame(pallete)
+def construct_ordered_palette_from_list(x, colors=[], other="grey", extend=None):
+    labels = pd.Series(x).unique()
+    colormap = defaultdict(lambda: other)
+    if extend:
+        colormap = colormap.update(extend)
+    for s, c in zip(labels, colors):
+        if s in colormap:
+            continue
+        colormap[s] = c
+    return colormap
+
+
+def subplots_grid(ncols, naxes, ax_width=3, ax_height=2.5, **kwargs):
+    nrows = int(np.ceil(naxes / ncols))
+    fig, axs = plt.subplots(
+        nrows, ncols, figsize=(ax_width * ncols, ax_height * nrows), **kwargs
+    )
+    axs = np.reshape(axs, (nrows, ncols))
+    return fig, axs
+
+
+def subplots_grid_fixed_rows(nrows, naxes, ax_width=3, ax_height=2.5, **kwargs):
+    ncols = int(np.ceil(naxes / nrows))
+    fig, axs = plt.subplots(
+        nrows, ncols, figsize=(ax_width * ncols, ax_height * nrows), **kwargs
+    )
+    axs = np.reshape(axs, (nrows, ncols))
+    return fig, axs
+
+
+def demo_palette(palette):
+    df = pd.DataFrame(palete)
     print(df)
 
 
