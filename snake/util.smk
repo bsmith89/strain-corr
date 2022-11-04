@@ -36,7 +36,7 @@ rule start_jupyter:
     params:
         port=config["jupyter_port"],
     shell:
-        "jupyter lab --port={params.port}"
+        "jupyter lab --port={params.port} --notebook-dir nb/"
 
 
 rule start_ipython:
