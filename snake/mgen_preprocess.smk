@@ -145,6 +145,16 @@ rule qc_processed_reads:
         )
 
 
+# Useful for when no additional processing is necessary.
+rule dummy_operation_on_reads:
+    output:
+        temp("{stem}.noop.fq.gz"),
+    input:
+        "{stem}.fq.gz",
+    shell:
+        alias_recipe
+
+
 rule deduplicate_reads:
     output:
         r1=temp("{stemA}.r1{stemB}dedup.fq.gz"),
