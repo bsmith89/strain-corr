@@ -89,12 +89,8 @@ rule all:
 
 
 database_inputs = [
-    # Metadata
-    DatabaseInput("subject", "smeta/subject.tsv", True),
-    DatabaseInput("sample", "meta/sample.tsv", True),
-    # Metagenomes
-    DatabaseInput("mgen", "meta/mgen.tsv", True),
-    DatabaseInput("mgen_x_mgen_group", "meta/mgen_x_mgen_group.tsv", True),
+    # # Metagenomes
+    # DatabaseInput("mgen", "meta/mgen.tsv", True),
 ]
 
 
