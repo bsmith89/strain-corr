@@ -1,9 +1,12 @@
-# Always ignore
-.DS_Store
+# Special file-extensions.
 *.swp
-.ipynb_checkpoints/
+*.log
 *.pyc
-scripts/__pycache__/
+
+# Tool-specific hidden-caches.
+.DS_Store
+.ipynb_checkpoints
+__pycache__
 .bash_history
 .parallel
 .snakemake
@@ -13,9 +16,15 @@ scripts/__pycache__/
 .jupyter
 .local
 .theano
+.python_history
+.pdbhistory
+.lesshst
+.condarc
+nb/profile_default
+.panoptes.db
 
+# Data Directories
 log
-cluster_log
 raw
 ref
 data
@@ -25,8 +34,7 @@ sdata
 smeta
 fig
 
+# Local-only files. Use "git add -f ..." to add these to platform specific branches.
 local.smk
 env_local
 config_local.yaml
-
-nb/profile_default
