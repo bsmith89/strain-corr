@@ -1,0 +1,5 @@
+local_data_dirs:
+  - raw
+  - data
+  - ref
+local_data_root: 'TODO'
