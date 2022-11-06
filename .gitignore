@@ -33,8 +33,3 @@ sraw
 sdata
 smeta
 fig
-
-# Local-only files. Use "git add -f ..." to add these to platform specific branches.
-local.smk
-env_local
-config_local.yaml
