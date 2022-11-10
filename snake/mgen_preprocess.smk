@@ -96,10 +96,12 @@ rule qc_reads:
         directory("{stemA}/{group}.a.r.{stemB}.fastqc.d"),
     input:
         r1=lambda w: [
-            f"{{stemA}}/{mgen}.r1.{{stemB}}.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"{{stemA}}/{mgen}.r1.{{stemB}}.fq.gz"
+            for mgen in config["mgen_group"][w.group]
         ],
         r2=lambda w: [
-            f"{{stemA}}/{mgen}.r2.{{stemB}}.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"{{stemA}}/{mgen}.r2.{{stemB}}.fq.gz"
+            for mgen in config["mgen_group"][w.group]
         ],
     container:
         config["container"]["toolz"]

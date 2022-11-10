@@ -1,5 +1,4 @@
 # {{{2 Data Configuration
 
 
-config['figures']['submission'] = [
-]
+config["figures"]["submission"] = []
