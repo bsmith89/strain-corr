@@ -104,6 +104,15 @@ rule processed_notebook_to_html:
         )
 
 
+rule serve_directory:
+    params:
+        port=config["server_port"],
+    shell:
+        """
+        python3 -m http.server {params.port}
+        """
+
+
 rule query_db:
     output:
         "data/{db}.select_{query}.tsv",
