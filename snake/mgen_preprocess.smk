@@ -63,7 +63,7 @@ ruleorder: alias_GRCh38_index_file > bowtie_index_build
 
 rule alias_raw_read_r1:
     output:
-        "data/{mgen}.r1.fq.gz",
+        "sdata/{mgen}.r1.fq.gz",
     input:
         lambda w: config["mgen"]["r1"][w.mgen],
     shell:
@@ -76,7 +76,7 @@ localrules:
 
 rule alias_raw_read_r2:
     output:
-        "data/{mgen}.r2.fq.gz",
+        "sdata/{mgen}.r2.fq.gz",
     input:
         lambda w: config["mgen"]["r2"][w.mgen],
     shell:

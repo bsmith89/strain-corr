@@ -3,3 +3,7 @@ local_data_dirs:
   - data
   - ref
 local_data_root: 'TODO'
+secure_local_data_dirs:
+  - sraw
+  - sdata
+secure_local_data_root: 'TODO'

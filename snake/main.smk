@@ -96,7 +96,7 @@ database_inputs = [
 
 rule build_db:
     output:
-        "sdata/database.db",
+        "data/database.db",
     input:
         script="scripts/build_db.py",
         schema="schema.sql",
