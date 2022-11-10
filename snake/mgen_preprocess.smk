@@ -65,7 +65,7 @@ rule alias_raw_read_r1:
     output:
         "sdata/{mgen}.r1.fq.gz",
     input:
-        lambda w: config["mgen"]["r1"][w.mgen],
+        lambda w: config["mgen"]["r1_path"][w.mgen],
     shell:
         alias_recipe
 
@@ -78,7 +78,7 @@ rule alias_raw_read_r2:
     output:
         "sdata/{mgen}.r2.fq.gz",
     input:
-        lambda w: config["mgen"]["r2"][w.mgen],
+        lambda w: config["mgen"]["r2_path"][w.mgen],
     shell:
         alias_recipe
 
@@ -93,13 +93,13 @@ localrules:
 
 rule qc_reads:
     output:
-        directory("{stemA}/{group}.a.r{stemB}.fastqc.d"),
+        directory("{stemA}/{group}.a.r.{stemB}.fastqc.d"),
     input:
         r1=lambda w: [
-            f"{stemA}/{mgen}.r1{stemB}.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"{{stemA}}/{mgen}.r1.{{stemB}}.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
         r2=lambda w: [
-            f"{stemA}/{mgen}.r2{stemB}.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"{{stemA}}/{mgen}.r2.{{stemB}}.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
     container:
         config["container"]["toolz"]
@@ -132,8 +132,8 @@ rule deduplicate_reads:
         r1="{stemA}.r1{stemB}fq.gz",
         r2="{stemA}.r2{stemB}fq.gz",
     resources:
-        mem_mb=resource_calculator(r1=5, input_size_exponent=dict(r1=1.1)),
-        walltime_min=resource_calculator(r1=0.01),
+        mem_mb=10_000,
+        walltime_min=600,
     container:
         config["container"]["toolz"]
     shell:
