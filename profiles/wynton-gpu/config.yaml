@@ -25,4 +25,8 @@ singularity-args: >-
   --bind /pollard
   --bind /wynton
   --bind /scratch
-config: ['MAX_THREADS=24', 'USE_CUDA=1', 'jupyter_port=8828']
+config:
+  - 'USE_CUDA=1'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8828'
+  - 'server_port=8829'

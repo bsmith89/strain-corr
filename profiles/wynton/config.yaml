@@ -16,4 +16,8 @@ singularity-args: >-
   --bind /wynton
   --bind /scratch
 singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
-config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']
+config:
+  - 'USE_CUDA=0'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8828'
+  - 'server_port=8829'

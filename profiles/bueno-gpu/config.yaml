@@ -15,4 +15,8 @@ singularity-args: >-
   --bind $PWD/include:/include
   --bind /pollard
 singularity-prefix: '/pollard/home/bsmith/.snakemake/singularity'
-config: ['MAX_THREADS=24', 'USE_CUDA=1', 'jupyter_port=8818']
+config:
+  - 'USE_CUDA=1'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8818'
+  - 'server_port=8819'

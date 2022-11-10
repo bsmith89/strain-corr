@@ -27,7 +27,6 @@ singularity-args: >-
   --bind /pollard
   --bind /wynton
   --bind /scratch
-config: ['MAX_THREADS=24', 'USE_CUDA=0']
 jobscript: 'profiles/wynton-qsub/jobscript.sh'
 cluster: "qsub -cwd \
         -v PATH \
@@ -40,3 +39,6 @@ cluster: "qsub -cwd \
         "
 cluster-cancel: '/opt/sge/bin/lx-amd64/qdel'
 jobname: '{name}.{jobid}.snkjb'
+config:
+  - 'USE_CUDA=0'
+  - 'MAX_THREADS=24'

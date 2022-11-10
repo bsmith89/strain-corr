@@ -6,4 +6,8 @@ resources: ['network_connections=3', 'mem_mb=8000']
 use-conda: true
 conda-frontend: 'mamba'
 conda-prefix: '/Users/byronsmith/.snakemake/conda'
-config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8888']
+config:
+  - 'USE_CUDA=0'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8888'
+  - 'server_port=8889'
