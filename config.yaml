@@ -4,7 +4,7 @@ container:
   gtpro: 'docker://bsmith89/gtpro:87767c1292df1c04cd5cebde9e88aa418ab9b7fe'
   gtpro_old: 'docker://bsmith89/compbio:latest'
   mambaforge: 'docker://condaforge/mambaforge:4.11.0-4'
-proc: 'hfilt.dedup.dadapt.qtrim'
+proc: 'hfilt.dedup.deadapt.qtrim'
 MAX_THREADS: 4
 USE_CUDA: 0
 ALL:
