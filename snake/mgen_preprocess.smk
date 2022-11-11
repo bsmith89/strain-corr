@@ -63,7 +63,7 @@ ruleorder: alias_GRCh38_index_file > bowtie_index_build
 
 rule alias_raw_read_r1:
     output:
-        "sdata/{mgen}.r1.fq.gz",
+        "sdata/reads/{mgen}/r1.fq.gz",
     input:
         lambda w: config["mgen"]["r1_path"][w.mgen],
     shell:
@@ -76,7 +76,7 @@ localrules:
 
 rule alias_raw_read_r2:
     output:
-        "sdata/{mgen}.r2.fq.gz",
+        "sdata/reads/{mgen}/r2.fq.gz",
     input:
         lambda w: config["mgen"]["r2_path"][w.mgen],
     shell:
@@ -93,14 +93,14 @@ localrules:
 
 rule qc_reads:
     output:
-        directory("{stemA}/{group}.a.r.{stemB}.fastqc.d"),
+        directory("{stemA}/group/{group}/a.r.{stemB}.fastqc.d"),
     input:
         r1=lambda w: [
-            f"{{stemA}}/{mgen}.r1.{{stemB}}.fq.gz"
+            f"{{stemA}}/reads/{mgen}/r1.{{stemB}}.fq.gz"
             for mgen in config["mgen_group"][w.group]
         ],
         r2=lambda w: [
-            f"{{stemA}}/{mgen}.r2.{{stemB}}.fq.gz"
+            f"{{stemA}}/reads/{mgen}/r2.{{stemB}}.fq.gz"
             for mgen in config["mgen_group"][w.group]
         ],
     container:
@@ -127,12 +127,12 @@ rule dummy_operation_on_reads:
 
 rule deduplicate_reads:
     output:
-        r1=temp("{stemA}.r1{stemB}dedup.fq.gz"),
-        r2=temp("{stemA}.r2{stemB}dedup.fq.gz"),
+        r1=temp("{stemA}/r1{stemB}dedup.fq.gz"),
+        r2=temp("{stemA}/r2{stemB}dedup.fq.gz"),
     input:
         script="scripts/fastuniq_wrapper.sh",
-        r1="{stemA}.r1{stemB}fq.gz",
-        r2="{stemA}.r2{stemB}fq.gz",
+        r1="{stemA}/r1{stemB}fq.gz",
+        r2="{stemA}/r2{stemB}fq.gz",
     resources:
         mem_mb=10_000,
         walltime_min=600,
@@ -166,12 +166,12 @@ rule trim_adapters:
 
 rule quality_trim_reads:
     output:
-        r1=temp("{stemA}.r1.{stemB}.qtrim.fq.gz"),
-        r2=temp("{stemA}.r2.{stemB}.qtrim.fq.gz"),
-        r3=temp("{stemA}.r3.{stemB}.qtrim.fq.gz"),
+        r1=temp("{stemA}/r1.{stemB}.qtrim.fq.gz"),
+        r2=temp("{stemA}/r2.{stemB}.qtrim.fq.gz"),
+        r3=temp("{stemA}/r3.{stemB}.qtrim.fq.gz"),
     input:
-        r1="{stemA}.r1.{stemB}.fq.gz",
-        r2="{stemA}.r2.{stemB}.fq.gz",
+        r1="{stemA}/r1.{stemB}.fq.gz",
+        r2="{stemA}/r2.{stemB}.fq.gz",
     params:
         qual_type="sanger",
         qual_thresh=20,
@@ -195,12 +195,12 @@ rule quality_trim_reads:
 # NULL case.
 rule filter_out_host:
     output:
-        r1="data/{mgen}.r1{stem}hfilt.fq.gz",
-        r2="data/{mgen}.r2{stem}hfilt.fq.gz",
+        r1="data/reads/{mgen}/r1{stem}hfilt.fq.gz",
+        r2="data/reads/{mgen}/r2{stem}hfilt.fq.gz",
     input:
         script="scripts/filter_out_mapping_reads.sh",
-        r1="sdata/{mgen}.r1{stem}fq.gz",
-        r2="sdata/{mgen}.r2{stem}fq.gz",
+        r1="sdata/reads/{mgen}/r1{stem}fq.gz",
+        r2="sdata/reads/{mgen}/r2{stem}fq.gz",
         index=[
             "ref/GRCh38.1.bt2",
             "ref/GRCh38.2.bt2",
@@ -244,13 +244,13 @@ localrules:
 
 rule gather_all_mgen_read_pairs_from_mgen_group:
     output:
-        touch("data/{group}.a.{stem}.ALL_MGEN_PAIRS.flag"),
+        touch("data/group/{group}/a.{stem}.ALL_MGEN_PAIRS.flag"),
     input:
         r1=lambda w: [
-            f"data/{mgen}.r1.{{stem}}" for mgen in config["mgen_group"][w.group]
+            f"data/reads/{mgen}/r1.{{stem}}" for mgen in config["mgen_group"][w.group]
         ],
         r2=lambda w: [
-            f"data/{mgen}.r2.{{stem}}" for mgen in config["mgen_group"][w.group]
+            f"data/reads/{mgen}/r2.{{stem}}" for mgen in config["mgen_group"][w.group]
         ],
     shell:
         "touch {output}"
@@ -262,9 +262,9 @@ localrules:
 
 rule gather_all_mgen_from_mgen_group:
     output:
-        touch("data/{group}.a.{stem}.ALL_MGEN.flag"),
+        touch("data/group/{group}/a.{stem}.ALL_MGEN.flag"),
     input:
-        lambda w: [f"data/{mgen}.r.{{stem}}" for mgen in config["mgen_group"][w.group]],
+        lambda w: [f"data/reads/{mgen}/r.{{stem}}" for mgen in config["mgen_group"][w.group]],
     shell:
         "touch {output}"
 
