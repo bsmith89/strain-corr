@@ -22,6 +22,7 @@ __pycache__
 .condarc
 nb/profile_default
 .panoptes.db
+.java
 
 # Data Directories
 log
