@@ -6,7 +6,6 @@ latency-wait: 5
 resources: ['network_connections=3', 'mem_mb=750000']
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/pollard/home/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
@@ -14,7 +13,6 @@ singularity-args: >-
   --bind $TMPDIR
   --bind $PWD/include:/include
   --bind /pollard
-singularity-prefix: '/pollard/home/bsmith/.snakemake/singularity'
 config:
   - 'USE_CUDA=1'
   - 'MAX_THREADS=24'

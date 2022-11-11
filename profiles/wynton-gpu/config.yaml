@@ -12,10 +12,8 @@ default-resources:
   - 'gpu_mem_mb=1000'
   - 'outdir="log/"'
 use-conda: true
-conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 conda-frontend: 'mamba'
 use-singularity: true
-singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --nv

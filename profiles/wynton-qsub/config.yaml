@@ -16,9 +16,7 @@ default-resources:
   - 'device="cpu"'
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
-singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --bind $TMPDIR

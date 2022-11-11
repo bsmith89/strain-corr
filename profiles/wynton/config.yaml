@@ -5,7 +5,6 @@ keep-going: true
 resources: ['network_connections=3', 'mem_mb=500000']
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
@@ -15,7 +14,6 @@ singularity-args: >-
   --bind /pollard
   --bind /wynton
   --bind /scratch
-singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 config:
   - 'USE_CUDA=0'
   - 'MAX_THREADS=24'
