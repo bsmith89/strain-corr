@@ -57,6 +57,7 @@ rule initialize_project_config:
         git config --local alias.s "status -uno"
         git config --local alias.ls-other "ls-files --other --exclude-standard"
         git config --local alias.grep-other "!git ls-other | git grep -f -"
+        git config --local alias.grep-hist '!f() {{ patt=$1; shift; git grep $patt $(git rev-list --all) $@; }}; f'
         git config --local pull.ff only
         echo 'Add local configuration to {input.local_config_files}'
         echo 'Or by creating/relinking profile/default/'
