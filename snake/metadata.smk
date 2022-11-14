@@ -1,11 +1,5 @@
 # {{{2 Data Configuration
 
-config["species_group"] = (
-    pd.read_table("meta/species_group.tsv", dtype=str)
-    .groupby("species_group_id")
-    .apply(lambda d: d.species_id.to_list())
-)
-
 config["mgen"] = pd.read_table("meta/mgen_to_reads.tsv", index_col="mgen_id")
 _mgen_group = pd.read_table("meta/mgen_group.tsv")
 
@@ -19,7 +13,6 @@ config["species_group"] = (
     .groupby("species_group_id")
     .species_id.apply(list)
 )
-
 
 rule process_hmp2_metadata:
     output:
@@ -36,6 +29,5 @@ rule process_hmp2_metadata:
         """
         cat {input.raw} | {input.script} {output.subject} {output.visit} {output.stool} {output.preparation} {output.mgen} {output.mtab}
         """
-
 
 config["figures"]["submission"] = []

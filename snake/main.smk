@@ -10,7 +10,6 @@ from lib.snake import (
     single_param_wc,
     endswith_period_or_slash_wc,
     curl_recipe,
-    resource_calculator,
     nested_defaultdict,
     nested_dictlookup,
 )
@@ -95,7 +94,7 @@ database_inputs = [
 
 rule build_db:
     output:
-        "sdata/database.db",
+        "data/database.db",
     input:
         script="scripts/build_db.py",
         schema="schema.sql",

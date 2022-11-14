@@ -1,4 +1,4 @@
-rerun-triggers: ['mtime']
+rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
 notemp: true
 printshellcmds: true
 keep-going: true
@@ -12,10 +12,8 @@ default-resources:
   - 'gpu_mem_mb=1000'
   - 'outdir="log/"'
 use-conda: true
-conda-prefix: '/wynton/home/pollard/bsmith/.snakemake/conda'
 conda-frontend: 'mamba'
 use-singularity: true
-singularity-prefix: "/wynton/home/pollard/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --nv
@@ -25,4 +23,8 @@ singularity-args: >-
   --bind /pollard
   --bind /wynton
   --bind /scratch
-config: ['MAX_THREADS=24', 'USE_CUDA=1', 'jupyter_port=8828']
+config:
+  - 'USE_CUDA=1'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8828'
+  - 'server_port=8829'

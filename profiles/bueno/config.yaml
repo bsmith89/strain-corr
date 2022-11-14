@@ -1,4 +1,4 @@
-rerun-triggers: ['mtime']
+rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
 notemp: true
 printshellcmds: true
 keep-going: true
@@ -6,12 +6,14 @@ latency-wait: 5
 resources: ['network_connections=3', 'mem_mb=750000']
 use-conda: true
 conda-frontend: 'mamba'
-conda-prefix: '/pollard/home/bsmith/.snakemake/conda'
 use-singularity: true
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --bind $TMPDIR
   --bind /pollard
   --bind $PWD/include:/include
-singularity-prefix: '/pollard/home/bsmith/.snakemake/singularity'
-config: ['USE_CUDA=0', 'MAX_THREADS=24', 'jupyter_port=8818']
+config:
+  - 'USE_CUDA=0'
+  - 'MAX_THREADS=24'
+  - 'jupyter_port=8818'
+  - 'server_port=8819'
