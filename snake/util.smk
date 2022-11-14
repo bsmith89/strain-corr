@@ -25,11 +25,15 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
 rule start_jupyter:
     params:
         port=config["jupyter_port"],
+    shadow:
+        "shallow"
     shell:
         "jupyter lab --port={params.port} --notebook-dir nb/"
 
 
 rule start_ipython:
+    shadow:
+        "shallow"
     shell:
         "ipython"
 
@@ -37,6 +41,8 @@ rule start_ipython:
 rule start_shell:
     container:
         config["container"]["toolz"]
+    shadow:
+        "shallow"
     shell:
         "bash"
 
