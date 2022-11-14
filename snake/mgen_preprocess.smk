@@ -93,7 +93,7 @@ localrules:
 
 rule qc_reads:
     output:
-        directory("{stemA}/group/{group}/a.r.{stemB}.fastqc.d"),
+        directory("{stemA}/group/{group}/r.{stemB}.fastqc.d"),
     input:
         r1=lambda w: [
             f"{{stemA}}/reads/{mgen}/r1.{{stemB}}.fq.gz"
@@ -244,7 +244,7 @@ localrules:
 
 rule gather_all_mgen_read_pairs_from_mgen_group:
     output:
-        touch("data/group/{group}/a.{stem}.ALL_MGEN_PAIRS.flag"),
+        touch("data/group/{group}/r.{stem}.ALL_MGEN_PAIRS.flag"),
     input:
         r1=lambda w: [
             f"data/reads/{mgen}/r1.{{stem}}" for mgen in config["mgen_group"][w.group]
@@ -262,9 +262,11 @@ localrules:
 
 rule gather_all_mgen_from_mgen_group:
     output:
-        touch("data/group/{group}/a.{stem}.ALL_MGEN.flag"),
+        touch("data/group/{group}/r.{stem}.ALL_MGEN.flag"),
     input:
-        lambda w: [f"data/reads/{mgen}/r.{{stem}}" for mgen in config["mgen_group"][w.group]],
+        lambda w: [
+            f"data/reads/{mgen}/r.{{stem}}" for mgen in config["mgen_group"][w.group]
+        ],
     shell:
         "touch {output}"
 

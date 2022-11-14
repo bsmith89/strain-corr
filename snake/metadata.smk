@@ -14,6 +14,7 @@ config["species_group"] = (
     .species_id.apply(list)
 )
 
+
 rule process_hmp2_metadata:
     output:
         subject="meta/subject.tsv",
@@ -29,5 +30,6 @@ rule process_hmp2_metadata:
         """
         cat {input.raw} | {input.script} {output.subject} {output.visit} {output.stool} {output.preparation} {output.mgen} {output.mtab}
         """
+
 
 config["figures"]["submission"] = []

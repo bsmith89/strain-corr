@@ -34,7 +34,7 @@ rule load_metagenotype_from_merged_gtpro:
 
 rule compile_species_variation_from_vcf:
     output:
-        "data/sp-{species}.gtpro_ref.mgen.nc",
+        "data/species/sp-{species}/gtpro_ref.mgen.nc",
     input:
         script="scripts/vcf_to_sfacts.py",
         gtpro_snp_dict="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
@@ -49,11 +49,11 @@ rule compile_species_variation_from_vcf:
 
 rule concatenate_gtpro_refs:
     output:
-        "data/sp-{species}.{group}.a.{stem}.plus_refs.mgen.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.plus_refs.mgen.nc",
     input:
         script="scripts/stack_mgen_with_refs.py",
-        mgen="data/sp-{species}.{group}.a.{stem}.mgen.nc",
-        ref="data/sp-{species}.gtpro_ref.mgen.nc",
+        mgen="data/group/{group}/species/sp-{species}/{stem}.mgen.nc",
+        ref="data/species/sp-{species}/gtpro_ref.mgen.nc",
     params:
         multi=100,
     conda:
@@ -319,28 +319,28 @@ rule export_sfacts_comm:
 # once it has been run for the focal group.
 rule calculate_all_strain_depths:
     output:
-        "data/{group}.a.{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv",
+        "data/group/{group}/{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv",
     input:
         script="scripts/merge_all_strains_depth.py",
-        species="data/{group}.a.{proc_stem}.gtpro.species_depth.tsv",
+        species="data/group/{group}/{proc_stem}.gtpro.species_depth.tsv",
         strains=lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
+            f"data/group/{w.group}/species/sp-{species}/{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
-                num_samples=2,
+                num_samples=1,
                 require_in_species_group=True,
             )
         ],
     params:
         args=lambda w: [
-            f"{species}=data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
+            f"{species}=data/group/{w.group}/species/sp-{species}/{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
-                num_samples=2,
+                num_samples=1,
                 require_in_species_group=True,
             )
         ],

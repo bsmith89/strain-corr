@@ -6,6 +6,7 @@ from lib.snake import (
     alias_recipe,
     alias_recipe_norelative,
     noperiod_wc,
+    no_period_or_slash_wc,
     integer_wc,
     single_param_wc,
     endswith_period_or_slash_wc,
@@ -65,9 +66,9 @@ if path.exists("snake/local.smk"):
 
 wildcard_constraints:
     r="r|r1|r2|r3",
-    group=noperiod_wc,
-    mgen=noperiod_wc,
-    species=noperiod_wc,
+    group=no_period_or_slash_wc,
+    mgen=no_period_or_slash_wc,
+    species=no_period_or_slash_wc,
     strain=noperiod_wc,
     compound_id=noperiod_wc,
     hmm_cutoff="XX",

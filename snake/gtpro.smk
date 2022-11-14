@@ -144,7 +144,16 @@ rule gtpro_finish_processing_reads:
 # Helper rule that pre-formats paths from library_id to r1 and r2 paths.
 rule count_species_lines_from_both_reads_helper:
     output:
-        temp("data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args"),
+        temp("data/group/{group}/r.{stem}.gtpro_species_tally.tsv.args"),
+    input:
+        r1=lambda w: [
+            f"data/reads/{mgen}/r1.{w.stem}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        r2=lambda w: [
+            f"data/reads/{mgen}/r2.{w.stem}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
     params:
         mgen=lambda w: config["mgen_group"][w.group],
     run:
@@ -152,8 +161,8 @@ rule count_species_lines_from_both_reads_helper:
             for mgen in params.mgen:
                 print(
                     mgen,
-                    f"data/{mgen}.r1.{wildcards.stem}.gtpro_parse.tsv.bz2",
-                    f"data/{mgen}.r2.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    f"data/reads/{mgen}/r1.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    f"data/reads/{mgen}/r2.{wildcards.stem}.gtpro_parse.tsv.bz2",
                     sep="\t",
                     file=f,
                 )
@@ -161,18 +170,10 @@ rule count_species_lines_from_both_reads_helper:
 
 rule count_species_lines_from_both_reads:
     output:
-        "data/{group}.a.r.{stem}.gtpro_species_tally.tsv",
+        "data/group/{group}/r.{stem}.gtpro_species_tally.tsv",
     input:
         script="scripts/tally_gtpro_species_lines.sh",
-        r1=lambda w: [
-            f"data/{mgen}.r1.{{stem}}.gtpro_parse.tsv.bz2"
-            for mgen in config["mgen_group"][w.group]
-        ],
-        r2=lambda w: [
-            f"data/{mgen}.r2.{{stem}}.gtpro_parse.tsv.bz2"
-            for mgen in config["mgen_group"][w.group]
-        ],
-        helper="data/{group}.a.r.{stem}.gtpro_species_tally.tsv.args",
+        helper="data/group/{group}/r.{stem}.gtpro_species_tally.tsv.args",
     threads: 24
     shell:
         r"""
@@ -196,19 +197,11 @@ rule estimate_all_species_horizontal_coverage:
         "{input.script} {input.snps} {input.r} {output}"
 
 
-# TODO: Test whether this rule will work without the '.gtpro.' anchor point in the middle
-# That's there so that rules that have more stem than '.a.{stem}.gtpro.' have a clear
-# dividing line between _this_ stem and the later stem.
-# That's necessary because a 'stem=' parameter has to be passed to
-# checkpoint_select_species_with_greater_max_coverage_gtpro(...)
-# in order for it to pull up the correct file.
-# Perhaps there's a way to instead pass the input-filename this function
-# and have it extract the correct wildcards... :-/
 checkpoint select_species_with_greater_max_coverage_gtpro:
     output:
-        "data/{group}.a.{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
+        "data/group/{group}/{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
     input:
-        "data/{group}.a.{stem}.gtpro.horizontal_coverage.tsv",
+        "data/group/{group}/{stem}.gtpro.horizontal_coverage.tsv",
     params:
         cvrg_thresh=lambda w: float(w.cvrg_thresh) / 100,
         num_samples=lambda w: int(w.num_samples),
@@ -255,10 +248,10 @@ def checkpoint_select_species_with_greater_max_coverage_gtpro(
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
-        temp("data/{group}.a.{r12}.{stem}.gtpro.tsv.bz2.args"),
+        temp("data/group/{group}/{stem}.gtpro.tsv.bz2.args"),
     input:
         gtpro=lambda w: [
-            f"data/{mgen}.{{r12}}.{{stem}}.gtpro_parse.tsv.bz2"
+            f"data/reads/{mgen}/{w.stem}.gtpro_parse.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
         ],
     run:
@@ -266,7 +259,7 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
             for mgen in config["mgen_group"][wildcards.group]:
                 print(
                     mgen,
-                    f"data/{mgen}.{wildcards.r12}.{wildcards.stem}.gtpro_parse.tsv.bz2",
+                    f"data/reads/{mgen}/{wildcards.stem}.gtpro_parse.tsv.bz2",
                     sep="\t",
                     file=f,
                 )
@@ -276,14 +269,10 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
 # Selects a single species from every file and concatenates.
 rule concatenate_mgen_group_one_read_count_data_from_one_species:
     output:
-        "data/sp-{species}.{group}.a.{r12}.{stem}.gtpro.tsv.bz2",
+        "data/group/{group}/species/sp-{species}/{r12}.{stem}.gtpro.tsv.bz2",
     input:
         script="scripts/select_gtpro_species_lines.sh",
-        gtpro=lambda w: [
-            f"data/{mgen}.{{r12}}.{{stem}}.gtpro_parse.tsv.bz2"
-            for mgen in config["mgen_group"][w.group]
-        ],
-        helper="data/{group}.a.{r12}.{stem}.gtpro.tsv.bz2.args",
+        helper="data/group/{group}/{r12}.{stem}.gtpro.tsv.bz2.args",
     wildcard_constraints:
         r12="r[12]",
     params:
@@ -305,11 +294,11 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
 # once it has been run for the focal group/species.
 rule merge_both_reads_species_count_data:
     output:
-        "data/{stemA}.r.{stemB}.gtpro.tsv.bz2",
+        "{stemA}/r.{stemB}.gtpro.tsv.bz2",
     input:
         script="scripts/sum_merged_gtpro_tables.py",
-        r1="data/{stemA}.r1.{stemB}.gtpro.tsv.bz2",
-        r2="data/{stemA}.r2.{stemB}.gtpro.tsv.bz2",
+        r1="{stemA}/r1.{stemB}.gtpro.tsv.bz2",
+        r2="{stemA}/r2.{stemB}.gtpro.tsv.bz2",
     resources:
         mem_mb=100000,
         pmem=lambda w, threads: 100000 // threads,
@@ -321,10 +310,10 @@ rule merge_both_reads_species_count_data:
 
 rule estimate_species_depth_from_metagenotype:
     output:
-        "data/sp-{species}.{stem}.gtpro.species_depth.tsv",
+        "data/group/{group}/species/sp-{species}/r.{stem}.gtpro.species_depth.tsv",
     input:
         script="scripts/estimate_species_depth_from_metagenotype.py",
-        mgen="data/sp-{species}.{stem}.gtpro.mgen.nc",
+        mgen="data/group/{group}/species/sp-{species}/r.{stem}.gtpro.mgen.nc",
     params:
         trim=0.05,
     shell:
@@ -335,15 +324,15 @@ rule estimate_species_depth_from_metagenotype:
 # once it has been run for the focal group.
 rule concatenate_all_species_depths:
     output:
-        "data/{group}.a.{stem}.gtpro.species_depth.tsv",
+        "data/group/{group}/{stem}.gtpro.species_depth.tsv",
     input:
         species=lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.stem}.gtpro.species_depth.tsv"
+            f"data/group/{w.group}/species/sp-{species}/{w.stem}.gtpro.species_depth.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
                 stem=w.stem,
                 cvrg_thresh=0.2,
-                num_samples=2,
+                num_samples=1,
                 require_in_species_group=True,
             )
         ],
@@ -363,10 +352,10 @@ rule concatenate_all_species_depths:
 
 rule gather_mgen_group_for_all_species:
     output:
-        touch("data/ALL_SPECIES.{group}.a.{stem}.flag"),
+        touch("data/group/{group}/ALL_SPECIES/{stem}.flag"),
     input:
         lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.stem}"
+            f"data/group/{group}/species/sp-{species}/{w.stem}"
             for species in config["species_group"][w.group]
         ],
     shell:
@@ -375,15 +364,15 @@ rule gather_mgen_group_for_all_species:
 
 rule construct_files_for_all_select_species:
     output:
-        touch("data/{group}.a.{proc_stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/{proc_stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/sp-{species}.{w.group}.a.{w.proc_stem}.gtpro.{w.suffix}"
+            f"data/group/{group}/species/sp-{species}/{w.proc_stem}.gtpro.{w.suffix}"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
                 stem=w.proc_stem,
                 cvrg_thresh=0.2,
-                num_samples=2,
+                num_samples=1,
                 require_in_species_group=True,
             )
         ],

@@ -2,7 +2,7 @@ rule combine_midasdb_all_gene_annotations:
     output:
         "ref/midasdb_uhgg.sp-{species}.gene_annotations.tsv",
     input:
-        flag="data/sp-{species}.download_uhgg_gene_annotations_all_tsv.flag",
+        flag="data/species/sp-{species}/download_uhgg_gene_annotations_all_tsv.flag",
     shell:
         """
         find ref/midasdb_uhgg/gene_annotations/{wildcards.species}/ -name '*.tsv.lz4' \
@@ -37,13 +37,13 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
 
 rule convert_genes_tally_to_cluster_depth:
     output:
-        "data/sp-{species}.{group}.a.{stem}.midas_gene.depth.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.midas_gene.depth.nc",
     input:
         script="scripts/convert_genes_tally_to_depth.py",
-        midasdir="data/sp-{species}.{group}.a.{stem}.midas_merge/genes",
+        midasdir="data/group/{group}/species/sp-{species}/{stem}.midas_merge/genes",
         meta="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     params:
-        inpath="data/sp-{species}.{group}.a.{stem}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
+        inpath="data/group/{group}/species/sp-{species}/{stem}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
         assumed_read_length=125,
     shell:
         """
@@ -57,10 +57,10 @@ rule convert_genes_tally_to_cluster_depth:
 
 rule aggregate_gene_depth_by_centroid:
     output:
-        "data/sp-{species}.{stem}.midas_gene{centroid}.depth.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.depth.nc",
     input:
         script="scripts/aggregate_gene_depth_by_centroid.py",
-        depth="data/sp-{species}.{stem}.midas_gene.depth.nc",
+        depth="data/group/{group}/species/sp-{species}/{stem}.midas_gene.depth.nc",
         meta="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     params:
         aggregate_genes_by=lambda w: {
@@ -83,14 +83,14 @@ rule aggregate_gene_depth_by_centroid:
 
 rule calculate_species_correlation_of_genes:
     output:
-        corr="data/sp-{species}.{stem}.midas_gene{centroid}.species_correlation.tsv",
-        sample_depth="data/sp-{species}.{stem}.midas_gene{centroid}.species_depth.tsv",
-        gene_depth="data/sp-{species}.{stem}.midas_gene{centroid}.species_depth_ratio.tsv",
-        threshold="data/sp-{species}.{stem}.midas_gene{centroid}.species_corr_threshold.tsv",
+        corr="data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.species_correlation.tsv",
+        sample_depth="data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.species_depth.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.species_depth_ratio.tsv",
+        threshold="data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.species_corr_threshold.tsv",
     input:
         script="scripts/calculate_species_correlation_of_genes.py",
-        species_depth="data/{stem}.gtpro.species_depth.tsv",
-        gene_depth="data/sp-{species}.{stem}.midas_gene{centroid}.depth.nc",
+        species_depth="data/group/{group}/{stem}.gtpro.species_depth.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stem}.midas_gene{centroid}.depth.nc",
     params:
         transformation_root=0.33,
         n_marker_genes=1000,
@@ -113,12 +113,12 @@ rule calculate_species_correlation_of_genes:
 
 rule calculate_strain_specific_correlation_of_genes:
     output:
-        "data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
     input:
         script="scripts/calculate_strain_specific_correlation_of_genes.py",
-        species_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.species_depth.tsv",
-        strain_frac="data/sp-{species}.{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_depth.tsv",
+        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
     params:
         strain_frac_thresh=0.95,
         species_depth_thresh_abs=0.0001,
@@ -140,12 +140,12 @@ rule calculate_strain_specific_correlation_of_genes:
 
 rule calculate_cross_species_strain_specific_correlation_of_genes:
     output:
-        "data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_by_species_correlation.nc",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_by_species_correlation.nc",
     input:
         script="scripts/calculate_cross_species_strain_specific_correlation_of_genes.py",
-        species_depth="data/{stemA}.gtpro.species_depth.tsv",
-        strain_frac="data/sp-{species}.{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
+        species_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
+        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
     params:
         strain_frac_thresh=0.95,
         species_depth_thresh_abs=0.0001,
@@ -168,12 +168,12 @@ rule calculate_cross_species_strain_specific_correlation_of_genes:
 
 rule calculate_strain_specific_gene_depth_ratio:
     output:
-        "data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
     input:
         script="scripts/calculate_strain_specific_gene_depth_ratio.py",
-        species_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.species_depth.tsv",
-        strain_frac="data/sp-{species}.{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_depth.tsv",
+        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
     params:
         strain_frac_thresh=0.95,
     shell:
@@ -189,12 +189,12 @@ rule calculate_strain_specific_gene_depth_ratio:
 
 rule pick_strain_gene_thresholds:
     output:
-        "data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_gene_threshold.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
-        species_corr="data/sp-{species}.{stemA}.midas_gene{centroid}.species_correlation.tsv",
-        strain_corr="data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
-        strain_depth="data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
+        species_corr="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_correlation.tsv",
+        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
+        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
     params:
         strain_corr_quantile_strict=0.1,
         strain_corr_quantile_moderate=0.05,
@@ -218,7 +218,7 @@ rule pick_strain_gene_thresholds:
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
     output:
-        "data/sp-{species}.midas_gene{centroid}.reference_copy_number.nc",
+        "data/species/sp-{species}/midas_gene{centroid}.reference_copy_number.nc",
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
         genes="ref/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
@@ -228,19 +228,19 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
 
 rule collect_files_for_strain_assessment:
     output:
-        "data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_files.flag",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_files.flag",
     input:
-        sfacts="data/sp-{species}.{stemA}.gtpro.{stemB}.world.nc",
-        strain_correlation="data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
-        strain_depth_ratio="data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
-        strain_fraction="data/sp-{species}.{stemA}.gtpro.{stemB}.comm.tsv",
+        sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
+        strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
+        strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
+        strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
         gene_centroids="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
-        species_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.species_depth.tsv",
-        gtpro_depth="data/sp-{species}.{stemA}.gtpro.species_depth.tsv",
-        species_correlation="data/sp-{species}.{stemA}.midas_gene{centroid}.species_correlation.tsv",
-        strain_thresholds="data/sp-{species}.{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_gene_threshold.tsv",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_depth.tsv",
+        gtpro_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.species_depth.tsv",
+        species_correlation="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_correlation.tsv",
+        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_gene_threshold.tsv",
         gene_annotations="ref/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv",
-        midas_depth="data/sp-{species}.{stemA}.midas_gene{centroid}.depth.nc",
-        reference_copy_number="data/sp-{species}.midas_gene{centroid}.reference_copy_number.nc",
+        midas_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
+        reference_copy_number="data/species/sp-{species}/midas_gene{centroid}.reference_copy_number.nc",
     shell:
         "echo {input} | tee {output}"
