@@ -208,7 +208,7 @@ rule estimate_all_species_horizontal_coverage:
 # and have it extract the correct wildcards... :-/
 checkpoint select_species_with_greater_max_coverage_gtpro:
     output:
-        "data_temp/{group}.a.{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
+        "data/{group}.a.{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
     input:
         "data/{group}.a.{stem}.gtpro.horizontal_coverage.tsv",
     params:

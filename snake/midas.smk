@@ -7,10 +7,10 @@ rule start_shell_midas:
 
 rule download_midasdb_uhgg_all_group_species:
     output:
-        "data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        "data/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
     input:
-        midasdb=ancient("ref_temp/midasdb_uhgg"),
-        species_list="data_temp/hmp2.a.r.proc.gtpro.horizontal_coverage.filt-h20-n1.list",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        species_list="data/hmp2.a.r.proc.gtpro.horizontal_coverage.filt-h20-n1.list",
     conda:
         "conda/midas.yaml"
     threads: 64
@@ -26,10 +26,10 @@ rule download_midasdb_uhgg_all_group_species:
 
 rule download_midasdb_species_gene_annotations_all_tsv:
     output:
-        "data_temp/sp-{species}.download_uhgg_gene_annotations_all_tsv.flag",
+        "data/sp-{species}.download_uhgg_gene_annotations_all_tsv.flag",
     params:
         url="s3://microbiome-pollardlab/uhgg_v1/gene_annotations/{species}",
-        outdir="ref_temp/midasdb_uhgg/gene_annotations/{species}",
+        outdir="ref/midasdb_uhgg/gene_annotations/{species}",
     conda:
         "conda/midas.yaml"
     shell:
@@ -41,7 +41,7 @@ rule download_midasdb_species_gene_annotations_all_tsv:
 
 rule download_midasdb_species_pangenome_gene_list:
     output:
-        "ref_temp/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
+        "ref/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
     params:
         url="s3://microbiome-pollardlab/uhgg_v1/pangenomes/{species}/gene_info.txt.lz4",
     conda:
@@ -54,13 +54,13 @@ rule download_midasdb_species_pangenome_gene_list:
 
 rule build_midas_one_species_pangenome_index:
     output:
-        directory("ref_temp/midasdb_uhgg_indexes/{species}/pangenomes"),
+        directory("ref/midasdb_uhgg_indexes/{species}/pangenomes"),
     input:
-        midasdb=ancient("ref_temp/midasdb_uhgg"),
+        midasdb=ancient("ref/midasdb_uhgg"),
         # # FIXME: This means that the species must be in the list for {group}.
         # # It would be better if we could ensure that each individual species
         # # had been downloaded.
-        # midasdb_downloaded_flag="data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        # midasdb_downloaded_flag="data/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
     conda:
         "conda/midas.yaml"
     threads: 12
@@ -74,17 +74,46 @@ rule build_midas_one_species_pangenome_index:
         """
 
 
+rule build_midas_pangenome_index:
+    output:
+        directory("data/midasdb_uhgg_indexes/{group}.a.{stem}/pangenomes"),
+    input:
+        midasdb=ancient("ref/midasdb_uhgg"),
+        midasdb_downloaded_flag="data/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+    conda:
+        "conda/midas.yaml"
+    params:
+        species_list=lambda w: ",".join(
+            checkpoint_select_species_with_greater_max_coverage_gtpro(
+                group=w.group,
+                stem=w.stem,
+                cvrg_thresh=0.2,
+                num_samples=1,
+                require_in_species_group=True,
+            )
+        ),
+    threads: 40
+    shell:
+        """
+        midas2 build_bowtie2db \
+                --midasdb_name uhgg --midasdb_dir {input.midasdb} \
+                --species_list {params.species_list} --select_threshold=-1 \
+                --bt2_indexes_name pangenomes --bt2_indexes_dir {output} \
+                --num_cores {threads}
+        """
+
+
 rule run_midas_genes:
     output:
-        directory("data_temp/{group}.a.r.{stem}.midas_output/{mgen}/genes"),
+        directory("data/{group}.a.r.{stem}.midas_output/{mgen}/genes"),
     input:
-        midasdb=ancient("ref_temp/midasdb_uhgg"),
-        midasdb_downloaded_flag="data_temp/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        midasdb_downloaded_flag="data/{group}.a.{stem}.gtpro.download_species_midasdb_uhgg.flag",
         r1="data/{mgen}.r1.{stem}.fq.gz",
         r2="data/{mgen}.r2.{stem}.fq.gz",
         species_coverage="data/{group}.a.r.proc.gtpro.horizontal_coverage.tsv",
     params:
-        outdir=lambda w: f"data_temp/{w.group}.a.r.{w.stem}.midas_output",
+        outdir=lambda w: f"data/{w.group}.a.r.{w.stem}.midas_output",
         thresh=0.2,
         min_reads=0,
         min_mapq=0,
@@ -116,14 +145,14 @@ rule run_midas_genes:
 
 rule run_midas_genes_one_species:
     output:
-        directory("data_temp/sp-{species}.{group}.a.r.{stem}.midas_output/{mgen}/genes"),
+        directory("data/sp-{species}.{group}.a.r.{stem}.midas_output/{mgen}/genes"),
     input:
-        midasdb=ancient("ref_temp/midasdb_uhgg"),
-        bt2_dir="ref_temp/midasdb_uhgg_indexes/{species}/pangenomes",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        bt2_dir="ref/midasdb_uhgg_indexes/{species}/pangenomes",
         r1="data/{mgen}.r1.{stem}.fq.gz",
         r2="data/{mgen}.r2.{stem}.fq.gz",
     params:
-        outdir=lambda w: f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
+        outdir=lambda w: f"data/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output",
         min_reads=0,
         min_mapq=0,
     conda:
@@ -167,16 +196,16 @@ rule build_mgen_group_midas_manifest:
 
 rule merge_midas_genes_one_species:
     output:
-        directory("data_temp/sp-{species}.{group}.a.r.{stem}.midas_merge/genes"),
+        directory("data/sp-{species}.{group}.a.r.{stem}.midas_merge/genes"),
     input:
-        manifest="data_temp/sp-{species}.{group}.a.r.{stem}.midas_manifest.tsv",
+        manifest="data/sp-{species}.{group}.a.r.{stem}.midas_manifest.tsv",
         genes=lambda w: [
-            f"data_temp/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
+            f"data/sp-{w.species}.{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        outdir="data_temp/sp-{species}.{group}.a.r.{stem}.midas_merge",
-        midasdb="ref_temp/midasdb_uhgg",
+        outdir="data/sp-{species}.{group}.a.r.{stem}.midas_merge",
+        midasdb="ref/midasdb_uhgg",
     conda:
         "conda/midas.yaml"
     threads: 24
@@ -194,18 +223,18 @@ rule merge_midas_genes_one_species:
         """
 
 
-rule merge_midas_genes:
+rule merge_midas_genes_all_species:
     output:
-        directory("data_temp/{group}.a.r.{stem}.midas_merge/genes"),
+        directory("data/{group}.a.r.{stem}.midas_merge/genes"),
     input:
-        manifest="data_temp/{group}.a.r.{stem}.midas_manifest.tsv",
+        manifest="data/{group}.a.r.{stem}.midas_manifest.tsv",
         genes=lambda w: [
-            f"data_temp/{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
+            f"data/{w.group}.a.r.{w.stem}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        outdir="data_temp/{group}.a.r.{stem}.midas_merge",
-        midasdb="ref_temp/midasdb_uhgg",
+        outdir="data/{group}.a.r.{stem}.midas_merge",
+        midasdb="ref/midasdb_uhgg",
         species=lambda w: ",".join(
             checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
@@ -236,8 +265,8 @@ rule merge_midas_genes:
 # workflow (not the one-species-only workflow).
 rule unzip_and_relocate_midas_merge_genes_output:
     output:
-        "data_temp/sp-{species}.{stem}.midas_genes.{out_type}.tsv",
+        "data/sp-{species}.{stem}.midas_genes.{out_type}.tsv",
     input:
-        "data_temp/sp-{species}.{stem}.midas_merge/genes/{species}/{species}.genes_{out_type}.tsv.lz4",
+        "data/sp-{species}.{stem}.midas_merge/genes/{species}/{species}.genes_{out_type}.tsv.lz4",
     shell:
         "lz4cat {input} > {output}"
