@@ -1,8 +1,6 @@
-rule start_shell_midas:
+rule use rule start_shell as start_shell_gtpro start_shell_gtpro with:
     conda:
         "conda/midas.yaml"
-    shell:
-        "bash"
 
 
 rule download_midasdb_uhgg_all_group_species:

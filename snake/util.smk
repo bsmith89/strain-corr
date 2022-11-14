@@ -31,16 +31,6 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
 # And then run `snakemake -j1 install_jupyter_kernel_pymc`.
 
 
-use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
-    params:
-        name="sfacts",
-    conda:
-        "conda/sfacts.yaml"
-
-
-# And then run `snakemake -j1 install_jupyter_kernel_sfacts`.
-
-
 rule start_jupyter:
     params:
         port=config["jupyter_port"],

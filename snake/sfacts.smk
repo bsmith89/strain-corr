@@ -1,22 +1,14 @@
 # Same as sfacts, but with an environment defined by conda/sfacts.yaml
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
-rule start_ipython_sfacts:
+use rule start_ipython as start_ipython_sfacts with:
     conda:
         "conda/sfacts.yaml"
-    shell:
-        """
-        ipython
-        """
 
 
-rule start_shell_sfacts:
+use rule start_shell as start_shell_sfacts with:
     conda:
         "conda/sfacts.yaml"
-    shell:
-        """
-        bash
-        """
 
 
 # NOTE: Comment out this rule to speed up DAG-building time
