@@ -29,7 +29,7 @@ rule run_gtpro:
         pmem=60000 // 4,
         walltime_hr=4,
     container:
-        config["container"]["gtpro_old"]
+        config["container"]["gtpro"]
     shell:
         dd(
             """
