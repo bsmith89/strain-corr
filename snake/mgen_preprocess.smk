@@ -93,13 +93,13 @@ localrules:
 
 rule qc_raw_reads:
     output:
-        directory("data/{group}.a.fastqc.d"),
+        directory("data/{group}.a.{stem}.fastqc.d"),
     input:
         r1=lambda w: [
-            f"sdata/{mgen}.r1.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"data/{mgen}.r1.{{stem}}.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
         r2=lambda w: [
-            f"sdata/{mgen}.r2.fq.gz" for mgen in config["mgen_group"][w.group]
+            f"data/{mgen}.r2.{{stem}}.fq.gz" for mgen in config["mgen_group"][w.group]
         ],
     container:
         config["container"]["toolz"]
