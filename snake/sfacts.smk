@@ -11,6 +11,13 @@ use rule start_shell as start_shell_sfacts with:
         "conda/sfacts.yaml"
 
 
+use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
+    params:
+        name="sfacts",
+    conda:
+        "conda/sfacts.yaml"
+
+
 # NOTE: Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
     output:
