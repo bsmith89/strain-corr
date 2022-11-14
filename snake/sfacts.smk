@@ -49,10 +49,10 @@ rule compile_species_variation_from_vcf:
 
 rule concatenate_gtpro_refs:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.plus_refs.mgen.nc",
+        "{stemA}/species/sp-{species}/{stemB}.plus_refs.mgen.nc",
     input:
         script="scripts/stack_mgen_with_refs.py",
-        mgen="data/group/{group}/species/sp-{species}/{stem}.mgen.nc",
+        mgen="{stemA}/species/sp-{species}/{stemB}.mgen.nc",
         ref="data/species/sp-{species}/gtpro_ref.mgen.nc",
     params:
         multi=100,
@@ -155,9 +155,9 @@ rule sfacts_clust_initialization:
 
 rule sfacts_clust_approximation:
     output:
-        "data/{stem}.approx-clust2-thresh{thresh}-s{strain_exponent}.world.nc",
+        "{stem}.approx-clust2-thresh{thresh}-s{strain_exponent}.world.nc",
     input:
-        "data/{stem}.mgen.nc",
+        "{stem}.mgen.nc",
     params:
         thresh=lambda w: float(w.thresh) / 100,
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
@@ -319,15 +319,15 @@ rule export_sfacts_comm:
 # once it has been run for the focal group.
 rule calculate_all_strain_depths:
     output:
-        "data/group/{group}/{proc_stem}.gtpro.{fit_stem}.strain_depth.tsv",
+        "data/group/{group}/{stemA}.gtpro.{stemB}.strain_depth.tsv",
     input:
         script="scripts/merge_all_strains_depth.py",
-        species="data/group/{group}/{proc_stem}.gtpro.species_depth.tsv",
+        species="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
         strains=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
+            f"data/group/{w.group}/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
-                stem=w.proc_stem,
+                stem=w.stemA,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,
@@ -335,10 +335,10 @@ rule calculate_all_strain_depths:
         ],
     params:
         args=lambda w: [
-            f"{species}=data/group/{w.group}/species/sp-{species}/{w.proc_stem}.gtpro.{w.fit_stem}.comm.tsv"
+            f"{species}=data/group/{w.group}/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.comm.tsv"
             for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
                 group=w.group,
-                stem=w.proc_stem,
+                stem=w.stemA,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,

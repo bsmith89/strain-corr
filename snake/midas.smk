@@ -5,10 +5,11 @@ use rule start_shell as start_shell_midas with:
 
 rule download_midasdb_uhgg_all_group_species:
     output:
-        "data/group/{group}/r.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        "{stem}.gtpro.download_species_midasdb_uhgg.flag",
     input:
         midasdb=ancient("ref/midasdb_uhgg"),
-        species_list="data/group/{group}/r.{stem}.gtpro.horizontal_coverage.filt-h20-n1.list",
+        # FIXME:
+        species_list="{stem}.gtpro.horizontal_coverage.filt-h20-n1.list",
     conda:
         "conda/midas.yaml"
     threads: 64
@@ -71,10 +72,6 @@ rule build_midas_one_species_pangenome_index:
                 --bt2_indexes_name pangenomes --bt2_indexes_dir {output} \
                 --num_cores {threads}
         """
-
-
-
-
 
 
 rule run_midas_genes_one_species:

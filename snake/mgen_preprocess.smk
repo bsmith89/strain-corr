@@ -221,12 +221,12 @@ rule quality_trim_reads:
 # NULL case.
 rule filter_out_host:
     output:
-        r1="data/reads/{mgen}/r1{stem}hfilt.fq.gz",
-        r2="data/reads/{mgen}/r2{stem}hfilt.fq.gz",
+        r1="data/{stemA}/r1{stemB}hfilt.fq.gz",
+        r2="data/{stemA}/r2{stemB}hfilt.fq.gz",
     input:
         script="scripts/filter_out_mapping_reads.sh",
-        r1="sdata/reads/{mgen}/r1{stem}fq.gz",
-        r2="sdata/reads/{mgen}/r2{stem}fq.gz",
+        r1="sdata/{stemA}/r1{stemB}fq.gz",
+        r2="sdata/{stemA}/r2{stemB}fq.gz",
         index=[
             "ref/GRCh38.1.bt2",
             "ref/GRCh38.2.bt2",
