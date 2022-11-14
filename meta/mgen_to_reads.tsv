@@ -1,4 +1,4 @@
-mgen_id	r1	r2
+mgen_id	r1_path	r2_path
 CSM5FZ3N_P_G79889	raw/mgen/hmp2/CSM5FZ3N_P_R1.fastq.gz	raw/mgen/hmp2/CSM5FZ3N_P_R2.fastq.gz
 CSM5FZ3R_P_G79894	raw/mgen/hmp2/CSM5FZ3R_P_R1.fastq.gz	raw/mgen/hmp2/CSM5FZ3R_P_R2.fastq.gz
 CSM5YRY7_P_G79903	raw/mgen/hmp2/CSM5YRY7_P_R1.fastq.gz	raw/mgen/hmp2/CSM5YRY7_P_R2.fastq.gz

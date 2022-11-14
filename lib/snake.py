@@ -19,6 +19,7 @@ independent_theano_compiledir = """
 
 # Utility wildcard constrains
 noperiod_wc = "[^.]+"
+no_period_or_slash_wc = "[^./]+"
 integer_wc = "[0-9]+"
 float_noperiod_wc = "[0-9]+(e[0-9]+)?"
 single_param_wc = "[^.-]+"
