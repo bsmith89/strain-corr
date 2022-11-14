@@ -87,6 +87,32 @@ localrules:
     alias_raw_read_r2,
 
 
+rule alias_raw_read_unsafe_r1:
+    output:
+        "data/reads/{mgen}/r1.fq.gz",
+    input:
+        lambda w: config["mgen"]["r1_path"][w.mgen],
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_raw_read_unsafe_r1,
+
+
+rule alias_raw_read_unsafe_r2:
+    output:
+        "data/reads/{mgen}/r2.fq.gz",
+    input:
+        lambda w: config["mgen"]["r2_path"][w.mgen],
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_raw_read_unsafe_r2,
+
+
 # {{{1 Process data
 # {{{2 Metagenomic reads
 
