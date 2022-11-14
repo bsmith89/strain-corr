@@ -1,4 +1,4 @@
-rule use rule start_shell as start_shell_gtpro start_shell_gtpro with:
+use rule start_shell as start_shell_midas with:
     conda:
         "conda/midas.yaml"
 

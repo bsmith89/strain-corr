@@ -40,10 +40,10 @@ rule convert_genes_tally_to_cluster_depth:
         "data/sp-{species}.{group}.a.{stem}.midas_gene.depth.nc",
     input:
         script="scripts/convert_genes_tally_to_depth.py",
-        midasdir="data/sp-{species}.{group}.a.{stem}.midas_merge2/genes",
+        midasdir="data/sp-{species}.{group}.a.{stem}.midas_merge/genes",
         meta="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     params:
-        inpath="data/sp-{species}.{group}.a.{stem}.midas_merge2/genes/{species}/{species}.genes_reads.tsv.lz4",
+        inpath="data/sp-{species}.{group}.a.{stem}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
         assumed_read_length=125,
     shell:
         """
