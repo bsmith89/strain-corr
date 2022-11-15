@@ -1,11 +1,11 @@
 rule combine_midasdb_all_gene_annotations:
     output:
-        "ref/midasdb_uhgg.sp-{species}.gene_annotations.tsv",
+        "ref/midasdb_uhgg_gene_annotations/sp-{species}.gene_annotations.tsv",
     input:
-        flag="data/species/sp-{species}/download_uhgg_gene_annotations_all_tsv.flag",
+        "ref/midasdb_uhgg_gene_annotations/{species}",
     shell:
         """
-        find ref/midasdb_uhgg/gene_annotations/{wildcards.species}/ -name '*.tsv.lz4' \
+        find {input} -name '*.tsv.lz4' \
                 | xargs lz4cat \
                 | awk '$1 != "locus_tag" && $2 != "gene"' \
             > {output}
@@ -14,10 +14,10 @@ rule combine_midasdb_all_gene_annotations:
 
 rule filter_midasdb_all_gene_annotations_by_centroid:
     output:
-        "ref/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv",
+        "ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
     input:
-        annot="ref/midasdb_uhgg.sp-{species}.gene_annotations.tsv",
-        centroids_list="ref/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
+        annot="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene_annotations.tsv",
+        centroids_list="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
     params:
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     shell:
@@ -41,15 +41,17 @@ rule convert_genes_tally_to_cluster_depth:
     input:
         script="scripts/convert_genes_tally_to_depth.py",
         midasdir="{stemA}/species/sp-{species}/{stemB}.midas_merge/genes",
-        meta="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:
+        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
         inpath="{stemA}/species/sp-{species}/{stemB}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
         assumed_read_length=125,
     shell:
         """
         {input.script} \
                 <(lz4cat {params.inpath} | tqdm --bytes) \
-                {input.meta} \
+                {params.cluster_info} \
                 {params.assumed_read_length} \
                 {output}
         """
@@ -61,7 +63,8 @@ rule aggregate_gene_depth_by_centroid:
     input:
         script="scripts/aggregate_gene_depth_by_centroid.py",
         depth="{stemA}/species/sp-{species}/{stemB}.midas_gene.depth.nc",
-        meta="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -71,11 +74,12 @@ rule aggregate_gene_depth_by_centroid:
             "80": "centroid_80",
             "75": "centroid_75",
         }[w.centroid],
+        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
         """
         {input.script} \
                 {input.depth} \
-                {input.meta} \
+                {params.cluster_info} \
                 {params.aggregate_genes_by} \
                 {output}
         """
@@ -218,10 +222,10 @@ rule pick_strain_gene_thresholds:
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
     output:
-        "data/species/sp-{species}/midas_gene{centroid}.reference_copy_number.nc",
+        "ref/midasdb_uhgg_pangenomes/{species}/midas_gene{centroid}.reference_copy_number.nc",
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
+        genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
 
@@ -234,13 +238,16 @@ rule collect_files_for_strain_assessment:
         strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_correlation.tsv",
         strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_depth_ratio.tsv",
         strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_centroids="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_depth.tsv",
         gtpro_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.species_depth.tsv",
         species_correlation="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.species_correlation.tsv",
         strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_gene_threshold.tsv",
-        gene_annotations="ref/midasdb_uhgg.sp-{species}.gene{centroid}_annotations.tsv",
+        gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
         midas_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
-        reference_copy_number="data/species/sp-{species}/midas_gene{centroid}.reference_copy_number.nc",
+        reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/midas_gene{centroid}.reference_copy_number.nc",
+        midasdb=ancient("ref/midasdb_uhgg"),
+        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
+    params:
+        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
-        "echo {input} | tee {output}"
+        "echo {input} {params.cluster_info} | tee {output}"

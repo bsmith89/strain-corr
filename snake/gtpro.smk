@@ -18,7 +18,8 @@ rule run_gtpro:
     output:
         temp("{stem}.gtpro_raw.gz"),
     input:
-        "{stem}.fq.gz",
+        r="{stem}.fq.gz",
+        db="ref/gtpro",
     params:
         db_l=32,
         db_m=36,
@@ -33,7 +34,7 @@ rule run_gtpro:
     shell:
         dd(
             """
-        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -f -o {output} {input}
+        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -f -o {output} {input.r}
         mv {output}.tsv.gz {output}
         """
         )
@@ -43,7 +44,7 @@ rule load_gtpro_snp_dict:
     output:
         "ref/gtpro.snp_dict.db",
     input:
-        "ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
+        "ref/gtpro.snp_dict.tsv",
     shell:
         dd(
             """
@@ -191,7 +192,7 @@ rule estimate_all_species_horizontal_coverage:
         "{stem}.gtpro.horizontal_coverage.tsv",
     input:
         script="scripts/estimate_all_species_horizontal_coverage_from_position_tally.py",
-        snps="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
+        snps="ref/gtpro.snp_dict.tsv",
         r="{stem}.gtpro_species_tally.tsv",
     shell:
         "{input.script} {input.snps} {input.r} {output}"

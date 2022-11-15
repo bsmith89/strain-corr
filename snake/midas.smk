@@ -3,13 +3,11 @@ use rule start_shell as start_shell_midas with:
         "conda/midas.yaml"
 
 
-rule download_midasdb_uhgg_all_group_species:
+rule download_midasdb_uhgg_species:
     output:
-        "{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        "data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     input:
         midasdb=ancient("ref/midasdb_uhgg"),
-        # FIXME:
-        species_list="{stem}.gtpro.horizontal_coverage.filt-h20-n1.list",
     conda:
         "conda/midas.yaml"
     threads: 64
@@ -18,29 +16,27 @@ rule download_midasdb_uhgg_all_group_species:
         midas2 database --download \
                 --debug --num_cores {threads} \
                 --midasdb_name uhgg --midasdb_dir {input.midasdb} \
-                --species_list {input.species_list}
+                --species {wildcards.species}
         touch {output}
         """
 
 
 rule download_midasdb_species_gene_annotations_all_tsv:
     output:
-        "data/species/sp-{species}/download_uhgg_gene_annotations_all_tsv.flag",
+        directory("ref/midasdb_uhgg_gene_annotations/{species}"),
     params:
         url="s3://microbiome-pollardlab/uhgg_v1/gene_annotations/{species}",
-        outdir="ref/midasdb_uhgg/gene_annotations/{species}",
     conda:
         "conda/midas.yaml"
     shell:
         """
-        aws s3 cp --no-sign-request --recursive --exclude "*" --include "*.tsv.lz4" {params.url} {params.outdir}
-        touch {output}
+        aws s3 cp --no-sign-request --recursive --exclude "*" --include "*.tsv.lz4" {params.url} {output}
         """
 
 
 rule download_midasdb_species_pangenome_gene_list:
     output:
-        "ref/midasdb_uhgg/pangenomes/{species}/gene_info.txt.lz4",
+        "ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
     params:
         url="s3://microbiome-pollardlab/uhgg_v1/pangenomes/{species}/gene_info.txt.lz4",
     conda:
@@ -56,11 +52,7 @@ rule build_midas_one_species_pangenome_index:
         directory("ref/midasdb_uhgg_indexes/{species}/pangenomes"),
     input:
         midasdb=ancient("ref/midasdb_uhgg"),
-        # # FIXME: This means that the species must be in the list for {group}.
-        # # It would be better if we could ensure that each individual species
-        # # had been downloaded.
-        # # FIXME: How to acknowledge that the species list is {group} and {stem} dependent?
-        # midasdb_downloaded_flag="data/group/{group}/r.{stem}.gtpro.download_species_midasdb_uhgg.flag",
+        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     conda:
         "conda/midas.yaml"
     threads: 12
@@ -81,6 +73,7 @@ rule run_midas_genes_one_species:
         ),
     input:
         midasdb=ancient("ref/midasdb_uhgg"),
+        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
         bt2_dir="ref/midasdb_uhgg_indexes/{species}/pangenomes",
         r1="data/reads/{mgen}/r1.{stem}.fq.gz",
         r2="data/reads/{mgen}/r2.{stem}.fq.gz",
