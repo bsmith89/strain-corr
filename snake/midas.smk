@@ -149,42 +149,6 @@ rule merge_midas_genes_one_species:
         """
 
 
-rule merge_midas_genes_all_species:
-    output:
-        directory("data/group/{group}/r.{stem}.midas_merge/genes"),
-    input:
-        manifest="data/group/{group}/r.{stem}.midas_manifest.tsv",
-        genes=lambda w: [
-            f"data/group/{w.group}/r.{w.stem}.midas_output/{mgen}/genes"
-            for mgen in config["mgen_group"][w.group]
-        ],
-    params:
-        outdir="data/group/{group}/r.{stem}.midas_output",
-        midasdb="ref/midasdb_uhgg",
-        species=lambda w: ",".join(
-            checkpoint_select_species_with_greater_max_coverage_gtpro(
-                group=w.group,
-                stem=w.stem,
-                cvrg_thresh=0.2,
-                num_samples=1,
-                require_in_species_group=True,
-            )
-        ),
-    conda:
-        "conda/midas.yaml"
-    threads: 24
-    shell:
-        """
-        midas2 merge_genes \
-                --num_cores {threads} \
-                --samples_list {input.manifest} \
-                --species_list {params.species} \
-                --midasdb_name uhgg \
-                --midasdb_dir {params.midasdb} \
-                --genome_depth 1e-3 \
-                --cluster_pid 99 \
-                {params.outdir}
-        """
 
 
 # TODO: Make this decompress/move the species file from the traditional MIDAS
