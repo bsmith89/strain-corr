@@ -44,8 +44,9 @@ if path.exists(local_config_path):
 
 
 if "container" in config:
+    if "default" in config["container"]:
 
-    container: config["container"]["default"]
+        container: config["container"]["default"]
 
 
 # {{{2 Sub-pipelines
