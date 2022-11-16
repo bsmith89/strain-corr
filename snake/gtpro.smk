@@ -186,63 +186,42 @@ rule count_species_lines_from_both_reads:
         """
 
 
-# NOTE: Comment out this rule to speed up DAG evaluation.
-rule estimate_all_species_horizontal_coverage:
+checkpoint estimate_all_species_horizontal_coverage_with_gtpro:
     output:
-        "{stem}.gtpro.horizontal_coverage.tsv",
+        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
     input:
         script="scripts/estimate_all_species_horizontal_coverage_from_position_tally.py",
         snps="ref/gtpro.snp_dict.tsv",
-        r="{stem}.gtpro_species_tally.tsv",
+        r="data/group/{group}/r.{proc}.gtpro_species_tally.tsv",
     shell:
         "{input.script} {input.snps} {input.r} {output}"
 
 
-checkpoint select_species_with_greater_max_coverage_gtpro:
-    output:
-        "data/group/{group}/{stem}.gtpro.horizontal_coverage.filt-h{cvrg_thresh}-n{num_samples}.list",
-    input:
-        "data/group/{group}/{stem}.gtpro.horizontal_coverage.tsv",
-    params:
-        cvrg_thresh=lambda w: float(w.cvrg_thresh) / 100,
-        num_samples=lambda w: int(w.num_samples),
-    run:
-        horizontal_coverage = (
-            pd.read_table(
-                input[0],
-                names=["sample_id", "species_id", "horizontal_coverage"],
-                index_col=["sample_id", "species_id"],
-            )
-            .squeeze()
-            .unstack(fill_value=0)
-        )
-        with open(output[0], "w") as f:
-            # Select species with >=2 libraries with more coverage than the threshold
-            for species_id in idxwhere(
-                (horizontal_coverage >= params.cvrg_thresh).sum() >= params.num_samples
-            ):
-                print(species_id, file=f)
+def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(group, proc):
+    return checkpoints.estimate_all_species_horizontal_coverage_with_gtpro.get(
+        group=group,
+        proc=proc,
+    )
 
 
-def checkpoint_select_species_with_greater_max_coverage_gtpro(
-    group, stem, cvrg_thresh, num_samples, require_in_species_group=False
+def checkpoint_select_species(
+    group, proc, cvrg_thresh, num_samples, require_in_species_group=False
 ):
-    potential_species = set(config["species_group"][group])
-    cvrg_thresh = int(cvrg_thresh * 100)
-    with open(
-        checkpoints.select_species_with_greater_max_coverage_gtpro.get(
-            group=group,
-            stem=stem,
-            cvrg_thresh=cvrg_thresh,
-            num_samples=num_samples,
-        ).output[0]
-    ) as f:
-        if require_in_species_group:
-            out = list(
-                set([l.strip() for l in f]) & set(config["species_group"][group])
-            )
-        else:
-            out = [l.strip() for l in f]
+    d = pd.read_table(
+        checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(
+            group=group, proc=proc
+        ).output[0],
+        names=["sample", "species", "max_coverage"],
+        dtype={'sample': str, 'species': str, 'max_coverage': float},
+        index_col=["sample", "species"],
+    ).squeeze().unstack("species").astype(float).fillna(0)
+    species_with_sufficient_coverage = idxwhere((d >= cvrg_thresh).sum() >= num_samples)
+    if require_in_species_group:
+        out = list(
+            set(species_with_sufficient_coverage) & set(config["species_group"][group])
+        )
+    else:
+        out = species_with_sufficient_coverage
     return out
 
 
@@ -325,13 +304,13 @@ rule estimate_species_depth_from_metagenotype:
 # once it has been run for the focal group.
 rule concatenate_all_species_depths:
     output:
-        "data/group/{group}/{stem}.gtpro.species_depth.tsv",
+        "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
     input:
         species=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/{w.stem}.gtpro.species_depth.tsv"
-            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"
+            for species in checkpoint_select_species(
                 group=w.group,
-                stem=w.stem,
+                proc=w.proc,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,
@@ -365,13 +344,13 @@ rule gather_mgen_group_for_all_species:
 
 rule construct_files_for_all_select_species:
     output:
-        touch("data/group/{group}/{stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/r.{stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/{w.stem}.gtpro.{w.suffix}"
-            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
+            for species in checkpoint_select_species(
                 group=w.group,
-                stem=w.stem,
+                proc=w.proc,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,

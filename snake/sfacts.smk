@@ -324,26 +324,26 @@ rule export_sfacts_comm:
 # once it has been run for the focal group.
 rule calculate_all_strain_depths:
     output:
-        "data/group/{group}/{stemA}.gtpro.{stemB}.strain_depth.tsv",
+        "data/group/{group}/r.{proc}.gtpro.{stem}.strain_depth.tsv",
     input:
         script="scripts/merge_all_strains_depth.py",
-        species="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
+        species="data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
         strains=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.comm.tsv"
-            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
+            for species in checkpoint_select_species(
                 group=w.group,
-                stem=w.stemA,
+                proc=w.proc,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,
             )
         ],
     params:
-        args=lambda w: [
-            f"{species}=data/group/{w.group}/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.comm.tsv"
-            for species in checkpoint_select_species_with_greater_max_coverage_gtpro(
+        strains=lambda w: [
+            f"{species}=data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
+            for species in checkpoint_select_species(
                 group=w.group,
-                stem=w.stemA,
+                proc=w.proc,
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,
