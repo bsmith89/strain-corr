@@ -329,7 +329,7 @@ rule calculate_all_strain_depths:
                 group=w.group,
                 proc=w.proc,
                 cvrg_thresh=0.2,
-                num_samples=1,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],
