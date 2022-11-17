@@ -73,7 +73,6 @@ rule run_midas_genes_one_species:
         ),
     input:
         midasdb=ancient("ref/midasdb_uhgg"),
-        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
         bt2_dir="ref/midasdb_uhgg_indexes/{species}/pangenomes",
         r1="data/reads/{mgen}/r1.{stem}.fq.gz",
         r2="data/reads/{mgen}/r2.{stem}.fq.gz",

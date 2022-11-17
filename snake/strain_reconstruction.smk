@@ -42,7 +42,6 @@ rule convert_genes_tally_to_cluster_depth:
         script="scripts/convert_genes_tally_to_depth.py",
         midasdir="{stemA}/species/sp-{species}/{stemB}.midas_merge/genes",
         midasdb=ancient("ref/midasdb_uhgg"),
-        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
         inpath="{stemA}/species/sp-{species}/{stemB}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
@@ -64,7 +63,6 @@ rule aggregate_gene_depth_by_centroid:
         script="scripts/aggregate_gene_depth_by_centroid.py",
         depth="{stemA}/species/sp-{species}/{stemB}.midas_gene.depth.nc",
         midasdb=ancient("ref/midasdb_uhgg"),
-        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -246,7 +244,6 @@ rule collect_files_for_strain_assessment:
         midas_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/midas_gene{centroid}.reference_copy_number.nc",
         midasdb=ancient("ref/midasdb_uhgg"),
-        species_downloaded_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
