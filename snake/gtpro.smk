@@ -297,7 +297,7 @@ rule estimate_species_depth_from_metagenotype:
         "{stemA}/species/sp-{species}/r.{stemB}.gtpro.species_depth.tsv",
     input:
         script="scripts/estimate_species_depth_from_metagenotype.py",
-        mgen="{stemA}/species/sp-{species}/r.{stemB}.gtpro.mgen.nc",
+        mgen="{stemA}/species/sp-{species}/r.{stemB}.gtpro.mgtp.nc",
     params:
         trim=0.05,
     shell:

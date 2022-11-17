@@ -21,7 +21,7 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
 # NOTE: Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
     output:
-        "{stem}.gtpro.mgen.nc",
+        "{stem}.gtpro.mgtp.nc",
     input:
         "{stem}.gtpro.tsv.bz2",
     conda:
@@ -34,7 +34,7 @@ rule load_metagenotype_from_merged_gtpro:
 
 rule compile_species_variation_from_vcf:
     output:
-        "data/species/sp-{species}/gtpro_ref.mgen.nc",
+        "data/species/sp-{species}/gtpro_ref.mgtp.nc",
     input:
         script="scripts/vcf_to_sfacts.py",
         gtpro_snp_dict="ref/gtpro/variants_main.covered.hq.snp_dict.tsv",
@@ -49,11 +49,11 @@ rule compile_species_variation_from_vcf:
 
 rule concatenate_gtpro_refs:
     output:
-        "{stemA}/species/sp-{species}/{stemB}.plus_refs.mgen.nc",
+        "{stemA}/species/sp-{species}/{stemB}.plus_refs.mgtp.nc",
     input:
         script="scripts/stack_mgen_with_refs.py",
-        mgen="{stemA}/species/sp-{species}/{stemB}.mgen.nc",
-        ref="data/species/sp-{species}/gtpro_ref.mgen.nc",
+        mgen="{stemA}/species/sp-{species}/{stemB}.mgtp.nc",
+        ref="data/species/sp-{species}/gtpro_ref.mgtp.nc",
     params:
         multi=100,
     conda:
@@ -66,9 +66,9 @@ rule concatenate_gtpro_refs:
 
 rule filter_metagenotype:
     output:
-        "{stem}.filt-poly{poly}-cvrg{cvrg}.mgen.nc",
+        "{stem}.filt-poly{poly}-cvrg{cvrg}.mgtp.nc",
     input:
-        "{stem}.mgen.nc",
+        "{stem}.mgtp.nc",
     wildcard_constraints:
         poly="[0-9]+",
         cvrg="[0-9]+",
@@ -88,9 +88,9 @@ rule filter_metagenotype:
 
 rule subset_metagenotype:
     output:
-        "{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgen.nc",
+        "{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgtp.nc",
     input:
-        "{stem}.mgen.nc",
+        "{stem}.mgtp.nc",
     params:
         seed=lambda w: int(w.seed),
         num_positions=lambda w: int(w.num_positions),
@@ -112,7 +112,7 @@ rule sfacts_nmf_approximation:
     output:
         "{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc",
     input:
-        "{stem}.mgen.nc",
+        "{stem}.mgtp.nc",
     params:
         seed=lambda w: int(w.seed),
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
@@ -136,7 +136,7 @@ rule sfacts_clust_initialization:
     output:
         "{stem}.approx-clust-thresh{thresh}-s{strain_exponent}-seed0.world.nc",
     input:
-        "{stem}.mgen.nc",
+        "{stem}.mgtp.nc",
     params:
         thresh=lambda w: float(w.thresh) / 100,
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
@@ -157,7 +157,7 @@ rule sfacts_clust_approximation:
     output:
         "{stem}.approx-clust2-thresh{thresh}-s{strain_exponent}.world.nc",
     input:
-        "{stem}.mgen.nc",
+        "{stem}.mgtp.nc",
     params:
         thresh=lambda w: float(w.thresh) / 100,
         strain_exponent=lambda w: float(w.strain_exponent) / 100,
@@ -178,9 +178,9 @@ rule sfacts_clust_approximation:
 
 rule calculate_metagenotype_pdist:
     output:
-        "{stem}.mgen.pdist.nc",
+        "{stem}.mgtp.pdist.nc",
     input:
-        mgen="{stem}.mgen.nc",
+        mgen="{stem}.mgtp.nc",
     conda:
         "conda/sfacts.yaml"
     resources:
@@ -194,7 +194,7 @@ rule fit_sfacts:
         fit="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.world.nc",
         hist="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.loss_history",
     input:
-        mgen="{stem}.mgen.nc",
+        mgen="{stem}.mgtp.nc",
         strategy="meta/sfacts/strategy{strategy}.args",
     wildcard_constraints:
         strain_exponent="[0-9]+",
@@ -228,7 +228,7 @@ rule refit_genotypes_sfacts:
         fit="data/{stemA}.fit-{stemB}.refit-sfacts{strategy}-seed{seed}.world.nc",
     input:
         fit="data/{stemA}.fit-{stemB}.world.nc",
-        mgen="data/{stemA}.mgen.nc",
+        mgen="data/{stemA}.mgtp.nc",
         strategy="meta/sfacts/strategy{strategy}.args",
     wildcard_constraints:
         seed="[0-9]+",
