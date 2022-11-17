@@ -129,8 +129,6 @@ rule qc_reads:
             f"{{stemA}}/reads/{mgen}/r2.{{stemB}}.fq.gz"
             for mgen in config["mgen_group"][w.group]
         ],
-    container:
-        config["container"]["toolz"]
     threads: config["MAX_THREADS"]
     shell:
         dd(
@@ -162,8 +160,6 @@ rule deduplicate_reads:
     resources:
         mem_mb=10_000,
         walltime_min=600,
-    container:
-        config["container"]["toolz"]
     shell:
         "{input.script} {input.r1} {input.r2} {output.r1} {output.r2}"
 
@@ -176,8 +172,6 @@ rule trim_adapters:
         fq="{stem}.fq.gz",
     log:
         "log/{stem}.scythe.log",
-    container:
-        config["container"]["toolz"]
     threads: 2
     resources:
         walltime_hr=2,
@@ -201,8 +195,6 @@ rule quality_trim_reads:
     params:
         qual_type="sanger",
         qual_thresh=20,
-    container:
-        config["container"]["toolz"]
     resources:
         walltime_hr=3,
     shell:
@@ -237,8 +229,6 @@ rule filter_out_host:
         ],
     params:
         index="ref/GRCh38",
-    container:
-        config["container"]["toolz"]
     threads: 8
     shell:
         dd(

@@ -4,22 +4,12 @@
 rule install_jupyter_kernel_default:
     params:
         name="default",
+    conda:
+        "conda/toolz.yaml"
     shell:
         """
         python -m ipykernel install --user --name={params.name} --env PATH $PATH
         """
-
-
-# Any conda environment spec can be installed for Jupyter use
-# just like the below:
-use rule install_jupyter_kernel_default as install_jupyter_kernel_pymc with:
-    params:
-        name="pymc",
-    conda:
-        "conda/pymc.yaml"
-
-
-# And then run `snakemake -j1 install_jupyter_kernel_pymc`.
 
 
 rule start_jupyter:
@@ -38,13 +28,21 @@ rule start_ipython:
         "ipython"
 
 
+use rule start_ipython as start_ipython_toolz with:
+    conda:
+        "conda/toolz.yaml"
+
+
 rule start_shell:
-    container:
-        config["container"]["toolz"]
     shadow:
         "shallow"
     shell:
         "bash"
+
+
+use rule start_shell as start_shell_toolz with:
+    conda:
+        "conda/toolz.yaml"
 
 
 rule visualize_rulegraph:

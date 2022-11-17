@@ -2,13 +2,11 @@
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
 use rule start_ipython as start_ipython_sfacts with:
-    container: config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
 
 
 use rule start_shell as start_shell_sfacts with:
-    container: config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
 
@@ -16,7 +14,6 @@ use rule start_shell as start_shell_sfacts with:
 use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
     params:
         name="sfacts",
-    container: config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
 
@@ -212,8 +209,6 @@ rule fit_sfacts:
         mem_mb=5_000,
         device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
         gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
-    container:
-        config["container"]["mambaforge"]
     conda:
         "conda/sfacts.yaml"
     shell:
