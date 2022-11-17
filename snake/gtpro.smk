@@ -205,14 +205,20 @@ def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(group, proc):
 def checkpoint_select_species(
     group, proc, cvrg_thresh, num_samples, require_in_species_group=False
 ):
-    d = pd.read_table(
-        checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(
-            group=group, proc=proc
-        ).output[0],
-        names=["sample", "species", "max_coverage"],
-        dtype={'sample': str, 'species': str, 'max_coverage': float},
-        index_col=["sample", "species"],
-    ).squeeze().unstack("species").astype(float).fillna(0)
+    d = (
+        pd.read_table(
+            checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(
+                group=group, proc=proc
+            ).output[0],
+            names=["sample", "species", "max_coverage"],
+            dtype={"sample": str, "species": str, "max_coverage": float},
+            index_col=["sample", "species"],
+        )
+        .squeeze()
+        .unstack("species")
+        .astype(float)
+        .fillna(0)
+    )
     species_with_sufficient_coverage = idxwhere((d >= cvrg_thresh).sum() >= num_samples)
     if require_in_species_group:
         out = list(
