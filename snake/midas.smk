@@ -78,6 +78,45 @@ rule build_midas_one_species_pangenome_index:
         """
 
 
+rule build_midas_multi_species_pangenome_index:
+    output:
+        directory("data/group/{group}/r.{proc}.pangenomes"),
+    input:
+        midasdb=ancient("ref/midasdb_uhgg"),
+        species_downloaded_flags=lambda w: [
+            f"data/species/sp-{species}/download_species_midasdb_uhgg.flag"
+            for species in checkpoint_select_species(
+                group=w.group,
+                proc=w.proc,
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
+        checkpoint_species="data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
+    params:
+        species_list=lambda w: ",".join(
+            checkpoint_select_species(
+                group=w.group,
+                proc=w.proc,
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ),
+    conda:
+        "conda/midas.yaml"
+    threads: 100
+    shell:
+        """
+        midas2 build_bowtie2db \
+                --midasdb_name uhgg --midasdb_dir {input.midasdb} \
+                --species_list {params.species_list} --select_threshold=-1 \
+                --bt2_indexes_name pangenomes --bt2_indexes_dir {output} \
+                --num_cores {threads}
+        """
+
+
 rule run_midas_genes_one_species:
     output:
         directory(
@@ -168,6 +207,39 @@ rule merge_midas_genes_one_species:
         ],
     params:
         outdir="data/group/{group}/species/sp-{species}/r.{stem}.midas_merge",
+        midasdb="ref/midasdb_uhgg",
+    conda:
+        "conda/midas.yaml"
+    threads: 24
+    resources:
+        walltime_hr=48,
+    shell:
+        """
+        midas2 merge_genes \
+                --num_cores {threads} \
+                --samples_list {input.manifest} \
+                --species_list {wildcards.species} \
+                --midasdb_name uhgg \
+                --midasdb_dir {params.midasdb} \
+                --genome_depth 1e-3 \
+                --cluster_pid 99 \
+                {params.outdir}
+        """
+
+
+rule merge_midas_genes_from_multi_species:
+    output:
+        directory(
+            "data/group/{group}/species/sp-{species}/r.{proc}.midas_merge_from_multi/genes"
+        ),
+    input:
+        manifest="data/group/{group}/r.{proc}.midas_manifest.tsv",
+        genes=lambda w: [
+            f"data/group/{w.group}/r.{w.proc}.midas_output/{mgen}/genes"
+            for mgen in config["mgen_group"][w.group]
+        ],
+    params:
+        outdir="data/group/{group}/species/sp-{species}/r.{proc}.midas_merge_from_multi",
         midasdb="ref/midasdb_uhgg",
     conda:
         "conda/midas.yaml"
