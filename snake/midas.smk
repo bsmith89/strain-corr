@@ -111,14 +111,40 @@ rule run_midas_genes_one_species:
         """
 
 
+rule run_midas_genes_multi_species:
+    output:
+        directory("data/group/{group}/r.{proc}.midas_output/{mgen}/genes"),
+    input:
+        midasdb=ancient("ref/midasdb_uhgg"),
+        bt2_dir="data/group/{group}/r.{proc}.pangenomes",
+        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+    params:
+        outdir="data/group/{group}/r.{proc}.midas_output",
+        min_reads=0,
+        min_mapq=0,
+    conda:
+        "conda/midas.yaml"
+    threads: 4
+    resources:
+        walltime_hr=24,
+        mem_mb=2_000,
+        pmem=2_000,
+    shell:
+        """
+        midas2 run_genes --sample_name {wildcards.mgen} \
+                -1 {input.r1} -2 {input.r2} \
+                --midasdb_name uhgg --midasdb_dir {input.midasdb} \
+                --prebuilt_bowtie2_indexes {input.bt2_dir}/pangenomes --prebuilt_bowtie2_species {input.bt2_dir}/pangenomes.species \
+                --select_threshold=-1 \
+                --read_depth {params.min_reads} --aln_mapq {params.min_mapq} \
+                --num_cores {threads} {params.outdir}
+        """
+
+
 rule build_mgen_group_midas_manifest:
     output:
         "data/group/{group}/{stem}.midas_manifest.tsv",
-    input:
-        genes=lambda w: [
-            f"data/group/{w.group}/{w.stem}.midas_output/{mgen}/genes"
-            for mgen in config["mgen_group"][w.group]
-        ],
     wildcard_constraints:
         stemA=endswith_period_or_slash_wc,
     params:
