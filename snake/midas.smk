@@ -21,6 +21,10 @@ rule download_midasdb_uhgg_species:
         """
 
 
+localrules:
+    download_midasdb_uhgg_species,
+
+
 rule download_midasdb_species_gene_annotations_all_tsv:
     output:
         directory("ref/midasdb_uhgg_gene_annotations/{species}"),
@@ -34,6 +38,10 @@ rule download_midasdb_species_gene_annotations_all_tsv:
         """
 
 
+localrules:
+    download_midasdb_species_gene_annotations_all_tsv,
+
+
 rule download_midasdb_species_pangenome_gene_list:
     output:
         "ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
@@ -45,6 +53,10 @@ rule download_midasdb_species_pangenome_gene_list:
         """
         aws s3 cp --no-sign-request {params.url} {output}
         """
+
+
+localrules:
+    download_midasdb_species_pangenome_gene_list,
 
 
 rule build_midas_one_species_pangenome_index:

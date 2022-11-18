@@ -149,6 +149,10 @@ rule dummy_operation_on_reads:
         alias_recipe
 
 
+localrules:
+    dummy_operation_on_reads,
+
+
 rule deduplicate_reads:
     output:
         r1=temp("{stemA}/r1{stemB}dedup.fq.gz"),
