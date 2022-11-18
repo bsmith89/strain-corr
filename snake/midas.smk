@@ -10,7 +10,7 @@ rule download_midasdb_uhgg_species:
         midasdb=ancient("ref/midasdb_uhgg"),
     conda:
         "conda/midas.yaml"
-    threads: 64
+    threads: 2
     shell:
         """
         midas2 database --download \

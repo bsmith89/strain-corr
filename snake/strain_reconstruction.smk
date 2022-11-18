@@ -46,6 +46,9 @@ rule convert_genes_tally_to_cluster_depth:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
         inpath="{stemA}/species/sp-{species}/{stemB}.midas_merge/genes/{species}/{species}.genes_reads.tsv.lz4",
         assumed_read_length=125,
+    resources:
+        mem_mb=16_000,
+        pmem=16_000,
     shell:
         """
         {input.script} \
