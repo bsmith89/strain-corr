@@ -167,8 +167,8 @@ rule run_midas_genes_multi_species:
     threads: 4
     resources:
         walltime_hr=24,
-        mem_mb=2_000,
-        pmem=2_000,
+        mem_mb=16_000,
+        pmem=4_000,
     shell:
         """
         midas2 run_genes --sample_name {wildcards.mgen} \
