@@ -86,8 +86,7 @@ rule build_midas_multi_species_pangenome_index:
         species_downloaded_flags=lambda w: [
             f"data/species/sp-{species}/download_species_midasdb_uhgg.flag"
             for species in checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
                 num_samples=2,
                 require_in_species_group=True,
@@ -97,8 +96,7 @@ rule build_midas_multi_species_pangenome_index:
     params:
         species_list=lambda w: ",".join(
             checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
                 num_samples=2,
                 require_in_species_group=True,

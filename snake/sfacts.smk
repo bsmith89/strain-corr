@@ -326,8 +326,7 @@ rule calculate_all_strain_depths:
         strains=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
             for species in checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
                 num_samples=2,
                 require_in_species_group=True,
@@ -337,8 +336,7 @@ rule calculate_all_strain_depths:
         strains=lambda w: [
             f"{species}=data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
             for species in checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,

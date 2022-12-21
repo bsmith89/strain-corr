@@ -195,21 +195,20 @@ checkpoint estimate_all_species_horizontal_coverage_with_gtpro:
         "{input.script} {input.snps} {input.r} {output}"
 
 
-def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(group, proc):
-    return checkpoints.estimate_all_species_horizontal_coverage_with_gtpro.get(
-        group=group,
-        proc=proc,
+def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(path):
+    chkpt, w = get_checkpoint_by_path(
+        checkpoints.estimate_all_species_horizontal_coverage_with_gtpro, path
     )
+    return chkpt, w
 
 
 def checkpoint_select_species(
-    group, proc, cvrg_thresh, num_samples, require_in_species_group=False
+    path, cvrg_thresh, num_samples, require_in_species_group=False
 ):
+    chkpt, w = checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(path)
     d = (
         pd.read_table(
-            checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(
-                group=group, proc=proc
-            ).output[0],
+            chkpt.output[0],
             names=["sample", "species", "max_coverage"],
             dtype={"sample": str, "species": str, "max_coverage": float},
             index_col=["sample", "species"],
@@ -222,11 +221,27 @@ def checkpoint_select_species(
     species_with_sufficient_coverage = idxwhere((d >= cvrg_thresh).sum() >= num_samples)
     if require_in_species_group:
         out = list(
-            set(species_with_sufficient_coverage) & set(config["species_group"][group])
+            set(species_with_sufficient_coverage)
+            & set(config["species_group"][w["group"]])
         )
     else:
         out = species_with_sufficient_coverage
     return out
+
+
+rule debug_checkpoint_select_species:
+    output:
+        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.select_species.flag",
+    input:
+        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
+    params:
+        obj=lambda w: checkpoint_select_species(
+            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=1,
+        ),
+    shell:
+        "echo {params.obj}"
 
 
 # Helper rule that pre-formats paths from library_id *.gtpro_parse.tsv.bz2 files.
@@ -313,8 +328,7 @@ rule concatenate_all_species_depths:
         species=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"
             for species in checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
                 num_samples=1,
                 require_in_species_group=True,
@@ -348,15 +362,14 @@ rule gather_mgen_group_for_all_species:
 
 rule construct_files_for_all_select_species:
     output:
-        touch("data/group/{group}/r.{stem}.gtpro.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/r.{proc}.X.{suffix}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.{w.suffix}"
             for species in checkpoint_select_species(
-                group=w.group,
-                proc=w.proc,
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
-                num_samples=1,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],

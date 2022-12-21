@@ -13,6 +13,7 @@ from lib.snake import (
     curl_recipe,
     nested_defaultdict,
     nested_dictlookup,
+    get_checkpoint_by_path,
 )
 from lib.pandas_util import idxwhere
 import pandas as pd
