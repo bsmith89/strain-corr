@@ -34,7 +34,7 @@ rule download_midasdb_species_gene_annotations_all_tsv:
         "conda/midas.yaml"
     shell:
         """
-        aws s3 cp --no-sign-request --recursive --exclude "*" --include "*.tsv.lz4" {params.url} {output}
+        aws s3 cp --quiet --no-sign-request --recursive --exclude "*" --include "*.tsv.lz4" {params.url} {output}
         """
 
 
@@ -51,7 +51,7 @@ rule download_midasdb_species_pangenome_gene_list:
         "conda/midas.yaml"
     shell:
         """
-        aws s3 cp --no-sign-request {params.url} {output}
+        aws s3 cp --quiet --no-sign-request {params.url} {output}
         """
 
 
