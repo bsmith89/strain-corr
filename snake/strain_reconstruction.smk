@@ -247,6 +247,7 @@ rule collect_files_for_strain_assessment:
         midas_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/midas_gene{centroid}.reference_copy_number.nc",
         midasdb=ancient("ref/midasdb_uhgg"),
+        gtpro_reference_genotype="data/species/sp-{species}/gtpro_ref.mgtp.nc",
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
