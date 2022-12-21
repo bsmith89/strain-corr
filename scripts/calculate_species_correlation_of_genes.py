@@ -15,7 +15,7 @@ if __name__ == "__main__":
     gene_depth_inpath = sys.argv[3]
     # gene_meta_inpath = sys.argv[4]
     # aggregate_genes_by = sys.argv[5]
-    transformation_root = float(sys.argv[4])
+    transformation_exponent = float(sys.argv[4])
     n_marker_genes = int(sys.argv[5])
     # corr_thresh = float(sys.argv[5])
     trim_frac = float(sys.argv[6])
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     n_genes = len(gene_depth.gene_id)
     n_samples = len(gene_depth.sample)
     info(f"Calculating correlation among {n_genes} genes across {n_samples} samples.")
-    trnsfm = lambda x: x ** (1 / transformation_root)
+    trnsfm = lambda x: x ** transformation_exponent
     corr = pd.Series(
         1
         - cdist(

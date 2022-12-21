@@ -15,7 +15,7 @@ if __name__ == "__main__":
     strain_frac_inpath = sys.argv[4]
     strain_frac_thresh = float(sys.argv[5])
     gene_depth_inpath = sys.argv[6]
-    transformation_root = float(sys.argv[7])
+    transformation_exponent = float(sys.argv[7])
     outpath = sys.argv[8]
 
     info("Loading input data.")
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # info(f"Found {nstrains} strains with total depth > 1.0 and pure in >= 2 samples.")
 
     info("Transforming depths.")
-    trnsfm = lambda x: x ** (1 / transformation_root)
+    trnsfm = lambda x: x ** transformation_exponent
     gene_depth = trnsfm(gene_depth)
     species_depth = trnsfm(species_depth)
     info("Iterating strains.")
