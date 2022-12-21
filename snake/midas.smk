@@ -259,14 +259,3 @@ rule merge_midas_genes_from_multi_species:
         """
 
 
-
-
-# TODO: Make this decompress/move the species file from the traditional MIDAS
-# workflow (not the one-species-only workflow).
-rule unzip_and_relocate_midas_merge_genes_output:
-    output:
-        "data/species/sp-{species}/{stem}.midas_genes.{out_type}.tsv",
-    input:
-        "data/species/sp-{species}/{stem}.midas_merge/genes/{species}/{species}.genes_{out_type}.tsv.lz4",
-    shell:
-        "lz4cat {input} > {output}"
