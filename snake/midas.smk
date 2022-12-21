@@ -162,11 +162,11 @@ rule run_midas_genes_multi_species:
         min_mapq=0,
     conda:
         "conda/midas.yaml"
-    threads: 4
+    threads: 5
     resources:
         walltime_hr=24,
-        mem_mb=16_000,
-        pmem=4_000,
+        mem_mb=100_000,
+        pmem=20_000,
     shell:
         """
         midas2 run_genes --sample_name {wildcards.mgen} \
@@ -241,7 +241,10 @@ rule merge_midas_genes_from_multi_species:
         midasdb="ref/midasdb_uhgg",
     conda:
         "conda/midas.yaml"
-    threads: 24
+    threads: 4
+    resources:
+        mem_mb=100_000,
+        pmem=100_000 // 4,
     shell:
         """
         midas2 merge_genes \
