@@ -243,8 +243,9 @@ rule merge_midas_genes_from_multi_species:
         "conda/midas.yaml"
     threads: 4
     resources:
-        mem_mb=100_000,
-        pmem=100_000 // 4,
+        mem_mb=30_000,
+        pmem=30_000 // 4,
+        walltime_hr=4,
     shell:
         """
         midas2 merge_genes \

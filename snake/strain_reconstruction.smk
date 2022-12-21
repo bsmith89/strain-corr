@@ -47,8 +47,8 @@ rule convert_genes_tally_from_multi_to_cluster_depth:
         inpath="{stemA}/species/sp-{species}/{stemB}.midas_merge_from_multi/genes/{species}/{species}.genes_reads.tsv.lz4",
         assumed_read_length=125,
     resources:
-        mem_mb=16_000,
-        pmem=16_000,
+        mem_mb=64_000,
+        pmem=64_000,
     shell:
         """
         {input.script} \
