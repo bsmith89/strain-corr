@@ -42,8 +42,7 @@ if __name__ == "__main__":
     species_depth = species_depth.sel(sample=shared_samples)
     gene_depth = gene_depth.sel(sample=shared_samples)
 
-    # TODO: Do I need to filter the homogenous samples bit by strain_frac??
-    # strain_frac = strain_frac.sel(sample=shared_samples)
+    strain_frac = strain_frac.sel(sample=list(set(strain_frac.sample.values) & set(shared_samples)))
 
     info("Identifying strain-pure samples.")
     homogenous_samples = idxwhere(
