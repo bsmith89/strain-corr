@@ -362,10 +362,10 @@ rule gather_mgen_group_for_all_species:
 
 rule construct_files_for_all_select_species:
     output:
-        touch("data/group/{group}/r.{proc}.X.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/r.{proc}.gtpro.{suffix}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.{w.suffix}"
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
             for species in checkpoint_select_species(
                 f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
