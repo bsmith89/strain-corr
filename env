@@ -18,14 +18,14 @@ fi
 for dir in `ls -d ${PROJECT_ROOT}/profiles/*/`
 do
     profile=$(basename $dir)
-    alias smake-$profile="snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
+    alias smake-$profile="nice -n 5 snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
-    alias smake-$profile-xargs="xargs snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
+    alias smake-$profile-xargs="nice -n 5 xargs snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
 # Extra-convenient alias for the default profile
-alias smake='snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake='nice -n 5 snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake
-alias smake-xargs='xargs snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake-xargs='nice -n 5 xargs snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake-xargs
