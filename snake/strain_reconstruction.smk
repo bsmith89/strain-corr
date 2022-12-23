@@ -201,8 +201,8 @@ rule pick_strain_gene_thresholds:
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.spgc-e{exponent}.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.spgc-e{exponent}.strain_depth_ratio.tsv",
     params:
-        strain_corr_quantile_strict=0.1,
-        strain_corr_quantile_moderate=0.05,
+        strain_corr_quantile_strict=0.075,
+        strain_corr_quantile_moderate=0.025,
         strain_corr_quantile_lenient=0.01,
         strain_depth_quantile=0.05,
         n_marker_genes=1000,
