@@ -41,6 +41,8 @@ rule compile_species_variation_from_vcf:
         vcf="raw/gtpro_refs/variation_in_species/{species}/core_snps.vcf.gz",
     conda:
         "conda/sfacts.yaml"
+    resources:
+        mem_mb=10_000,
     shell:
         """
         {input.script} {input.gtpro_snp_dict} {input.vcf} {wildcards.species} {output}
@@ -77,6 +79,8 @@ rule filter_metagenotype:
         cvrg=lambda w: float(w.cvrg) / 100,
     conda:
         "conda/sfacts.yaml"
+    resources:
+        mem_mb=12_000,
     shell:
         """
         python3 -m sfacts filter_mgen \
@@ -209,6 +213,7 @@ rule fit_sfacts:
         mem_mb=5_000,
         device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
         gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+        gpu=1,
     conda:
         "conda/sfacts.yaml"
     shell:

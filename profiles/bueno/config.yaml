@@ -3,7 +3,7 @@ notemp: true
 printshellcmds: true
 keep-going: true
 latency-wait: 5
-resources: ['network_connections=3', 'mem_mb=750000']
+resources: ['network_connections=3', 'mem_mb=500000']
 use-conda: true
 conda-frontend: 'mamba'
 use-singularity: true
