@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-from lib.pandas_util import idxwhere
 import sys
 
 if __name__ == "__main__":
     species_corr_path = sys.argv[1]
-    species_corr_threshold = float(sys.argv[2])
+    n_marker_genes = int(sys.argv[2])
     strain_corr_path = sys.argv[3]
     strain_corr_quantile_strict = float(sys.argv[4])
     strain_corr_quantile_moderate = float(sys.argv[5])
@@ -40,7 +39,7 @@ if __name__ == "__main__":
     strain_depth = strain_depth.reindex(gene_list, fill_value=0)
 
     # Select highly correlated species marker genes.
-    species_gene_hit = idxwhere(species_corr > species_corr_threshold)
+    species_gene_hit = species_corr.sort_values(ascending=False).head(n_marker_genes).index
 
     # Calculate the strain correlation threshold for each strain at which strain_corr_quantile
     # of the species genes (defined as those passing the species_corr_threshold)

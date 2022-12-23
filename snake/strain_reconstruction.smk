@@ -205,12 +205,12 @@ rule pick_strain_gene_thresholds:
         strain_corr_quantile_moderate=0.05,
         strain_corr_quantile_lenient=0.01,
         strain_depth_quantile=0.05,
-        species_corr_threshold=0.98,
+        n_marker_genes=1000,
     shell:
         """
         {input.script} \
                 {input.species_corr} \
-                {params.species_corr_threshold} \
+                {params.n_marker_genes} \
                 {input.strain_corr} \
                 {params.strain_corr_quantile_strict} \
                 {params.strain_corr_quantile_moderate} \
