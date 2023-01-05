@@ -143,32 +143,6 @@ rule calculate_strain_specific_correlation_of_genes:
         """
 
 
-rule calculate_cross_species_strain_specific_correlation_of_genes:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.strain_by_species_correlation.nc",
-    input:
-        script="scripts/calculate_cross_species_strain_specific_correlation_of_genes.py",
-        species_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
-        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.midas_gene{centroid}.depth.nc",
-    params:
-        strain_frac_thresh=0.95,
-        species_depth_thresh_abs=0.0001,
-        species_depth_thresh_pres=0.5,
-        transformation_root=0.33,
-    shell:
-        """
-        {input.script} \
-                {input.species_depth} \
-                {wildcards.species} \
-                {params.species_depth_thresh_abs} \
-                {params.species_depth_thresh_pres} \
-                {input.strain_frac} \
-                {params.strain_frac_thresh} \
-                {input.gene_depth} \
-                {params.transformation_root} \
-                {output}
-        """
 
 
 rule calculate_strain_specific_gene_depth_ratio:
