@@ -207,9 +207,10 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
 
 rule collect_files_for_strain_assessment:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.spgc-e{exponent}.strain_files.flag",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.midas_gene{centroid}.spgc-e{exponent}.strain_files.flag",
     input:
         sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
+        refit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.world.nc",
         strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.spgc-e{exponent}.strain_correlation.tsv",
         strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.midas_gene{centroid}.spgc-e{exponent}.strain_depth_ratio.tsv",
         strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
