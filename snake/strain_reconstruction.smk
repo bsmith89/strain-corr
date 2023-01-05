@@ -179,7 +179,7 @@ rule pick_strain_gene_thresholds:
         strain_corr_quantile_moderate=0.025,
         strain_corr_quantile_lenient=0.01,
         strain_depth_quantile=0.05,
-        n_marker_genes=1000,
+        n_marker_genes=700,
     shell:
         """
         {input.script} \
