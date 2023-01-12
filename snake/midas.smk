@@ -227,36 +227,22 @@ rule merge_midas_genes_one_species:
 
 rule merge_midas_genes_from_multi_species:
     output:
-        directory(
-            "data/group/{group}/species/sp-{species}/r.{proc}.midas_merge_from_multi/genes"
-        ),
+        "data/group/{group}/species/sp-{species}/r.{proc}.midas_gene.depth.nc",
     input:
-        manifest="data/group/{group}/r.{proc}.midas_manifest.tsv",
-        genes=lambda w: [
+        script="scripts/merge_midas_genes.py",
+        samples=lambda w: [
             f"data/group/{w.group}/r.{w.proc}.midas_output/{mgen}/genes"
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        outdir="data/group/{group}/species/sp-{species}/r.{proc}.midas_merge_from_multi",
-        midasdb="ref/midasdb_uhgg",
+        args=lambda w: [
+            f"{mgen}=data/group/{w.group}/r.{w.proc}.midas_output/{mgen}/genes/{w.species}.genes.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
+        ],
     conda:
-        "conda/midas.yaml"
-    threads: 4
-    resources:
-        mem_mb=30_000,
-        pmem=30_000 // 4,
-        walltime_hr=4,
+        "conda/toolz.yaml"
+    threads: 1
     shell:
         """
-        midas2 merge_genes \
-                --num_cores {threads} \
-                --samples_list {input.manifest} \
-                --species_list {wildcards.species} \
-                --midasdb_name uhgg \
-                --midasdb_dir {params.midasdb} \
-                --genome_depth 1e-3 \
-                --cluster_pid 99 \
-                {params.outdir}
+        {input.script} {output} {params.args}
         """
-
-

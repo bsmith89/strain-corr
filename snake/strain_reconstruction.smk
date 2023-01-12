@@ -35,30 +35,6 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
         """
 
 
-rule convert_genes_tally_from_multi_to_cluster_depth:
-    output:
-        "{stemA}/species/sp-{species}/{stemB}.midas_gene.depth.nc",
-    input:
-        script="scripts/convert_genes_tally_to_depth.py",
-        midasdir="{stemA}/species/sp-{species}/{stemB}.midas_merge_from_multi/genes",
-        midasdb=ancient("ref/midasdb_uhgg"),
-    params:
-        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
-        inpath="{stemA}/species/sp-{species}/{stemB}.midas_merge_from_multi/genes/{species}/{species}.genes_reads.tsv.lz4",
-        assumed_read_length=125,
-    resources:
-        mem_mb=64_000,
-        pmem=64_000,
-    shell:
-        """
-        {input.script} \
-                <(lz4cat {params.inpath} | tqdm --bytes) \
-                {params.cluster_info} \
-                {params.assumed_read_length} \
-                {output}
-        """
-
-
 rule aggregate_gene_depth_by_centroid:
     output:
         "{stemA}/species/sp-{species}/{stemB}.midas_gene{centroid}.depth.nc",
