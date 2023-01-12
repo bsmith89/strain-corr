@@ -112,6 +112,29 @@ rule subset_metagenotype:
         """
 
 
+rule resample_metagenotype:
+    output:
+        "{stem}.rs-alpha{alpha}-g{num_positions}-seed{seed}.mgtp.nc",
+    input:
+        "{stem}.mgtp.nc",
+    params:
+        seed=lambda w: int(w.seed),
+        num_positions=lambda w: int(w.num_positions),
+        entropy_weight_alpha=lambda w: float(w.alpha),
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts sample_mgen \
+                --random-seed {params.seed} \
+                --with-replacement \
+                --num-positions {params.num_positions} \
+                --entropy-weighted-alpha {params.entropy_weight_alpha} \
+                {input} \
+                {output}
+        """
+
+
 rule sfacts_nmf_approximation:
     output:
         "{stem}.approx-nmf-s{strain_exponent}-seed{seed}.world.nc",
@@ -317,6 +340,19 @@ rule export_sfacts_comm:
     shell:
         """
         sfacts dump --community {output} {input}
+        """
+
+
+rule sfacts_metagenotypet_to_tsv:
+    output:
+        "{stem}.mgtp.tsv",
+    input:
+        "{stem}.mgtp.nc",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts dump --metagenotype {output} {input}
         """
 
 
