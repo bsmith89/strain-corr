@@ -220,12 +220,12 @@ def checkpoint_select_species(
     )
     species_with_sufficient_coverage = idxwhere((d >= cvrg_thresh).sum() >= num_samples)
     if require_in_species_group:
-        out = list(
+        out = sorted(
             set(species_with_sufficient_coverage)
             & set(config["species_group"][w["group"]])
         )
     else:
-        out = species_with_sufficient_coverage
+        out = sorted(species_with_sufficient_coverage)
     return out
 
 
