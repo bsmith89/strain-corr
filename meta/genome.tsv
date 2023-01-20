@@ -1,0 +1,12 @@
+genome_id	species_id	genome_path	comments
+xjin_102340_dsm26588	102340	raw/genomes/xjin/Intestinimonas-butyriciproducens-DSM-26588_MAF-2.fa	
+xjin_102492_atcc33656	102492	raw/genomes/xjin/Eubacterium-rectale-ATCC-33656_NCBI.fa	
+xjin_100196_116	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-1-1-6_MAF-2.fa	
+xjin_100196_vpi5482	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-VPI-5482_MAF-2.fa	
+xjin_101316_dsm20544	101316	raw/genomes/xjin/Mitsuokella-multacida-DSM-20544_MAF-2.fa	
+xjin_101346_atcc8492	101346	raw/genomes/xjin/Bacteroides-uniformis-ATCC-8492_MAF-2.fa	
+xjin_101440_d21maf	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	
+xjin_100046_dsmz102144	100046	raw/genomes/xjin/Megasphaera-DSMZ-102144_MinIONHybrid.fa	
+xjin_101310_atcc29176	101310	raw/genomes/xjin/Ruminococcus-lactaris-ATCC-29176_MAF-2.fa	
+xjin_100150_dsm13479	100150	raw/genomes/xjin/Hungatella-hathewayi-DSM-13479_MinIONHybrid.fa	
+xjin_100146_atcc27755	100146	raw/genomes/xjin/Dorea-formicigenerans-ATCC-27755_MAF-2.fa	

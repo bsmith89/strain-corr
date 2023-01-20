@@ -14,6 +14,9 @@ config["species_group"] = (
     .species_id.apply(list)
 )
 
+config["genome"] = pd.read_table("meta/genome.tsv", index_col=["genome_id"])
+# config["species_to_genome"] = pd.read_table("meta/genome.tsv").groupby("species_id").apply(lambda x: x.genome_id.tolist())
+
 
 rule process_hmp2_metadata:
     output:
