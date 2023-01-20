@@ -45,6 +45,11 @@ use rule start_shell as start_shell_toolz with:
         "conda/toolz.yaml"
 
 
+use rule start_shell as start_shell_seqtk with:
+    conda:
+        "conda/seqtk.yaml"
+
+
 rule visualize_rulegraph:
     output:
         "data/rulegraph.dot",
