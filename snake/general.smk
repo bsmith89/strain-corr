@@ -194,14 +194,14 @@ rule index_cram:
 
 rule make_diamond_db:
     output:
-        "ref/{db}.dmnd",
+        "{stem}/{db}.dmnd",
     input:
-        "ref/{db}.fa",
+        "{stem}/{db}.fa",
     threads: config["MAX_THREADS"]
     shell:
         dd(
             """
-        diamond makedb --threads {threads} --db ref/{wildcards.db} --in {input}
+        diamond makedb --threads {threads} --db {wildcards.stem}/{wildcards.db} --in {input}
         """
         )
 
@@ -223,6 +223,11 @@ rule diamond_search_fn:
         )
 
 
+def parse_diamond_db_from_path(db):
+    assert db[-len('.dmnd'):] == '.dmnd'
+    return db[:-len('.dmnd')]
+
+
 rule diamond_search_fa:
     output:
         "data/{query}.{db}-blastp.tsv",
@@ -230,12 +235,13 @@ rule diamond_search_fa:
         fasta="data/{query}.fa",
         db="ref/{db}.dmnd",
     params:
-        db="ref/{db}",
+        db=lambda w, input: parse_diamond_db_from_path(input.db),
+        extra_diamond_blastp_args="",
     threads: config["MAX_THREADS"]
     shell:
         dd(
             """
-        diamond blastp --threads {threads} --db {params.db} --query {input.fasta} > {output}
+        diamond blastp --threads {threads} --db {params.db} --query {input.fasta} {params.extra_diamond_blastp_args} > {output}
         """
         )
 
