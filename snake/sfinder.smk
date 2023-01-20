@@ -139,3 +139,21 @@ rule parse_sfinder_cpickle:
 
 localrules:
     parse_sfinder_cpickle,
+
+
+ruleorder: parse_sfinder_cpickle > export_sfacts_comm
+
+
+rule build_world_from_sfinder_results:
+    output:
+        "{stemA}.fit-sfinder{params}.world.nc",
+    input:
+        comm="{stemA}.fit-sfinder{params}.comm.tsv",
+        geno="{stemA}.fit-sfinder{params}.geno.tsv",
+        mgtp="{stemA}.mgtp.tsv",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts load --metagenotype {input.mgtp} --community {input.comm} --genotype {input.geno} {output}
+        """

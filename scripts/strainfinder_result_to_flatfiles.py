@@ -28,16 +28,17 @@ if __name__ == "__main__":
     nstrain = pi.shape[1]
     strain_list = list(range(nstrain))
 
+    # import pdb; pdb.set_trace()
     pi_df = pd.DataFrame(pi, index=sample_list, columns=strain_list).rename_axis(
         index="sample", columns="strain"
-    ).stack().rename('communities')
+    ).stack().rename('community')
     gamma_df = pd.Series(
         gamma.flatten(),
         index=pd.MultiIndex.from_product(
             [strain_list, position_list, input_allele_list],
             names=["strain", "position", "allele"],
         ),
-        name="genotypes",
+        name="genotype",
     )
 
     pi_df.to_csv(sys.argv[3], sep='\t', header=True)
