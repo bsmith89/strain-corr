@@ -38,6 +38,37 @@ rule run_gtpro:
         )
 
 
+rule run_gtpro_on_genome:
+    output:
+        temp("{stemA}/genome/{stemB}.gtpro_raw.gz"),
+    input:
+        r="{stemA}/genome/{stemB}.tiles-l200-o32.fq",
+        db="ref/gtpro",
+    params:
+        db_l=32,
+        db_m=36,
+        db_name="ref/gtpro/20190723_881species",
+    threads: 4
+    resources:
+        mem_mb=60000,
+        pmem=60000 // 4,
+    container:
+        config["container"]["gtpro"]
+    shell:
+        dd(
+            """
+        cat {input.r} \
+                | GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} \
+                | awk -v OFS='\t' '$2==0 {{print $0}} $2>=1 {{print $1,1}}' \
+                | gzip -c \
+            > {output}
+        """
+        )
+
+
+ruleorder: run_gtpro_on_genome > run_gtpro
+
+
 rule load_gtpro_snp_dict:
     output:
         "ref/gtpro.snp_dict.db",
