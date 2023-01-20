@@ -225,7 +225,7 @@ rule merge_midas_genes_one_species:
         """
 
 
-rule merge_midas_genes_from_multi_species:
+rule merge_midas_genes_from_multi_species_and_apply_length_correction:
     output:
         "data/group/{group}/species/sp-{species}/r.{proc}.midas_gene.depth.nc",
     input:
@@ -239,10 +239,13 @@ rule merge_midas_genes_from_multi_species:
             f"{mgen}=data/group/{w.group}/r.{w.proc}.midas_output/{mgen}/genes/{w.species}.genes.tsv.lz4"
             for mgen in config["mgen_group"][w.group]
         ],
+        minimum_alignment_coverage=0.75,  # Used for fragement length correction. MIDAS2 default is 0.75.
+        nominal_read_length=100,  # Used for fragement length correction.
+        maximum_correction_factor=10,  # Used for fragment length correction.
     conda:
         "conda/toolz.yaml"
     threads: 1
     shell:
         """
-        {input.script} {output} {params.args}
+        {input.script} {params.minimum_alignment_coverage} {params.nominal_read_length} {params.maximum_correction_factor} {output} {params.args}
         """
