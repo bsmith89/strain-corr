@@ -24,9 +24,17 @@ if __name__ == "__main__":
         pd.read_table(sys.argv[1], index_col=["sample", "position", "allele"])
         .squeeze()
         .astype(int)
+        .sort_index()  # NOTE: This is a stop-gap. See below.
     )
 
     print("Parsing", file=sys.stderr)
+    # TODO: These three *_list variables may be out of order
+    # but apparently they work if the index was previously sorted
+    # (see above). Ultimately, we want each of the lists sorted
+    # like the indices of each axis of the multi-dimensional array.
+    # This approach (pre-sorting the index) works (and we were
+    # already doing that below), but I'm not 100% confident that Index.unique()
+    # always results in a correctly sorted list.
     sample_list = in_data.index.unique("sample")
     position_list = in_data.index.unique("position")
     input_allele_list = in_data.index.unique("allele")
@@ -74,6 +82,6 @@ if __name__ == "__main__":
         [['alt', 'ref']]
         .stack()
     )
-    assert (in_data == reconstruction).all()
+    assert (in_data.sort_index() == reconstruction.sort_index()).all()
 
     print("Done", file=sys.stderr)
