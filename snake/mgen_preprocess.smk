@@ -246,9 +246,9 @@ rule filter_out_host:
 # once all libraries have been processed
 rule alias_cleaned_reads:
     output:
-        "data/{stem}.proc.fq.gz",
+        "data/reads/{mgen}/{r}.proc.fq.gz",
     input:
-        f"data/{{stem}}.{config['proc']}.fq.gz",
+        lambda w: f"data/reads/{w.mgen}/{w.r}." + config['mgen']['preprocessing'][w.mgen] + ".fq.gz"
     shell:
         alias_recipe
 
