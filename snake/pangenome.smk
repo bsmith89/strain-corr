@@ -45,6 +45,8 @@ rule profile_pangenome_depth_aggregated_by_gene:
         "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes.bam",
     conda:
         "conda/midas.yaml"
+    resources:
+        walltime_hr=2,
     shell:
         """
         samtools depth -a {input} \
@@ -77,6 +79,10 @@ rule merge_pangenome_depths:
     conda:
         "conda/toolz.yaml"
     threads: 1
+    resources:
+        walltime_hr=24,
+        mem_mb=100_000,
+        pmem=100_000 // 1,
     shell:
         """
         {input.script} {output} {params.args}
