@@ -16,7 +16,7 @@ rule run_bowtie_multi_species_pangenome:
         """
         bowtie2 --no-unal -X 5000  --local --very-sensitive-local \
             -x {input.bt2_dir}/pangenomes \
-            --threads {threads} -q \
+            --threads {threads} --mm -q \
             -1 {input.r1} \
             -2 {input.r2} \
             | samtools view --threads 1 -b - \
