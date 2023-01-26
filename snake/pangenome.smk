@@ -72,10 +72,8 @@ rule merge_pangenome_depths:
             for mgen in config["mgen_group"][w.group]
         ],
     params:
-        args=lambda w: [
-            f"{mgen}=data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes.gene_depth.tsv.bz2"
-            for mgen in config["mgen_group"][w.group]
-        ],
+        input_file_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes.gene_depth.tsv.bz2",
+        mgen_list=lambda w: list(config["mgen_group"][w.group]),
     conda:
         "conda/toolz.yaml"
     threads: 1
@@ -84,9 +82,26 @@ rule merge_pangenome_depths:
         mem_mb=100_000,
         pmem=100_000 // 1,
     shell:
-        """
-        {input.script} {output} {params.args}
-        """
+        dd("""
+        db=$(mktemp)
+        echo Writing to db: $db
+        sqlite3 $db -separator '\\t' <<EOF
+        CREATE TABLE main (
+        sample TEXT, gene_id TEXT, depth FLOAT, PRIMARY KEY (sample, gene_id)
+        );
+        EOF
+
+        i=0
+        for sample in {params.mgen_list}
+        do
+            path="{params.input_file_pattern}"
+            echo -n '.' >&2
+            bzip2 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
+        done | sqlite3 -separator '\t' $db '.import /dev/stdin main'
+        echo '' >&2
+        {input.script} $db {output}
+        rm $db
+        """)
 
 
 rule select_species_pangenome_depths:
