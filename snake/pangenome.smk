@@ -62,18 +62,33 @@ rule profile_pangenome_depth_aggregated_by_gene:
         """
 
 
-rule merge_pangenome_depths:
+rule build_pangenome_depths_db:
     output:
-        "data/group/{group}/r.{proc}.pangenomes.gene_depth.nc",
+        "data/group/{group}/r.{proc}.pangenomes.db",
     input:
-        script="scripts/merge_pangenomes_depth.py",
         samples=lambda w: [
             f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes.gene_depth.tsv.bz2"
             for mgen in config["mgen_group"][w.group]
         ],
+        genes=lambda w: [
+            f"ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4"
+            for species in checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
     params:
-        input_file_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes.gene_depth.tsv.bz2",
-        mgen_list=lambda w: list(config["mgen_group"][w.group]),
+        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes.gene_depth.tsv.bz2",
+        sample_list=lambda w: list(config["mgen_group"][w.group]),
+        gene_pattern="ref/midasdb_uhgg_pangenomes/$species/gene_info.txt.lz4",
+        species_list=lambda w: checkpoint_select_species(
+            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=2,
+            require_in_species_group=True,
+        ),
     conda:
         "conda/toolz.yaml"
     threads: 1
@@ -82,31 +97,63 @@ rule merge_pangenome_depths:
         mem_mb=100_000,
         pmem=100_000 // 1,
     shell:
-        dd("""
-        for sample in {params.mgen_list}
+        dd(
+            """
+        db={output}.tmp
+        echo Writing to temporary db path: $db
+        rm -rf $db
+
+        sqlite3 $db <<EOF
+        CREATE TABLE gene (
+            gene_id TEXT PRIMARY KEY
+          , species TEXT
+        );
+        CREATE TABLE sample_x_gene (
+            sample TEXT
+          , gene_id TEXT REFERENCES gene(gene_id)
+          , depth FLOAT
+          , PRIMARY KEY (sample, gene_id)
+        );
+        EOF
+
+        echo "Compiling gene lists."
+        for species in {params.species_list}
         do
-            path="{params.input_file_pattern}"
+            path="{params.gene_pattern}"
+            echo -n '.' >&2
+            lz4 -dc $path | sed '1,1d' | cut -f2 | sort | uniq | awk -v OFS='\t' -v species=$species '{{print $1,species}}'
+        done | sqlite3 -separator '\t' $db '.import /dev/stdin gene'
+        echo '' >&2
+        echo '' >&2
+
+        echo "Compiling depth data."
+        for sample in {params.sample_list}
+        do
+            path="{params.sample_pattern}"
             echo -n '.' >&2
             bzip2 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
-        done | {input.script} {output}
+        done | sqlite3 -separator '\t' $db '.import /dev/stdin sample_x_gene'
         echo '' >&2
-        """)
+        echo '' >&2
+
+        echo "DONE"
+        mv $db {output}
+        """
+        )
 
 
-rule select_species_pangenome_depths:
+rule load_one_species_pangenome_depth_into_netcdf:
     output:
         "data/group/{group}/species/sp-{species}/r.{proc}.pangenomes.gene_depth.nc",
     input:
-        script="scripts/subset_pangenome_depths.py",
-        genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
-        depth="data/group/{group}/r.{proc}.pangenomes.gene_depth.nc",
+        script="scripts/load_one_species_pangenome_depth_into_netcdf.py",
+        db="data/group/{group}/r.{proc}.pangenomes.db",
     conda:
         "conda/toolz.yaml"
     threads: 1
     shell:
-        """
-        {input.script} \
-           <(lz4 -dc {input.genes} | cut -f2 | sed '1,1d' | sort | uniq) \
-           {input.depth} \
-           {output}
-        """
+        dd("""
+        sqlite3 -separator '\t' -header {input.db} \
+                'SELECT sample, gene_id, depth FROM gene JOIN sample_x_gene USING (gene_id) WHERE species = "{wildcards.species}";' \
+            | {input.script} {output}
+        """)
