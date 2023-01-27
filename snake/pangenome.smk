@@ -83,24 +83,15 @@ rule merge_pangenome_depths:
         pmem=100_000 // 1,
     shell:
         dd("""
-        db=$(mktemp)
-        echo Writing to db: $db
-        sqlite3 $db -separator '\\t' <<EOF
-        CREATE TABLE main (
-        sample TEXT, gene_id TEXT, depth FLOAT, PRIMARY KEY (sample, gene_id)
-        );
-        EOF
-
-        i=0
+        tmp=$(mktemp --suffix='.bz2')
         for sample in {params.mgen_list}
         do
             path="{params.input_file_pattern}"
             echo -n '.' >&2
             bzip2 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
-        done | sqlite3 -separator '\t' $db '.import /dev/stdin main'
-        echo '' >&2
-        {input.script} $db {output}
-        rm $db
+        done | bzip2 -zc > $tmp
+        echo
+        {input.script} $tmp {output}
         """)
 
 
