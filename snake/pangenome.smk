@@ -83,15 +83,13 @@ rule merge_pangenome_depths:
         pmem=100_000 // 1,
     shell:
         dd("""
-        tmp=$(mktemp --suffix='.bz2')
         for sample in {params.mgen_list}
         do
             path="{params.input_file_pattern}"
             echo -n '.' >&2
             bzip2 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
-        done | bzip2 -zc > $tmp
-        echo
-        {input.script} $tmp {output}
+        done | {input.script} {output}
+        echo '' >&2
         """)
 
 
