@@ -152,18 +152,6 @@ rule load_one_species_pangenome_depth_into_netcdf:
         "conda/toolz.yaml"
     threads: 1
     shell:
-        dd("""
-        sqlite3 -separator '\t' -header {input.db} \
-                ' \
-                PRAGMA journal_mode=OFF; \
-                PRAGMA synchronous=OFF; \
-                PRAGMA locking_mode=EXCLUSIVE; \
-                PRAGMA temp_store=MEMORY; \
-                PRAGMA cache_size=1000000; \
-                SELECT sample, gene_id, depth \
-                FROM gene JOIN sample_x_gene USING (gene_id) \
-                WHERE species = "{wildcards.species}"; \
-                ' \
-            | sed '1,4d' \
-            | {input.script} {output}
-        """)
+        """
+            {input.script} {input.db} {wildcards.species} {output}
+        """
