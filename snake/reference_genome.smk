@@ -67,9 +67,9 @@ use rule diamond_search_fa as blastp_genome_against_midasdb_uhgg with:
     input:
         fasta="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.fa",
         db="data/species/sp-{species}/pangenome.centroids.tran.dmnd",
-    # params:
-    #     db=lambda w, input: parse_diamond_db_from_path(input.db),
-    #     extra_diamond_blastp_args="--mid-sensitive",
+    params:
+        db=lambda w, input: parse_diamond_db_from_path(input.db),
+        extra_diamond_blastp_args="--ultra-sensitive --max-hsps 10000",
 
 
 use rule diamond_search_fa as reciprocal_blastp_genome with:
