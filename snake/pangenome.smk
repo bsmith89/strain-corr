@@ -108,6 +108,7 @@ rule build_pangenome_depths_db:
             gene_id TEXT PRIMARY KEY
           , species TEXT
         );
+        CREATE INDEX gene__species ON gene (species);
         CREATE TABLE sample_x_gene (
             sample TEXT
           , gene_id TEXT REFERENCES gene(gene_id)
