@@ -151,6 +151,10 @@ rule load_one_species_pangenome_depth_into_netcdf:
     conda:
         "conda/toolz.yaml"
     threads: 1
+    resources:
+        walltime_hr=12,
+        mem_mb=20_000,
+        pmem=20_000 // 1,
     shell:
         """
             {input.script} {input.db} {wildcards.species} {output}

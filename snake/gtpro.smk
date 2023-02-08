@@ -332,6 +332,7 @@ rule merge_both_reads_species_count_data:
     resources:
         mem_mb=100000,
         pmem=lambda w, threads: 100000 // threads,
+        walltime_hr=4,
     shell:
         """
         {input.script} {input.r1} {input.r2} {output}

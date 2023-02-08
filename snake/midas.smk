@@ -104,7 +104,11 @@ rule build_midas_multi_species_pangenome_index:
         ),
     conda:
         "conda/midas.yaml"
-    threads: 100
+    threads: 64
+    resources:
+        mem_mb=480_000,
+        pmem=480_000 // 24,
+        walltime_hr=72,
     shell:
         """
         midas2 build_bowtie2db \
@@ -166,7 +170,7 @@ rule run_midas_genes_multi_species:
     resources:
         walltime_hr=24,
         mem_mb=100_000,
-        pmem=20_000,
+        pmem=100_000 // 5,
     shell:
         """
         midas2 run_genes --sample_name {wildcards.mgen} \

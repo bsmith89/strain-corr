@@ -268,6 +268,7 @@ rule refit_genotypes_sfacts:
         mem_mb=5_000,
         device={0: "cpu", 1: "cuda"}[config["USE_CUDA"]],
         gpu_mem_mb={0: 0, 1: 5_000}[config["USE_CUDA"]],
+        gpu=1,
     conda:
         "conda/sfacts.yaml"
     shell:
