@@ -7,6 +7,7 @@ from lib.util import info
 from lib.pandas_util import idxwhere
 from scipy.spatial.distance import cdist
 from tqdm import tqdm
+import numpy as np
 
 if __name__ == "__main__":
     species_depth_inpath = sys.argv[1]
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         .to_xarray()
     )
     info("Loading gene depth.")
-    gene_depth = xr.load_dataarray(gene_depth_inpath)
+    gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(0)  # FIXME: Shouldn't be necessary.
     info("Aligning indexes.")
     shared_samples = list(
         set(species_depth.sample.values) & set(gene_depth.sample.values)
@@ -79,20 +80,22 @@ if __name__ == "__main__":
         strain_pure_samples = idxwhere(
             strain_frac.sel(strain=strain).to_series() > strain_frac_thresh
         )
-        if not strain_pure_samples:
-            continue
-        focal_samples = strain_pure_samples + no_species_samples
-        y = gene_depth.sel(sample=focal_samples)
-        x = species_depth.sel(sample=focal_samples)
-        corr[strain] = pd.Series(
-            1
-            - cdist(
-                x.expand_dims(dict(_=1)),
-                y,
-                metric="cosine",
-            )[0],
-            index=gene_depth.gene_id,
-        )
+        if strain_pure_samples:
+            focal_samples = strain_pure_samples + no_species_samples
+            y = gene_depth.sel(sample=focal_samples)
+            x = species_depth.sel(sample=focal_samples)
+            corr[strain] = pd.Series(
+                1
+                - cdist(
+                    x.expand_dims(dict(_=1)),
+                    y.transpose('gene_id', 'sample'),
+                    metric="cosine",
+                )[0],
+                index=gene_depth.gene_id,
+            )
+        else:
+            corr[strain] = pd.Series(np.nan, index=gene_depth.gene_id)
+
     info("Compiling correlations table.")
     corr = (
         pd.DataFrame(corr)

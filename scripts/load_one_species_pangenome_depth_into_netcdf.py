@@ -30,4 +30,4 @@ PRAGMA cache_size=1000000;
         con=con,
         index_col=["sample", "gene_id"],
     ).squeeze()
-    data.to_xarray().to_netcdf(outpath)
+    data.to_xarray().fillna(0).to_netcdf(outpath)

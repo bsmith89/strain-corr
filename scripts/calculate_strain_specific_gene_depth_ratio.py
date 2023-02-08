@@ -6,6 +6,7 @@ import sys
 from lib.util import info
 from lib.pandas_util import idxwhere
 from tqdm import tqdm
+import numpy as np
 
 if __name__ == "__main__":
     species_depth_inpath = sys.argv[1]
@@ -67,12 +68,13 @@ if __name__ == "__main__":
         strain_pure_samples = idxwhere(
             (strain_frac.sel(strain=strain) > strain_frac_thresh).to_series()
         )
-        if not strain_pure_samples:
-            continue
-        depth_ratio[strain] = (
-            gene_depth.sel(sample=strain_pure_samples).sum("sample")
-            / species_depth.sel(sample=strain_pure_samples).sum()
-        ).to_series()
+        if strain_pure_samples:
+            depth_ratio[strain] = (
+                gene_depth.sel(sample=strain_pure_samples).sum("sample")
+                / species_depth.sel(sample=strain_pure_samples).sum()
+            ).to_series()
+        else:
+            depth_ratio[strain] = pd.Series(np.nan, index=gene_depth.gene_id)
 
     info("Compiling depth ratios table.")
     depth_ratio = (

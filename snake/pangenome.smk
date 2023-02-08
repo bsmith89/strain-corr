@@ -145,7 +145,7 @@ rule build_pangenome_depths_db:
 
 rule load_one_species_pangenome_depth_into_netcdf:
     output:
-        "data/group/{group}/species/sp-{species}/r.{proc}.pangenomes.gene_depth.nc",
+        "data/group/{group}/species/sp-{species}/r.{proc}.gene99.depth.nc",
     input:
         script="scripts/load_one_species_pangenome_depth_into_netcdf.py",
         db="data/group/{group}/r.{proc}.pangenomes.db",
