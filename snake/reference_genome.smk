@@ -39,7 +39,8 @@ rule genome_fasta_to_fastq:
 
 
 rule alias_midas_uhgg_pangenome_cds:
-    output: 'data/species/sp-{species}/pangenome.centroids.fn'
+    output:
+        "data/species/sp-{species}/pangenome.centroids.fn",
     input:
         midas_download_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
     params:

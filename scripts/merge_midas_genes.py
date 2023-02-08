@@ -21,7 +21,7 @@ def depth_estimator(
     # gene length. This will determine a correction factor to be applied to the
     # naive depth estimate.
     edge_ratio = edge_length / gene_length
-    maximum_edge_ratio =  1 - 1 / maximum_correction_factor
+    maximum_edge_ratio = 1 - 1 / maximum_correction_factor
     edge_ratio_clipped = edge_ratio.clip(lower=0, upper=maximum_edge_ratio)
     # Notice that we're clipping the edge ratio complement,
     # since this number can be close to or below zero

@@ -64,9 +64,9 @@ if __name__ == "__main__":
         cp.dump(out_data, file=f)
 
     with open(sys.argv[3], "w") as f:
-        print(','.join(str(x) for x in sample_list), file=f)
-        print(','.join(str(x) for x in position_list), file=f)
-        print(','.join(str(x) for x in input_allele_list), file=f)
+        print(",".join(str(x) for x in sample_list), file=f)
+        print(",".join(str(x) for x in position_list), file=f)
+        print(",".join(str(x) for x in input_allele_list), file=f)
 
     print("Checking", file=sys.stderr)
     out_index = full_size_data.index.to_numpy().reshape((g, n, 4))
@@ -78,8 +78,7 @@ if __name__ == "__main__":
             ),
         )
         .unstack("allele")
-        .rename(columns={"A": "alt", "C": "ref"})
-        [['alt', 'ref']]
+        .rename(columns={"A": "alt", "C": "ref"})[["alt", "ref"]]
         .stack()
     )
     assert (in_data.sort_index() == reconstruction.sort_index()).all()

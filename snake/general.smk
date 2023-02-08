@@ -224,8 +224,8 @@ rule diamond_search_fn:
 
 
 def parse_diamond_db_from_path(db):
-    assert db[-len('.dmnd'):] == '.dmnd'
-    return db[:-len('.dmnd')]
+    assert db[-len(".dmnd") :] == ".dmnd"
+    return db[: -len(".dmnd")]
 
 
 rule diamond_search_fa:

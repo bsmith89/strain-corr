@@ -39,7 +39,9 @@ if __name__ == "__main__":
         .fillna(0)
     )
     info("Loading gene depth.")
-    gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(0)  # FIXME: Shouldn't be necessary.
+    gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(
+        0
+    )  # FIXME: Shouldn't be necessary.
 
     info("Transforming input data.")
     info("Aligning indexes.")
@@ -50,12 +52,12 @@ if __name__ == "__main__":
     n_genes = len(gene_depth.gene_id)
     n_samples = len(gene_depth.sample)
     info(f"Calculating correlation among {n_genes} genes across {n_samples} samples.")
-    trnsfm = lambda x: x ** transformation_exponent
+    trnsfm = lambda x: x**transformation_exponent
     corr = pd.Series(
         1
         - cdist(
             trnsfm(species_depth.expand_dims(dict(_=1))),
-            trnsfm(gene_depth.transpose('gene_id', 'sample')),
+            trnsfm(gene_depth.transpose("gene_id", "sample")),
             metric="cosine",
         )[0],
         index=gene_depth.gene_id,
@@ -78,7 +80,7 @@ if __name__ == "__main__":
     gene_mean_depth = gene_depth.sum("sample") / sample_mean_depth.sum()
 
     info("Writing species gene list.")
-    with open(species_gene_outpath, 'w') as f:
+    with open(species_gene_outpath, "w") as f:
         for g in species_gene_hit:
             print(g, file=f)
     info("Writing correlation.")

@@ -158,5 +158,5 @@ rule load_one_species_pangenome_depth_into_netcdf:
         pmem=20_000 // 1,
     shell:
         """
-            {input.script} {input.db} {wildcards.species} {output}
+        {input.script} {input.db} {wildcards.species} {output}
         """

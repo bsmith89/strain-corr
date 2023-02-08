@@ -69,7 +69,7 @@ ruleorder: load_one_species_pangenome_depth_into_netcdf > aggregate_gene_depth_b
 
 rule select_species_core_genes_from_reference:
     output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim{trim_quantile}-prev{prevalence}.list"
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim{trim_quantile}-prev{prevalence}.list",
     input:
         script="scripts/select_high_prevalence_species_genes.py",
         copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",

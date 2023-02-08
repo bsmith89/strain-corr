@@ -18,7 +18,9 @@ if __name__ == "__main__":
 
     # Representative genome selection (remove outliers based on gene number).
     gene_count = reference_copy_number.sum("gene_id")
-    low_q, high_q = gene_count.quantile([trim_quantile, 1 - trim_quantile]).astype(int).values
+    low_q, high_q = (
+        gene_count.quantile([trim_quantile, 1 - trim_quantile]).astype(int).values
+    )
     inter_quantile_range_genomes = idxwhere(
         ((gene_count > low_q) & (gene_count < high_q)).to_series()
     )

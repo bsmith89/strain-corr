@@ -29,9 +29,12 @@ if __name__ == "__main__":
     strain_list = list(range(nstrain))
 
     # import pdb; pdb.set_trace()
-    pi_df = pd.DataFrame(pi, index=sample_list, columns=strain_list).rename_axis(
-        index="sample", columns="strain"
-    ).stack().rename('community')
+    pi_df = (
+        pd.DataFrame(pi, index=sample_list, columns=strain_list)
+        .rename_axis(index="sample", columns="strain")
+        .stack()
+        .rename("community")
+    )
     gamma_df = pd.Series(
         gamma.flatten(),
         index=pd.MultiIndex.from_product(
@@ -41,5 +44,5 @@ if __name__ == "__main__":
         name="genotype",
     )
 
-    pi_df.to_csv(sys.argv[3], sep='\t', header=True)
-    gamma_df.to_csv(sys.argv[4], sep='\t', header=True)
+    pi_df.to_csv(sys.argv[3], sep="\t", header=True)
+    gamma_df.to_csv(sys.argv[4], sep="\t", header=True)

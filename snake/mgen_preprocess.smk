@@ -248,7 +248,9 @@ rule alias_cleaned_reads:
     output:
         "data/reads/{mgen}/{r}.proc.fq.gz",
     input:
-        lambda w: f"data/reads/{w.mgen}/{w.r}." + config['mgen']['preprocessing'][w.mgen] + ".fq.gz"
+        lambda w: f"data/reads/{w.mgen}/{w.r}."
+        + config["mgen"]["preprocessing"][w.mgen]
+        + ".fq.gz",
     shell:
         alias_recipe
 

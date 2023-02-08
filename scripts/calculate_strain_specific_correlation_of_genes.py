@@ -35,7 +35,9 @@ if __name__ == "__main__":
         .to_xarray()
     )
     info("Loading gene depth.")
-    gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(0)  # FIXME: Shouldn't be necessary.
+    gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(
+        0
+    )  # FIXME: Shouldn't be necessary.
     info("Aligning indexes.")
     shared_samples = list(
         set(species_depth.sample.values) & set(gene_depth.sample.values)
@@ -43,7 +45,9 @@ if __name__ == "__main__":
     species_depth = species_depth.sel(sample=shared_samples)
     gene_depth = gene_depth.sel(sample=shared_samples)
 
-    strain_frac = strain_frac.sel(sample=list(set(strain_frac.sample.values) & set(shared_samples)))
+    strain_frac = strain_frac.sel(
+        sample=list(set(strain_frac.sample.values) & set(shared_samples))
+    )
 
     info("Identifying strain-pure samples.")
     homogenous_samples = idxwhere(
@@ -71,7 +75,7 @@ if __name__ == "__main__":
     # info(f"Found {nstrains} strains with total depth > 1.0 and pure in >= 2 samples.")
 
     info("Transforming depths.")
-    trnsfm = lambda x: x ** transformation_exponent
+    trnsfm = lambda x: x**transformation_exponent
     gene_depth = trnsfm(gene_depth)
     species_depth = trnsfm(species_depth)
     info("Iterating strains.")
@@ -88,7 +92,7 @@ if __name__ == "__main__":
                 1
                 - cdist(
                     x.expand_dims(dict(_=1)),
-                    y.transpose('gene_id', 'sample'),
+                    y.transpose("gene_id", "sample"),
                     metric="cosine",
                 )[0],
                 index=gene_depth.gene_id,
