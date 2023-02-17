@@ -1,9 +1,9 @@
 # {{{1 Generalizable rules
 
 
-rule find_genes:
+rule find_genes_metagenome:
     output:
-        "data/{stem}.prodigal.gff",
+        "data/{stem}.prodigal-t11-meta.gff",
     input:
         "data/{stem}.fn",
     threads: 12
@@ -16,12 +16,29 @@ rule find_genes:
         """
         )
 
+rule find_genes_reference:
+    output:
+        "data/{stem}.prodigal-single.gff",
+    input:
+        "data/{stem}.fn",
+    threads: 12
+    shell:
+        dd(
+            """
+        cat {input} | parallel --gnu --plain -j {threads} --recstart '>' --pipe \
+                prodigal -m -q -f gff \
+            > {output}
+        """
+        )
+
 
 rule convert_prodigal_gff_to_bed:
     output:
-        "{stem}.prodigal.bed",
+        "{stem}.prodigal{params}.bed",
     input:
-        "{stem}.prodigal.gff",
+        "{stem}.prodigal{params}.gff",
+    wildcard_constraints:
+        params=no_period_or_slash_wc,
     shell:
         dd(
             r"""
@@ -53,11 +70,13 @@ rule nlength_to_bed:
 
 rule fetch_prodigal_cds:
     output:
-        "{stem}.cds.fn",
+        "{stem}.prodigal{params}.cds.fn",
     input:
-        bed="{stem}.prodigal.bed",
+        bed="{stem}.prodigal{params}.bed",
         fn="{stem}.fn",
         fai="{stem}.fn.fai",
+    wildcard_constraints:
+        params=no_period_or_slash_wc,
     shell:
         dd(
             """

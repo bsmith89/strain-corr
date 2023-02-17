@@ -56,7 +56,7 @@ use rule diamond_search_fa as blastp_midasdb_uhgg_against_genome with:
         "{stemA}/species/sp-{species}/genome/midas_uhgg_pangenome.{stemB}-blastp.tsv",
     input:
         fasta="data/species/sp-{species}/pangenome.centroids.tran.fa",
-        db="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.dmnd",
+        db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
     # params:
     #     db=lambda w, input: parse_diamond_db_from_path(input.db),
     #     extra_diamond_blastp_args="--mid-sensitive",
@@ -66,7 +66,7 @@ use rule diamond_search_fa as blastp_genome_against_midasdb_uhgg with:
     output:
         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastp.tsv",
     input:
-        fasta="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.fa",
+        fasta="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.fa",
         db="data/species/sp-{species}/pangenome.centroids.tran.dmnd",
     params:
         db=lambda w, input: parse_diamond_db_from_path(input.db),
@@ -77,8 +77,8 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
     output:
         "{stemA}/species/sp-{species}/genome/{stemB}.{stemB}-blastp.tsv",
     input:
-        fasta="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.fa",
-        db="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.dmnd",
+        fasta="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.fa",
+        db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
     # params:
     #     db=lambda w, input: parse_diamond_db_from_path(input.db),
     #     extra_diamond_blastp_args="--mid-sensitive",
