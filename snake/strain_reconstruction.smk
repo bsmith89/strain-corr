@@ -220,6 +220,9 @@ rule collect_files_for_strain_assessment:
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
         midasdb=ancient("ref/midasdb_uhgg"),
         gtpro_reference_genotype="data/species/sp-{species}/gtpro_ref.mgtp.nc",
+        strain_blastp_midas=lambda w: [f'data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastp.tsv' for strain in species_genomes(w.species)],
+        strain_blastp_self=lambda w: [f'data/species/sp-{w.species}/genome/{strain}.{strain}-blastp.tsv' for strain in species_genomes(w.species)],
+        strain_gene_lengths=lambda w: [f"data/species/sp-{w.species}/genome/{strain}.prodigal-single.cds.nlength.tsv" for strain in species_genomes(w.species)],
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:

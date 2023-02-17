@@ -112,3 +112,8 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
 #         """
 #         diamond blastp --threads {threads} --db {params.db_stem} --query {input.fa} > {output}
 #         """
+
+def species_genomes(species):
+    strain_list = idxwhere(config['genome'].species_id == species)
+    assert len(strain_list) > 0
+    return strain_list

@@ -14,7 +14,7 @@ config["species_group"] = (
     .species_id.apply(list)
 )
 
-config["genome"] = pd.read_table("meta/genome.tsv", index_col=["genome_id"]).dropna(
+config["genome"] = pd.read_table("meta/genome.tsv", dtype=str, index_col=["genome_id"]).dropna(
     subset=["genome_path"]
 )
 # config["species_to_genome"] = pd.read_table("meta/genome.tsv").groupby("species_id").apply(lambda x: x.genome_id.tolist())
