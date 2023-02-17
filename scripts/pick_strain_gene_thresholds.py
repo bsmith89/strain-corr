@@ -6,12 +6,10 @@ import sys
 if __name__ == "__main__":
     species_gene_path = sys.argv[1]
     strain_corr_path = sys.argv[2]
-    strain_corr_quantile_strict = float(sys.argv[3])
-    strain_corr_quantile_moderate = float(sys.argv[4])
-    strain_corr_quantile_lenient = float(sys.argv[5])
-    strain_depth_path = sys.argv[6]
-    strain_depth_quantile = float(sys.argv[7])
-    outpath = sys.argv[8]
+    strain_corr_quantile = float(sys.argv[3])
+    strain_depth_path = sys.argv[4]
+    strain_depth_quantile = float(sys.argv[5])
+    outpath = sys.argv[6]
 
     # Select highly correlated species marker genes.
     with open(species_gene_path) as f:
@@ -36,20 +34,8 @@ if __name__ == "__main__":
     # Calculate the strain correlation threshold for each strain at which strain_corr_quantile
     # of the species genes (defined as those passing the species_corr_threshold)
     # are also assigned to the strain.
-    (
-        (_, strain_corr_threshold_strict),
-        (_, strain_corr_threshold_moderate),
-        (_, strain_corr_threshold_lenient),
-    ) = (
-        strain_corr.loc[species_gene_hit]
-        .quantile(
-            [
-                strain_corr_quantile_strict,
-                strain_corr_quantile_moderate,
-                strain_corr_quantile_lenient,
-            ]
-        )
-        .iterrows()
+    strain_corr_threshold = strain_corr.loc[species_gene_hit].quantile(
+        strain_corr_quantile
     )
     (_, strain_depth_threshold_low), (_, strain_depth_threshold_high) = (
         strain_depth.loc[species_gene_hit]
@@ -58,9 +44,7 @@ if __name__ == "__main__":
     )
     out = pd.DataFrame(
         dict(
-            correlation_strict=strain_corr_threshold_strict,
-            correlation_moderate=strain_corr_threshold_moderate,
-            correlation_lenient=strain_corr_threshold_lenient,
+            correlation=strain_corr_threshold,
             depth_low=strain_depth_threshold_low,
             depth_high=strain_depth_threshold_high,
         ),
