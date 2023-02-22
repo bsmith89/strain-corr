@@ -159,6 +159,26 @@ rule calculate_strain_specific_gene_depth_ratio:
         """
 
 
+rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
+    output:
+        corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_corr_quantile.tsv",
+        depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_quantile.tsv",
+    input:
+        script="scripts/calculate_strain_gene_scores.py",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",
+        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
+        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
+    shell:
+        """
+        {input.script} \
+                {input.species_gene} \
+                {input.strain_corr} \
+                {input.strain_depth} \
+                {output.corr} \
+                {output.depth}
+        """
+
+
 rule pick_strain_gene_thresholds:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
@@ -207,6 +227,8 @@ rule collect_files_for_strain_assessment:
         species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_gene.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",
         strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
+        strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_corr_quantile.tsv",
+        strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_quantile.tsv",
         gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
         depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.depth.nc",
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
