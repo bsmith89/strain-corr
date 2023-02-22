@@ -117,3 +117,34 @@ def species_genomes(species):
     strain_list = idxwhere(config['genome'].species_id == species)
     assert len(strain_list) > 0
     return strain_list
+
+
+rule assign_matching_genes:
+    output:
+        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastp.gene_matching-c{centroid}-t{thresh}.tsv",
+    input:
+        script="scripts/assign_matching_genes.py",
+        orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-blastp.tsv",
+        orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastp.tsv",
+        midasdb=ancient("ref/midasdb_uhgg"),
+    params:
+        aggregate_genes_by=lambda w: {
+            "99": "centroid_99",
+            "95": "centroid_95",
+            "90": "centroid_90",
+            "85": "centroid_85",
+            "80": "centroid_80",
+            "75": "centroid_75",
+        }[w.centroid],
+        thresh=lambda w: int(w.thresh) / 100,
+        gene_clust="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+    shell:
+        """
+        {input.script} \
+                {input.orf_x_orf} \
+                {input.orf_x_midas} \
+                {params.gene_clust} \
+                {params.aggregate_genes_by} \
+                {params.thresh} \
+                {output}
+        """

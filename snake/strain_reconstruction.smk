@@ -241,3 +241,26 @@ rule collect_files_for_strain_assessment:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
         "echo {input} {params.cluster_info} | tee {output}"
+
+
+rule assess_infered_strain_accuracy:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.{strain}.gene_content_reconstruction_accuracy.txt",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastp.gene_matching-c{centroid}-t50.tsv",
+        strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.strain_corr_quantile.tsv",
+        strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.strain_depth_quantile.tsv",
+    params:
+        corr_q_thresh=0.01,
+        depth_q_thresh=0.01,
+    shell:
+        """
+        {input.script} \
+                {input.gene_matching} \
+                {input.strain_corr_quantile} \
+                {input.strain_depth_quantile} \
+                {params.corr_q_thresh} \
+                {params.depth_q_thresh} \
+                {output}
+        """
