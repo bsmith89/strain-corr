@@ -3,6 +3,11 @@ use rule start_shell as start_shell_midas with:
         "conda/midas.yaml"
 
 
+use rule start_shell as start_shell_eggnog with:
+    conda:
+        "conda/eggnog.yaml"
+
+
 rule download_midasdb_uhgg_species:
     output:
         "data/species/sp-{species}/download_species_midasdb_uhgg.flag",
@@ -252,4 +257,41 @@ rule merge_midas_genes_from_multi_species_and_apply_length_correction:
     shell:
         """
         {input.script} {params.minimum_alignment_coverage} {params.nominal_read_length} {params.maximum_correction_factor} {output} {params.args}
+        """
+
+
+rule eggnog_mapper_annotate_pangenome_for_a_species:
+    output:
+        dir=directory("data/species/sp-{species}/pangenome.centroids.emapper.d"),
+        table="data/species/sp-{species}/pangenome.centroids.emapper.d/pangenome.emapper.annotations",
+    input:
+        fasta="data/species/sp-{species}/pangenome.centroids.tran.fa",
+        db="ref/eggnog_mapper_db",
+    params:
+        tax_scope="root",  # FIXME: Maybe be dynamic by which species
+        sensmode="more-sensitive",
+        mapper="diamond",
+    conda:
+        "conda/eggnog.yaml"
+    threads: 24
+    resources:
+        walltime_hr=5,
+    shell:
+        """
+        export EGGNOG_DATA_DIR={input.db}
+        mkdir -p {output.dir}
+        emapper.py \
+                -m {params.mapper} \
+                -i {input.fasta} \
+                --itype proteins \
+                --sensmode {params.sensmode} \
+                --go_evidence all \
+                --dbmem \
+                --output 'pangenome' \
+                --tax_scope {params.tax_scope} \
+                --output_dir {output.dir} \
+                --cpu {threads}
+        # TODO  # Test on 100035 because it has very few genes
+        # FIXME: We should dynamically set the domain, not root.
+
         """
