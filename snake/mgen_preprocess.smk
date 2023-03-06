@@ -163,7 +163,7 @@ rule deduplicate_reads:
         r2="{stemA}/r2{stemB}fq.gz",
     resources:
         mem_mb=10_000,
-        walltime_min=600,
+        walltime_hr=10,
     shell:
         "{input.script} {input.r1} {input.r2} {output.r1} {output.r2}"
 
@@ -178,7 +178,7 @@ rule trim_adapters:
         "log/{stem}.scythe.log",
     threads: 2
     resources:
-        walltime_hr=2,
+        walltime_hr=8,
     shell:
         dd(
             """
@@ -234,6 +234,10 @@ rule filter_out_host:
     params:
         index="ref/GRCh38",
     threads: 8
+    resources:
+        walltime_hr=8,
+        mem_mb=10_000,
+        pmem=10_000 // 8,
     shell:
         dd(
             """

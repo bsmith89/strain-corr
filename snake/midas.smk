@@ -273,9 +273,11 @@ rule eggnog_mapper_annotate_pangenome_for_a_species:
         mapper="diamond",
     conda:
         "conda/eggnog.yaml"
-    threads: 24
+    threads: 12
     resources:
-        walltime_hr=5,
+        walltime_hr=240,
+        mem_mb=20_000,
+        pmem=20_000 // 12,
     shell:
         """
         export EGGNOG_DATA_DIR={input.db}
