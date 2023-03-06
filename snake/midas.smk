@@ -260,12 +260,12 @@ rule merge_midas_genes_from_multi_species_and_apply_length_correction:
         """
 
 
-rule eggnog_mapper_annotate_pangenome_for_a_species:
+rule eggnog_mapper_translated_orfs:
     output:
-        dir=directory("data/species/sp-{species}/pangenome.centroids.emapper.d"),
-        table="data/species/sp-{species}/pangenome.centroids.emapper.d/pangenome.emapper.annotations",
+        dir=directory("{stem}.emapper.d"),
+        table="{stem}.emapper.d/proteins.emapper.annotations",
     input:
-        fasta="data/species/sp-{species}/pangenome.centroids.tran.fa",
+        fasta="{stem}.tran.fa",
         db="ref/eggnog_mapper_db",
     params:
         tax_scope="root",  # FIXME: Maybe be dynamic by which species
@@ -281,7 +281,7 @@ rule eggnog_mapper_annotate_pangenome_for_a_species:
     shell:
         """
         export EGGNOG_DATA_DIR={input.db}
-        mkdir -p {output.dir}
+        mkdir -p {output.dir}.temp
         emapper.py \
                 -m {params.mapper} \
                 -i {input.fasta} \
@@ -291,8 +291,9 @@ rule eggnog_mapper_annotate_pangenome_for_a_species:
                 --dbmem \
                 --output 'pangenome' \
                 --tax_scope {params.tax_scope} \
-                --output_dir {output.dir} \
+                --output_dir {output.dir}.temp \
                 --cpu {threads}
+        mv {output.dir}.temp {output.dir}
         # TODO  # Test on 100035 because it has very few genes
         # FIXME: We should dynamically set the domain, not root.
 
