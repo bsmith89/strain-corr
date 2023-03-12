@@ -1,91 +1,126 @@
-genome_id	species_id	genome_path	comments
-xjin_100003_a	100003	raw/genomes/xjin/Alistipes-shahii-WAL-8301_MAF-2.fa	
-xjin_100018_a	100018	raw/genomes/xjin/Coprococcus-eutactus-ATCC-27759_MAF-2.fa	
-xjin_100026_a	100026	raw/genomes/xjin/Catenibacterium-mitsuokai-DSM-15897_MAF-2.fa	
-xjin_100029_a	100029	raw/genomes/xjin/Bacteroides-finegoldii-DSM-17565_MAF-2.fa	
-xjin_100035_a	100035	raw/genomes/xjin/Blautia-hydrogenotrophica-DSM-10507_MAF-2.fa	
-xjin_100038_a	100038	raw/genomes/xjin/Dorea-longicatena-DSM-13814_MAF-2.fa	
-xjin_100044_a	100044	raw/genomes/xjin/Parabacteroides-merdae-ATCC-43184_MAF-2.fa	
-xjin_100046_dsmz102144	100046	raw/genomes/xjin/Megasphaera-DSMZ-102144_MinIONHybrid.fa	
-xjin_100060_a	100060	raw/genomes/xjin/Lachnospira-eligens-ATCC-27750_MAF-2.fa	
-xjin_100062_a	100062	raw/genomes/xjin/Intestinibacter-bartlettii-DSM-16795_MAF-2.fa	
-xjin_100069_a	100069	raw/genomes/xjin/Clostridium-leptum-DSM-753_MAF-2.fa	
-xjin_100074_a	100074	raw/genomes/xjin/Alistipes-onderdonkii-DSM-19147_MAF-2.fa	
-xjin_100076_a	100076	raw/genomes/xjin/Roseburia-intestinalis-L1-82_MAF-2.fa	
-xjin_100080_a	100080	raw/genomes/xjin/Anaerostipes-caccae-DSM-14662_MAF-2.fa	
-xjin_100138_a	100138	raw/genomes/xjin/Parabacteroides-johnsonii-DSM-18315_MAF-2.fa	
-xjin_100142_a	100142		Blautia_A_massiliensis
-xjin_100146_atcc27755	100146	raw/genomes/xjin/Dorea-formicigenerans-ATCC-27755_MAF-2.fa	
-xjin_100148_a	100148	raw/genomes/xjin/Tyzzerella-nexilis-DSM-1787_MAF-2.fa	
-xjin_100150_dsm13479	100150	raw/genomes/xjin/Hungatella-hathewayi-DSM-13479_MinIONHybrid.fa	
-xjin_100159_a	100159		Sellimonas_intestinalis
-xjin_100196_116	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-1-1-6_MAF-2.fa	
-xjin_100196_vpi5482	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-VPI-5482_MAF-2.fa	
-xjin_100203_a	100203	raw/genomes/xjin/Butyricimonas-virosa-DSM-23226_MAF-2.fa	
-xjin_100208_a	100208	raw/genomes/xjin/Eubacterium-ventriosum-ATCC-27560_MAF-2.fa	
-xjin_100212_a	100212	raw/genomes/xjin/Blautia-obeum-ATCC-29174_MAF-2.fa	
-xjin_100214_a	100214	raw/genomes/xjin/Veillonella-dispar-ATCC-17748_MAF-2.fa	
-xjin_100226_a	100226	raw/genomes/xjin/Lactococcus-lactis-DSMZ-20729_MAF-2.fa	
-xjin_100236_a	100236		Bacteroides_sp2
-xjin_100254_a	100254	raw/genomes/xjin/Odoribacter-splanchnicus-DSM-20712_MAF-2.fa	
-xjin_100289_a	100289	raw/genomes/xjin/Prevotella-buccae-D17_MAF-2.fa	
-xjin_100296_a	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	
-xjin_100760_a	100760	raw/genomes/xjin/Prevotella-buccalis-ATCC-35310_MAF-2.fa	UHGG species number matched based on genus and process of elimination with two other Prevotella
-xjin_100878_a	100878	raw/genomes/xjin/Collinsella-aerofaciens-ATCC-25986_MAF-2.fa	
-xjin_100901_a	100901	raw/genomes/xjin/Acidaminococcus-fermentans-DSM-20731_MAF-2.fa	
-xjin_101292_a	101292		Bifidobacterium_infantis
-xjin_101294_a	101294		Parasutterella_excrementihominis
-xjin_101302_a	101302	raw/genomes/xjin/Alistipes-putredinis-DSM-17216_MAF-2.fa	
-xjin_101303_a	101303		Dorea_scindens
-xjin_101306_a	101306	raw/genomes/xjin/Bacteroides-coprocola-DSM-17136_MAF-2.fa	
-xjin_101309_a	101309	raw/genomes/xjin/Clostridium-sporogenes-ATCC-15579_MinIONHybrid.fa	
-xjin_101310_atcc29176	101310	raw/genomes/xjin/Ruminococcus-lactaris-ATCC-29176_MAF-2.fa	
-xjin_101313_a	101313	raw/genomes/xjin/Bacteroides-eggerthii-DSM-20697_MAF-2.fa	
-xjin_101314_a	101314	raw/genomes/xjin/Bacteroides-pectinophilus-ATCC-43243_MAF-2.fa	
-xjin_101315_a	101315	raw/genomes/xjin/Coprococcus-comes-ATCC-27758_MAF-2.fa	
-xjin_101316_dsm20544	101316	raw/genomes/xjin/Mitsuokella-multacida-DSM-20544_MAF-2.fa	
-xjin_101319_a	101319	raw/genomes/xjin/Butyrivibrio-crossotus-DSM-2876_MAF-2.fa	
-xjin_101321_a	101321	raw/genomes/xjin/Desulfovibrio-piger-ATCC-29098_MAF-2.fa	
-xjin_101334_a	101334	raw/genomes/xjin/Lactobacillus-ruminis-ATCC-25644_MAF-2.fa	
-xjin_101337_2_1_6_maf2	101337	raw/genomes/xjin/Bacteroides-fragilis-2-1-16_MAF-2.fa	
-xjin_101337_3_1_12_maf2	101337	raw/genomes/xjin/Bacteroides-fragilis-3-1-12_MAF-2.fa	
-xjin_101345_a	101345	raw/genomes/xjin/Bacteroides-xylanisolvens-SD-CC-1b_MAF-2.fa	
-xjin_101346_atcc8492	101346	raw/genomes/xjin/Bacteroides-uniformis-ATCC-8492_MAF-2.fa	
-xjin_101349_a	101349		Veillonella_parvula
-xjin_101359_a	101359	raw/genomes/xjin/Bilophila-wadsworthia-ATCC-49260_MinIONHybrid.fa	
-xjin_101374_a	101374	raw/genomes/xjin/Ruminococcus-torques-ATCC-27756_MAF-2.fa	
-xjin_101378_a	101378	raw/genomes/xjin/Bacteroides-ovatus-ATCC-8483_MAF-2.fa	
-xjin_101380_a	101380	raw/genomes/xjin/Ruminococcus-gnavus-ATCC-29149_MinIONHybrid.fa	
-xjin_101385_a	101385	raw/genomes/xjin/Alistipes-indistinctus-YIT-12060_MAF-2.fa	
-xjin_101420_a	101420	raw/genomes/xjin/Alistipes-senegalensis-JC50_MAF-2.fa	
-xjin_101440_d21maf	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	
-xjin_101490_a	101490	raw/genomes/xjin/Bifidobacterium-catenulatum-JCM-1194_MAF-2.fa	
-xjin_101493_a	101493		Clostridium_M_bolteae
-xjin_101704_a	101704	raw/genomes/xjin/Blautia-hansenii-DSM-20583_MAF-2.fa	
-xjin_101711_a	101711	raw/genomes/xjin/Holdemanella-biformis-DSM-3989_MAF-2.fa	
-xjin_101830_a	101830	raw/genomes/xjin/Alistipes-finegoldii-DSM-17242_NCBI.fa	
-xjin_102293_a	102293	raw/genomes/xjin/Prevotella-copri-DSM-18205_MAF-2.fa	
-xjin_102327_a	102327	raw/genomes/xjin/Oscillibacter-sp-KLE-1728_MAF-2.fa	
-xjin_102328_a	102328		g__Clostridium_M;s__GCF_000509045.1
-xjin_102340_dsm26588	102340	raw/genomes/xjin/Intestinimonas-butyriciproducens-DSM-26588_MAF-2.fa	
-xjin_102395_a	102395	raw/genomes/xjin/Bifidobacterium-adolescentis-L2-32_MAF-2.fa	
-xjin_102438_a	102438	raw/genomes/xjin/Parabacteroides-distasonis-ATCC-8503_MAF-2.fa	
-xjin_102454_a	102454	raw/genomes/xjin/Akkermansia-muciniphila-ATCC-BAA-835_MAF-2.fa	
-xjin_102455_a	102455	raw/genomes/xjin/Bacteroides-cellulosilyticus-DSM-14838_MAF-2.fa	
-xjin_102469_a	102469	raw/genomes/xjin/Bifidobacterium-breve-JCM-1192_MAF-2.fa	
-xjin_102470_a	102470	raw/genomes/xjin/Bacteroides-intestinalis-DSM-17393_MAF-2.fa	
-xjin_102478_a	102478	raw/genomes/xjin/Bacteroides-dorei-5-1-36-D4_MAF-2.fa	
-xjin_102478_a	102478	raw/genomes/xjin/Bacteroides-dorei-DSM-17855_MAF-2.fa	
-xjin_102480_a	102480	raw/genomes/xjin/Adlercreutzia-equolifaciens-DSM-19450_NCBI.fa	
-xjin_102483_a	102483		Clostridium_Q_saccharolyticum
-xjin_102492_atcc33656	102492	raw/genomes/xjin/Eubacterium-rectale-ATCC-33656_NCBI.fa	a.k.a. Agathobacter rectalis
-xjin_102530_a	102530		Ruminiclostridium_E_siraeum
-xjin_102544_a	102544	raw/genomes/xjin/Eggerthella-lenta-DSM-2243_MAF-2.fa	
-xjin_102549_a	102549	raw/genomes/xjin/Bacteroides-caccae-ATCC-43185_MAF-2.fa	
-xjin_102779_a	102779	raw/genomes/xjin/Holdemania-filiformis-DSM-12042_MAF-2.fa	UHGG species number matched based on genus only
-xjin_103681_a	103681	raw/genomes/xjin/Bacteroides-stercoris-ATCC-43183_MAF-2.fa	
-xjin_103682_a	103682		Ruthenibacterium_lactatiformans
-xjin_103683_a	103683	raw/genomes/xjin/Bifidobacterium-pseudocatenulatum-JCM-1200_MAF-2.fa	
-xjin_103684_a	103684		g__Eisenbergiella;s__GCF_000466465.2
-xjin_104158_a	104158	raw/genomes/xjin/Dialister-invisus-DSM-15470_MAF-2.fa	
-xjin_104345_a	104345	raw/genomes/xjin/Streptococcus-thermophilus-LMD-9_MAF-2.fa
+genome_id	species_id	genome_path	_old_genome_id	comments
+Alistipes-shahii-WAL-8301_MAF-2	100003	raw/genomes/xjin/Alistipes-shahii-WAL-8301_MAF-2.fa	xjin_100003_a	
+Coprococcus-eutactus-ATCC-27759_MAF-2	100018	raw/genomes/xjin/Coprococcus-eutactus-ATCC-27759_MAF-2.fa	xjin_100018_a	
+Faecalibacterium-prausnitzii-A2-165_MAF-2	100022	raw/genomes/xjin/Faecalibacterium-prausnitzii-A2-165_MAF-2.fa	Faecalibacterium_prausnitzii_A2_165_MAF_2	
+Catenibacterium-mitsuokai-DSM-15897_MAF-2	100026	raw/genomes/xjin/Catenibacterium-mitsuokai-DSM-15897_MAF-2.fa	xjin_100026_a	
+Bacteroides-finegoldii-DSM-17565_MAF-2	100029	raw/genomes/xjin/Bacteroides-finegoldii-DSM-17565_MAF-2.fa	xjin_100029_a	
+Blautia-hydrogenotrophica-DSM-10507_MAF-2	100035	raw/genomes/xjin/Blautia-hydrogenotrophica-DSM-10507_MAF-2.fa	xjin_100035_a	
+Dorea-longicatena-DSM-13814_MAF-2	100038	raw/genomes/xjin/Dorea-longicatena-DSM-13814_MAF-2.fa	xjin_100038_a	
+Parabacteroides-merdae-ATCC-43184_MAF-2	100044	raw/genomes/xjin/Parabacteroides-merdae-ATCC-43184_MAF-2.fa	xjin_100044_a	
+Megasphaera-DSMZ-102144_MinIONHybrid	100046	raw/genomes/xjin/Megasphaera-DSMZ-102144_MinIONHybrid.fa	xjin_100046_dsmz102144	
+Lachnospira-eligens-ATCC-27750_MAF-2	100060	raw/genomes/xjin/Lachnospira-eligens-ATCC-27750_MAF-2.fa	xjin_100060_a	Very few gt-pro positions hit but no contamination;
+Intestinibacter-bartlettii-DSM-16795_MAF-2	100062	raw/genomes/xjin/Intestinibacter-bartlettii-DSM-16795_MAF-2.fa	xjin_100062_a	
+Clostridium-leptum-DSM-753_MAF-2	100069	raw/genomes/xjin/Clostridium-leptum-DSM-753_MAF-2.fa	xjin_100069_a	
+Alistipes-onderdonkii-DSM-19147_MAF-2	100074	raw/genomes/xjin/Alistipes-onderdonkii-DSM-19147_MAF-2.fa	xjin_100074_a	
+Roseburia-intestinalis-L1-82_MAF-2	100076	raw/genomes/xjin/Roseburia-intestinalis-L1-82_MAF-2.fa	xjin_100076_a	
+Anaerostipes-caccae-DSM-14662_MAF-2	100080	raw/genomes/xjin/Anaerostipes-caccae-DSM-14662_MAF-2.fa	xjin_100080_a	
+Parabacteroides-johnsonii-DSM-18315_MAF-2	100138	raw/genomes/xjin/Parabacteroides-johnsonii-DSM-18315_MAF-2.fa	xjin_100138_a	
+Blautia-sp-KLE-1732_MAF-2	100142	raw/genomes/xjin/Blautia-sp-KLE-1732_MAF-2.fa	xjin_100142_a	Blautia_A_massiliensis
+Turicibacter-sanguinis-DSM-14220_MAF-2	100143	raw/genomes/xjin/Turicibacter-sanguinis-DSM-14220_MAF-2.fa	Turicibacter_sanguinis_DSM_14220_MAF_2	
+Dorea-formicigenerans-ATCC-27755_MAF-2	100146	raw/genomes/xjin/Dorea-formicigenerans-ATCC-27755_MAF-2.fa	xjin_100146_atcc27755	
+Tyzzerella-nexilis-DSM-1787_MAF-2	100148	raw/genomes/xjin/Tyzzerella-nexilis-DSM-1787_MAF-2.fa	xjin_100148_a	
+Hungatella-hathewayi-DSM-13479_MinIONHybrid	100150	raw/genomes/xjin/Hungatella-hathewayi-DSM-13479_MinIONHybrid.fa	xjin_100150_dsm13479	Very light contamination (three SNPs) into other species GT-Pro kmers;
+Clostridiales-bacterium-VE202-14_MinIONHybrid	100159	raw/genomes/xjin/Clostridiales-bacterium-VE202-14_MinIONHybrid.fa	xjin_100159_a	Sellimonas_intestinalis; GT-Pro kmers found in a large number of other strains;
+Bacteroides-thetaiotaomicron-1-1-6_MAF-2	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-1-1-6_MAF-2.fa	xjin_100196_116	
+Bacteroides-thetaiotaomicron-VPI-5482_MAF-2	100196	raw/genomes/xjin/Bacteroides-thetaiotaomicron-VPI-5482_MAF-2.fa	xjin_100196_vpi5482	
+Butyricimonas-virosa-DSM-23226_MAF-2	100203	raw/genomes/xjin/Butyricimonas-virosa-DSM-23226_MAF-2.fa	xjin_100203_a	
+Eubacterium-ventriosum-ATCC-27560_MAF-2	100208	raw/genomes/xjin/Eubacterium-ventriosum-ATCC-27560_MAF-2.fa	xjin_100208_a	
+Blautia-obeum-ATCC-29174_MAF-2	100212	raw/genomes/xjin/Blautia-obeum-ATCC-29174_MAF-2.fa	xjin_100212_a	
+Veillonella-dispar-ATCC-17748_MAF-2	100214	raw/genomes/xjin/Veillonella-dispar-ATCC-17748_MAF-2.fa	xjin_100214_a	
+Lactococcus-lactis-DSMZ-20729_MAF-2	100226	raw/genomes/xjin/Lactococcus-lactis-DSMZ-20729_MAF-2.fa	xjin_100226_a	
+Bacteroides-fragilis-3-1-12_MAF-2	100236	raw/genomes/xjin/Bacteroides-fragilis-3-1-12_MAF-2.fa	xjin_100236_a	I initially named this strain incorrectly as xjin_101337_3_1_12_maf2
+Odoribacter-splanchnicus-DSM-20712_MAF-2	100254	raw/genomes/xjin/Odoribacter-splanchnicus-DSM-20712_MAF-2.fa	xjin_100254_a	
+Anaerobutyricum-hallii-DSM-3353_MAF-2	100262	raw/genomes/xjin/Anaerobutyricum-hallii-DSM-3353_MAF-2.fa	Anaerobutyricum_hallii_DSM_3353_MAF_2	
+Roseburia-inulinivorans-DSM-16841_MAF-2	100271	raw/genomes/xjin/Roseburia-inulinivorans-DSM-16841_MAF-2.fa	Roseburia_inulinivorans_DSM_16841_MAF_2	
+Bacteroides-coprophilus-DSM-18228_MAF-2	100273	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	
+Prevotella-buccae-D17_MAF-2	100289	raw/genomes/xjin/Prevotella-buccae-D17_MAF-2.fa	xjin_100289_a	
+Peptostreptococcus-anaerobius-ATCC-27337_MAF-2	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	xjin_100296_a	
+Prevotella-buccalis-ATCC-35310_MAF-2	100760	raw/genomes/xjin/Prevotella-buccalis-ATCC-35310_MAF-2.fa	xjin_100760_a	UHGG species number matched based on genus and process of elimination with two other Prevotella
+Collinsella-aerofaciens-ATCC-25986_MAF-2	100878	raw/genomes/xjin/Collinsella-aerofaciens-ATCC-25986_MAF-2.fa	xjin_100878_a	
+Acidaminococcus-fermentans-DSM-20731_MAF-2	100901	raw/genomes/xjin/Acidaminococcus-fermentans-DSM-20731_MAF-2.fa	xjin_100901_a	
+Bifidobacterium-longum-ATCC-15697_MAF-2	101292	raw/genomes/xjin/Bifidobacterium-longum-ATCC-15697_MAF-2.fa	xjin_101292_a	alternatively Bifidobacterium infantis?
+Burkholderiales-bacterium-1-1-47_MAF-2	101294	raw/genomes/xjin/Burkholderiales-bacterium-1-1-47_MAF-2.fa	xjin_101294_a	Parasutterella_excrementihominis
+Alistipes-putredinis-DSM-17216_MAF-2	101302	raw/genomes/xjin/Alistipes-putredinis-DSM-17216_MAF-2.fa	xjin_101302_a	
+Clostridium-scindens-ATCC-35704_MAF-2	101303	raw/genomes/xjin/Clostridium-scindens-ATCC-35704_MAF-2.fa	xjin_101303_a	Alternatively Dorea scindens? Contamination of GT-Pro kmers across several other strains;
+Bacteroides-coprocola-DSM-17136_MAF-2	101306	raw/genomes/xjin/Bacteroides-coprocola-DSM-17136_MAF-2.fa	xjin_101306_a	
+Clostridium-sporogenes-ATCC-15579_MinIONHybrid	101309	raw/genomes/xjin/Clostridium-sporogenes-ATCC-15579_MinIONHybrid.fa	xjin_101309_a	
+Ruminococcus-lactaris-ATCC-29176_MAF-2	101310	raw/genomes/xjin/Ruminococcus-lactaris-ATCC-29176_MAF-2.fa	xjin_101310_atcc29176	
+Bacteroides-eggerthii-DSM-20697_MAF-2	101313	raw/genomes/xjin/Bacteroides-eggerthii-DSM-20697_MAF-2.fa	xjin_101313_a	
+Bacteroides-pectinophilus-ATCC-43243_MAF-2	101314	raw/genomes/xjin/Bacteroides-pectinophilus-ATCC-43243_MAF-2.fa	xjin_101314_a	
+Coprococcus-comes-ATCC-27758_MAF-2	101315	raw/genomes/xjin/Coprococcus-comes-ATCC-27758_MAF-2.fa	xjin_101315_a	
+Mitsuokella-multacida-DSM-20544_MAF-2	101316	raw/genomes/xjin/Mitsuokella-multacida-DSM-20544_MAF-2.fa	xjin_101316_dsm20544	
+Butyrivibrio-crossotus-DSM-2876_MAF-2	101319	raw/genomes/xjin/Butyrivibrio-crossotus-DSM-2876_MAF-2.fa	xjin_101319_a	
+Desulfovibrio-piger-ATCC-29098_MAF-2	101321	raw/genomes/xjin/Desulfovibrio-piger-ATCC-29098_MAF-2.fa	xjin_101321_a	
+Lactobacillus-ruminis-ATCC-25644_MAF-2	101334	raw/genomes/xjin/Lactobacillus-ruminis-ATCC-25644_MAF-2.fa	xjin_101334_a	
+Bacteroides-fragilis-2-1-16_MAF-2	101337	raw/genomes/xjin/Bacteroides-fragilis-2-1-16_MAF-2.fa	xjin_101337_2_1_6_maf2	
+Bacteroides-sp-2-1-22_MinIONHybrid	101345	raw/genomes/xjin/Bacteroides-sp-2-1-22_MinIONHybrid.fa	Bacteroides_sp_2_1_22_MinIONHybrid	Only GT-Pro hits were to species 101345, but this could be wrong;
+Bacteroides-xylanisolvens-SD-CC-1b_MAF-2	101345	raw/genomes/xjin/Bacteroides-xylanisolvens-SD-CC-1b_MAF-2.fa	xjin_101345_a	Since another xjin strain also hits Bacteroides_sp_2_1_22_MinIONHybrid, GT-Pro results may be contaminated;
+Bacteroides-rodentium-JCM-16496_MAF-2	101346	raw/genomes/xjin/Bacteroides-rodentium-JCM-16496_MAF-2.fa	Bacteroides_rodentium_JCM_16496_MAF_2	Hits a variety of GT-Pro kmers; dominant by far is 101346 where it hits 1398; another strain hits 2317 101346 kmers;
+Bacteroides-uniformis-ATCC-8492_MAF-2	101346	raw/genomes/xjin/Bacteroides-uniformis-ATCC-8492_MAF-2.fa	xjin_101346_atcc8492	
+Veillonella-sp-3-1-44_MAF-2	101349	raw/genomes/xjin/Veillonella-sp-3-1-44_MAF-2.fa	xjin_101349_a	Veillonella_parvula; contamination of GT-Pro kmers across several other strains;
+Veillonella-sp-6-1-27_MAF-2	101349	raw/genomes/xjin/Veillonella-sp-6-1-27_MAF-2.fa	xjin_101349_b	Veillonella_parvula; contamination of GT-Pro kmers across several other strains;
+Bilophila-wadsworthia-ATCC-49260_MinIONHybrid	101359	raw/genomes/xjin/Bilophila-wadsworthia-ATCC-49260_MinIONHybrid.fa	xjin_101359_a	
+Ruminococcus-torques-ATCC-27756_MAF-2	101374	raw/genomes/xjin/Ruminococcus-torques-ATCC-27756_MAF-2.fa	xjin_101374_a	
+Bacteroides-ovatus-ATCC-8483_MAF-2	101378	raw/genomes/xjin/Bacteroides-ovatus-ATCC-8483_MAF-2.fa	xjin_101378_a	
+Bacteroides-sp-D2_MAF-2	101378	raw/genomes/xjin/Bacteroides-sp-D2_MAF-2.fa	Bacteroides_sp_D2_MAF_2	Hits a large fraction but not all GT-Pro kmers in 101378;
+Ruminococcus-gnavus-ATCC-29149_MinIONHybrid	101380	raw/genomes/xjin/Ruminococcus-gnavus-ATCC-29149_MinIONHybrid.fa	xjin_101380_a	
+Alistipes-indistinctus-YIT-12060_MAF-2	101385	raw/genomes/xjin/Alistipes-indistinctus-YIT-12060_MAF-2.fa	xjin_101385_a	
+Alistipes-senegalensis-JC50_MAF-2	101420	raw/genomes/xjin/Alistipes-senegalensis-JC50_MAF-2.fa	xjin_101420_a	
+Alistipes-ihumii-AP11_MAF-2	101429	raw/genomes/xjin/Alistipes-ihumii-AP11_MAF-2.fa	Alistipes_ihumii_AP11_MAF_2	
+Acidaminococcus-intestini-D21_MAF-2	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	xjin_101440_d21maf	
+Bifidobacterium-catenulatum-JCM-1194_MAF-2	101490	raw/genomes/xjin/Bifidobacterium-catenulatum-JCM-1194_MAF-2.fa	xjin_101490_a	
+Enterocloster-bolteae-ATCC-BAA-613_MAF-2	101493	raw/genomes/xjin/Enterocloster-bolteae-ATCC-BAA-613_MAF-2.fa	xjin_101493_a	alternatively Clostridium_M_bolteae? contamination of GT-Pro kmers across several other strains;
+Blautia-hansenii-DSM-20583_MAF-2	101704	raw/genomes/xjin/Blautia-hansenii-DSM-20583_MAF-2.fa	xjin_101704_a	
+Holdemanella-biformis-DSM-3989_MAF-2	101711	raw/genomes/xjin/Holdemanella-biformis-DSM-3989_MAF-2.fa	xjin_101711_a	hits GT-Pro kmers in a large number of other species; no dominant hit;
+Alistipes-finegoldii-DSM-17242_NCBI	101830	raw/genomes/xjin/Alistipes-finegoldii-DSM-17242_NCBI.fa	xjin_101830_a	
+Prevotella-copri-DSM-18205_MAF-2	102293	raw/genomes/xjin/Prevotella-copri-DSM-18205_MAF-2.fa	xjin_102293_a	
+Oscillibacter-sp-KLE-1728_MAF-2	102327	raw/genomes/xjin/Oscillibacter-sp-KLE-1728_MAF-2.fa	xjin_102327_a	
+Enterocloster-asparagiformis-DSM-15981_MAF-2	102328	raw/genomes/xjin/Enterocloster-asparagiformis-DSM-15981_MAF-2.fa	xjin_102328_a	g__Clostridium_M;s__GCF_000509045.1
+Intestinimonas-butyriciproducens-DSM-26588_MAF-2	102340	raw/genomes/xjin/Intestinimonas-butyriciproducens-DSM-26588_MAF-2.fa	xjin_102340_dsm26588	
+Lactobacillus-plantarum-ATCC-BAA-793_NCBI	102386	raw/genomes/xjin/Lactobacillus-plantarum-ATCC-BAA-793_NCBI.fa	Lactobacillus_plantarum_ATCC_BAA_793_NCBI	Also hits a small number of GT-Pro kmers in a handful of other species;
+Bifidobacterium-adolescentis-L2-32_MAF-2	102395	raw/genomes/xjin/Bifidobacterium-adolescentis-L2-32_MAF-2.fa	xjin_102395_a	
+Bacteroides-sp-3-1-19_MAF-2	102438	raw/genomes/xjin/Bacteroides-sp-3-1-19_MAF-2.fa	Bacteroides_sp_3_1_19_MAF_2	
+Parabacteroides-distasonis-ATCC-8503_MAF-2	102438	raw/genomes/xjin/Parabacteroides-distasonis-ATCC-8503_MAF-2.fa	xjin_102438_a	
+Parabacteroides-sp-D13_MAF-2	102438	raw/genomes/xjin/Parabacteroides-sp-D13_MAF-2.fa	Parabacteroides_sp_D13_MAF_2	
+Akkermansia-muciniphila-ATCC-BAA-835_MAF-2	102454	raw/genomes/xjin/Akkermansia-muciniphila-ATCC-BAA-835_MAF-2.fa	xjin_102454_a	
+Bacteroides-cellulosilyticus-DSM-14838_MAF-2	102455	raw/genomes/xjin/Bacteroides-cellulosilyticus-DSM-14838_MAF-2.fa	xjin_102455_a	
+Bifidobacterium-breve-JCM-1192_MAF-2	102469	raw/genomes/xjin/Bifidobacterium-breve-JCM-1192_MAF-2.fa	xjin_102469_a	
+Bacteroides-intestinalis-DSM-17393_MAF-2	102470	raw/genomes/xjin/Bacteroides-intestinalis-DSM-17393_MAF-2.fa	xjin_102470_a	
+Bacteroides-dorei-5-1-36-D4_MAF-2	102478	raw/genomes/xjin/Bacteroides-dorei-5-1-36-D4_MAF-2.fa	xjin_102478_a	
+Bacteroides-dorei-DSM-17855_MAF-2	102478	raw/genomes/xjin/Bacteroides-dorei-DSM-17855_MAF-2.fa	xjin_102478_b	
+Bacteroides-sp-9-1-42FAA_MAF-2	102478	raw/genomes/xjin/Bacteroides-sp-9-1-42FAA_MAF-2.fa	Bacteroides_sp_9_1_42FAA_MAF_2	Hits a large fraction but not all GT-Pro kmers in 102478;
+Bacteroides-vulgatus-ATCC-8482_NCBI	102478	raw/genomes/xjin/Bacteroides-vulgatus-ATCC-8482_NCBI.fa	Bacteroides_vulgatus_ATCC_8482_NCBI	Hits a large fraction but not all GT-Pro kmers in 102478;
+Adlercreutzia-equolifaciens-DSM-19450_NCBI	102480	raw/genomes/xjin/Adlercreutzia-equolifaciens-DSM-19450_NCBI.fa	xjin_102480_a	
+Clostridium-sp-M62-1_MAF-2	102483	raw/genomes/xjin/Clostridium-sp-M62-1_MAF-2.fa	xjin_102483_a	Clostridium_Q_saccharolyticum; contamination of GT-Pro kmers across several other strains;
+Eubacterium-rectale-ATCC-33656_NCBI	102492	raw/genomes/xjin/Eubacterium-rectale-ATCC-33656_NCBI.fa	xjin_102492_atcc33656	a.k.a. Agathobacter rectalis
+Eubacterium-siraeum-DSM-15702_MAF-2	102530	raw/genomes/xjin/Eubacterium-siraeum-DSM-15702_MAF-2.fa	xjin_102530_a	Ruminiclostridium_E_siraeum; light contamination of GT-Pro kmers in one other strain
+Eggerthella-lenta-DSM-2243_MAF-2	102544	raw/genomes/xjin/Eggerthella-lenta-DSM-2243_MAF-2.fa	xjin_102544_a	
+Bacteroides-caccae-ATCC-43185_MAF-2	102549	raw/genomes/xjin/Bacteroides-caccae-ATCC-43185_MAF-2.fa	xjin_102549_a	
+Holdemania-filiformis-DSM-12042_MAF-2	102779	raw/genomes/xjin/Holdemania-filiformis-DSM-12042_MAF-2.fa	xjin_102779_a	UHGG species number matched based on genus only
+Bacteroides-stercoris-ATCC-43183_MAF-2	103681	raw/genomes/xjin/Bacteroides-stercoris-ATCC-43183_MAF-2.fa	xjin_103681_a	
+Subdoligranulum-sp-4-3-54A2FAA_MAF-2	103682	raw/genomes/xjin/Subdoligranulum-sp-4-3-54A2FAA_MAF-2.fa	xjin_103682_a	Alternatively Ruthenibacterium_lactatiformans? GT-Pro kmers found in several other strains;
+Bifidobacterium-pseudocatenulatum-JCM-1200_MAF-2	103683	raw/genomes/xjin/Bifidobacterium-pseudocatenulatum-JCM-1200_MAF-2.fa	xjin_103683_a	
+Clostridiales-bacterium-VE202-27_MinIONHybrid	103684	raw/genomes/xjin/Clostridiales-bacterium-VE202-27_MinIONHybrid.fa	xjin_103684_a	alternatively g__Eisenbergiella;s__GCF_000466465.2? GT-Pro kmers found in several other strains;
+Dialister-invisus-DSM-15470_MAF-2	104158	raw/genomes/xjin/Dialister-invisus-DSM-15470_MAF-2.fa	xjin_104158_a	
+Streptococcus-thermophilus-LMD-9_MAF-2	104345	raw/genomes/xjin/Streptococcus-thermophilus-LMD-9_MAF-2.fa	xjin_104345_a	
+Anaerotruncus-colihominis-DSM-17241_MAF-2	TODO	raw/genomes/xjin/Anaerotruncus-colihominis-DSM-17241_MAF-2.fa	Anaerotruncus_colihominis_DSM_17241_MAF_2	hits GT-Pro kmers in a large number of species; no clear GT-Pro match;
+Bacteroides-plebeius-DSM-17135_MAF-2	TODO	raw/genomes/xjin/Bacteroides-plebeius-DSM-17135_MAF-2.fa	Bacteroides_plebeius_DSM_17135_MAF_2	Hits absolutely no GT-Pro kmers;
+Blautia-wexlerae-DSM-19850_MAF-2	TODO	raw/genomes/xjin/Blautia-wexlerae-DSM-19850_MAF-2.fa	Blautia_wexlerae_DSM_19850_MAF_2	
+Clostridium-hylemonae-DSM-15053_MAF-2	TODO	raw/genomes/xjin/Clostridium-hylemonae-DSM-15053_MAF-2.fa	Clostridium_hylemonae_DSM_15053_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 101303 with 266 SNPs;
+Clostridium-sp-ATCC-29733_MAF-2	TODO	raw/genomes/xjin/Clostridium-sp-ATCC-29733_MAF-2.fa	Clostridium_sp_ATCC_29733_MAF_2	
+Clostridium-sp-D5_MAF-2	TODO	raw/genomes/xjin/Clostridium-sp-D5_MAF-2.fa	Clostridium_sp_D5_MAF_2	
+Clostridium-sp-L2-50_MinIONHybrid	TODO	raw/genomes/xjin/Clostridium-sp-L2-50_MinIONHybrid.fa	Clostridium_sp_L2_50_MinIONHybrid	
+Clostridium-spiroforme-DSM-1552_MAF-2	TODO	raw/genomes/xjin/Clostridium-spiroforme-DSM-1552_MAF-2.fa	Clostridium_spiroforme_DSM_1552_MAF_2	
+Collinsella-stercoris-DSM-13279_MAF-2	TODO	raw/genomes/xjin/Collinsella-stercoris-DSM-13279_MAF-2.fa	Collinsella_stercoris_DSM_13279_MAF_2	
+Granulicatella-adiacens-ATCC-49175_MAF-2	TODO	raw/genomes/xjin/Granulicatella-adiacens-ATCC-49175_MAF-2.fa	Granulicatella_adiacens_ATCC_49175_MAF_2	hits GT-Pro kmers in a large number of other species; no dominant hit;
+Lacrimispora-saccharolytica-WM1_MAF-2	TODO	raw/genomes/xjin/Lacrimispora-saccharolytica-WM1_MAF-2.fa	Lacrimispora_saccharolytica_WM1_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 100032;
+Marvinbryantia-formatexigens-DSM-14469_MAF-2	TODO	raw/genomes/xjin/Marvinbryantia-formatexigens-DSM-14469_MAF-2.fa	Marvinbryantia_formatexigens_DSM_14469_MAF_2	
+Olsenella-uli-DSM-7084_MAF-2	TODO	raw/genomes/xjin/Olsenella-uli-DSM-7084_MAF-2.fa	Olsenella_uli_DSM_7084_MAF_2	hits GT-Pro kmers in a large number of other species; most hits to 100256 and 102450;
+Peptostreptococcus-sp-CC14N-HM-1051_MAF-2	TODO	raw/genomes/xjin/Peptostreptococcus-sp-CC14N-HM-1051_MAF-2.fa	Peptostreptococcus_sp_CC14N_HM_1051_MAF_2	
+Ruminococcus-albus-8_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-albus-8_MAF-2.fa	Ruminococcus_albus_8_MAF_2	Hits kmers in a variety of species; but dominated by 102321; only one other strain has any hits to this species;
+Ruminococcus-bromii-ATCC-27255_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-bromii-ATCC-27255_MAF-2.fa	Ruminococcus_bromii_ATCC_27255_MAF_2	
+Ruminococcus-gauvreauii-DSM-19829_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-gauvreauii-DSM-19829_MAF-2.fa	Ruminococcus_gauvreauii_DSM_19829_MAF_2	
+Slackia-exigua-ATCC-700122_MAF-2	TODO	raw/genomes/xjin/Slackia-exigua-ATCC-700122_MAF-2.fa	Slackia_exigua_ATCC_700122_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 104041, 102509, and 101387;
+Slackia-heliotrinireducens-DSM-20476_MAF-2	TODO	raw/genomes/xjin/Slackia-heliotrinireducens-DSM-20476_MAF-2.fa	Slackia_heliotrinireducens_DSM_20476_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 102509, 101387, 102480, and 104041;
+Solobacterium-moorei-DSM-22971_MAF-2	TODO	raw/genomes/xjin/Solobacterium-moorei-DSM-22971_MAF-2.fa	Solobacterium_moorei_DSM_22971_MAF_2	Hits kmers in a variety of species; dominated by 100773; 100773 only hits two kmers in one other strain;
+Subdoligranulum-variabile-DSM-15176_MAF-2	TODO	raw/genomes/xjin/Subdoligranulum-variabile-DSM-15176_MAF-2.fa	Subdoligranulum_variabile_DSM_15176_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 103921, 101157, and 101627;
