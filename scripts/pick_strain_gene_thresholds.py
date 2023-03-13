@@ -42,9 +42,7 @@ if __name__ == "__main__":
     # Calculate the strain correlation threshold for each strain at which strain_corr_quantile
     # of the species genes (defined as those passing the species_corr_threshold)
     # are also assigned to the strain.
-    strain_corr_threshold = strain_corr[strain_gene_mask].quantile(
-        strain_corr_quantile
-    )
+    strain_corr_threshold = strain_corr[strain_gene_mask].quantile(strain_corr_quantile)
     (_, strain_depth_threshold_low), (_, strain_depth_threshold_high) = (
         strain_depth[strain_gene_mask]
         .quantile([strain_depth_quantile, 1 - strain_depth_quantile])

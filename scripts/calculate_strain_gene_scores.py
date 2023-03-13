@@ -33,7 +33,5 @@ if __name__ == "__main__":
     strain_corr_quantile = strain_corr.apply(lambda x: ECDF(x[species_gene_hit])(x))
     strain_depth_quantile = strain_depth.apply(lambda x: ECDF(x[species_gene_hit])(x))
 
-
-    strain_corr_quantile.to_csv(corr_outpath, sep='\t')
-    strain_depth_quantile.to_csv(depth_outpath, sep='\t')
-
+    strain_corr_quantile.to_csv(corr_outpath, sep="\t")
+    strain_depth_quantile.to_csv(depth_outpath, sep="\t")
