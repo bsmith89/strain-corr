@@ -16,6 +16,7 @@ rule find_genes_metagenome:
         """
         )
 
+
 rule find_genes_reference:
     output:
         "data/{stem}.prodigal-single.gff",

@@ -94,6 +94,7 @@ rule alias_midas_uhgg_pangenome_cds:
 #         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
 #         """
 
+
 rule blastn_genome_against_midasdb_uhgg:
     output:
         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.tsv",
@@ -105,6 +106,7 @@ rule blastn_genome_against_midasdb_uhgg:
         """
         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
         """
+
 
 rule blastn_genome_against_genome:
     output:
@@ -183,9 +185,10 @@ def species_genomes(species):
 
 
 rule debug_species_genomes:
-    output: 'debug_{species}_genomes.flag'
+    output:
+        "debug_{species}_genomes.flag",
     params:
-        test=lambda w: species_genomes(w.species)
+        test=lambda w: species_genomes(w.species),
     shell:
         "echo {params.test}; false"
 
