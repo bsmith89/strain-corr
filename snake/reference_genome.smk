@@ -11,10 +11,10 @@ rule link_reference_genome:
 
 rule tile_reference_genome:
     output:
-        "data/species/sp-{species}/genome/{genome}.tiles-l{length}-o{overlap}.fn",
+        "{stem}.tiles-l{length}-o{overlap}.fn",
     input:
         script="scripts/tile_fasta.py",
-        fn="data/species/sp-{species}/genome/{genome}.fn",
+        fn="{stem}.fn",
     wildcard_constraints:
         genome=noperiod_wc,
         length=integer_wc,
@@ -42,6 +42,32 @@ rule genome_fasta_to_fastq:
         "conda/seqtk.yaml"
     shell:
         "seqtk seq -F '#' {input} | gzip -c > {output}"
+
+
+rule combine_strain_genome_gtpro_data_loadable:
+    output:
+        "data/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
+    input:
+        strain=lambda w: [
+            f"data/species/sp-{w.species}/genome/{strain}.tiles-l100-o99.gtpro_parse.tsv.bz2"
+            for strain in species_genomes(w.species)
+        ],
+    params:
+        strain_list=lambda w: species_genomes(w.species),
+        pattern="data/species/sp-{species}/genome/$strain.tiles-l100-o99.gtpro_parse.tsv.bz2",
+    shell:
+        """
+        for strain in {params.strain_list}
+        do
+            path={params.pattern}
+            ( \
+                bzip2 -dc $path \
+                | awk -v OFS='\t' -v strain=$strain -v species={wildcards.species} '$1==species {{print strain,$0}}' \
+                | bzip2 -zc \
+            )
+        done > {output}
+
+        """
 
 
 rule alias_midas_uhgg_pangenome_cds:
@@ -205,10 +231,36 @@ rule assign_matching_genes:
         awk -v OFS='\t' -v thresh='{params.thresh}' '(NR > 1) && ($3 > thresh) {{print $1,$2}}' {input} > {output}
         """
 
-use rule run_bowtie_multi_species_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles with:
+
+use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles with:
     output:
-        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes.bam",
+        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}.bam",
     input:
-        bt2_dir="data/group/{group}/r.proc.pangenomes",  # Assumes `proc` infix.
+        bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+
+
+# FIXME: This is also a hub rule, and extends another hub rule. Consider
+# commenting it out.
+# NOTE: The "samples" here are actually reference strains, not samples.
+# Then the sample_pattern+sample_list trick is doing something extra tricky
+# where the species and strain are combined together.
+use rule build_new_pangenome_db as build_pangenome_db_on_reference_genome_tiles with:
+    output:
+        protected("data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}.db"),
+    input:
+        samples=lambda w: [
+            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally.tsv.lz4"
+            for strain, species in config["genome"].species_id.items()
+        ],
+        genes="data/group/{group}/r.proc.pangenomes.gene_info.tsv.lz4",
+        nlength="data/group/{group}/r.proc.pangenomes99.nlength.tsv",
+    params:
+        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_mapping_tally.tsv.lz4",
+        sample_list=lambda w: [
+            f"sp-{species}/genome/{strain}"
+            for strain, species in config["genome"].species_id.items()
+        ],
+
+

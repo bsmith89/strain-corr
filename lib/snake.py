@@ -1,6 +1,8 @@
 from collections import defaultdict
 from warnings import warn
 from numpy import ceil
+import snakemake.io
+import re
 
 alias_recipe = "ln -rs {input} {output}"
 alias_recipe_norelative = "ln -sT {input} {output}"
@@ -101,3 +103,12 @@ def resource_calculator(
         return ceil(outvalue)
 
     return func
+
+
+def get_checkpoint_by_path(checkpoint, path, output_idx=0):
+    regex = snakemake.io.regex(checkpoint.rule.output[output_idx])
+    match = re.match(
+        regex,
+        path,
+    )
+    return checkpoint.get(**match.groupdict()), match.groupdict()

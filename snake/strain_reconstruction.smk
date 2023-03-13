@@ -12,6 +12,8 @@ rule combine_midasdb_all_gene_annotations:
         """
 
 
+# TODO: The aggregated gene_annotations.tsv files could/should go into each
+# individual species directory.
 rule filter_midasdb_all_gene_annotations_by_centroid:
     output:
         "ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
@@ -87,7 +89,7 @@ rule select_species_core_genes_de_novo:
     input:
         script="scripts/select_highly_correlated_species_genes.py",
         species_depth="{stemA}/{stemB}.gtpro.species_depth.tsv",
-        gene_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroid}.depth.nc",
+        gene_depth="{stemA}/species/sp-{species}/{stemB}.gene99-agg{centroid}.depth2.nc",
     params:
         n_marker_genes=700,
     shell:
@@ -101,10 +103,10 @@ rule calculate_species_depth_from_core_genes:
         species_depth="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroid}.spgc.species_depth.tsv",
     input:
         script="scripts/calculate_species_depth_from_core_genes.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list", # species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroid}.spgc.species_gene.list",
-        gene_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroid}.depth.nc",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",  # species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroid}.spgc.species_gene.list",
+        gene_depth="{stemA}/species/sp-{species}/{stemB}.gene99-agg{centroid}.depth2.nc",
     params:
-        trim_frac=0.25,
+        trim_frac=0.05,
     shell:
         """
         {input.script} {input.species_gene} {input.gene_depth} {params.trim_frac} {output.species_depth}
@@ -118,7 +120,7 @@ rule calculate_strain_specific_correlation_of_genes:
         script="scripts/calculate_strain_specific_correlation_of_genes.py",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_depth.tsv",
         strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.depth.nc",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
     params:
         strain_frac_thresh=0.95,
         species_depth_thresh_abs=0.0001,
@@ -145,7 +147,7 @@ rule calculate_strain_specific_gene_depth_ratio:
         script="scripts/calculate_strain_specific_gene_depth_ratio.py",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_depth.tsv",
         strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.depth.nc",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
     params:
         strain_frac_thresh=0.95,
     shell:
@@ -165,7 +167,7 @@ rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
         depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_quantile.tsv",
     input:
         script="scripts/calculate_strain_gene_scores.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",  # FIXME: Are these the right way to define a species core gene?
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
     shell:
@@ -184,20 +186,28 @@ rule pick_strain_gene_thresholds:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list", # species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_gene.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim25-prev95.list",  # FIXME: Are these the right way to define a species core gene? # species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_gene.list",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
     params:
         strain_corr_quantile=lambda w: float(w.corr_quant) / 1000,
         strain_depth_quantile=lambda w: float(w.depth_quant) / 1000,
+        min_corr=0.2,
+        max_corr=0.9,
+        min_depth=0.1,
+        max_depth=0.5,
     shell:
         """
         {input.script} \
                 {input.species_gene} \
                 {input.strain_corr} \
                 {params.strain_corr_quantile} \
+                {params.min_corr} \
+                {params.max_corr} \
                 {input.strain_depth} \
                 {params.strain_depth_quantile} \
+                {params.min_depth} \
+                {params.max_depth} \
                 {output}
         """
 
@@ -210,6 +220,26 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
         genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
+
+
+rule assess_infered_strain_accuracy:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastn.gene_matching-c{centroid}-t95.tsv",
+        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc-corr10-depth10.strain_gene_threshold.tsv",
+        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
+        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
+    shell:
+        """
+        {input.script} \
+                {input.gene_matching} \
+                {input.strain_corr} \
+                {input.strain_depth} \
+                {input.thresholds} \
+                {output}
+        """
 
 
 rule collect_files_for_strain_assessment:
@@ -230,37 +260,43 @@ rule collect_files_for_strain_assessment:
         strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_corr_quantile.tsv",
         strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_quantile.tsv",
         gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
-        depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.depth.nc",
+        depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
-        midasdb=ancient("ref/midasdb_uhgg"),
         gtpro_reference_genotype="data/species/sp-{species}/gtpro_ref.mgtp.nc",
-        strain_blastp_midas=lambda w: [f'data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastp.tsv' for strain in species_genomes(w.species)],
-        strain_blastp_self=lambda w: [f'data/species/sp-{w.species}/genome/{strain}.{strain}-blastp.tsv' for strain in species_genomes(w.species)],
-        strain_gene_lengths=lambda w: [f"data/species/sp-{w.species}/genome/{strain}.prodigal-single.cds.nlength.tsv" for strain in species_genomes(w.species)],
+        strain_blastn_midas=lambda w: [
+            f"data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastn.tsv"
+            for strain in species_genomes(w.species)
+        ],
+        strain_blastn_self=lambda w: [
+            f"data/species/sp-{w.species}/genome/{strain}.{strain}-blastn.tsv"
+            for strain in species_genomes(w.species)
+        ],
+        strain_blastn_ratio=lambda w: [
+            f"data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastn.bitscore_ratio-c75.tsv"
+            for strain in species_genomes(w.species)
+        ],
+        strain_gene_lengths=lambda w: [
+            f"data/species/sp-{w.species}/genome/{strain}.prodigal-single.cds.nlength.tsv"
+            for strain in species_genomes(w.species)
+        ],
+        strain_genotype=lambda w: [
+            f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
+        ],
+        reference_strain_accuracy=lambda w: [
+            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroid}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
         "echo {input} {params.cluster_info} | tee {output}"
 
 
-rule assess_infered_strain_accuracy:
+rule assess_strain_accuracy_for_species:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.{strain}.gene_content_reconstruction_accuracy.txt",
+        "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.gene_content_reconstruction_accuracy.ALL_STRAINS.flag",
     input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastp.gene_matching-c{centroid}-t50.tsv",
-        strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.strain_corr_quantile.tsv",
-        strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gene{centroid}.{stemB}.strain_depth_quantile.tsv",
-    params:
-        corr_q_thresh=0.01,
-        depth_q_thresh=0.01,
-    shell:
-        """
-        {input.script} \
-                {input.gene_matching} \
-                {input.strain_corr_quantile} \
-                {input.strain_depth_quantile} \
-                {params.corr_q_thresh} \
-                {params.depth_q_thresh} \
-                {output}
-        """
+        reference_strain_accuracy=lambda w: [
+            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroid}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
