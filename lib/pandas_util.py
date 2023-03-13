@@ -11,12 +11,22 @@ def normalize_rows(df):
     return df.divide(df.sum(1), axis=0)
 
 
-def align_indexes(*args, axis="index"):
+def aligned_index(*args, axis="index", how="inner"):
     a0, *aa = args
     idx = set(getattr(a0, axis))
     for a in aa:
-        idx &= set(getattr(a, axis))
+        if how == "inner":
+            idx &= set(getattr(a, axis))
+        elif how == "outer":
+            idx |= set(getattr(a, axis))
+        else:
+            raise ValueError("*how* parameter must be one of {'inner', 'outer'}.")
 
+    return idx
+
+
+def align_indexes(*args, axis="index", how="inner"):
+    idx = aligned_index(*args, axis=axis, how=how)
     assert idx
     return [a.reindex(idx, axis=axis) for a in args]
 
