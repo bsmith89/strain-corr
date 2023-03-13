@@ -262,13 +262,15 @@ rule merge_midas_genes_from_multi_species_and_apply_length_correction:
 
 rule eggnog_mapper_translated_orfs:
     output:
-        dir=directory("{stem}.emapper.d"),
-        table="{stem}.emapper.d/proteins.emapper.annotations",
+        "{stem}.emapper.d/proteins.emapper.annotations",
+        "{stem}.emapper.d/proteins.emapper.hits",
+        "{stem}.emapper.d/proteins.emapper.seed_orthologs",
     input:
         fasta="{stem}.tran.fa",
         db="ref/eggnog_mapper_db",
     params:
-        tax_scope="root",  # FIXME: Maybe be dynamic by which species
+        outdir="{stem}.emapper.d",
+        tax_scope="auto",
         sensmode="more-sensitive",
         mapper="diamond",
     conda:
@@ -280,8 +282,10 @@ rule eggnog_mapper_translated_orfs:
         pmem=20_000 // 12,
     shell:
         """
+        tmpdir=$(mktemp -d)
         export EGGNOG_DATA_DIR={input.db}
-        mkdir -p {output.dir}.temp
+        rm -rf {params.outdir}.temp {params.outdir}
+        mkdir -p {params.outdir}.temp
         emapper.py \
                 -m {params.mapper} \
                 -i {input.fasta} \
@@ -289,12 +293,13 @@ rule eggnog_mapper_translated_orfs:
                 --sensmode {params.sensmode} \
                 --go_evidence all \
                 --dbmem \
-                --output 'pangenome' \
                 --tax_scope {params.tax_scope} \
-                --output_dir {output.dir}.temp \
-                --cpu {threads}
-        mv {output.dir}.temp {output.dir}
+                --temp_dir $tmpdir \
+                --override \
+                --cpu {threads} \
+                --output_dir {params.outdir}.temp \
+                --output 'proteins'
+        mv {params.outdir}.temp {params.outdir}
         # TODO  # Test on 100035 because it has very few genes
-        # FIXME: We should dynamically set the domain, not root.
 
         """
