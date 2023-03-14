@@ -82,6 +82,9 @@ rule select_species_core_genes_from_reference:
         "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
 
 
+# TODO: Consider doing this *after* aggregating by strain. This will prevent a
+# very very abundant/prevalent strain from dominating and degrading the core
+# gene selection.
 rule select_species_core_genes_de_novo:
     output:
         species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroid}.spgc.species_gene.list",
@@ -113,28 +116,50 @@ rule calculate_species_depth_from_core_genes:
         """
 
 
-rule calculate_strain_specific_correlation_of_genes:
+rule partition_strain_samples:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
+        nospecies="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroid}.spgc.species_free_samples.list",
+        strain="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroid}.spgc.strain_samples.tsv",
     input:
-        script="scripts/calculate_strain_specific_correlation_of_genes.py",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_depth.tsv",
-        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
+        script="scripts/partition_strain_samples.py",
+        species_depth="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.gene{centroid}.spgc.species_depth.tsv",
+        strain_frac="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.comm.tsv",
     params:
-        strain_frac_thresh=0.95,
-        species_depth_thresh_abs=0.0001,
-        species_depth_thresh_pres=0.5,
+        frac_thresh=0.95,
+        absent_thresh=0.0001,
+        present_thresh=0.5,
     shell:
         """
         {input.script} \
                 {input.species_depth} \
-                {params.species_depth_thresh_abs} \
-                {params.species_depth_thresh_pres} \
                 {input.strain_frac} \
-                {params.strain_frac_thresh} \
+                {params.frac_thresh} \
+                {params.absent_thresh} \
+                {params.present_thresh} \
+                {output.nospecies} \
+                {output.strain}
+        """
+
+
+rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
+    output:
+        corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_correlation.tsv",
+        depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
+    input:
+        script="scripts/calculate_strain_partitioned_gene_stats.py",
+        nospecies_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.species_free_samples.list",
+        strain_partitions="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_samples.tsv",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_depth.tsv",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
+    shell:
+        """
+        {input.script} \
+                {input.nospecies_samples} \
+                {input.strain_partitions} \
+                {input.species_depth} \
                 {input.gene_depth} \
-                {output}
+                {output.corr} \
+                {output.depth}
         """
 
 
