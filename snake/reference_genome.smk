@@ -254,7 +254,7 @@ use rule build_new_pangenome_db as build_pangenome_db_on_reference_genome_tiles 
         protected("data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}-mapq{q}.db"),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally-mapq{q}.tsv.lz4"
+            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally-mapq{w.q}.tsv.lz4"
             for strain, species in config["genome"].species_id.items()
         ],
         genes="data/group/{group}/r.proc.pangenomes.gene_info.tsv.lz4",

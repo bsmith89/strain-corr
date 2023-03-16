@@ -287,7 +287,7 @@ rule build_new_pangenome_db:
         protected("data/group/{group}/r.{proc}.pangenomes{centroid}-mapq{q}.db"),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}.gene_mapping_tally-mapq{q}.tsv.lz4"
+            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}.gene_mapping_tally-mapq{w.q}.tsv.lz4"
             for mgen in config["mgen_group"][w.group]
         ],
         genes="data/group/{group}/r.{proc}.pangenomes.gene_info.tsv.lz4",
