@@ -104,16 +104,18 @@ rule alias_to_pangenome_sorted:
         alias_recipe
 
 
-rule profile_pangenome_depth:
+rule profile_pangenome_position_depths:
     output:
-        "{stem}.pangenomes{centroid}.position_depth.tsv.lz4",
+        "{stem}.pangenomes{centroid}.position_depth-mapq{q}.tsv.lz4",
     input:
         "{stem}.pangenomes{centroid}.bam",
+    params:
+        mapq_thresh=lambda w: int(w.q),
     conda:
         "conda/midas.yaml"
     shell:
         """
-        samtools depth -a {input} | lz4 -9zc > {output}
+        samtools depth --min-MQ {params.mapq_thresh} -a {input} | lz4 -9zc > {output}
         """
 
 
@@ -122,6 +124,8 @@ rule profile_pangenome_depth_aggregated_by_gene:
         "{stem}.pangenomes{centroid}.gene_depth.tsv.lz4",
     input:
         "{stem}.pangenomes{centroid}.bam",
+    params:
+        mapq_thresh=0,
     conda:
         "conda/midas.yaml"
     threads: 1
@@ -129,7 +133,7 @@ rule profile_pangenome_depth_aggregated_by_gene:
         walltime_hr=2,
     shell:
         """
-        samtools depth -@ {threads} -a {input} \
+        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} -a {input} \
             | awk -v OFS='\t' '\\
                 BEGIN {{gene_id="__START__"; position_tally=0; depth_sum=0}} \\
                 $1==gene_id {{position_tally+=1; depth_sum+=$3}} \\
@@ -144,9 +148,11 @@ rule profile_pangenome_depth_aggregated_by_gene:
 
 rule profile_pangenome_mapping_tally_aggregated_by_gene:
     output:
-        "{stem}.pangenomes{centroid}.gene_mapping_tally.tsv.lz4",
+        "{stem}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
     input:
         "{stem}.pangenomes{centroid}.bam",
+    params:
+        mapq_thresh=lambda w: int(w.q),
     conda:
         "conda/midas.yaml"
     threads: 1
@@ -154,12 +160,38 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         walltime_hr=2,
     shell:
         """
-        samtools depth -@ {threads} {input} \
+        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} {input} \
             | awk -v OFS='\t' '\\
-                BEGIN {{gene_id="__START__"; position_tally=0; depth_sum=0}} \\
-                $1==gene_id {{position_tally+=1; depth_sum+=$3}} \\
-                $1!=gene_id {{print gene_id, depth_sum; gene_id=$1; position_tally=0; depth_sum=0}} \\
-                END {{print gene_id,depth_sum / position_tally}} \\
+                BEGIN {{gene_id="__START__"; depth_tally=0}} \\
+                $1==gene_id {{depth_tally+=$3}} \\
+                $1!=gene_id {{print gene_id, depth_tally; gene_id=$1; depth_tally=0}} \\
+                END {{print gene_id,depth_tally}} \\
+                ' \
+            | (echo 'gene_id\ttally'; sed '1,1d') \
+            | lz4 -9 -zc > {output}.temp
+        mv {output}.temp {output}
+        """
+
+rule profile_pangenome_mapping_coverage_aggregated_by_gene:
+    output:
+        "{stem}.pangenomes{centroid}.gene_coverage_tally-mapq{q}.tsv.lz4",
+    input:
+        "{stem}.pangenomes{centroid}.bam",
+    params:
+        mapq_thresh=lambda w: int(w.q),
+    conda:
+        "conda/midas.yaml"
+    threads: 1
+    resources:
+        walltime_hr=2,
+    shell:
+        """
+        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} {input} \
+            | awk -v OFS='\t' '\\
+                BEGIN {{gene_id="__START__"; position_tally=0}} \\
+                $1==gene_id {{position_tally+=1}} \\
+                $1!=gene_id {{print gene_id, position_tally; gene_id=$1; position_tally=0}} \\
+                END {{print gene_id,position_tally}} \\
                 ' \
             | (echo 'gene_id\ttally'; sed '1,1d') \
             | lz4 -9 -zc > {output}.temp
@@ -252,16 +284,16 @@ ruleorder: concatenate_reference_gene_lengths > count_seq_lengths_nucl
 # startup time for downstream tasks.
 rule build_new_pangenome_db:
     output:
-        protected("data/group/{group}/r.{proc}.pangenomes{centroid}.db"),
+        protected("data/group/{group}/r.{proc}.pangenomes{centroid}-mapq{q}.db"),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}.gene_mapping_tally.tsv.lz4"
+            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}.gene_mapping_tally-mapq{q}.tsv.lz4"
             for mgen in config["mgen_group"][w.group]
         ],
         genes="data/group/{group}/r.{proc}.pangenomes.gene_info.tsv.lz4",
         nlength="data/group/{group}/r.{proc}.pangenomes99.nlength.tsv",
     params:
-        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes{centroid}.gene_mapping_tally.tsv.lz4",
+        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
         sample_list=lambda w: list(config["mgen_group"][w.group]),
     conda:
         "conda/toolz.yaml"
@@ -340,6 +372,28 @@ rule build_new_pangenome_db:
         mv $db {output}
         """
         )
+
+
+rule load_one_species_pangenome2_depth_into_netcdf:
+    output:
+        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-mapq{q}-agg{centroidB}.depth2.nc",
+    input:
+        script="scripts/load_one_species_pangenome2_depth_into_netcdf.py",
+        db="{stemA}/{stemB}.pangenomes{centroidA}-mapq{q}.db",
+    wildcard_constraints:
+        centroidA="99|95",
+        centroidB="99|95|90|85|80|75",
+    conda:
+        "conda/toolz.yaml"
+    threads: 1
+    resources:
+        walltime_hr=12,
+        mem_mb=20_000,
+        pmem=20_000 // 1,
+    shell:
+        """
+        {input.script} {input.db} {wildcards.species} {wildcards.centroidB} {output}
+        """
 
 
 # rule load_one_species_pangenome2_depth_into_netcdf:

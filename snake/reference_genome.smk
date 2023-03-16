@@ -251,16 +251,16 @@ use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_spe
 # where the species and strain are combined together.
 use rule build_new_pangenome_db as build_pangenome_db_on_reference_genome_tiles with:
     output:
-        protected("data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}.db"),
+        protected("data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}-mapq{q}.db"),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally.tsv.lz4"
+            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally-mapq{q}.tsv.lz4"
             for strain, species in config["genome"].species_id.items()
         ],
         genes="data/group/{group}/r.proc.pangenomes.gene_info.tsv.lz4",
         nlength="data/group/{group}/r.proc.pangenomes99.nlength.tsv",
     params:
-        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_mapping_tally.tsv.lz4",
+        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
         sample_list=lambda w: [
             f"sp-{species}/genome/{strain}"
             for strain, species in config["genome"].species_id.items()
