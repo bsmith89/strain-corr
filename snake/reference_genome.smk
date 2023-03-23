@@ -243,6 +243,45 @@ use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_spe
         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
 
+rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v10.bam",
+    input:
+        bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+        tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75"
+    params:
+        extra_flags="",
+    conda:
+        "conda/midas.yaml"
+    threads: 24
+    resources:
+        walltime_hr=24,
+        mem_mb=100_000,
+        pmem=100_000 // 24,
+    shell:
+        """
+        bowtie2 --no-unal --local --very-sensitive-local \
+            -x {input.bt2_dir}/centroids \
+            --threads {threads} --mm -q \
+            -U {input.tiles} \
+            {params.extra_flags} \
+            | samtools view --threads 1 -b - \
+            | samtools sort --threads {threads} -o {output}.temp
+        mv {output}.temp {output}
+        """
+
+
+use rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v13 with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v13.bam",
+    input:
+        bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+        tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
+    params:
+        extra_flags="--all",
+    threads: 24
 
 # FIXME: This is also a hub rule, and extends another hub rule. Consider
 # commenting it out.
