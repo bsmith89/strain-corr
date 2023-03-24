@@ -41,68 +41,6 @@ def nested_dictlookup(mapping, *args):
     return value
 
 
-def resource_calculator(
-    baseline=1,
-    threads_exponent=0,
-    attempt_base=1,
-    input_size_exponent=None,
-    agg=None,
-    bad_inputs="replace",
-    **input_size_multipliers,
-):
-    if agg is None:
-        agg = sum
-    if input_size_exponent is None:
-        input_size_exponent = {}
-    _input_size_exponent = defaultdict(lambda: 1)
-    _input_size_exponent.update(input_size_exponent)
-    input_size_exponent = _input_size_exponent
-
-    def func(wildcards, input, threads, attempt):
-        input_sizes = {}
-        for k in input_size_multipliers:
-            if hasattr(wildcards, k) and hasattr(input, k):
-                warn(
-                    f"{k} is both a wildcard and an input file. Input file size takes precedence."
-                )
-            if hasattr(input, k):
-                input_sizes[k] = getattr(input, k).size / 1024 / 1024
-            elif hasattr(wildcards, k):
-                input_sizes[k] = float(getattr(wildcards, k))
-
-            # FIXME: Can't find a way to get around the `TypeError: '>' not supported between instances of 'TBDString' and 'int'` problem...
-            # if not isinstance(input_sizes[k], (int, float)):
-            #     if bad_inputs == 'fail':
-            #         raise ValueError(f"Size of input '{k}' is invalid: {input_sizes[k]}")
-            #     elif bad_inputs == 'warn':
-            #         warn(f"Size of input '{k}' is invalid: {input_sizes[k]}")
-            #     elif bad_inputs == 'ignore':
-            #         pass
-            #     elif bad_inputs == 'replace':
-            #         warn(f"Size of input '{k}' is invalid: {input_sizes[k]}. Replacing with 1")
-            #         input_sizes[k] = 1
-            #     else:
-            #         raise ValueError(f"{bad_inputs} is not a valid option for *bad_inputs*.")
-            # else:
-            #     print(input_sizes[k], file=sys.stderr)
-
-            # # print(type(getattr(input, k).size))
-            # try:
-            # except AttributeError as err:
-            #     warn(str(err))
-            #     input_sizes[k] = 0
-        base_estimate = agg(
-            [baseline]
-            + [
-                input_size_multipliers[k] * input_sizes[k] ** input_size_exponent[k]
-                for k in input_size_multipliers
-            ]
-        )
-        outvalue = base_estimate * threads**threads_exponent * attempt_base**attempt
-        # print(weighted_input_size, threads, threads_exponent, attempt_base, attempt, outvalue)
-        return ceil(outvalue)
-
-    return func
 
 
 def get_checkpoint_by_path(checkpoint, path, output_idx=0):
