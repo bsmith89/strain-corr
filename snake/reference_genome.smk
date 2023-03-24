@@ -129,6 +129,11 @@ use rule diamond_search_fa as blastp_midasdb_uhgg_against_genome with:
         db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
 
 
+# params:
+#     db=lambda w, input: parse_diamond_db_from_path(input.db),
+#     extra_diamond_blastp_args="--mid-sensitive",
+
+
 use rule diamond_search_fa as blastp_genome_against_midasdb_uhgg with:
     output:
         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastp.tsv",
@@ -148,6 +153,11 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
         db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
 
 
+# params:
+#     db=lambda w, input: parse_diamond_db_from_path(input.db),
+#     extra_diamond_blastp_args="--mid-sensitive",
+
+
 # rule blast_midasdb_uhgg_against_genome:
 #     output:
 #         "{stemA}/species/sp-{species}/genome/midas_uhgg_pangenome.{stemB}-blastx.tsv",
@@ -161,8 +171,8 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
 #         """
 #         diamond blastp --threads {threads} --db {params.db_stem} --query {input.fa} > {output}
 #         """
-
-
+#
+#
 # rule blast_genome_against_midasdb_uhgg:
 #     output:
 #         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastx.tsv",
@@ -191,6 +201,16 @@ rule debug_species_genomes:
         test=lambda w: species_genomes(w.species),
     shell:
         "echo {params.test}; false"
+
+
+# def all_blastp_for_species_reference_strain_genomes(species):
+#     strain_list = idxwhere(config['genome'].species_id == species)
+#     files_list = []
+#     for strain in strain_list:
+#         files_list.append(f'data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastp.tsv')
+#         files_list.append(f'data/species/sp-{species}/genome/{strain}.{strain}-blastp.tsv')
+#     assert len(files_list) > 0
+#     return files_list
 
 
 rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
@@ -245,6 +265,109 @@ use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_spe
         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
 
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v1 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v1.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="",
+#     threads: 24
+
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v2 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v2.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--ignore-quals",
+#     threads: 12
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v3 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v3.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="-N 1",
+#     threads: 12
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v4 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v4.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="-L 15",
+#     threads: 12
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v5 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v5.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--score-min G,10,5",
+#     threads: 12
+
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v6 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v6.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="-k 2",
+#     threads: 24
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v7 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v7.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--all",
+#     threads: 24
+
+use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v8 with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v8.bam",
+    input:
+        bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+        r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+        r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+    params:
+        extra_flags="--score-min G,5,2",
+    threads: 24
+
+
+# use rule run_bowtie_multi_species_dereplicated_pangenome as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v9 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v9.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--score-min G,5,0",
+#     threads: 24
+
+
 rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10:
     output:
         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v10.bam",
@@ -274,6 +397,26 @@ rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10:
         mv {output}.temp {output}
         """
 
+# use rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v11 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v11.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--score-min G,5,0",
+#     threads: 24
+
+
+# use rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v12 with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v12.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
+#         tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     params:
+#         extra_flags="--score-min G,5,0 --all",
+#     threads: 24
 
 use rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multi_species_pangenome_on_reference_genome_tiles_v13 with:
     output:
@@ -308,3 +451,62 @@ use rule build_new_pangenome_db as build_pangenome_db_on_reference_genome_tiles 
         ],
 
 
+# # NOTE: This is an experimental version of this rule that is supposed to correct
+# # for multimapping.
+# # FIXME: This is also a hub rule, and extends another hub rule. Consider
+# # commenting it out.
+# # NOTE: The "samples" here are actually reference strains, not samples.
+# # Then the sample_pattern+sample_list trick is doing something extra tricky
+# # where the species and strain are combined together.
+# use rule build_new_pangenome_db_with_correction as build_pangenome_db_on_reference_genome_tiles_with_correction with:
+#     output:
+#         protected("data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}-mapq{q}.db"),
+#     input:
+#         mapping=lambda w: [
+#             f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_mapping_tally-mapq{w.q}.tsv.lz4"
+#             for strain, species in config["genome"].species_id.items()
+#         ],
+#         cvrg_mapq0=lambda w: [
+#             f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_coverage_tally-mapq0.tsv.lz4"
+#             for strain, species in config["genome"].species_id.items()
+#         ],
+#         cvrg_mapqq=lambda w: [
+#             f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}.gene_coverage_tally-mapq{w.q}.tsv.lz4"
+#             for strain, species in config["genome"].species_id.items()
+#         ],
+#         genes="data/group/{group}/r.proc.pangenomes.gene_info.tsv.lz4",
+#         nlength="data/group/{group}/r.proc.pangenomes99.nlength.tsv",
+#     params:
+#         mapping_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
+#         cvrg_mapq0_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_coverage_tally-mapq0.tsv.lz4",
+#         cvrg_mapqq_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}.gene_coverage_tally-mapq{q}.tsv.lz4",
+#         sample_list=lambda w: [
+#             f"sp-{species}/genome/{strain}"
+#             for strain, species in config["genome"].species_id.items()
+#         ],
+
+# rule run_bowtie_multi_species_pangenome_on_reference_genome_tiles:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes.bam",
+#     input:
+#         bt2_dir="data/group/{group}/r.proc.pangenomes",  # Assumes `proc` infix.
+#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
+#     conda:
+#         "conda/midas.yaml"
+#     threads: 5
+#     resources:
+#         walltime_hr=24,
+#         mem_mb=100_000,
+#         pmem=100_000 // 5,
+#     shell:
+#         """
+#         bowtie2 --no-unal -X 5000  --local --very-sensitive-local \
+#             -x {input.bt2_dir}/pangenomes \
+#             --threads {threads} --mm -q \
+#             -1 {input.r1} \
+#             -2 {input.r2} \
+#             | samtools view --threads 1 -b - \
+#             | samtools sort --threads {threads} -o {output}.temp
+#         mv {output}.temp {output}
+#         """

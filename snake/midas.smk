@@ -176,11 +176,11 @@ rule run_midas_genes_multi_species:
         min_mapq=0,
     conda:
         "conda/midas.yaml"
-    threads: 5
+    threads: 10
     resources:
         walltime_hr=24,
         mem_mb=100_000,
-        pmem=100_000 // 5,
+        pmem=100_000 // 10,
     shell:
         """
         midas2 run_genes --sample_name {wildcards.mgen} \

@@ -35,3 +35,92 @@ rule link_secure_local_data_directories:
             ln -s "{params.root}/$dir"
         done
         """
+
+
+rule link_gtpro_db:
+    output:
+        directory("ref/gtpro"),
+    input:
+        ancient("/pollard/data/gt-pro-db"),
+    shell:
+        alias_recipe_norelative
+
+
+rule link_gtpro_snps_dict:
+    output:
+        "ref/gtpro.snp_dict.tsv",
+    input:
+        ancient("/pollard/data/gt-pro-db/variants_main.covered.hq.snp_dict.tsv"),
+    shell:
+        alias_recipe_norelative
+
+
+rule link_midasdb_uhgg:
+    output:
+        directory("ref/midasdb_uhgg"),
+    input:
+        ancient("/pollard/scratch/bsmith/midasdb_uhgg/"),
+    shell:
+        alias_recipe_norelative
+
+
+rule link_xjin_mgen_data:
+    output:
+        directory("raw/mgen/xjin"),
+    input:
+        "/pollard/data/internal/unpublished/CZBMI-Biofilm_BeadExperiment/biofilmBeadExpV2",
+    shell:
+        alias_recipe_norelative
+
+
+rule linkage_xjin_genomes_data:
+    output:
+        directory("raw/genomes/xjin"),
+    input:
+        "/pollard/data/microbial_genomes/fischbachBiohubStrains/Hybrid_Closed_Genomes/",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_watson2022_raw_data:
+    output:
+        directory("raw/mgen/watson2022"),
+    input:
+        "/pollard/data/metagenomes/fmt_studies/watson2021_biorxiv/wms_dna",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_fmt_studies_raw_data:
+    output:
+        directory("raw/mgen/fmt_studies"),
+    input:
+        "/pollard/data/metagenomes/fmt_studies",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_eggnog_mapper_db:
+    output:
+        directory("ref/eggnog_mapper_db"),
+    input:
+        ancient("/pollard/scratch/vdubinki/eggnog_mapper_data"),
+    shell:
+        alias_recipe_norelative
+
+
+localrules:
+    link_eggnog_mapper_db,
+
+
+rule link_dbcan_db:
+    output:
+        directory("ref/dbcan"),
+    input:
+        ancient("/pollard/scratch/vdubinki/dbcan/db/"),
+    shell:
+        alias_recipe_norelative
+
+
+localrules:
+    link_dbcan_db,
