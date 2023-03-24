@@ -530,25 +530,6 @@ rule load_one_species_pangenome2_depth_into_netcdf:
         """
 
 
-# rule load_one_species_pangenome_depth_into_netcdf:
-#     output:
-#         "data/group/{group}/species/sp-{species}/r.{proc}.gene99.depth.nc",
-#     input:
-#         script="scripts/load_one_species_pangenome_depth_into_netcdf.py",
-#         db="data/group/{group}/r.{proc}.pangenomes.db",
-#     conda:
-#         "conda/toolz.yaml"
-#     threads: 1
-#     resources:
-#         walltime_hr=12,
-#         mem_mb=20_000,
-#         pmem=20_000 // 1,
-#     shell:
-#         """
-#         {input.script} {input.db} {wildcards.species} {output}
-#         """
-
-
 rule normalize_multispecies_gene_depth_profile:
     output:
         "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-agg{centroidB}.normed_depth2.nc",
