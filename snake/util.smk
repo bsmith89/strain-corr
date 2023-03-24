@@ -15,15 +15,11 @@ rule install_jupyter_kernel_default:
 rule start_jupyter:
     params:
         port=config["jupyter_port"],
-    shadow:
-        "shallow"
     shell:
         "jupyter lab --port={params.port} --notebook-dir nb/"
 
 
 rule start_ipython:
-    shadow:
-        "shallow"
     shell:
         "ipython"
 
@@ -34,8 +30,6 @@ use rule start_ipython as start_ipython_toolz with:
 
 
 rule start_shell:
-    shadow:
-        "shallow"
     shell:
         "bash"
 
@@ -48,6 +42,11 @@ use rule start_shell as start_shell_toolz with:
 use rule start_shell as start_shell_seqtk with:
     conda:
         "conda/seqtk.yaml"
+
+
+use rule start_shell as start_shell_hsblastn with:
+    conda:
+        "conda/hsblastn.yaml"
 
 
 rule visualize_rulegraph:
