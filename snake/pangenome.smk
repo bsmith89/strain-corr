@@ -532,10 +532,10 @@ rule load_one_species_pangenome2_depth_into_netcdf:
 
 rule normalize_multispecies_gene_depth_profile:
     output:
-        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-agg{centroidB}.normed_depth2.nc",
+        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-mapq{q}-agg{centroidB}.normed_depth2.nc",
     input:
         script="scripts/normalize_gene_depth_by_sample.py",
-        depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-agg{centroidB}.depth2.nc",
+        depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-mapq{q}-agg{centroidB}.depth2.nc",
         norm="{stemA}/{stemB}.gtpro.total_species_depth.tsv",
     shell:
         """
