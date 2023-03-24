@@ -195,12 +195,14 @@ rule debug_species_genomes:
 
 rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
     output:
-        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.bitscore_ratio-c{centroid}.tsv",
+        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-{blastn_or_p}.bitscore_ratio-c{centroid}.tsv",
     input:
         script="scripts/calculate_bitscore_ratio_for_gene_matching.py",
-        orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-blastn.tsv",
-        orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.tsv",
+        orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-{blastn_or_p}.tsv",
+        orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-{blastn_or_p}.tsv",
         midasdb=ancient("ref/midasdb_uhgg"),
+    wildcard_constraints:
+        blastn_or_p='blastn|blastp',
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -224,9 +226,9 @@ rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
 
 rule assign_matching_genes:
     output:
-        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.gene_matching-c{centroid}-t{thresh}.tsv",
+        "data/species/sp-{species}/genome/{stemB}.gene_matching-c{centroid}-t{thresh}.tsv",
     input:
-        ratio="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.bitscore_ratio-c{centroid}.tsv",
+        ratio="data/species/sp-{species}/genome/{stemB}.bitscore_ratio-c{centroid}.tsv",
     params:
         thresh=lambda w: int(w.thresh) / 100,
     shell:
