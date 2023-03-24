@@ -1,4 +1,5 @@
 import pandas as pd
+import subprocess
 
 
 def idxwhere(condition, x=None):
@@ -48,3 +49,9 @@ def invert_mapping(x):
     x_index_name = x.index.name
 
     return x.reset_index().set_index(x_value_name)[x_index_name]
+
+
+def read_table_lz4(path, *args, **kwargs):
+    with subprocess.Popen(["lz4", "-dc", path], stdout=subprocess.PIPE) as proc:
+        out = pd.read_table(proc.stdout, *args, **kwargs)
+    return out
