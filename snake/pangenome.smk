@@ -1,6 +1,15 @@
-rule build_multispecies_dereplicated_pangenome_bowtie_index:
+rule build_multispecies_dereplicated_pangenome_large_bowtie_index:
     output:
-        directory("data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d"),
+        dir=directory("data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d"),
+        fn="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.fn",
+        fai="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.fn.fai",
+        db1="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.1.bt2l",
+        db2="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.2.bt2l",
+        db3="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.3.bt2l",
+        db4="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.4.bt2l",
+        dbrev1="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.rev.1.bt2l",
+        dbrev2="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.rev.2.bt2l",
+        md5="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/checksum.md5",
     input:
         download_flag=lambda w: [
             f"data/species/sp-{species}/download_species_midasdb_uhgg.flag"
@@ -35,8 +44,7 @@ rule build_multispecies_dereplicated_pangenome_bowtie_index:
     threads: 48
     shell:
         """
-        rm -rf {output}.temp
-        mkdir -p {output}.temp
+        echo "Collecting representative sequences."
         for species in {params.species_list}
         do
             fasta_path={params.fasta_pattern}
@@ -44,16 +52,25 @@ rule build_multispecies_dereplicated_pangenome_bowtie_index:
             seqtk subseq \
                     $fasta_path \
                     <(lz4 -dc $gene_info_path | cut -f{params.col} | sort | uniq)
+            echo -n "$species " >&2
         done \
-            > {output}.temp/centroids.fn
+            > {output.fn}
+        echo "" >&2
+
+        echo "Building bowtie2 reference index." >&2
         bowtie2-build  \
+                -c \
                 --large-index \
                 --threads {threads} \
                 --seed 0 \
-            {output}.temp/centroids.fn {output}.temp/centroids
-        mv {output}.temp {output}
-        """
+            {output.fn} {output.dir}/centroids
 
+        echo "Indexing reference sequences." >&2
+        samtools faidx {output.fn}
+
+        echo "Collecting md5 checksums." >&2
+        md5sum {output.dir}/* > {output.md5}
+        """
 
 rule run_bowtie_multi_species_dereplicated_pangenome:
     output:
