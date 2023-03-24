@@ -268,6 +268,16 @@ rule assess_infered_strain_accuracy:
         """
 
 
+rule assess_strain_accuracy_for_species:
+    output:
+        "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.gene_content_reconstruction_accuracy.ALL_STRAINS.flag",
+    input:
+        reference_strain_accuracy=lambda w: [
+            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroid}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
+
+
 rule collect_files_for_strain_assessment:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroid}.spgc-corr{corr_quant}-depth{depth_quant}.strain_files.flag",
@@ -317,13 +327,3 @@ rule collect_files_for_strain_assessment:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
         "echo {input} {params.cluster_info} | tee {output}"
-
-
-rule assess_strain_accuracy_for_species:
-    output:
-        "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.gene_content_reconstruction_accuracy.ALL_STRAINS.flag",
-    input:
-        reference_strain_accuracy=lambda w: [
-            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroid}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
-            for strain in species_genomes(w.species)
-        ],
