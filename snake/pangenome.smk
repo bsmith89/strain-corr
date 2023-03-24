@@ -240,9 +240,9 @@ rule alias_to_pangenome_sorted:
 
 rule profile_pangenome_position_depths:
     output:
-        "{stem}.pangenomes{centroid}.position_depth-mapq{q}.tsv.lz4",
+        "{stem}.pangenomes{bowtie_params}.position_depth-mapq{q}.tsv.lz4",
     input:
-        "{stem}.pangenomes{centroid}.bam",
+        "{stem}.pangenomes{bowtie_params}.bam",
     params:
         mapq_thresh=lambda w: int(w.q),
     conda:
