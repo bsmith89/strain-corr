@@ -224,7 +224,7 @@ rule list_checkpoint_select_species:
             num_samples=2,
         ),
     shell:
-        "echo {params.obj}"
+        "for species in {params.obj}; do echo $species; done > {output}"
 
 
 # NOTE: Comment out this rule to speed up DAG evaluation.
