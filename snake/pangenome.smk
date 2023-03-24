@@ -62,6 +62,11 @@ rule run_bowtie_multi_species_dereplicated_pangenome:
         bt2_dir="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75"
+    params:
+        extra_flags="-X 5000",
+        seed=0,
     conda:
         "conda/midas.yaml"
     threads: 5
@@ -71,15 +76,144 @@ rule run_bowtie_multi_species_dereplicated_pangenome:
         pmem=100_000 // 5,
     shell:
         """
-        bowtie2 --no-unal -X 5000  --local --very-sensitive-local \
+        bowtie2 --no-unal --local --very-sensitive-local \
             -x {input.bt2_dir}/centroids \
             --threads {threads} --mm -q \
             -1 {input.r1} \
             -2 {input.r2} \
+            --seed {params.seed} \
+            {params.extra_flags} \
             | samtools view --threads 1 -b - \
             | samtools sort --threads {threads} -o {output}.temp
         mv {output}.temp {output}
         """
+        # TODO: Assign a fixed seed for bowtie2
+
+
+# rule build_single_species_dereplicated_pangenome_bowtie_index:
+#     output:
+#         directory("data/species/sp-{species}/pangenome{centroid}.bt2.d"),
+#     input:
+#         download_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
+#         gene_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+#     params:
+#         fasta="ref/midasdb_uhgg/pangenomes/{species}/centroids.ffn",
+#         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+#     conda:
+#         "conda/midas.yaml"
+#     threads: 18
+#     shell:
+#         """
+#         rm -rf {output}.temp
+#         mkdir -p {output}.temp
+#         seqtk subseq \
+#                 {params.fasta} \
+#                 <(lz4 -dc {input.gene_info} | cut -f{params.col} | sort | uniq) \
+#             > {output}.temp/centroids.fn
+#         bowtie2-build  \
+#                 --large-index \
+#                 --threads {threads} \
+#                 --seed 0 \
+#             {output}.temp/centroids.fn {output}.temp/centroids
+#         mv {output}.temp {output}
+#         """
+
+
+# rule run_bowtie_single_species_pangenome:
+#     output:
+#         "data/species/sp-{species}/reads/{mgen}/r.{proc}.pangenome{centroid}.bam",
+#     input:
+#         bt2_dir="data/species/sp-{species}/pangenome{centroid}.bt2.d",
+#         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+#         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+#     conda:
+#         "conda/midas.yaml"
+#     threads: 4
+#     resources:
+#         walltime_hr=24,
+#         mem_mb=10_000,
+#         pmem=10_000 // 4,
+#     shell:
+#         """
+#         bowtie2 --no-unal -X 5000  --local --very-sensitive-local \
+#             -x {input.bt2_dir}/centroids \
+#             --threads {threads} --mm -q \
+#             -1 {input.r1} \
+#             -2 {input.r2} \
+#             | samtools view --threads 1 -b - \
+#             | samtools sort --threads {threads} -o {output}.temp
+#         mv {output}.temp {output}
+#         """
+
+
+# rule profile_single_species_pangenome_depth_aggregated_by_gene:
+#     output:
+#         "{stem}.pangenome{centroid}.gene_depth.tsv.lz4",
+#     input:
+#         "{stem}.pangenome{centroid}.bam",
+#     params:
+#         mapq_thresh=0,  # MAPQ didn't have much effect in one test run. Also, I can't have such a high threshold if centroid=99, since multi-mapping is expected...
+#     conda:
+#         "conda/midas.yaml"
+#     threads: 1
+#     resources:
+#         walltime_hr=2,
+#     shell:
+#         """
+#         samtools depth -@ {threads} --min-MQ {params.mapq_thresh} -a {input} \
+#             | awk -v OFS='\t' '\\
+#                 BEGIN {{gene_id="__START__"; position_tally=0; depth_sum=0}} \\
+#                 $1==gene_id {{position_tally+=1; depth_sum+=$3}} \\
+#                 $1!=gene_id {{print gene_id,depth_sum / position_tally; gene_id=$1; position_tally=0; depth_sum=0}} \\
+#                 END {{print gene_id,depth_sum / position_tally}} \\
+#                 ' \
+#             | (echo 'gene_id\tdepth'; sed '1,1d') \
+#             | lz4 -9 -zc > {output}.temp
+#         mv {output}.temp {output}
+#         """
+
+
+# rule concatenate_single_species_pangenome_depth_aggregated_by_gene:
+#     output:
+#         "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{clust}.gene_depth.tsv.lz4",
+#     input:
+#         samples=lambda w: [
+#             f"data/species/sp-{w.species}/reads/{mgen}/r.{w.proc}.pangenome{w.clust}.gene_depth.tsv.lz4"
+#             for mgen in config["mgen_group"][w.group]
+#         ],
+#     params:
+#         sample_pattern="data/species/sp-{species}/reads/$sample/r.{proc}.pangenome{clust}.gene_depth.tsv.lz4",
+#         sample_list=lambda w: list(config["mgen_group"][w.group]),
+#         header="sample	gene_id	depth",
+#     shell:
+#         """
+#         (
+#             echo "{params.header}"
+#             for sample in {params.sample_list}
+#             do
+#                 path="{params.sample_pattern}"
+#                 echo -n "." >&2
+#                 lz4 -dc $path | sed '1,1d' | awk -v OFS='\t' -v sample=$sample '{{print sample,$1,$2}}'
+#             done
+#         ) \
+#                 | lz4 -9 -zc \
+#             > {output}
+#         echo "" >&2
+#         """
+
+
+# rule load_single_species_pangenome_depth_into_netcdf:
+#     output:
+#         "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{clust}.gene_depth.nc",
+#     input:
+#         script="scripts/generic_netcdf_loader.py",
+#         table="data/group/{group}/species/sp-{species}/r.{proc}.pangenome{clust}.gene_depth.tsv.lz4",
+#     params:
+#         index="sample,gene_id",
+#     shell:
+#         """
+#         lz4 -dc {input.table} | {input.script} {params.index} {output}
+#         """
 
 
 # rule profile_pangenome_depth:
