@@ -8,6 +8,11 @@ use rule start_shell as start_shell_eggnog with:
         "conda/eggnog.yaml"
 
 
+use rule start_shell as start_shell_dbcan with:
+    conda:
+        "conda/dbcan.yaml"
+
+
 rule download_midasdb_uhgg_species:
     output:
         "data/species/sp-{species}/download_species_midasdb_uhgg.flag",
@@ -301,5 +306,32 @@ rule eggnog_mapper_translated_orfs:
                 --output 'proteins'
         mv {params.outdir}.temp {params.outdir}
         # TODO  # Test on 100035 because it has very few genes
+        """
 
+
+# .emapper.annotation
+
+
+rule dbCAN_annotate_translated_orfs:
+    output:
+        dir=directory("{stem}.dbcan.d"),
+    input:
+        fasta="{stem}.tran.fa",
+        db="ref/dbcan",
+    conda:
+        "conda/dbcan.yaml"
+    threads: 4
+    resources:
+        walltime_hr=24,
+        mem_mb=20_000,
+        pmem=20_000 // 4,
+    shell:
+        """
+        run_dbcan \
+                {input.fasta} \
+                protein \
+                --db_dir {input.db} \
+                --tools hmmer diamond \
+                --tf_cpu {threads} --stp_cpu {threads} --dia_cpu {threads} --hmm_cpu {threads} --dbcan_thread {threads} \
+                --out_dir {output.dir}
         """
