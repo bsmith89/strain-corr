@@ -74,7 +74,8 @@ rule build_multispecies_dereplicated_pangenome_large_bowtie_index:
 
 rule run_bowtie_multi_species_dereplicated_pangenome:
     output:
-        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.bam",
+        # cram="data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.cram",
+        bam="data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.bam",
     input:
         bt2_dir="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
@@ -86,7 +87,7 @@ rule run_bowtie_multi_species_dereplicated_pangenome:
         seed=0,
     conda:
         "conda/midas.yaml"
-    threads: 5
+    threads: 24
     resources:
         walltime_hr=24,
         mem_mb=100_000,
@@ -101,8 +102,7 @@ rule run_bowtie_multi_species_dereplicated_pangenome:
             --seed {params.seed} \
             {params.extra_flags} \
             | samtools view --threads 1 -b - \
-            | samtools sort --threads {threads} -o {output}.temp
-        mv {output}.temp {output}
+            | samtools sort --threads {threads} -o {output.bam}
         """
         # TODO: Assign a fixed seed for bowtie2
 
