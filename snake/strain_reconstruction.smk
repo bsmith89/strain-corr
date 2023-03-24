@@ -37,36 +37,6 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
         """
 
 
-rule aggregate_gene_depth_by_centroid:
-    output:
-        "{stemA}/species/sp-{species}/{stemB}.gene{centroid}.depth.nc",
-    input:
-        script="scripts/aggregate_gene_depth_by_centroid.py",
-        depth="{stemA}/species/sp-{species}/{stemB}.gene99.depth.nc",
-        midasdb=ancient("ref/midasdb_uhgg"),
-    wildcard_constraints:
-        centroid="(75|80|85|90|95)",
-    params:
-        aggregate_genes_by=lambda w: {
-            # "99": "centroid_99",
-            "95": "centroid_95",
-            "90": "centroid_90",
-            "85": "centroid_85",
-            "80": "centroid_80",
-            "75": "centroid_75",
-        }[w.centroid],
-        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
-    shell:
-        """
-        {input.script} \
-                {input.depth} \
-                {params.cluster_info} \
-                {params.aggregate_genes_by} \
-                {output}
-        """
-
-
-ruleorder: load_one_species_pangenome_depth_into_netcdf > aggregate_gene_depth_by_centroid
 
 
 rule select_species_core_genes_from_reference:
@@ -164,27 +134,6 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
         """
 
 
-
-
-rule calculate_strain_specific_gene_depth_ratio:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroid}.spgc.strain_depth_ratio.tsv",
-    input:
-        script="scripts/calculate_strain_specific_gene_depth_ratio.py",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroid}.spgc.species_depth.tsv",
-        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene99-agg{centroid}.depth2.nc",
-    params:
-        strain_frac_thresh=0.95,
-    shell:
-        """
-        {input.script} \
-                {input.species_depth} \
-                {input.strain_frac} \
-                {params.strain_frac_thresh} \
-                {input.gene_depth} \
-                {output}
-        """
 
 
 rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
