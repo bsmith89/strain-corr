@@ -233,6 +233,12 @@ def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(path):
     return chkpt, w
 
 
+# FIXME: This is too convoluted of a checkpointing mechanism. I think I should
+# go back to the checkpoint rule being a species list and the checkpoint function
+# taking that path, using get_checkpoint_by_path(path) to get the checkpoint reference
+# and then simply reading the species list out of that file.
+# Parameterization by horizontal coverage and sample count should be included
+# in the file path directly.
 def checkpoint_select_species(
     path, cvrg_thresh, num_samples, require_in_species_group=False
 ):
@@ -260,16 +266,16 @@ def checkpoint_select_species(
     return out
 
 
-rule debug_checkpoint_select_species:
+rule list_checkpoint_select_species:
     output:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.select_species.flag",
+        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.select_species.list",
     input:
         "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
     params:
         obj=lambda w: checkpoint_select_species(
             f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
             cvrg_thresh=0.2,
-            num_samples=1,
+            num_samples=2,
         ),
     shell:
         "echo {params.obj}"
