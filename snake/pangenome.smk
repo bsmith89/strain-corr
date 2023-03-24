@@ -530,15 +530,12 @@ rule load_one_species_pangenome2_depth_into_netcdf:
         """
 
 
-# rule load_one_species_pangenome2_depth_into_netcdf:
+# rule load_one_species_pangenome_depth_into_netcdf:
 #     output:
-#         "data/group/{group}/species/sp-{species}/r.{proc}.gene{centroidA}-agg{centroidB}.depth2.nc",
+#         "data/group/{group}/species/sp-{species}/r.{proc}.gene99.depth.nc",
 #     input:
-#         script="scripts/load_one_species_pangenome2_depth_into_netcdf.py",
-#         db="data/group/{group}/r.{proc}.pangenomes{centroidA}.db",
-#     wildcard_constraints:
-#         centroidA="99|95",
-#         centroidB="99|95|90|85|80|75",
+#         script="scripts/load_one_species_pangenome_depth_into_netcdf.py",
+#         db="data/group/{group}/r.{proc}.pangenomes.db",
 #     conda:
 #         "conda/toolz.yaml"
 #     threads: 1
@@ -548,7 +545,7 @@ rule load_one_species_pangenome2_depth_into_netcdf:
 #         pmem=20_000 // 1,
 #     shell:
 #         """
-#         {input.script} {input.db} {wildcards.species} {wildcards.centroidB} {output}
+#         {input.script} {input.db} {wildcards.species} {output}
 #         """
 
 
