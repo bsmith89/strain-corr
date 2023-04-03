@@ -1,15 +1,26 @@
-rule build_multispecies_dereplicated_pangenome_large_bowtie_index:
+rule collect_species_pangenome_centroids:
     output:
-        dir=directory("data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d"),
+        fn="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.fn",
+    input:
+        download_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
+        gene_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+    params:
+        fn="ref/midasdb_uhgg/pangenomes/{species}/centroids.ffn",
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    conda:
+        "conda/seqtk.yaml"
+    shell:
+        """
+        seqtk subseq \
+                {params.fn} \
+                <(lz4 -dc {input.gene_info} | cut -f{params.col} | sort | uniq) \
+            > {output.fn}
+        """
+
+
+rule collect_multispecies_pangenome_centroids:
+    output:
         fn="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.fn",
-        fai="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.fn.fai",
-        db1="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.1.bt2l",
-        db2="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.2.bt2l",
-        db3="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.3.bt2l",
-        db4="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.4.bt2l",
-        dbrev1="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.rev.1.bt2l",
-        dbrev2="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.rev.2.bt2l",
-        md5="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/checksum.md5",
     input:
         download_flag=lambda w: [
             f"data/species/sp-{species}/download_species_midasdb_uhgg.flag"
@@ -40,8 +51,7 @@ rule build_multispecies_dereplicated_pangenome_large_bowtie_index:
         ),
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     conda:
-        "conda/midas.yaml"
-    threads: 48
+        "conda/seqtk.yaml"
     shell:
         """
         echo "Collecting representative sequences."
@@ -56,53 +66,122 @@ rule build_multispecies_dereplicated_pangenome_large_bowtie_index:
         done \
             > {output.fn}
         echo "" >&2
+        """
+
+
+# TODO: Move this to "general.smk".
+rule build_large_bowtie_index:
+    output:
+        db="{stem}.bt2db",
+        fn="{stem}.bt2db.fn",
+        fai="{stem}.bt2db.fn.fai",
+        db1="{stem}.bt2db.1.bt2l",
+        db2="{stem}.bt2db.2.bt2l",
+        db3="{stem}.bt2db.3.bt2l",
+        db4="{stem}.bt2db.4.bt2l",
+        dbrev1="{stem}.bt2db.rev.1.bt2l",
+        dbrev2="{stem}.bt2db.rev.2.bt2l",
+        md5="{stem}.bt2db.checksum.md5",
+    input:
+        fn="{stem}.fn",
+    conda:
+        "conda/midas.yaml"
+    threads: 48
+    shell:
+        """
+        echo "Linking input reference." >&2
+        ln -rs {input.fn} {output.fn}
 
         echo "Building bowtie2 reference index." >&2
         bowtie2-build  \
-                -c \
                 --large-index \
                 --threads {threads} \
                 --seed 0 \
-            {output.fn} {output.dir}/centroids
+            {output.fn} {output.db}
 
         echo "Indexing reference sequences." >&2
         samtools faidx {output.fn}
 
+        echo "This file is used as a flag and has the same name as the bowtie2 database overall." > {output.db}
+
         echo "Collecting md5 checksums." >&2
-        md5sum {output.dir}/* > {output.md5}
+        md5sum {output.db}* > {output.md5}
         """
 
-rule run_bowtie_multi_species_dereplicated_pangenome:
+
+rule run_bowtie_multispecies_dereplicated_pangenome:
     output:
-        # cram="data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.cram",
-        bam="data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.bam",
+        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.bam",
     input:
-        bt2_dir="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d",
+        db="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.bt2db",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     wildcard_constraints:
         centroid="99|95|90|85|80|75"
     params:
-        extra_flags="-X 5000",
+        extra_flags="--local --very-sensitive-local ",
         seed=0,
     conda:
         "conda/midas.yaml"
-    threads: 24
+    threads: 12
     resources:
         walltime_hr=24,
         mem_mb=100_000,
-        pmem=100_000 // 5,
+        pmem=100_000 // 12,
     shell:
         """
-        bowtie2 --no-unal --local --very-sensitive-local \
-            -x {input.bt2_dir}/centroids \
+        bowtie2 --no-unal \
+            -x {input.db} \
             --threads {threads} --mm -q \
             -1 {input.r1} \
             -2 {input.r2} \
             --seed {params.seed} \
             {params.extra_flags} \
             | samtools view --threads 1 -b - \
-            | samtools sort --threads {threads} -o {output.bam}
+            | samtools sort --threads {threads} -o {output}
+        """
+
+
+use rule run_bowtie_multispecies_dereplicated_pangenome as run_bowtie_multispecies_dereplicated_pangenome_v22 with:
+    output:
+        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}-v22.bam",
+    params:
+        extra_flags="--ignore-quals --end-to-end --very-sensitive",
+        seed=0,
+
+
+rule run_bowtie_species_dereplicated_pangenome_v22:
+    output:
+        "data/reads/{mgen}/r.{proc}.pangenome{centroid}-{species}-v22.{bam_or_cram}",
+    input:
+        db="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.bt2db",
+        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75",
+        bam_or_cram="bam|cram",
+    params:
+        extra_flags="--ignore-quals --end-to-end --very-sensitive",
+        seed=0,
+    conda:
+        "conda/midas.yaml"
+    threads: 8
+    resources:
+        walltime_hr=10,
+        mem_mb=30_000,
+        pmem=30_000 // 8,
+    shell:
+        """
+        bowtie2 --no-unal \
+            -x {input.db} \
+            --threads {threads} --mm -q \
+            -U {input.r1} \
+            -U {input.r2} \
+            --seed {params.seed} \
+            {params.extra_flags} \
+            | samtools view --threads 2 -u \
+            | samtools sort --threads {threads} -u -T {output} \
+            | samtools view --threads 2 -O {wildcards.bam_or_cram} --reference {input.db}.fn -t {input.db}.fn.fai -o {output}
         """
         # TODO: Assign a fixed seed for bowtie2
 
@@ -255,28 +334,38 @@ rule alias_to_pangenome_sorted:
         alias_recipe
 
 
-rule profile_pangenome_position_depths:
+# TODO: Move this to "general.smk".
+# TODO: Double check that --min-MQ 0 has no effect.
+rule profile_mapping_depths:
     output:
-        "{stem}.pangenomes{bowtie_params}.position_depth-mapq{q}.tsv.lz4",
+        "{stem}.position_depth.tsv.lz4",
     input:
-        "{stem}.pangenomes{bowtie_params}.bam",
-    params:
-        mapq_thresh=lambda w: int(w.q),
+        "{stem}.bam",
     conda:
         "conda/midas.yaml"
     shell:
         """
-        samtools depth --min-MQ {params.mapq_thresh} -a {input} | lz4 -9zc > {output}
+        samtools depth -g SECONDARY -a {input} | lz4 -9zc > {output}
+        """
+
+rule profile_mapping_depths_mapq2:
+    output:
+        "{stem}.position_depth-mapq2.tsv.lz4",
+    input:
+        "{stem}.bam",
+    conda:
+        "conda/midas.yaml"
+    shell:
+        """
+        samtools depth -g SECONDARY -a {input} --min-MQ 2 | lz4 -9zc > {output}
         """
 
 
 rule profile_pangenome_depth_aggregated_by_gene:
     output:
-        "{stem}.pangenomes{centroid}.gene_depth.tsv.lz4",
+        "{stemA}/reads/{mgen}/{stemB}.pangenome{mapping_params}.gene_depth.tsv.lz4",
     input:
-        "{stem}.pangenomes{centroid}.bam",
-    params:
-        mapq_thresh=0,
+        "{stemA}/reads/{mgen}/{stemB}.pangenome{mapping_params}.bam",
     conda:
         "conda/midas.yaml"
     threads: 1
@@ -284,7 +373,7 @@ rule profile_pangenome_depth_aggregated_by_gene:
         walltime_hr=2,
     shell:
         """
-        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} -a {input} \
+        samtools depth -@ {threads} -g SECONDARY -a {input} \
             | awk -v OFS='\t' '\\
                 BEGIN {{gene_id="__START__"; position_tally=0; depth_sum=0}} \\
                 $1==gene_id {{position_tally+=1; depth_sum+=$3}} \\
@@ -299,11 +388,9 @@ rule profile_pangenome_depth_aggregated_by_gene:
 
 rule profile_pangenome_mapping_tally_aggregated_by_gene:
     output:
-        "{stem}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
+        "{stemA}/reads/{mgen}/{stemB}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
     input:
-        "{stem}.pangenomes{centroid}.bam",
-    params:
-        mapq_thresh=lambda w: int(w.q),
+        "{stemA}/reads/{mgen}/{stemB}.pangenome{mapping_params}.bam",
     conda:
         "conda/midas.yaml"
     threads: 1
@@ -311,7 +398,7 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         walltime_hr=2,
     shell:
         """
-        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} {input} \
+        samtools depth -@ {threads} -g SECONDARY --min-MQ 0 {input} \
             | awk -v OFS='\t' '\\
                 BEGIN {{gene_id="__START__"; depth_tally=0}} \\
                 $1==gene_id {{depth_tally+=$3}} \\
@@ -433,18 +520,18 @@ ruleorder: concatenate_reference_gene_lengths > count_seq_lengths_nucl
 
 # FIXME: Hub rule. Commenting this out can greatly speed up
 # startup time for downstream tasks.
-rule build_new_pangenome_db:
+rule build_new_pangenomes_db:
     output:
-        protected("data/group/{group}/r.{proc}.pangenomes{centroid}-mapq{q}.db"),
+        protected("data/group/{group}/r.{proc}.pangenome{bowtie_params}.db"),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}.gene_mapping_tally-mapq{w.q}.tsv.lz4"
+            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenome{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
             for mgen in config["mgen_group"][w.group]
         ],
         genes="data/group/{group}/r.{proc}.pangenomes.gene_info.tsv.lz4",
         nlength="data/group/{group}/r.{proc}.pangenomes99.nlength.tsv",
     params:
-        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes{centroid}.gene_mapping_tally-mapq{q}.tsv.lz4",
+        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenome{bowtie_params}.gene_mapping_tally.tsv.lz4",
         sample_list=lambda w: list(config["mgen_group"][w.group]),
     conda:
         "conda/toolz.yaml"
@@ -524,21 +611,20 @@ rule build_new_pangenome_db:
         """
         )
 
-
 rule load_one_species_pangenome2_depth_into_netcdf:
     output:
-        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-mapq{q}-agg{centroidB}.depth2.nc",
+        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
         script="scripts/load_one_species_pangenome2_depth_into_netcdf.py",
-        db="{stemA}/{stemB}.pangenomes{centroidA}-mapq{q}.db",
+        db="{stemA}/{stemB}.pangenomes{centroidA}-{bowtie_params}.db",
     wildcard_constraints:
-        centroidA="99|95",
+        centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
     conda:
         "conda/toolz.yaml"
     threads: 1
     resources:
-        walltime_hr=12,
+        walltime_hr=24,
         mem_mb=20_000,
         pmem=20_000 // 1,
     shell:
@@ -557,4 +643,82 @@ rule normalize_multispecies_gene_depth_profile:
     shell:
         """
         {input.script} {input.norm} {input.depth} {output}
+        """
+
+
+rule concatenate_pangenome_depth_from_samples:
+    output:
+        "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{centroid}-{mapping_params}.gene_depth.tsv.lz4"
+    input:
+        samples=lambda w: [
+            f"data/reads/{mgen}/r.{w.proc}.pangenome{w.centroid}-{w.species}-{w.mapping_params}.gene_depth.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
+        ],
+    params:
+        header="sample\tgene_id\tdepth",
+        sample_pattern="data/reads/$sample/r.{proc}.pangenome{centroid}-{species}-{mapping_params}.gene_depth.tsv.lz4",
+        sample_list=lambda w: list(config["mgen_group"][w.group]),
+    shell:
+        """
+        (
+            echo "{params.header}"
+            for sample in {params.sample_list}
+            do
+                path="{params.sample_pattern}"
+                echo {wildcards.species} $sample >&2
+                lz4 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
+            done
+        ) | lz4 -9zc > {output}
+        """
+
+
+# NOTE: The approach skips the sqlite3-based aggregation and filtering.
+# FIXME: Use the standard depth2 pipeline for combining read count data across samples.
+# TODO: Remove this rule, if I'm never doing single-species pangenome depths.
+rule load_one_species_pangenome3_depth_into_netcdf:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}.depth3.nc",
+    input:
+        script="scripts/generic_netcdf_loader.py",
+        depths="data/group/{group}/species/sp-{species}/{stemB}.pangenome{centroidA}-{bowtie_params}.gene_depth.tsv.lz4",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+    conda:
+        "conda/toolz.yaml"
+    threads: 1
+    resources:
+        walltime_hr=12,
+        mem_mb=20_000,
+        pmem=20_000 // 1,
+    shell:
+        """
+        lz4 -dc {input.depths} | tqdm | {input.script} sample,gene_id {output}
+        """
+
+
+rule aggregate_gene_depth_by_centroid:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth3.nc",
+    input:
+        script="scripts/aggregate_gene_depth_by_centroid.py",
+        depth="data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}.depth3.nc",
+        cluster_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+    wildcard_constraints:
+        centroidB="75|80|85|90|95",
+    params:
+        aggregate_genes_by=lambda w: {
+            "99": "centroid_99",
+            "95": "centroid_95",
+            "90": "centroid_90",
+            "85": "centroid_85",
+            "80": "centroid_80",
+            "75": "centroid_75",
+        }[w.centroidB],
+    shell:
+        """
+        {input.script} \
+                {input.depth} \
+                <(lz4cat {input.cluster_info}) \
+                {params.aggregate_genes_by} \
+                {output}
         """
