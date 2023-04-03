@@ -37,8 +37,6 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
         """
 
 
-
-
 rule select_species_core_genes_from_reference:
     output:
         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.species_gene-trim{trim_quantile}-prev{prevalence}.list",
@@ -63,7 +61,6 @@ rule select_species_core_genes_de_novo:
         script="scripts/select_highly_correlated_species_genes.py",
         species_depth="{stemA}/{stemB}.gtpro.species_depth.tsv",
         gene_depth="{stemA}/species/sp-{species}/{stemB}.gene99-v22-agg{centroid}.depth2.nc",
-
     params:
         n_marker_genes=700,
     shell:
@@ -132,8 +129,6 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
                 {output.corr} \
                 {output.depth}
         """
-
-
 
 
 rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:

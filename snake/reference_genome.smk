@@ -202,7 +202,7 @@ rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
         orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-{blastn_or_p}.tsv",
         midasdb=ancient("ref/midasdb_uhgg"),
     wildcard_constraints:
-        blastn_or_p='blastn|blastp',
+        blastn_or_p="blastn|blastp",
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -322,6 +322,7 @@ rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10:
 #         seed=0,
 #     threads: 24
 
+
 use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v10 with:
     output:
         "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v10.{bam_or_cram}",
@@ -353,12 +354,14 @@ use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowti
         extra_flags="--ignore-quals --local --very-sensitive-local --all --mp 2 --score-min C,70,0 --ma 5 --rdg 5,1 --rfg 5,1",
         seed=0,
 
+
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v16 with:
     output:
         "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v16.{bam_or_cram}",
     params:
         extra_flags="--ignore-quals --end-to-end --very-sensitive --all",
         seed=0,
+
 
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v17 with:
     output:
@@ -367,12 +370,14 @@ use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowti
         extra_flags="--ignore-quals --end-to-end --very-sensitive --all --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-10.0,-0.1",
         seed=0,
 
+
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v21 with:
     output:
         "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v21.{bam_or_cram}",
     params:
         extra_flags="--ignore-quals --end-to-end --very-sensitive --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-10.0,-0.1",
         seed=0,
+
 
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v22 with:
     output:
@@ -381,6 +386,7 @@ use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowti
         extra_flags="--ignore-quals --end-to-end --very-sensitive",
         seed=0,
 
+
 use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22 with:
     output:
         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v22.{bam_or_cram}",
@@ -388,12 +394,14 @@ use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_
         extra_flags="--ignore-quals --end-to-end --very-sensitive",
         seed=0,
 
+
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v19 with:
     output:
         "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v19.{bam_or_cram}",
     params:
         extra_flags="--ignore-quals --end-to-end --very-sensitive --all --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-12.0,-0.1",
         seed=0,
+
 
 use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v20 with:
     output:
@@ -434,9 +442,7 @@ use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v13 as run_
 # where the species and strain are combined together.
 use rule build_new_pangenomes_db as build_pangenomes_db_on_reference_genome_tiles with:
     output:
-        protected(
-            "data/group/{group}/ALL_STRAINS.{stem}.pangenome{bowtie_params}.db"
-        ),
+        protected("data/group/{group}/ALL_STRAINS.{stem}.pangenome{bowtie_params}.db"),
     input:
         samples=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenome{w.bowtie_params}.gene_mapping_tally.tsv.lz4"

@@ -117,7 +117,7 @@ rule run_bowtie_multispecies_dereplicated_pangenome:
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     wildcard_constraints:
-        centroid="99|95|90|85|80|75"
+        centroid="99|95|90|85|80|75",
     params:
         extra_flags="--local --very-sensitive-local ",
         seed=0,
@@ -348,6 +348,7 @@ rule profile_mapping_depths:
         samtools depth -g SECONDARY -a {input} | lz4 -9zc > {output}
         """
 
+
 rule profile_mapping_depths_mapq2:
     output:
         "{stem}.position_depth-mapq2.tsv.lz4",
@@ -409,6 +410,7 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
             | lz4 -9 -zc > {output}.temp
         mv {output}.temp {output}
         """
+
 
 rule profile_pangenome_mapping_coverage_aggregated_by_gene:
     output:
@@ -611,6 +613,7 @@ rule build_new_pangenomes_db:
         """
         )
 
+
 rule load_one_species_pangenome2_depth_into_netcdf:
     output:
         "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
@@ -635,7 +638,7 @@ rule load_one_species_pangenome2_depth_into_netcdf:
 
 rule concatenate_pangenome_depth_from_samples:
     output:
-        "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{centroid}-{mapping_params}.gene_depth.tsv.lz4"
+        "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{centroid}-{mapping_params}.gene_depth.tsv.lz4",
     input:
         samples=lambda w: [
             f"data/reads/{mgen}/r.{w.proc}.pangenome{w.centroid}-{w.species}-{w.mapping_params}.gene_depth.tsv.lz4"

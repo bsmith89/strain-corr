@@ -38,8 +38,6 @@ rule run_gtpro:
         )
 
 
-
-
 rule load_gtpro_snp_dict:
     output:
         "ref/gtpro.snp_dict.db",
@@ -140,8 +138,6 @@ rule gtpro_finish_processing_reads:
         mv {output}.tmp2 {output}
         """
         )
-
-
 
 
 rule count_species_lines_from_both_reads:
