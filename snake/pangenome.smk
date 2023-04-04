@@ -109,15 +109,16 @@ rule build_large_bowtie_index:
         """
 
 
-rule run_bowtie_multispecies_dereplicated_pangenome:
+rule run_bowtie_multispecies_pangenome_v0:
     output:
-        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}.bam",
+        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}-v0.{bam_or_cram}",
     input:
         db="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.bt2db",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     wildcard_constraints:
         centroid="99|95|90|85|80|75",
+        bam_or_cram="bam|cram",
     params:
         extra_flags="--local --very-sensitive-local ",
         seed=0,
@@ -133,48 +134,6 @@ rule run_bowtie_multispecies_dereplicated_pangenome:
         bowtie2 --no-unal \
             -x {input.db} \
             --threads {threads} --mm -q \
-            -1 {input.r1} \
-            -2 {input.r2} \
-            --seed {params.seed} \
-            {params.extra_flags} \
-            | samtools view --threads 1 -b - \
-            | samtools sort --threads {threads} -o {output}
-        """
-
-
-use rule run_bowtie_multispecies_dereplicated_pangenome as run_bowtie_multispecies_dereplicated_pangenome_v22 with:
-    output:
-        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}-v22.bam",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive",
-        seed=0,
-
-
-rule run_bowtie_species_dereplicated_pangenome_v22:
-    output:
-        "data/reads/{mgen}/r.{proc}.pangenome{centroid}-{species}-v22.{bam_or_cram}",
-    input:
-        db="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.bt2db",
-        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
-        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
-    wildcard_constraints:
-        centroid="99|95|90|85|80|75",
-        bam_or_cram="bam|cram",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive",
-        seed=0,
-    conda:
-        "conda/midas.yaml"
-    threads: 8
-    resources:
-        walltime_hr=10,
-        mem_mb=30_000,
-        pmem=30_000 // 8,
-    shell:
-        """
-        bowtie2 --no-unal \
-            -x {input.db} \
-            --threads {threads} --mm -q \
             -U {input.r1} \
             -U {input.r2} \
             --seed {params.seed} \
@@ -183,7 +142,35 @@ rule run_bowtie_species_dereplicated_pangenome_v22:
             | samtools sort --threads {threads} -u -T {output} \
             | samtools view --threads 2 -O {wildcards.bam_or_cram} --reference {input.db}.fn -t {input.db}.fn.fai -o {output}
         """
-        # TODO: Assign a fixed seed for bowtie2
+
+
+use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_species_pangenome_v0 with:
+    output:
+        "data/reads/{mgen}/r.{proc}.pangenome{centroid}-{species}-v0.{bam_or_cram}",
+    input:
+        db="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.bt2db",
+        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+    resources:
+        walltime_hr=10,
+        mem_mb=30_000,
+        pmem=30_000 // 8,
+
+
+use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangenome_v22 with:
+    output:
+        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}-v22.{bam_or_cram}",
+    params:
+        extra_flags="--ignore-quals --end-to-end --very-sensitive",
+        seed=0,
+
+
+use rule run_bowtie_species_pangenome_v0 as run_bowtie_species_pangenome_v22 with:
+    output:
+        "data/reads/{mgen}/r.{proc}.pangenome{centroid}-{species}-v22.{bam_or_cram}",
+    params:
+        extra_flags="--ignore-quals --end-to-end --very-sensitive",
+        seed=0,
 
 
 # rule build_single_species_dereplicated_pangenome_bowtie_index:
@@ -522,7 +509,7 @@ ruleorder: concatenate_reference_gene_lengths > count_seq_lengths_nucl
 
 # FIXME: Hub rule. Commenting this out can greatly speed up
 # startup time for downstream tasks.
-rule build_new_pangenomes_db:
+rule build_new_pangenome_profiling_db:
     output:
         protected("data/group/{group}/r.{proc}.pangenome{bowtie_params}.db"),
     input:

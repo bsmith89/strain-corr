@@ -237,46 +237,22 @@ rule assign_matching_genes:
         """
 
 
-# use rule run_bowtie_multispecies_dereplicated_pangenome as run_bowtie_multispecies_pangenome_on_reference_genome_tiles with:
-#     output:
-#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}.cram",
-#     input:
-#         db="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d/centroids",
-#         r1="data/species/sp-{species}/genome/{stem}.fq.gz",
-#         r2="data/species/sp-{species}/genome/{stem}.fq.gz",
-
-
-rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10:
+use rule run_bowtie_multispecies_pangenome_v22 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22 with:
     output:
-        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v10.{bam_or_cram}",
+        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}-v22.{bam_or_cram}",
     input:
         db="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d/centroids.bt2db",
-        tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
-    wildcard_constraints:
-        centroid="99|95|90|85|80|75",
-        bam_or_cram="bam|cram",
-    params:
-        extra_flags="--local --very-sensitive-local",
-        seed=0,
-    conda:
-        "conda/midas.yaml"
-    threads: 30
-    resources:
-        walltime_hr=24,
-        mem_mb=30_000,
-        pmem=30_000 // 24,
-    shell:
-        """
-        bowtie2 --no-unal \
-            -x {input.db} \
-            --threads {threads} --mm -q \
-            -U {input.tiles} \
-            --seed {params.seed} \
-            {params.extra_flags} \
-            | samtools view --threads 2 -u \
-            | samtools sort --threads {threads} -u -T {output} \
-            | samtools view --threads 2 -O {wildcards.bam_or_cram} --reference {input.db}.fn -t {input.db}.fn.fai -o {output}
-        """
+        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+
+
+use rule run_bowtie_species_pangenome_v22 as run_bowtie_species_pangenome_on_reference_genome_tiles_v22 with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenome{centroid}-v22.{bam_or_cram}",
+    input:
+        db="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.bt2db",
+        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
 
 
 # rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10:
@@ -323,124 +299,12 @@ rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10:
 #     threads: 24
 
 
-use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v10 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v10.{bam_or_cram}",
-    input:
-        db="data/species/sp-{speciesB}/pangenome{centroid}.bt2.d/centroids.bt2db",
-        tiles="data/species/sp-{speciesA}/genome/{stem}.fq.gz",
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v13 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v13.{bam_or_cram}",
-    params:
-        extra_flags="--local --very-sensitive-local --all",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v14 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v14.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --local --very-sensitive-local --all --score-min L,80,0.40",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v15 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v15.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --local --very-sensitive-local --all --mp 2 --score-min C,70,0 --ma 5 --rdg 5,1 --rfg 5,1",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v16 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v16.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive --all",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v17 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v17.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive --all --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-10.0,-0.1",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v21 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v21.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-10.0,-0.1",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v22 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v22.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive",
-        seed=0,
-
-
-use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22 with:
-    output:
-        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v22.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v19 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v19.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --end-to-end --very-sensitive --all --mp=2 --rdg=5,1 --rfg=5,1 --score-min L,-12.0,-0.1",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v20 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v20.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --local --very-sensitive-local",
-        seed=0,
-
-
-use rule run_bowtie_species_pangenome_on_reference_genome_tiles_v10 as run_bowtie_species_pangenome_on_reference_genome_tiles_v18 with:
-    output:
-        "data/species/sp-{speciesA}/genome/{stem}.pangenome{centroid}-{speciesB}-v18.{bam_or_cram}",
-    params:
-        extra_flags="--ignore-quals --local --very-sensitive-local --all --score-min C,80,0.0 --ma=2 --mp=10 --rdg=5,1 --rfg=5,1",
-        seed=0,
-
-
-use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v13 with:
-    output:
-        "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v13.{bam_or_cram}",
-    params:
-        extra_flags="--local --very-sensitive-local --all",
-        seed=0,
-
-
-use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v13 as run_reference_genome_on_reference_genome_tiles_v13 with:
-    output:
-        "data/species/sp-{species}/genome/{genome}.tiles-{stem}.genome-v13.{bam_or_cram}",
-    input:
-        db="data/species/sp-{species}/genome/{genome}.bt2db",
-        tiles="data/species/sp-{species}/genome/{genome}.tiles-{stem}.fq.gz",
-
-
 # FIXME: This is also a hub rule, and extends another hub rule. Consider
 # commenting it out.
 # NOTE: The "samples" here are actually reference strains, not samples.
 # Then the sample_pattern+sample_list trick is doing something extra tricky
 # where the species and strain are combined together.
-use rule build_new_pangenomes_db as build_pangenomes_db_on_reference_genome_tiles with:
+use rule build_new_pangenome_profiling_db as build_new_pangenome_profiling_db_on_reference_genome_tiles with:
     output:
         protected("data/group/{group}/ALL_STRAINS.{stem}.pangenome{bowtie_params}.db"),
     input:
