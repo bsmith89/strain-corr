@@ -52,14 +52,14 @@ rule select_species_core_genes_from_reference:
 
 rule select_species_core_genes_de_novo:
     output:
-        species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n700.list",
-        species_corr="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation.tsv",
+        species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n{n_genes}.list",
+        species_corr="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation-n{n_genes}.tsv",
     input:
         script="scripts/select_highly_correlated_species_genes.py",
         species_depth="{stemA}/{stemB}.gtpro.species_depth.tsv",
         gene_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     params:
-        n_marker_genes=700,
+        n_marker_genes=lambda w: int(w.n_genes),
     shell:
         """
         {input.script} {input.species_depth} {wildcards.species} {input.gene_depth} {params.n_marker_genes} {output.species_gene} {output.species_corr}
@@ -69,28 +69,22 @@ rule select_species_core_genes_de_novo:
 # TODO: Use strain-partitioning from a different step to avoid redundant code.
 rule select_species_core_genes_de_novo_with_dereplication:
     output:
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n700.list",
-        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation2.tsv",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n{n_genes}.list",
+        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation2-n{n_genes}.tsv",
     input:
         script="scripts/select_highly_correlated_species_genes_with_dereplication.py",
         species_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
-        strain_frac="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     params:
-        absent_thresh=0.001,
-        present_thresh=1.0,
-        frac_thresh=0.95,
-        trnsf_root=1,
-        n_marker_genes=700,
+        diss_thresh=0.3,
+        trnsf_root=2,
+        n_marker_genes=lambda w: int(w.n_genes),
     shell:
-        r"""
+        """
         {input.script} \
                 {input.species_depth} \
                 {wildcards.species} \
-                {params.absent_thresh} \
-                {params.present_thresh} \
-                {input.strain_frac} \
-                {params.frac_thresh} \
+                {params.diss_thresh} \
                 {input.gene_depth} \
                 {params.trnsf_root} \
                 {params.n_marker_genes} \
@@ -104,7 +98,7 @@ rule calculate_species_depth_from_core_genes:
         species_depth="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
     input:
         script="scripts/calculate_species_depth_from_core_genes.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
+        species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
         gene_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     params:
         trim_frac=0.05,
@@ -187,7 +181,7 @@ rule pick_strain_gene_thresholds:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",  # FIXME: Are these the right way to define a species core gene? # species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene.list",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     params:
@@ -265,8 +259,8 @@ rule collect_files_for_strain_assessment:
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
         gtpro_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
         species_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation.tsv",
-        species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n700.list",
-        species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n700.list",
+        species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n1000.list",
+        species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
         strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
         strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
