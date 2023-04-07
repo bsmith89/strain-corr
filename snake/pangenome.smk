@@ -573,6 +573,7 @@ rule build_new_pangenome_profiling_db:
           , tally INT
           , PRIMARY KEY (sample, gene_id)
         );
+        CREATE INDEX sample_x_gene__gene_id ON sample_x_gene (gene_id);
         EOF
 
         echo "Loading gene lists."

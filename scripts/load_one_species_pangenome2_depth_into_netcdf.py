@@ -16,7 +16,7 @@ if __name__ == "__main__":
         """
 PRAGMA journal_mode=OFF;
 PRAGMA synchronous=OFF;
-PRAGMA locking_mode=EXCLUSIVE;
+PRAGMA locking_mode=SHARED;
 PRAGMA temp_store=MEMORY;
 PRAGMA cache_size=1000000;
 PRAGMA mmap_size=268435456;
