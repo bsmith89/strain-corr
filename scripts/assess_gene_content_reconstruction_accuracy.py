@@ -6,6 +6,7 @@ import scipy as sp
 import scipy.stats
 from lib.pandas_util import idxwhere
 from tqdm import tqdm
+import numpy as np
 
 
 def calculate_asymetric_statistics(match_matrix):
@@ -19,10 +20,21 @@ def calculate_asymetric_statistics(match_matrix):
     n_fn_orf = len(fn_orf)
     n_tp_orf = len(tp_orf)
 
-    precision = n_tp_gene / (n_tp_gene + n_fp_gene)
-    recall = n_tp_orf / (n_tp_orf + n_fn_orf)
+    if (n_tp_gene + n_fp_gene) == 0:
+        precision = np.nan
+    else:
+        precision = n_tp_gene / (n_tp_gene + n_fp_gene)
+    if (n_tp_orf + n_fn_orf) == 0:
+        recall = np.nan
+    else:
+        recall = n_tp_orf / (n_tp_orf + n_fn_orf)
 
-    return precision, recall
+    if np.isnan(precision) or np.isnan(recall):
+        f1 = np.nan
+    else:
+        f1 = sp.stats.hmean([precision, recall])
+
+    return precision, recall, f1
 
 
 if __name__ == "__main__":
@@ -75,13 +87,13 @@ if __name__ == "__main__":
             & (depth[strain] >= thresh.depth_low[strain])
         )
 
-        precision, recall = calculate_asymetric_statistics(
+        precision, recall, f1 = calculate_asymetric_statistics(
             matching_gene.loc[:, depth_and_corr_hit]
         )
-        precision_depth_only, recall_depth_only = calculate_asymetric_statistics(
+        precision_depth_only, recall_depth_only, f1_depth_only = calculate_asymetric_statistics(
             matching_gene.loc[:, depth_hit]
         )
-        precision_1to1, recall_1to1 = calculate_asymetric_statistics(
+        precision_1to1, recall_1to1, f1_1to1 = calculate_asymetric_statistics(
             matching_gene.loc[
                 orf_1to1,
                 list(set(gene_1to1) & set(depth_and_corr_hit)),
@@ -90,6 +102,7 @@ if __name__ == "__main__":
         (
             precision_depth_only_1to1,
             recall_depth_only_1to1,
+            f1_depth_only_1to1,
         ) = calculate_asymetric_statistics(
             matching_gene.loc[
                 orf_1to1,
@@ -97,13 +110,6 @@ if __name__ == "__main__":
             ]
         )
 
-        # Calculate F1 scores
-        f1 = sp.stats.hmean([precision, recall])
-        f1_depth_only = sp.stats.hmean([precision_depth_only, recall_depth_only])
-        f1_1to1 = sp.stats.hmean([precision_1to1, recall_1to1])
-        f1_depth_only_1to1 = sp.stats.hmean(
-            [precision_depth_only_1to1, recall_depth_only_1to1]
-        )
 
         results[strain] = [
             precision,
