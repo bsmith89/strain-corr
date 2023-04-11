@@ -30,8 +30,8 @@ if __name__ == "__main__":
     gene_list = strain_corr.index.to_list()
     strain_corr = strain_corr.reindex(gene_list, fill_value=0)
     strain_depth = strain_depth.reindex(gene_list, fill_value=0)
-    strain_corr_quantile = strain_corr.apply(lambda x: ECDF(x[species_gene_hit])(x))
-    strain_depth_quantile = strain_depth.apply(lambda x: ECDF(x[species_gene_hit])(x))
+    strain_corr_quantile = strain_corr.apply(lambda x: ECDF(x.reindex(species_gene_hit, fill_value=0))(x))
+    strain_depth_quantile = strain_depth.apply(lambda x: ECDF(x.reindex(species_gene_hit, fill_value=0))(x))
 
     strain_corr_quantile.to_csv(corr_outpath, sep="\t")
     strain_depth_quantile.to_csv(depth_outpath, sep="\t")
