@@ -1,8 +1,8 @@
 genome_id	species_id	genome_path	_old_genome_id	comments
 Alistipes-shahii-WAL-8301_MAF-2	100003	raw/genomes/xjin/Alistipes-shahii-WAL-8301_MAF-2.fa	xjin_100003_a	
 Coprococcus-eutactus-ATCC-27759_MAF-2	100018	raw/genomes/xjin/Coprococcus-eutactus-ATCC-27759_MAF-2.fa	xjin_100018_a	
-Faecalibacterium-prausnitzii-A2-165_MAF-2	100022	raw/genomes/xjin/Faecalibacterium-prausnitzii-A2-165_MAF-2.fa	Faecalibacterium_prausnitzii_A2_165_MAF_2	
-Catenibacterium-mitsuokai-DSM-15897_MAF-2	100026	raw/genomes/xjin/Catenibacterium-mitsuokai-DSM-15897_MAF-2.fa	xjin_100026_a	
+Faecalibacterium-prausnitzii-A2-165_MAF-2	100022	raw/genomes/xjin/Faecalibacterium-prausnitzii-A2-165_MAF-2.fa	Faecalibacterium_prausnitzii_A2_165_MAF_2	no xjin samples in metagenotype dataset after filtering;
+Catenibacterium-mitsuokai-DSM-15897_MAF-2	100026	raw/genomes/xjin/Catenibacterium-mitsuokai-DSM-15897_MAF-2.fa	xjin_100026_a	no xjin samples in metagenotype dataset after filtering;
 Bacteroides-finegoldii-DSM-17565_MAF-2	100029	raw/genomes/xjin/Bacteroides-finegoldii-DSM-17565_MAF-2.fa	xjin_100029_a	
 Blautia-hydrogenotrophica-DSM-10507_MAF-2	100035	raw/genomes/xjin/Blautia-hydrogenotrophica-DSM-10507_MAF-2.fa	xjin_100035_a	
 Dorea-longicatena-DSM-13814_MAF-2	100038	raw/genomes/xjin/Dorea-longicatena-DSM-13814_MAF-2.fa	xjin_100038_a	
@@ -10,13 +10,13 @@ Parabacteroides-merdae-ATCC-43184_MAF-2	100044	raw/genomes/xjin/Parabacteroides-
 Megasphaera-DSMZ-102144_MinIONHybrid	100046	raw/genomes/xjin/Megasphaera-DSMZ-102144_MinIONHybrid.fa	xjin_100046_dsmz102144	
 Lachnospira-eligens-ATCC-27750_MAF-2	100060	raw/genomes/xjin/Lachnospira-eligens-ATCC-27750_MAF-2.fa	xjin_100060_a	Very few gt-pro positions hit but no contamination;
 Intestinibacter-bartlettii-DSM-16795_MAF-2	100062	raw/genomes/xjin/Intestinibacter-bartlettii-DSM-16795_MAF-2.fa	xjin_100062_a	
-Clostridium-leptum-DSM-753_MAF-2	100069	raw/genomes/xjin/Clostridium-leptum-DSM-753_MAF-2.fa	xjin_100069_a	
+Clostridium-leptum-DSM-753_MAF-2	100069	raw/genomes/xjin/Clostridium-leptum-DSM-753_MAF-2.fa	xjin_100069_a	NLP NaN in refitting genotypes; high entropy strain profiles, for some reason in fit-sfacts37-s85-seed0; sfacts37-s85-seed1 works just fine, albeit still high-entropy;
 Alistipes-onderdonkii-DSM-19147_MAF-2	100074	raw/genomes/xjin/Alistipes-onderdonkii-DSM-19147_MAF-2.fa	xjin_100074_a	
 Roseburia-intestinalis-L1-82_MAF-2	100076	raw/genomes/xjin/Roseburia-intestinalis-L1-82_MAF-2.fa	xjin_100076_a	
 Anaerostipes-caccae-DSM-14662_MAF-2	100080	raw/genomes/xjin/Anaerostipes-caccae-DSM-14662_MAF-2.fa	xjin_100080_a	
 Parabacteroides-johnsonii-DSM-18315_MAF-2	100138	raw/genomes/xjin/Parabacteroides-johnsonii-DSM-18315_MAF-2.fa	xjin_100138_a	
 Blautia-sp-KLE-1732_MAF-2	100142	raw/genomes/xjin/Blautia-sp-KLE-1732_MAF-2.fa	xjin_100142_a	Blautia_A_massiliensis
-Turicibacter-sanguinis-DSM-14220_MAF-2	100143	raw/genomes/xjin/Turicibacter-sanguinis-DSM-14220_MAF-2.fa	Turicibacter_sanguinis_DSM_14220_MAF_2	
+Turicibacter-sanguinis-DSM-14220_MAF-2	100143	raw/genomes/xjin/Turicibacter-sanguinis-DSM-14220_MAF-2.fa	Turicibacter_sanguinis_DSM_14220_MAF_2	no xjin samples in metagenotype dataset after filtering; found in very few samples in xjin_hmp2 dataset;
 Dorea-formicigenerans-ATCC-27755_MAF-2	100146	raw/genomes/xjin/Dorea-formicigenerans-ATCC-27755_MAF-2.fa	xjin_100146_atcc27755	
 Tyzzerella-nexilis-DSM-1787_MAF-2	100148	raw/genomes/xjin/Tyzzerella-nexilis-DSM-1787_MAF-2.fa	xjin_100148_a	
 Hungatella-hathewayi-DSM-13479_MinIONHybrid	100150	raw/genomes/xjin/Hungatella-hathewayi-DSM-13479_MinIONHybrid.fa	xjin_100150_dsm13479	Very light contamination (three SNPs) into other species GT-Pro kmers;
@@ -30,13 +30,13 @@ Veillonella-dispar-ATCC-17748_MAF-2	100214	raw/genomes/xjin/Veillonella-dispar-A
 Lactococcus-lactis-DSMZ-20729_MAF-2	100226	raw/genomes/xjin/Lactococcus-lactis-DSMZ-20729_MAF-2.fa	xjin_100226_a	
 Bacteroides-fragilis-3-1-12_MAF-2	100236	raw/genomes/xjin/Bacteroides-fragilis-3-1-12_MAF-2.fa	xjin_100236_a	I initially named this strain incorrectly as xjin_101337_3_1_12_maf2
 Odoribacter-splanchnicus-DSM-20712_MAF-2	100254	raw/genomes/xjin/Odoribacter-splanchnicus-DSM-20712_MAF-2.fa	xjin_100254_a	
-Anaerobutyricum-hallii-DSM-3353_MAF-2	100262	raw/genomes/xjin/Anaerobutyricum-hallii-DSM-3353_MAF-2.fa	Anaerobutyricum_hallii_DSM_3353_MAF_2	
-Roseburia-inulinivorans-DSM-16841_MAF-2	100271	raw/genomes/xjin/Roseburia-inulinivorans-DSM-16841_MAF-2.fa	Roseburia_inulinivorans_DSM_16841_MAF_2	
-Bacteroides-coprophilus-DSM-18228_MAF-2	100273	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	
+Anaerobutyricum-hallii-DSM-3353_MAF-2	100262	raw/genomes/xjin/Anaerobutyricum-hallii-DSM-3353_MAF-2.fa	Anaerobutyricum_hallii_DSM_3353_MAF_2	no xjin samples in metagenotype dataset after filtering;
+Roseburia-inulinivorans-DSM-16841_MAF-2	100271	raw/genomes/xjin/Roseburia-inulinivorans-DSM-16841_MAF-2.fa	Roseburia_inulinivorans_DSM_16841_MAF_2	no xjin samples in metagenotype dataset after filtering;
+Bacteroides-coprophilus-DSM-18228_MAF-2	100273	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset;
 Prevotella-buccae-D17_MAF-2	100289	raw/genomes/xjin/Prevotella-buccae-D17_MAF-2.fa	xjin_100289_a	
-Peptostreptococcus-anaerobius-ATCC-27337_MAF-2	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	xjin_100296_a	
+Peptostreptococcus-anaerobius-ATCC-27337_MAF-2	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	xjin_100296_a	two (very similar) strains identified in sfacts37-s85-seed0; loss of samples due to strain mixture and 'wrong' strain is dominant; TODO: Try sfacts37-s85-seed1;
 Prevotella-buccalis-ATCC-35310_MAF-2	100760	raw/genomes/xjin/Prevotella-buccalis-ATCC-35310_MAF-2.fa	xjin_100760_a	UHGG species number matched based on genus and process of elimination with two other Prevotella
-Collinsella-aerofaciens-ATCC-25986_MAF-2	100878	raw/genomes/xjin/Collinsella-aerofaciens-ATCC-25986_MAF-2.fa	xjin_100878_a	
+Collinsella-aerofaciens-ATCC-25986_MAF-2	100878	raw/genomes/xjin/Collinsella-aerofaciens-ATCC-25986_MAF-2.fa	xjin_100878_a	only 1 GT-Pro SNP in database;
 Acidaminococcus-fermentans-DSM-20731_MAF-2	100901	raw/genomes/xjin/Acidaminococcus-fermentans-DSM-20731_MAF-2.fa	xjin_100901_a	
 Bifidobacterium-longum-ATCC-15697_MAF-2	101292	raw/genomes/xjin/Bifidobacterium-longum-ATCC-15697_MAF-2.fa	xjin_101292_a	alternatively Bifidobacterium infantis?
 Burkholderiales-bacterium-1-1-47_MAF-2	101294	raw/genomes/xjin/Burkholderiales-bacterium-1-1-47_MAF-2.fa	xjin_101294_a	Parasutterella_excrementihominis
@@ -66,18 +66,18 @@ Bacteroides-sp-D2_MAF-2	101378	raw/genomes/xjin/Bacteroides-sp-D2_MAF-2.fa	Bacte
 Ruminococcus-gnavus-ATCC-29149_MinIONHybrid	101380	raw/genomes/xjin/Ruminococcus-gnavus-ATCC-29149_MinIONHybrid.fa	xjin_101380_a	
 Alistipes-indistinctus-YIT-12060_MAF-2	101385	raw/genomes/xjin/Alistipes-indistinctus-YIT-12060_MAF-2.fa	xjin_101385_a	
 Alistipes-senegalensis-JC50_MAF-2	101420	raw/genomes/xjin/Alistipes-senegalensis-JC50_MAF-2.fa	xjin_101420_a	
-Alistipes-ihumii-AP11_MAF-2	101429	raw/genomes/xjin/Alistipes-ihumii-AP11_MAF-2.fa	Alistipes_ihumii_AP11_MAF_2	
+Alistipes-ihumii-AP11_MAF-2	101429	raw/genomes/xjin/Alistipes-ihumii-AP11_MAF-2.fa	Alistipes_ihumii_AP11_MAF_2	no xjin samples in metagenotype dataset after filtering;
 Acidaminococcus-intestini-D21_MAF-2	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	xjin_101440_d21maf	
 Bifidobacterium-catenulatum-JCM-1194_MAF-2	101490	raw/genomes/xjin/Bifidobacterium-catenulatum-JCM-1194_MAF-2.fa	xjin_101490_a	
 Enterocloster-bolteae-ATCC-BAA-613_MAF-2	101493	raw/genomes/xjin/Enterocloster-bolteae-ATCC-BAA-613_MAF-2.fa	xjin_101493_a	alternatively Clostridium_M_bolteae? contamination of GT-Pro kmers across several other strains;
-Blautia-hansenii-DSM-20583_MAF-2	101704	raw/genomes/xjin/Blautia-hansenii-DSM-20583_MAF-2.fa	xjin_101704_a	
+Blautia-hansenii-DSM-20583_MAF-2	101704	raw/genomes/xjin/Blautia-hansenii-DSM-20583_MAF-2.fa	xjin_101704_a	xjin samples with GT-Pro SNPs hits are at low coverage (~0.1x); interestingly, despite this, deconvolution works well!
 Holdemanella-biformis-DSM-3989_MAF-2	101711	raw/genomes/xjin/Holdemanella-biformis-DSM-3989_MAF-2.fa	xjin_101711_a	hits GT-Pro kmers in a large number of other species; no dominant hit;
 Alistipes-finegoldii-DSM-17242_NCBI	101830	raw/genomes/xjin/Alistipes-finegoldii-DSM-17242_NCBI.fa	xjin_101830_a	
 Prevotella-copri-DSM-18205_MAF-2	102293	raw/genomes/xjin/Prevotella-copri-DSM-18205_MAF-2.fa	xjin_102293_a	
 Oscillibacter-sp-KLE-1728_MAF-2	102327	raw/genomes/xjin/Oscillibacter-sp-KLE-1728_MAF-2.fa	xjin_102327_a	
 Enterocloster-asparagiformis-DSM-15981_MAF-2	102328	raw/genomes/xjin/Enterocloster-asparagiformis-DSM-15981_MAF-2.fa	xjin_102328_a	g__Clostridium_M;s__GCF_000509045.1
 Intestinimonas-butyriciproducens-DSM-26588_MAF-2	102340	raw/genomes/xjin/Intestinimonas-butyriciproducens-DSM-26588_MAF-2.fa	xjin_102340_dsm26588	
-Lactobacillus-plantarum-ATCC-BAA-793_NCBI	102386	raw/genomes/xjin/Lactobacillus-plantarum-ATCC-BAA-793_NCBI.fa	Lactobacillus_plantarum_ATCC_BAA_793_NCBI	Also hits a small number of GT-Pro kmers in a handful of other species;
+Lactobacillus-plantarum-ATCC-BAA-793_NCBI	102386	raw/genomes/xjin/Lactobacillus-plantarum-ATCC-BAA-793_NCBI.fa	Lactobacillus_plantarum_ATCC_BAA_793_NCBI	Also hits a small number of GT-Pro kmers in a handful of other species; was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset;
 Bifidobacterium-adolescentis-L2-32_MAF-2	102395	raw/genomes/xjin/Bifidobacterium-adolescentis-L2-32_MAF-2.fa	xjin_102395_a	
 Bacteroides-sp-3-1-19_MAF-2	102438	raw/genomes/xjin/Bacteroides-sp-3-1-19_MAF-2.fa	Bacteroides_sp_3_1_19_MAF_2	
 Parabacteroides-distasonis-ATCC-8503_MAF-2	102438	raw/genomes/xjin/Parabacteroides-distasonis-ATCC-8503_MAF-2.fa	xjin_102438_a	
