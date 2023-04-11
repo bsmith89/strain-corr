@@ -224,7 +224,7 @@ rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
         """
 
 
-rule assign_matching_genes:
+rule assign_matching_genes_based_on_bitscore_ratio:
     output:
         "data/species/sp-{species}/genome/{stemB}.gene_matching-c{centroid}-t{thresh}.tsv",
     input:
@@ -234,6 +234,24 @@ rule assign_matching_genes:
     shell:
         """
         awk -v OFS='\t' -v thresh='{params.thresh}' '(NR > 1) && ($3 > thresh) {{print $1,$2}}' {input} > {output}
+        """
+
+
+# NOTE: So-as to re-use the "gene matching" instrument designed for
+# blastn-based accuracy assessment, here we "label" each gene with arbitrary,
+# ascending integers.
+rule assign_matching_genes_based_on_tile_depth:
+    output:
+        "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.tsv",
+    input:
+        script="scripts/identify_strain_genes_from_tiling_depth.py",
+        depth="{stemA}/species/sp-{species}/ALL_STRAINS.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
+    params:
+        thresh=lambda w: int(w.thresh),
+        strain_id=lambda w: f"sp-{w.species}/genome/{w.strain}",
+    shell:
+        """
+        {input.script} {input.depth} {params.strain_id} {params.thresh} {output}
         """
 
 

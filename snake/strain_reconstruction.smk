@@ -219,11 +219,11 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
 
 rule assess_infered_strain_accuracy:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.{strain}.gene_content_reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastn.gene_matching-c{centroidB}-t95.tsv",
-        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr10-depth10.strain_gene_threshold.tsv",
+        gene_matching="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t30.tsv",
+        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_gene_threshold.tsv",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     shell:
@@ -289,7 +289,7 @@ rule collect_files_for_strain_assessment:
             f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
         ],
         reference_strain_accuracy=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc-{w.spgc_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
         reference_strain_mapping="data/group/{group}/species/sp-{species}/ALL_STRAINS.tiles-l100-o99.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
