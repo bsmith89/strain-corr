@@ -176,17 +176,20 @@ rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
         """
 
 
-rule pick_strain_gene_thresholds:
+rule pick_strain_gene_thresholds_by_quantiles_clipped:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
+    wildcard_constraints:
+        corr=integer_wc,
+        depth=integer_wc,
     params:
-        strain_corr_quantile=lambda w: float(w.corr_quant) / 1000,
-        strain_depth_quantile=lambda w: float(w.depth_quant) / 1000,
+        strain_corr_quantile=lambda w: float(w.corr) / 1000,
+        strain_depth_quantile=lambda w: float(w.depth) / 1000,
         min_corr=0.2,
         max_corr=0.9,
         min_depth=0.1,
@@ -205,6 +208,29 @@ rule pick_strain_gene_thresholds:
                 {params.max_depth} \
                 {output}
         """
+
+
+use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_thresholds_by_quantiles_clipped_fixed_depth with:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corrq{corr}-depth{depth}.strain_gene_threshold.tsv",
+    params:
+        strain_corr_quantile=lambda w: float(w.corr) / 1000,
+        strain_depth_quantile=0.5,  # NOTE: Dummy value. Min=max; therefore depth is fixed. Resulting depth_threshold_high is actually the median.
+        min_depth=lambda w: float(w.depth) / 1000,
+        max_depth=lambda w: float(w.depth) / 1000,
+        min_corr=0.2,  # NOTE: There's a parallel parameter also set for the parent rule.
+        max_corr=0.9,
+
+use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_thresholds_by_fixed_depth_and_corr with:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr}-depth{depth}.strain_gene_threshold.tsv",
+    params:
+        strain_corr_quantile=0.5,  # Dummy value. Min=max; therefore corr is fixed.
+        strain_depth_quantile=0.5,  # NOTE: Dummy value. Min=max; therefore depth is fixed. Resulting depth_threshold_high is actually the median.
+        min_depth=lambda w: float(w.depth) / 1000,
+        max_depth=lambda w: float(w.depth) / 1000,
+        min_corr=lambda w: float(w.corr) / 1000,
+        max_corr=lambda w: float(w.corr) / 1000,
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
@@ -249,7 +275,7 @@ rule assess_strain_accuracy_for_species:
 
 rule collect_files_for_strain_assessment:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_files.flag",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_files.flag",
     input:
         sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
         refit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.world.nc",
@@ -262,7 +288,7 @@ rule collect_files_for_strain_assessment:
         species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n1000.list",
         species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
-        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
+        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_gene_threshold.tsv",
         strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
         strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
         gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroidB}_annotations.tsv",
