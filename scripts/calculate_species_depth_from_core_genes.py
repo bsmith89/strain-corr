@@ -19,10 +19,11 @@ if __name__ == "__main__":
             species_gene_hit.append(line.strip())
     info("Loading gene depth.")
     gene_depth = xr.load_dataarray(gene_depth_inpath)
+    species_gene_depth = gene_depth.reindex(gene_id=species_gene_hit, fill_value=0)
     info("Calculating mean depth of samples.")
     species_mean_depth = xr.apply_ufunc(
         trim_mean,
-        gene_depth.sel(gene_id=species_gene_hit),
+        species_gene_depth,
         kwargs=dict(proportiontocut=trim_frac),
         input_core_dims=[["gene_id", "sample"]],
         output_core_dims=[["sample"]],
