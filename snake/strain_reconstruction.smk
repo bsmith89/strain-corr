@@ -98,7 +98,7 @@ rule calculate_species_depth_from_core_genes:
         species_depth="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
     input:
         script="scripts/calculate_species_depth_from_core_genes.py",
-        species_gene="{stemA}/species/sp-{species}/{stemB}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
         gene_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     params:
         trim_frac=0.05,
@@ -162,7 +162,7 @@ rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
         depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
     input:
         script="scripts/calculate_strain_gene_scores.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",  # FIXME: Are these the right way to define a species core gene?
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     shell:
@@ -181,7 +181,7 @@ rule pick_strain_gene_thresholds:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corr{corr_quant}-depth{depth_quant}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n1000.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     params:
