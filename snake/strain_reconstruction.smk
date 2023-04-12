@@ -226,14 +226,17 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
 #         """
 
 
+# NOTE: Because the species_gene file is not specific to this group, the stem is different. I therefore cannot simply
+# parameterize the filename by specgene parameters.
+# TODO: Alias specgene-ref*species_gene.list to a group-specific path, so that all of the specgene files share a stem.
 rule pick_strain_gene_thresholds_by_quantiles_clipped:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
+        "{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-t25-p95.species_gene.list",
-        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_correlation.tsv",
-        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_depth_ratio.tsv",
+        strain_corr="{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_correlation.tsv",
+        strain_depth="{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_depth_ratio.tsv",
     wildcard_constraints:
         corr=integer_wc,
         depth=integer_wc,
