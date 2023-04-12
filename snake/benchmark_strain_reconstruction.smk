@@ -4,7 +4,7 @@
 # file, but with fewer lines.
 rule subsample_strain_samples_for_benchmarking:
     output:
-        "{stem}.spgc-ss-seed{seed}-n{n_samples}.strain_samples.tsv"
+        "{stem}.spgc-ss-seed{seed}-n{n_samples}.strain_samples.tsv",
     input:
         script="scripts/subsample_strain_samples_for_benchmarking.py",
         samples="{stem}.spgc-allsamples.strain_samples.tsv",
@@ -108,7 +108,7 @@ rule collect_files_for_strain_assessment:
         strain_genotype=lambda w: [
             f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
         ],
-        reference_strain_accuracy=lambda w: [  # FIXME
+        reference_strain_accuracy=lambda w: [
             f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc_specgene-ref-t25-p95_thresh{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],

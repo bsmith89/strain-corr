@@ -297,12 +297,12 @@ rule estimate_all_species_depths:
     params:
         header="sample	species_id	depth",
         species_list=lambda w: checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=1,
-                require_in_species_group=True,
-            ),
-        species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv"
+            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=1,
+            require_in_species_group=True,
+        ),
+        species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv",
     shell:
         """
         (

@@ -271,6 +271,7 @@ use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_th
         min_corr=0.4,  # NOTE: There's a parallel parameter also set for the parent rule.
         max_corr=0.8,
 
+
 use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_thresholds_by_fixed_depth_and_corr with:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh-corr{corr}-depth{depth}.strain_gene_threshold.tsv",
