@@ -148,6 +148,41 @@ rule identify_strain_samples:
         """
 
 
+# rule partition_strain_samples_method1:
+#     output:
+#         nospecies="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.species_free_samples.list",
+#         strain="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_samples.tsv",
+#     input:
+#         script="scripts/partition_strain_samples.py",
+#         species_depth="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.species_depth.tsv",
+#         strain_frac="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.comm.tsv",
+#     params:
+#         frac_thresh=0.95,
+#         absent_thresh=0.0001,
+#         present_thresh=0.5,
+#     shell:
+#         """
+#         {input.script} \
+#                 {input.species_depth} \
+#                 {input.strain_frac} \
+#                 {params.frac_thresh} \
+#                 {params.absent_thresh} \
+#                 {params.present_thresh} \
+#                 {output.nospecies} \
+#                 {output.strain}
+#         """
+#
+#
+# use rule partition_strain_samples_method1 as partition_strain_samples_method2 with:
+#     output:
+#         nospecies="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.spgc.species_free_samples.list",
+#         strain="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.spgc.strain_samples.tsv",
+#     input:
+#         script="scripts/partition_strain_samples.py",
+#         species_depth="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.species_depth.tsv",
+#         strain_frac="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.comm.tsv",
+
+
 rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
     output:
         corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene{specgene_params}.strain_correlation.tsv",
@@ -168,6 +203,27 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
                 {output.corr} \
                 {output.depth}
         """
+
+
+# rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
+#     output:
+#         corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
+#         depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
+#     input:
+#         script="scripts/calculate_strain_gene_scores.py",
+#         # species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.species_gene2-n500.list",
+#         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
+#         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_correlation.tsv",
+#         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
+#     shell:
+#         """
+#         {input.script} \
+#                 {input.species_gene} \
+#                 {input.strain_corr} \
+#                 {input.strain_depth} \
+#                 {output.corr} \
+#                 {output.depth}
+#         """
 
 
 rule pick_strain_gene_thresholds_by_quantiles_clipped:
@@ -235,79 +291,3 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
         genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
-
-
-rule assess_infered_strain_accuracy:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh-{thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        # script="scripts/assess_gene_content_reconstruction_accuracy2.py",
-        # gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastn.gene_matching-c{centroidB}-t95.tsv",
-        gene_matching="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{centroidA}-{bowtie_params}-agg{centroidB}.gene_matching-t30.tsv",
-        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh-{thresh_params}.strain_gene_threshold.tsv",
-        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_correlation.tsv",
-        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_depth_ratio.tsv",
-    shell:
-        """
-        {input.script} \
-                {input.gene_matching} \
-                {input.strain_corr} \
-                {input.strain_depth} \
-                {input.thresholds} \
-                {output}
-        """
-
-
-rule collect_files_for_strain_assessment:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh{thresh_params}.strain_files.flag",
-    input:
-        sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
-        refit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.world.nc",
-        strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_correlation.tsv",
-        strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.strain_depth_ratio.tsv",
-        strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc.strain_samples.tsv",
-        # strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_samples.tsv",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95.species_depth.tsv",
-        gtpro_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
-        species_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n500.species_correlation.tsv",
-        species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo-n500.species_gene.list",
-        species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n500.species_gene.list",
-        species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-t25-p95.species_gene.list",
-        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-t25-p95_thresh{thresh_params}.strain_gene_threshold.tsv",
-        # strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
-        # strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
-        gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroidB}_annotations.tsv",
-        depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
-        reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroidB}.reference_copy_number.nc",
-        gtpro_reference_genotype="data/species/sp-{species}/gtpro_ref.mgtp.nc",
-        strain_blastn_midas=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastn.tsv"
-            for strain in species_genomes(w.species)
-        ],
-        strain_blastn_self=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.{strain}-blastn.tsv"
-            for strain in species_genomes(w.species)
-        ],
-        strain_blastn_ratio=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.midas_uhgg_pangenome-blastn.bitscore_ratio-c75.tsv"
-            for strain in species_genomes(w.species)
-        ],
-        strain_gene_lengths=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.prodigal-single.cds.nlength.tsv"
-            for strain in species_genomes(w.species)
-        ],
-        strain_genotype=lambda w: [
-            f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
-        ],
-        reference_strain_accuracy=lambda w: [  # FIXME
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc_specgene-ref-t25-p95_thresh{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
-            for strain in species_genomes(w.species)
-        ],
-        reference_strain_mapping="data/group/{group}/species/sp-{species}/ALL_STRAINS.tiles-l100-o99.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
-    params:
-        cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
-    shell:
-        "echo {input} {params.cluster_info} | tr ' ' '\n' > {output}"
