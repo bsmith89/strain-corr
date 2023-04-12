@@ -170,26 +170,6 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
         """
 
 
-rule calculate_correlation_and_depth_quantiles_relative_to_species_genes:
-    output:
-        corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
-        depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
-    input:
-        script="scripts/calculate_strain_gene_scores.py",
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
-        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
-        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
-    shell:
-        """
-        {input.script} \
-                {input.species_gene} \
-                {input.strain_corr} \
-                {input.strain_depth} \
-                {output.corr} \
-                {output.depth}
-        """
-
-
 rule pick_strain_gene_thresholds_by_quantiles_clipped:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
@@ -275,16 +255,6 @@ rule assess_infered_strain_accuracy:
                 {input.thresholds} \
                 {output}
         """
-
-
-rule assess_strain_accuracy_for_species:
-    output:
-        "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.gene_content_reconstruction_accuracy.ALL_STRAINS.flag",
-    input:
-        reference_strain_accuracy=lambda w: [
-            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
-            for strain in species_genomes(w.species)
-        ],
 
 
 rule collect_files_for_strain_assessment:
