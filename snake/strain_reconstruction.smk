@@ -108,29 +108,43 @@ rule calculate_species_depth_from_core_genes:
         """
 
 
-# TODO: Use GT-Pro species depths instead of those based on species-genes in order to avoid a circular dependency.
-rule partition_strain_samples:
+# NOTE: Because I use a species-specific species_depth.tsv,
+# in many of these files, samples with 0-depth (or maybe samples with
+# 0-depth for ALL species genes), are not even listed.
+# Therefore, the final list of "species-free samples" does not include
+# these at all.
+# TODO: Consider if this is a problem.
+rule identify_species_free_samples:
     output:
-        nospecies="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroidA}-{params}-agg{centroidB}.spgc.species_free_samples.list",
-        strain="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_samples.tsv",
+        "{stemA}/species/sp-{species}/{stemB}.species_free_samples.list",
     input:
-        script="scripts/partition_strain_samples.py",
-        species_depth="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",  # NOTE: Consider using GT-Pro depths here instead of species_depth, to avoid circular dependency in picking species genes. Previously: "{stemA}/{stemB}.gtpro.species_depth.tsv",
-        strain_frac="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.comm.tsv",
+        script="scripts/identify_species_free_samples.py",
+        species_depth="{stemA}/species/sp-{species}/{stemB}.species_depth.tsv",
     params:
-        frac_thresh=0.95,
-        absent_thresh=0.0001,
-        present_thresh=0.5,
+        thresh=0.0001,
     shell:
         """
         {input.script} \
+                {params.thresh} \
                 {input.species_depth} \
-                {input.strain_frac} \
-                {params.frac_thresh} \
-                {params.absent_thresh} \
-                {params.present_thresh} \
-                {output.nospecies} \
-                {output.strain}
+                {output}
+        """
+
+
+# NOTE: In this new formulation, I include ALL strain-pure samples, including those
+# below the previously considered minimum depth threshold.
+# If I want to exclude these samples, I should consider dropping them during
+# the correlation and/or depth-ratio calculation steps.
+rule identify_strain_samples:
+    output:
+        "{stem}.spgc.strain_samples.tsv",
+    input:
+        "{stem}.comm.tsv",
+    params:
+        frac_thresh=0.95,
+    shell:
+        """
+        awk -v OFS='\t' -v thresh={params.frac_thresh} 'NR == 1 || $3 > thresh {{print $2,$1}}' {input} > {output}
         """
 
 
@@ -140,8 +154,8 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
         depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     input:
         script="scripts/calculate_strain_partitioned_gene_stats.py",
-        nospecies_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.species_free_samples.list",
-        strain_partitions="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_samples.tsv",
+        nospecies_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_free_samples.list",
+        strain_partitions="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc.strain_samples.tsv",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     shell:
@@ -245,11 +259,11 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
 
 rule assess_infered_strain_accuracy:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.{strain}.gene_content_reconstruction_accuracy.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc{spgc_stem}.{strain}.gene_content_reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
         gene_matching="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t30.tsv",
-        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_gene_threshold.tsv",
+        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc{spgc_stem}.strain_gene_threshold.tsv",
         strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
     shell:
@@ -275,23 +289,21 @@ rule assess_strain_accuracy_for_species:
 
 rule collect_files_for_strain_assessment:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_files.flag",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.gene{centroidA}-{params}-agg{centroidB}.spgc{spgc_stem}.strain_files.flag",
     input:
         sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
         refit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.refit-{stemC}.world.nc",
         strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
         strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
         strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
-        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_samples.tsv",
+        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc.strain_samples.tsv",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
         gtpro_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
         species_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_correlation2-n500.tsv",
         species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene-n500.list",
         species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_gene2-n500.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.species_gene-trim25-prev95.list",
-        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc-{spgc_params}.strain_gene_threshold.tsv",
-        strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
-        strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
+        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc{spgc_stem}.strain_gene_threshold.tsv",
         gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroidB}_annotations.tsv",
         depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
         reference_copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroidB}.reference_copy_number.nc",
@@ -316,7 +328,7 @@ rule collect_files_for_strain_assessment:
             f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
         ],
         reference_strain_accuracy=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc-{w.spgc_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc{w.spgc_stem}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
         reference_strain_mapping="data/group/{group}/species/sp-{species}/ALL_STRAINS.tiles-l100-o99.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",

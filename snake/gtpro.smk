@@ -276,12 +276,12 @@ rule estimate_species_depth_from_metagenotype:
     params:
         trim=0.05,
     shell:
-        "{input.script} {params.trim} {output} {wildcards.species}={input.mgen}"
+        "{input.script} {params.trim} {input.mgen} {output}"
 
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
-rule concatenate_all_species_depths:
+rule estimate_all_species_depths:
     output:
         "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
     input:
@@ -296,15 +296,24 @@ rule concatenate_all_species_depths:
         ],
     params:
         header="sample	species_id	depth",
+        species_list=lambda w: checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=1,
+                require_in_species_group=True,
+            ),
+        species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv"
     shell:
         """
-        echo "{params.header}" > {output}.tmp
-        for file in {input.species}
-        do
-            echo $file >&2
-            sed '1,1d' $file
-        done >> {output}.tmp
-        mv {output}.tmp {output}
+        (
+            echo "{params.header}"
+            for species in {params.species_list}
+            do
+                file={params.species_pattern}
+                echo $file >&2
+                awk -v species=$species -v OFS='\t' '{{print $1,species,$2}}' $file
+            done
+        ) > {output}
         """
 
 
