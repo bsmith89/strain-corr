@@ -1,19 +1,18 @@
-# TODO: Write script.
 # This will shuffle the order of lines in the samples map (reproducibly based on seed)
 # and then take the top n_samples for each strain and write out a strain_samples
 # file, but with fewer lines.
 rule subsample_strain_samples_for_benchmarking:
     output:
-        "{stem}.spgc-ss-seed{seed}-n{n_samples}.strain_samples.tsv",
+        "{stem}.spgc_ss-seed{seed}-n{n_samples}.strain_samples.tsv",
     input:
         script="scripts/subsample_strain_samples_for_benchmarking.py",
-        samples="{stem}.spgc-allsamples.strain_samples.tsv",
+        samples="{stem}.spgc_ss-all.strain_samples.tsv",
     params:
         seed=lambda w: int(w.seed),
         n_samples=lambda w: int(w.n_samples),
     shell:
         """
-        {input.script} {input.seed} {input.n_samples} {input.samples} {output}
+        {input.script} {params.seed} {params.n_samples} {input.samples} {output}
         """
 
 

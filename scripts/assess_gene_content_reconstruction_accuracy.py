@@ -10,6 +10,7 @@ import numpy as np
 
 
 def calculate_asymetric_statistics(match_matrix):
+    # TODO: Inline these calculations and drop approach to "asymetric" matching.
     tp_orf = idxwhere(match_matrix.any(1))
     fn_orf = idxwhere(~match_matrix.any(1))
     tp_gene = idxwhere(match_matrix.any(0))
@@ -21,16 +22,16 @@ def calculate_asymetric_statistics(match_matrix):
     n_tp_orf = len(tp_orf)
 
     if (n_tp_gene + n_fp_gene) == 0:
-        precision = np.nan
+        precision = 0  # np.nan
     else:
         precision = n_tp_gene / (n_tp_gene + n_fp_gene)
     if (n_tp_orf + n_fn_orf) == 0:
-        recall = np.nan
+        recall = 0  # np.nan
     else:
         recall = n_tp_orf / (n_tp_orf + n_fn_orf)
 
     if np.isnan(precision) or np.isnan(recall):
-        f1 = np.nan
+        f1 = 0  # np.nan
     else:
         f1 = sp.stats.hmean([precision, recall])
 
@@ -42,11 +43,10 @@ if __name__ == "__main__":
     corr_path = sys.argv[2]
     depth_path = sys.argv[3]
     thresh_path = sys.argv[4]
-    # corr_q_thresh = float(sys.argv[4])
-    # depth_q_thresh = float(sys.argv[5])
     outpath = sys.argv[5]
 
     # Load data
+    # TODO: Change "matching gene" input to just a list.
     matching_gene = (
         pd.read_table(
             gene_matching_path, names=["orf", "gene"], index_col=["orf", "gene"]
@@ -66,22 +66,14 @@ if __name__ == "__main__":
     corr = corr.reindex(index=gene_list, fill_value=0)
     matching_gene = matching_gene.reindex(gene_list, fill_value=False).T
 
-    # Align strains FIXME: Why does this need to happen?
-    # assert set(corr_q_all.columns) == set(depth_q_all.columns)
+    # Align strains
     strain_list = list(set(corr.columns) & set(depth.columns))
     depth = depth[strain_list]
     corr = corr[strain_list]
 
-    scaled_matching_gene = (
-        matching_gene.T * (matching_gene * matching_gene.sum()).sum(1)
-    ).T
-    gene_1to1 = idxwhere(scaled_matching_gene.sum() <= 1)
-    orf_1to1 = idxwhere(scaled_matching_gene.sum(1) == 1)
-
     results = {}
     for strain in tqdm(corr.columns):
         # Classify genes
-        depth_hit = idxwhere(depth[strain] >= thresh.depth_low[strain])
         depth_and_corr_hit = idxwhere(
             (corr[strain] >= thresh.correlation[strain])
             & (depth[strain] >= thresh.depth_low[strain])
@@ -90,40 +82,10 @@ if __name__ == "__main__":
         precision, recall, f1 = calculate_asymetric_statistics(
             matching_gene.loc[:, depth_and_corr_hit]
         )
-        precision_depth_only, recall_depth_only, f1_depth_only = calculate_asymetric_statistics(
-            matching_gene.loc[:, depth_hit]
-        )
-        precision_1to1, recall_1to1, f1_1to1 = calculate_asymetric_statistics(
-            matching_gene.loc[
-                orf_1to1,
-                list(set(gene_1to1) & set(depth_and_corr_hit)),
-            ]
-        )
-        (
-            precision_depth_only_1to1,
-            recall_depth_only_1to1,
-            f1_depth_only_1to1,
-        ) = calculate_asymetric_statistics(
-            matching_gene.loc[
-                orf_1to1,
-                list(set(gene_1to1) & set(depth_hit)),
-            ]
-        )
-
-
         results[strain] = [
             precision,
             recall,
             f1,
-            precision_depth_only,
-            recall_depth_only,
-            f1_depth_only,
-            precision_1to1,
-            recall_1to1,
-            f1_1to1,
-            precision_depth_only_1to1,
-            recall_depth_only_1to1,
-            f1_depth_only_1to1,
         ]
 
     # Compile results
@@ -134,15 +96,6 @@ if __name__ == "__main__":
                 "precision",
                 "recall",
                 "f1",
-                "precision_depth_only",
-                "recall_depth_only",
-                "f1_depth_only",
-                "precision_1to1",
-                "recall_1to1",
-                "f1_1to1",
-                "precision_depth_only_1to1",
-                "recall_depth_only_1to1",
-                "f1_depth_only_1to1",
             ],
         )
         .T.rename_axis(index="strain")
