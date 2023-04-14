@@ -44,6 +44,21 @@ rule subsample_xjin_samples_for_benchmarking:
 #         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
 
 
+rule select_highest_depth_xjin_samples_for_benchmarking:
+    output:
+        "{stemA}.gtpro.{stemB}.spgc_ss-xjin-deepest-n{n_samples}.strain_samples.tsv",
+    input:
+        script="scripts/select_highest_depth_strain_samples_for_benchmarking.py",
+        depth="{stemA}.gtpro.species_depth.tsv",
+        samples="{stemA}.gtpro.{stemB}.spgc_ss-xjin-all.strain_samples.tsv",
+    params:
+        n_samples=lambda w: int(w.n_samples),
+    shell:
+        """
+        {input.script} {params.n_samples} {input.depth} {input.samples} {output}
+        """
+
+
 rule assess_infered_strain_accuracy:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv",
