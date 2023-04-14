@@ -15,6 +15,11 @@ if __name__ == "__main__":
 
     sample_to_strain = pd.read_table(strain_samples_path, index_col="sample").strain
     num_strain_samples = sample_to_strain.value_counts()
+    try:
+        dominant_strain = num_strain_samples.idxmax()
+    except ValueError:
+        dominant_strain = -1
+
     species_free_samples = (
         pd.read_table(species_free_samples_path, names=["sample"]).squeeze().values
     )
@@ -51,6 +56,7 @@ if __name__ == "__main__":
     reference_genome_accuracy = pd.concat(reference_genome_accuracy)
 
     result = reference_genome_accuracy.assign(
+        dominant_strain=dominant_strain,
         total_num_reference_genomes=num_reference_genomes,
         total_num_xjin_strains=num_xjin_strains,
         num_species_free_samples=num_species_free_samples,
