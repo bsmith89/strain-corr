@@ -1,12 +1,24 @@
+rule select_xjin_samples:
+    output:
+        "{stem}.spgc_ss-xjin-all.strain_samples.tsv",
+    input:
+        "{stem}.spgc_ss-all.strain_samples.tsv",
+    params:
+        pattern="^xjin_"
+    shell:
+        """
+        awk 'NR==1 || $2~/{params.pattern}/ {{print $0}}' {input} > {output}
+        """
+
 # This will shuffle the order of lines in the samples map (reproducibly based on seed)
 # and then take the top n_samples for each strain and write out a strain_samples
 # file, but with fewer lines.
-rule subsample_strain_samples_for_benchmarking:
+rule subsample_xjin_samples_for_benchmarking:
     output:
-        "{stem}.spgc_ss-seed{seed}-n{n_samples}.strain_samples.tsv",
+        "{stem}.spgc_ss-xjin-seed{seed}-n{n_samples}.strain_samples.tsv",
     input:
         script="scripts/subsample_strain_samples_for_benchmarking.py",
-        samples="{stem}.spgc_ss-all.strain_samples.tsv",
+        samples="{stem}.spgc_ss-xjin-all.strain_samples.tsv",
     params:
         seed=lambda w: int(w.seed),
         n_samples=lambda w: int(w.n_samples),
@@ -62,6 +74,27 @@ rule assess_infered_strain_accuracy:
 #             f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
 #             for strain in species_genomes(w.species)
 #         ],
+
+
+rule assess_xjin_strain_accuracy:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv",
+    input:
+        script="scripts/compile_reference_genome_accuracy_info.py",
+        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-xjin-{ss_params}.strain_samples.tsv",
+        species_free_samples="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_free_samples.list",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
+        reference_genome_accuracy=lambda w: [
+            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
+    params:
+        args=lambda w: [
+            f"{strain}=data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
+    shell:
+        "{input.script} {input.strain_samples} {input.species_free_samples} {input.species_depth} {params.args} > {output}"
 
 
 rule collect_files_for_strain_assessment:
