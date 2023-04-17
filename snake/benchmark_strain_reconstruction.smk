@@ -4,11 +4,12 @@ rule select_xjin_samples:
     input:
         "{stem}.spgc_ss-all.strain_samples.tsv",
     params:
-        pattern="^xjin_"
+        pattern="^xjin_",
     shell:
         """
         awk 'NR==1 || $2~/{params.pattern}/ {{print $0}}' {input} > {output}
         """
+
 
 # This will shuffle the order of lines in the samples map (reproducibly based on seed)
 # and then take the top n_samples for each strain and write out a strain_samples
@@ -91,7 +92,7 @@ rule assess_infered_strain_accuracy:
 #         ],
 
 
-rule assess_xjin_strain_accuracy:
+rule compile_reference_genome_accuracy_info:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv",
     input:

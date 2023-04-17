@@ -96,9 +96,9 @@ rule select_species_core_genes_de_novo_with_dereplication:
 # TODO: Use this in place of midasuhgg* everywhere.
 rule alias_species_genes_from_reference_to_match_de_novo_paths:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list"
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     input:
-        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list"
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     shell:
         alias_recipe
 

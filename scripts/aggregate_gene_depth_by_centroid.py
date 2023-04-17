@@ -17,8 +17,8 @@ if __name__ == "__main__":
     info("Loading gene metadata.")
     meta = (
         pd.read_table(meta_inpath)
-        .set_index('centroid_99', drop=False)
-        .drop(columns=['gene_id'])
+        .set_index("centroid_99", drop=False)
+        .drop(columns=["gene_id"])
         .rename_axis(index="gene_id")
         .drop_duplicates()
         .loc[depth.gene_id]
