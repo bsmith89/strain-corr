@@ -296,6 +296,31 @@ use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_th
         max_corr=lambda w: float(w.corr) / 1000,
 
 
+rule pick_strain_gene_thresholds_by_grid_search:
+    output:
+        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-alpha{alpha}.strain_gene_threshold.tsv",
+    input:
+        script="scripts/pick_strain_gene_thresholds_by_grid_search.py",
+        species_gene="{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_gene.list",
+        strain_corr="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
+        strain_depth="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+    params:
+        resolution_corr=50,
+        resolution_depth=50,
+        alpha=lambda w: float(w.alpha) / 100,
+    shell:
+        """
+        {input.script} \
+                {input.species_gene} \
+                {input.strain_corr} \
+                {input.strain_depth} \
+                {params.resolution_corr} \
+                {params.resolution_depth} \
+                {params.alpha} \
+                {output}
+        """
+
+
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
     output:
         "ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",

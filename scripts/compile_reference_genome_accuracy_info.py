@@ -10,6 +10,7 @@ if __name__ == "__main__":
         strain_samples_path,
         species_free_samples_path,
         species_depth_path,
+        strain_thresh_path,
         *reference_genome_accuracy_path_map_list,
     ) = sys.argv[1:]
 
@@ -47,13 +48,18 @@ if __name__ == "__main__":
     num_reference_genomes = len(reference_genome_accuracy_path_map_list)
     num_xjin_strains = len(num_strain_samples.index)
 
+    strain_thresh = pd.read_table(strain_thresh_path, index_col="strain")
+
     reference_genome_accuracy = []
     for key_value_pair in reference_genome_accuracy_path_map_list:
         genome, path = key_value_pair.split("=")
-        data = pd.read_table(path)
-        data["genome_id"] = genome
+        data = pd.read_table(path, index_col="strain").assign(
+            genome_id=genome,
+            correlation_thresh=strain_thresh["correlation"],
+            depth_thresh=strain_thresh["depth_low"],
+        )
         reference_genome_accuracy.append(data)
-    reference_genome_accuracy = pd.concat(reference_genome_accuracy)
+    reference_genome_accuracy = pd.concat(reference_genome_accuracy).reset_index()
 
     result = reference_genome_accuracy.assign(
         dominant_strain=dominant_strain,

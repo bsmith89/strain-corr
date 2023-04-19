@@ -94,23 +94,24 @@ rule assess_infered_strain_accuracy:
 
 rule compile_reference_genome_accuracy_info:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-{thresh_params}.xjin_strain_summary.tsv",
     input:
         script="scripts/compile_reference_genome_accuracy_info.py",
         strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-xjin-{ss_params}.strain_samples.tsv",
         species_free_samples="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_free_samples.list",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
+        strain_thresh="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-{thresh_params}.strain_gene_threshold.tsv",
         reference_genome_accuracy=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
     params:
         args=lambda w: [
-            f"{strain}=data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"{strain}=data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
     shell:
-        "{input.script} {input.strain_samples} {input.species_free_samples} {input.species_depth} {params.args} > {output}"
+        "{input.script} {input.strain_samples} {input.species_free_samples} {input.species_depth} {input.strain_thresh} {params.args} > {output}"
 
 
 rule collect_files_for_strain_assessment:
@@ -126,6 +127,7 @@ rule collect_files_for_strain_assessment:
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
         gtpro_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
         species_correlation="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n500.species_correlation.tsv",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_gene.list",
         species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo-n500.species_gene.list",
         species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n500.species_gene.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-t25-p95.species_gene.list",
@@ -164,6 +166,7 @@ rule collect_files_for_strain_assessment:
             for strain in species_genomes(w.species)
         ],
         reference_strain_mapping="data/group/{group}/species/sp-{species}/ALL_STRAINS.tiles-l100-o99.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
+        xjin_strain_summary="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv"
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
