@@ -27,9 +27,11 @@ rule link_panphlan_reference:
         alias_recipe
 
 
-rule run_panphlan_map:
+rule run_panphlan:
     output:
-        "data/species/sp-{species}/reads/{mgen}/r.{stem}.panphlan_map.csv",
+        tally="data/species/sp-{species}/reads/{mgen}/r.{stem}.panphlan_map.csv",
+        hit="data/species/sp-{species}/reads/{mgen}/r.{stem}.panphlan_hit.tsv",
+        depth="data/species/sp-{species}/reads/{mgen}/r.{stem}.panphlan_depth.tsv",
     input:
         pangenome="ref/panphlan/{species}",
         r1="data/reads/{mgen}/r1.{stem}.fq.gz",
@@ -38,7 +40,7 @@ rule run_panphlan_map:
         panphlan_species=lambda w: config["species_to_panphlan"][w.species],
     conda:
         "conda/panphlan.yaml"
-    threads: 8
+    threads: 2
     resources:
         walltime_hr=12,
     shell:
@@ -51,39 +53,10 @@ rule run_panphlan_map:
                 -p {input.pangenome}/{params.panphlan_species}_pangenome.tsv \
                 --indexes {input.pangenome}/{params.panphlan_species} \
                 -i $fastq \
-            -o {output}
+            -o {output.tally}
         rm $fastq
-        """
-
-
-rule run_panphlan_profile:
-    output:
-        hit="data/group/{group}/species/sp-{species}/{stem}.panphlan_hit.tsv",
-        cvrg="data/group/{group}/species/sp-{species}/{stem}.panphlan_cvrg.tsv",
-    input:
-        samples=lambda w: [
-            f"data/species/sp-{w.species}/reads/{mgen}/{w.stem}.panphlan_map.csv"
-            for mgen in config["mgen_group"][w.group]
-        ],
-        pangenome="ref/panphlan/{species}",
-    params:
-        panphlan_species=lambda w: config["species_to_panphlan"][w.species],
-        sample_list=lambda w: config["mgen_group"][w.group],
-        sample_pattern="data/species/sp-{species}/reads/$sample/{stem}.panphlan_map.csv",
-    conda:
-        "conda/panphlan.yaml"
-    shell:
-        """
-        tmpdir=$(mktemp -d)
-        for sample in {params.sample_list}
-        do
-            ln -s $(realpath {params.sample_pattern}) $tmpdir/$sample
-        done
-        ls $tmpdir
-        panphlan_profiling.py -i $tmpdir \
+        panphlan_profiling.py -i <(echo {output.tally}) \
                 -p {input.pangenome}/{params.panphlan_species}_pangenome.tsv \
                 --o_matrix {output.hit} \
-                --o_covmat {output.cvrg}
+                --o_covmat {output.depth}
         """
-                # --func_annot {input.pangenome}/panphlan_{params.panphlan_species}_annot.tsv \
-                # --field 8 \
