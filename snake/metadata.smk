@@ -20,6 +20,11 @@ config["genome"] = pd.read_table(
 # config["species_to_genome"] = pd.read_table("meta/genome.tsv").groupby("species_id").apply(lambda x: x.genome_id.tolist())
 
 
+config["species_to_panphlan"] = pd.read_table(
+    "meta/species_to_panphlan.tsv", dtype=str, index_col=["species_id"]
+).panphlan_species_id.rename(str)
+
+
 rule process_hmp2_metadata:
     output:
         subject="meta/subject.tsv",
