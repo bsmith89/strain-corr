@@ -321,6 +321,24 @@ rule pick_strain_gene_thresholds_by_grid_search:
         """
 
 
+rule collect_strain_gene_hits:
+    output:
+        "{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.strain_gene.tsv",
+    input:
+        script="scripts/construct_strain_genes_table.py",
+        thresholds="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.strain_gene_threshold.tsv",
+        strain_corr="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
+        strain_depth="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+    shell:
+        """
+        {input.script} \
+                {input.strain_corr} \
+                {input.strain_depth} \
+                {input.thresholds} \
+                {output}
+        """
+
+
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
     output:
         "ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",

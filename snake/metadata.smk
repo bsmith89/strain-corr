@@ -24,6 +24,10 @@ config["species_to_panphlan"] = pd.read_table(
     "meta/species_to_panphlan.tsv", dtype=str, index_col=["species_id"]
 ).panphlan_species_id.rename(str)
 
+config["species_to_spanda"] = pd.read_table(
+    "meta/species_to_panphlan.tsv", dtype=str, index_col=["species_id"]
+).spanda_species_id.rename(str)
+
 
 rule process_hmp2_metadata:
     output:

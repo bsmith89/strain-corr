@@ -26,10 +26,10 @@ def aligned_index(*args, axis="index", how="inner"):
     return idx
 
 
-def align_indexes(*args, axis="index", how="inner"):
+def align_indexes(*args, axis="index", how="inner", **kwargs):
     idx = aligned_index(*args, axis=axis, how=how)
     assert idx
-    return [a.reindex(idx, axis=axis) for a in args]
+    return [a.reindex(idx, axis=axis, **kwargs) for a in args]
 
 
 def repeated(df, subset=None):

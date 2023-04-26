@@ -7,3 +7,6 @@
 [submodule "include/StrainFinder"]
 	path = include/StrainFinder
 	url = https://github.com/cssmillie/StrainFinder
+[submodule "include/StrainPanDA"]
+	path = include/StrainPanDA
+	url = https://github.com/xbiome/StrainPanDA.git

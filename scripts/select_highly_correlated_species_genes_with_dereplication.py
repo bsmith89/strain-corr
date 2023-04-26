@@ -45,9 +45,11 @@ if __name__ == "__main__":
     gene_depth = xr.load_dataarray(gene_depth_inpath).fillna(
         0
     )  # FIXME: Shouldn't be necessary.
+    info("Filtering out samples with no gene depths.")
+    gene_sample_list = idxwhere(gene_depth.max("gene_id").to_series() > 0)
 
     info("Aligning indexes.")
-    sample_list = list(set(gene_depth.sample.values) & set(species_depth.sample.values))
+    sample_list = list(set(gene_sample_list) & set(species_depth.sample.values))
     species_depth = species_depth.sel(sample=sample_list)
     gene_depth = gene_depth.sel(sample=sample_list)
 
