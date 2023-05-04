@@ -3,16 +3,6 @@ use rule start_shell as start_shell_midas with:
         "conda/midas.yaml"
 
 
-use rule start_shell as start_shell_eggnog with:
-    conda:
-        "conda/eggnog.yaml"
-
-
-use rule start_shell as start_shell_dbcan with:
-    conda:
-        "conda/dbcan.yaml"
-
-
 rule download_midasdb_uhgg_species:
     output:
         "data/species/sp-{species}/download_species_midasdb_uhgg.flag",
@@ -262,76 +252,4 @@ rule merge_midas_genes_from_multi_species_and_apply_length_correction:
     shell:
         """
         {input.script} {params.minimum_alignment_coverage} {params.nominal_read_length} {params.maximum_correction_factor} {output} {params.args}
-        """
-
-
-rule eggnog_mapper_translated_orfs:
-    output:
-        "{stem}.emapper.d/proteins.emapper.annotations",
-        "{stem}.emapper.d/proteins.emapper.hits",
-        "{stem}.emapper.d/proteins.emapper.seed_orthologs",
-    input:
-        fasta="{stem}.tran.fa",
-        db="ref/eggnog_mapper_db",
-    params:
-        outdir="{stem}.emapper.d",
-        tax_scope="auto",
-        sensmode="more-sensitive",
-        mapper="diamond",
-    conda:
-        "conda/eggnog.yaml"
-    threads: 12
-    resources:
-        walltime_hr=240,
-        mem_mb=20_000,
-        pmem=20_000 // 12,
-    shell:
-        """
-        tmpdir=$(mktemp -d)
-        export EGGNOG_DATA_DIR={input.db}
-        rm -rf {params.outdir}.temp {params.outdir}
-        mkdir -p {params.outdir}.temp
-        emapper.py \
-                -m {params.mapper} \
-                -i {input.fasta} \
-                --itype proteins \
-                --sensmode {params.sensmode} \
-                --go_evidence all \
-                --dbmem \
-                --tax_scope {params.tax_scope} \
-                --temp_dir $tmpdir \
-                --override \
-                --cpu {threads} \
-                --output_dir {params.outdir}.temp \
-                --output 'proteins'
-        mv {params.outdir}.temp {params.outdir}
-        # TODO  # Test on 100035 because it has very few genes
-        """
-
-
-# .emapper.annotation
-
-
-rule dbCAN_annotate_translated_orfs:
-    output:
-        dir=directory("{stem}.dbcan.d"),
-    input:
-        fasta="{stem}.tran.fa",
-        db="ref/dbcan",
-    conda:
-        "conda/dbcan.yaml"
-    threads: 4
-    resources:
-        walltime_hr=24,
-        mem_mb=20_000,
-        pmem=20_000 // 4,
-    shell:
-        """
-        run_dbcan \
-                {input.fasta} \
-                protein \
-                --db_dir {input.db} \
-                --tools hmmer diamond \
-                --tf_cpu {threads} --stp_cpu {threads} --dia_cpu {threads} --hmm_cpu {threads} --dbcan_thread {threads} \
-                --out_dir {output.dir}
         """
