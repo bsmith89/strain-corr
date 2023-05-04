@@ -606,9 +606,9 @@ rule build_new_pangenome_profiling_db:
 
 rule extract_pangenome_mapping_tally_from_profile_database:
     output:
-        "data/group/xjin_hmp2/species/sp-{species}/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4"
+        "data/group/xjin_hmp2/species/sp-{species}/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",
     input:
-        "data/group/xjin_hmp2/r.{stem}.pangenomes{centroidA}-{bowtie_params}.db"
+        "data/group/xjin_hmp2/r.{stem}.pangenomes{centroidA}-{bowtie_params}.db",
     shell:
         dd(
             """

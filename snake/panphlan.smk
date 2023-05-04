@@ -34,7 +34,7 @@ rule run_panphlan_on_spgc_mapping:
     params:
         sample_pattern="data/group/xjin_hmp2/species/sp-{species}/reads/$sample/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",
         sample_list=lambda w: list(config["mgen_group"][w.group]),
-        min_depth=0.,
+        min_depth=0.0,
     conda:
         "conda/panphlan.yaml"
     threads: 2
