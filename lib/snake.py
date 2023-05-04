@@ -41,8 +41,6 @@ def nested_dictlookup(mapping, *args):
     return value
 
 
-
-
 def get_checkpoint_by_path(checkpoint, path, output_idx=0):
     regex = snakemake.io.regex(checkpoint.rule.output[output_idx])
     match = re.match(
