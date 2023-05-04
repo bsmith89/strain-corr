@@ -509,6 +509,8 @@ ruleorder: concatenate_reference_gene_lengths > count_seq_lengths_nucl
 
 # FIXME: Hub rule. Commenting this out can greatly speed up
 # startup time for downstream tasks.
+# NOTE: I _think_ that "bowtie_params" may include the trailing "s" making this rule
+# apply to pangenomes75 just as well as pangenome75...?
 rule build_new_pangenome_profiling_db:
     output:
         protected("data/group/{group}/r.{proc}.pangenome{bowtie_params}.db"),
