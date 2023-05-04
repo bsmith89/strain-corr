@@ -602,6 +602,31 @@ rule build_new_pangenome_profiling_db:
         )
 
 
+# FIXME: These rules print six header lines that they shouldn't,
+# corresponding to the six "PRAGMA" lines in the sqlite3 script. :-/
+rule extract_pangenome_mapping_tally_from_profile_database:
+    output:
+        "data/group/xjin_hmp2/species/sp-{species}/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4"
+    input:
+        "data/group/xjin_hmp2/r.{stem}.pangenomes{centroidA}-{bowtie_params}.db"
+    shell:
+        """
+        sqlite3 -header -separator "\t" {input} <<EOF | lz4 -zc > {output}
+PRAGMA journal_mode=OFF;
+PRAGMA synchronous=OFF;
+PRAGMA locking_mode=SHARED;
+PRAGMA temp_store=MEMORY;
+PRAGMA cache_size=1000000;
+PRAGMA mmap_size=268435456;
+SELECT gene_id, tally
+FROM sample_x_gene JOIN gene USING (gene_id)
+WHERE species = '{wildcards.species}' AND sample = '{wildcards.mgen}';
+EOF
+        """
+        # sed '1,6 {/^\(journal_mode\|off\|locking_mode\|mmap_size\|268435456\|normal\)/d}'
+
+
+
 rule load_one_species_pangenome2_depth_into_netcdf:
     output:
         "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",

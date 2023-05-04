@@ -34,35 +34,6 @@ rule extract_spanda_reference:
         """
 
 
-rule run_panphlan_spanda:
-    output:
-        tally="data/species/sp-{species}/reads/{mgen}/r.{stem}.panphlan_spanda_map.tsv",
-    input:
-        pangenome="ref/strainpanda/{species}",
-        r1="data/reads/{mgen}/r1.{stem}.fq.gz",
-        r2="data/reads/{mgen}/r2.{stem}.fq.gz",
-    params:
-        panphlan_species=lambda w: config["species_to_spanda"][w.species],
-    conda:
-        "conda/panphlan.yaml"
-    threads: 2
-    resources:
-        walltime_hr=20,
-    shell:
-        """
-        fastq=$(mktemp)
-        echo Unzipping {input.r1} and {input.r2} to $fastq >&2
-        gzip -dc {input.r1} {input.r2} > $fastq
-        echo Running panphlan_map on {input.r1} and {input.r2} as $fastq >&2
-        panphlan_map.py --nproc {threads} \
-                -p {input.pangenome}/panphlan_{params.panphlan_species}_pangenome.csv \
-                --indexes {input.pangenome}/panphlan_{params.panphlan_species} \
-                -i $fastq \
-            -o {output.tally}
-        rm $fastq
-        """
-
-
 # rule collect_panphlan_spanda_group:
 #     output:
 #         hit="data/group/{group}/species/sp-{species}/r.{stem}.panphlan_spanda_hit.tsv",
