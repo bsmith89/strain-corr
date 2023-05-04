@@ -98,19 +98,21 @@ rule run_panphlan_spanda:
 #         """
 
 
-rule construct_strainpanda_count_matrix:
+# FIXME: I've hard-coded xjin_hmp2 so that this table does not require
+# re-running the bowtie2 building and mapping steps.
+rule construct_spanda_count_matrix_from_spgc_mapping:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.panphlan.spanda_counts.csv",
+        "data/group/{group}/species/sp-{species}/{stem}.spanda_counts.csv",
     input:
         script="scripts/construct_spanda_count_matrix.py",
         samples=lambda w: [
-            f"data/species/sp-{w.species}/reads/{mgen}/{w.stem}.panphlan_spanda_map.tsv"
+            f"data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
             for mgen in config["mgen_group"][w.group]
         ],
     params:
         sample_args=lambda w: [
-            f"{sample}=data/species/sp-{w.species}/reads/{sample}/{w.stem}.panphlan_spanda_map.tsv"
-            for sample in config["mgen_group"][w.group]
+            f"{mgen}=data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
         ],
     shell:
         """
@@ -118,26 +120,28 @@ rule construct_strainpanda_count_matrix:
         """
 
 
-rule run_strainpanda_decompose:
+rule run_spanda_decompose:
     output:
-        gene="data/group/{group}/species/sp-{species}/{stem}.panphlan.spanda-s{nstrain}.genefamily_strain.csv",
-        sample="data/group/{group}/species/sp-{species}/{stem}.panphlan.spanda-s{nstrain}.strain_sample.csv",
+        gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",
+        sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
     input:
-        data="data/group/{group}/species/sp-{species}/{stem}.panphlan.spanda_counts.csv",
-        ref="ref/strainpanda/{species}/",
+        data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}.spanda_counts.csv",
+        pangenome="ref/panphlan/{species}.midasdb_uhgg_pangenome{centroidB}.tsv",
     params:
-        outstem="data/group/{group}/species/sp-{species}/{stem}.panphlan.spanda-s{nstrain}",
+        outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
         max_strains=lambda w: int(w.nstrain),
         expect_strains=lambda w: int(w.nstrain),
-        panphlan_name=lambda w: config["species_to_panphlan"][w.species],
     singularity:
         config["container"]["spanda"]
     threads: 12
     shell:
         """
+        tmpdir=$(mktemp -d)
+        ln -rs {input.pangenome} $tmpdir/{wildcards.species}_pangenome.csv
+        echo $tmpdir/{wildcards.species}_pangenome.csv
         Rscript include/StrainPanDA/bin/run_strainpandar.r \
                 -c {input.data} \
-                -r {input.ref} \
+                -r $tmpdir \
                 -o {params.outstem} \
                 -t {threads} \
                 -m {params.max_strains} \
