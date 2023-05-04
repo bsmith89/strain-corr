@@ -77,7 +77,7 @@ rule generate_report:
 
 rule dot_to_pdf:
     output:
-        "fig/{stem}.pdf",
+        "fig/{stem}.dot.pdf",
     input:
         "data/{stem}.dot",
     shell:
