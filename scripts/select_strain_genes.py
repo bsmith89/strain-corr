@@ -31,4 +31,4 @@ if __name__ == "__main__":
         strain_depth >= thresholds.depth_low
     )
 
-    hits.stack()[lambda x: x].to_frame()[[]].to_csv(outpath, sep="\t")
+    hits[lambda x: x.sum(1) > 0].astype(int).to_csv(outpath, sep="\t")

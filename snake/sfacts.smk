@@ -18,7 +18,7 @@ use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
         "conda/sfacts.yaml"
 
 
-# NOTE: Comment out this rule to speed up DAG-building time
+# NOTE: Hub rule. Comment out this rule to speed up DAG-building time
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgtp.nc",
@@ -329,6 +329,22 @@ rule cleanup_fit:
         """
         sfacts cleanup_fit --dissimilarity {params.diss} --abundance {params.abund} --entropy {params.entr} {input} {output}
         """
+
+
+rule alias_final_fit:
+    output:
+        "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.sfacts-fit.world.nc",
+    input:
+        source=lambda w: (
+            "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.world.nc".format(
+                group=w.group, species=w.species, proc=w.proc,
+                sfacts_stem=config["species_group_to_sfacts_stem"][
+                    (w.species, w.group)
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
 
 
 rule export_sfacts_comm:

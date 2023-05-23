@@ -126,7 +126,7 @@ rule run_bowtie_multispecies_pangenome_v0:
         "conda/midas.yaml"
     threads: 12
     resources:
-        walltime_hr=24,
+        walltime_hr=48,
         mem_mb=100_000,
         pmem=100_000 // 12,
     shell:
@@ -604,6 +604,7 @@ rule build_new_pangenome_profiling_db:
         )
 
 
+# NOTE: Hub rule.
 rule extract_pangenome_mapping_tally_from_profile_database:
     output:
         "data/group/xjin_hmp2/species/sp-{species}/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",

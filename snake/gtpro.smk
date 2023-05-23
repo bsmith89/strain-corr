@@ -218,6 +218,7 @@ rule list_checkpoint_select_species:
             f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
             cvrg_thresh=0.2,
             num_samples=2,
+            require_in_species_group=True,
         ),
     shell:
         "for species in {params.obj}; do echo $species; done > {output}"
@@ -267,6 +268,7 @@ rule merge_both_reads_species_count_data:
         """
 
 
+# FIXME: Change script to output only a mapping sample\tdepth; no header, no second index.
 rule estimate_species_depth_from_metagenotype:
     output:
         "{stemA}/species/sp-{species}/r.{stemB}.gtpro.species_depth.tsv",
@@ -290,7 +292,7 @@ rule estimate_all_species_depths:
             for species in checkpoint_select_species(
                 f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
                 cvrg_thresh=0.2,
-                num_samples=1,
+                num_samples=2,
                 require_in_species_group=True,
             )
         ],
@@ -299,7 +301,7 @@ rule estimate_all_species_depths:
         species_list=lambda w: checkpoint_select_species(
             f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
             cvrg_thresh=0.2,
-            num_samples=1,
+            num_samples=2,
             require_in_species_group=True,
         ),
         species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv",

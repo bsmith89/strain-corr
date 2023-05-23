@@ -1,7 +1,7 @@
 container:
   default: 'docker://bsmith89/compbio2:5cbda6bd9437faaa46546c71b3a2afb961ba5376'
   gtpro: 'docker://bsmith89/gtpro:522c78fdbd1524580c636956a4cb5b1dc268d022'
-  spanda: 'docker://yuxiangtan/strainpanda-strainpandar:dev'
+  spanda: 'docker://bsmith89/spanda_dev:ab92d3675e56ee74e603df90d8fb39bb2290c515'
 MAX_THREADS: 4
 USE_CUDA: 0
 ALL:

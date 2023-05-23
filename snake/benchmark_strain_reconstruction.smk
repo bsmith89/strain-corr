@@ -60,67 +60,247 @@ rule select_highest_depth_xjin_samples_for_benchmarking:
         """
 
 
-rule assess_infered_strain_accuracy:
+rule alias_spgc_gene_hits_as_uhgg_strain_gene:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv",
+        "{stemA}.spgc{stemB}.uhgg-strain_gene.tsv",
+    input:
+        "{stemA}.spgc{stemB}.strain_gene.tsv",
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_spgc_gene_hits_as_uhgg_strain_gene,
+
+
+rule aggregate_uhgg_strain_gene_by_annotation:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
+    input:
+        uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
+        agg="data/species/sp-{species}/pangenome.centroids.emapper.gene_x_{agg}.tsv",
+    group:
+        "assess_gene_inference_benchmark"
+    run:
+        gene_table = pd.read_table(input.uhgg, index_col="gene_id")
+        agg = pd.read_table(input.agg, index_col="gene_id").squeeze()
+        result = (
+            gene_table.astype(bool).join(agg).groupby(wildcards.agg).any().astype(int)
+        )
+        result.to_csv(output[0], sep="\t")
+
+
+rule assess_spgc_infered_strain_accuracy_uhgg:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.uhgg-reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        # script="scripts/assess_gene_content_reconstruction_accuracy2.py",
-        # gene_matching="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome-blastn.gene_matching-c{centroidB}-t95.tsv",
-        gene_matching="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{centroidA}-{bowtie_params}-agg{centroidB}.gene_matching-t30.tsv",
-        thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.strain_gene_threshold.tsv",
-        strain_corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        strain_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.uhgg-strain_gene.tsv",
+        truth="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
+    group:
+        "assess_gene_inference_benchmark"
     shell:
         """
         {input.script} \
-                {input.gene_matching} \
-                {input.strain_corr} \
-                {input.strain_depth} \
-                {input.thresholds} \
+                {input.truth} \
+                {input.infer} \
                 {output}
         """
 
 
-# rule assess_strain_accuracy_for_species:
-#     output:
-#         "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.gene_content_reconstruction_accuracy.ALL_STRAINS.flag",
-#     input:
-#         reference_strain_accuracy=lambda w: [
-#             f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.params}-agg{w.centroidB}.spgc.{strain}.gene_content_reconstruction_accuracy.tsv"
-#             for strain in species_genomes(w.species)
-#         ],
-
-
-rule compile_reference_genome_accuracy_info:
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_xjin_strain_accuracy_uhgg with:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-{thresh_params}.xjin_strain_summary.tsv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.uhgg-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.uhgg-strain_gene.tsv",
+        truth="data/group/xjin_hmp2/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
+
+
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_xjin_strain_accuracy_uhgg with:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.uhgg-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.uhgg-strain_gene.tsv",
+        truth="data/group/xjin_hmp2/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
+
+
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spgc_infered_strain_accuracy_ko with:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.ko-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.ko-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
+
+
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_strain_accuracy_ko with:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.ko-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.ko-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
+    input:
+        uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
+        ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
+        cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
+
+
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_strain_accuracy_ko with:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.ko-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.ko-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
+
+
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spgc_infered_strain_accuracy_cog with:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.cog-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.cog-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
+
+
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_strain_accuracy_cog with:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.cog-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.cog-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
+
+
+# NOTE: This rule only works for group=XJIN_BENCHMARK.
+use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_strain_accuracy_cog with:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.cog-reconstruction_accuracy.tsv",
+    input:
+        script="scripts/assess_gene_content_reconstruction_accuracy.py",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.cog-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
+
+
+# # NOTE: This hard-codes the "xjin_" prefix and finds the strain with the most
+# # of these samples.
+# rule match_xjin_strains:
+#     output:
+#         samples="data/group/xjin_hmp2/{stem}.spgc_ss-{ss_params}.xjin_sample_count.tsv",
+#     input:
+#         samples="data/group/xjin_hmp2/{stem}.spgc_ss-{ss_params}.strain_samples.tsv",
+#     params:
+#         pattern="^xjin_"
+#     shell:
+#         """
+#         awk '$2~/{params.pattern}/ {{print $0}}' {input} \
+#                 | cut -f1 \
+#                 | sort \
+#                 | uniq -c \
+#                 | awk -v OFS="\t" '{{print $2,$1}}' \
+#             > {output}
+#         """
+
+
+rule compile_reference_genome_accuracy_info_for_spgc:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-{thresh_params}.{unit}-xjin_strain_summary.tsv",
     input:
         script="scripts/compile_reference_genome_accuracy_info.py",
-        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-xjin-{ss_params}.strain_samples.tsv",
-        species_free_samples="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_free_samples.list",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
-        strain_thresh="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-{thresh_params}.strain_gene_threshold.tsv",
+        strain_samples="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-xjin-{ss_params}.strain_samples.tsv",
+        species_free_samples="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-{specgene_params}.species_free_samples.list",
+        species_depth="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-{specgene_params}.species_depth.tsv",
+        strain_thresh="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-{thresh_params}.strain_gene_threshold.tsv",
         reference_genome_accuracy=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
     params:
         args=lambda w: [
-            f"{strain}=data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_thresh-{w.thresh_params}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"{strain}=data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
+    group:
+        "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.strain_samples} {input.species_free_samples} {input.species_depth} {input.strain_thresh} {params.args} > {output}"
 
 
+# TODO: Combine all reference genomes into one table.
+rule compile_reference_genome_accuracy_info_for_spanda:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{unit}-xjin_strain_summary.tsv",
+    input:
+        reference_genome_accuracy=lambda w: [
+            f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gene{w.pangenome_params}.spanda{w.spanda_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
+    params:
+        pattern=lambda w: f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gene{w.pangenome_params}.spanda{w.spanda_params}.{{strain}}.{w.unit}-reconstruction_accuracy.tsv",
+        strain_list=lambda w: species_genomes(w.species),
+    group:
+        "assess_gene_inference_benchmark"
+    run:
+        result = []
+        for genome_id in params.strain_list:
+            path = params.pattern.format(strain=genome_id)
+            data = pd.read_table(path).assign(genome_id=genome_id)
+            highest_f1_strain = data.set_index("strain").f1.idxmax()
+            data = data.assign(
+                dominant_strain=highest_f1_strain
+            )  # Don't try and pick the highest-abundance strain.
+            result.append(data)
+        result = pd.concat(result).assign(
+            total_num_reference_genomes=len(params.strain_list)
+        )
+        result.to_csv(output[0], sep="\t", index=False)
+
+
+# TODO: Combine all reference genomes into one table.
+rule compile_reference_genome_accuracy_info_for_panphlan:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{unit}-xjin_strain_summary.tsv",
+    input:
+        reference_genome_accuracy=lambda w: [
+            f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gene{w.pangenome_params}.panphlan.{strain}.{w.unit}-reconstruction_accuracy.tsv"
+            for strain in species_genomes(w.species)
+        ],
+    params:
+        pattern=lambda w: f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gene{w.pangenome_params}.panphlan.{{strain}}.{w.unit}-reconstruction_accuracy.tsv",
+        strain_list=lambda w: species_genomes(w.species),
+    group:
+        "assess_gene_inference_benchmark"
+    run:
+        result = []
+        for genome_id in params.strain_list:
+            path = params.pattern.format(strain=genome_id)
+            data = pd.read_table(path).assign(genome_id=genome_id)
+            highest_f1_strain = data.set_index("strain").f1.idxmax()
+            data = data.assign(
+                dominant_strain=highest_f1_strain
+            )  # Don't try and pick the highest-abundance strain.
+            result.append(data)
+        result = pd.concat(result).assign(
+            total_num_reference_genomes=len(params.strain_list)
+        )
+        result.to_csv(output[0], sep="\t", index=False)
+
+
 rule collect_files_for_strain_assessment:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.strain_files.flag",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-corr{corr_thresh}-depth{depth_thresh}.strain_files.flag",
     input:
         sfacts="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
-        strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        strain_correlation="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_correlation.tsv",
+        strain_depth_ratio="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_depth_ratio.tsv",
         strain_fraction="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.comm.tsv",
         strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
         # strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_samples.tsv",
@@ -131,7 +311,7 @@ rule collect_files_for_strain_assessment:
         species_gene_de_novo="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo-n500.species_gene.list",
         species_gene_de_novo2="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n500.species_gene.list",
         species_gene_reference="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-t25-p95.species_gene.list",
-        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.strain_gene_threshold.tsv",
+        strain_thresholds="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-corr{corr_thresh}-depth{depth_thresh}.strain_gene_threshold.tsv",
         # strain_corr_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_corr_quantile.tsv",
         # strain_depth_quantile="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.strain_depth_quantile.tsv",
         gene_annotations="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroidB}_annotations.tsv",
@@ -158,16 +338,70 @@ rule collect_files_for_strain_assessment:
             f"data/species/sp-{w.species}/strain_genomes.gtpro.mgtp.nc"
         ],
         reference_strain_accuracy=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-{w.ss_params}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-{w.ss_params}_t-{w.trnsfm}_thresh-corr{w.corr_thresh}-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
-        reference_strain_accuracy_depth_only=lambda w: [
-            f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-{w.ss_params}_thresh-corr0-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
-            for strain in species_genomes(w.species)
-        ],
+        # reference_strain_accuracy_depth_only=lambda w: [
+        #     f"data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.centroidA}-{w.bowtie_params}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}_ss-{w.ss_params}_t-{w.trnsfm}_thresh-corr0-depth{w.depth_thresh}.{strain}.gene_content_reconstruction_accuracy.tsv"
+        #     for strain in species_genomes(w.species)
+        # ],
+        # xjin_strain_summary="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv"
         reference_strain_mapping="data/group/{group}/species/sp-{species}/ALL_STRAINS.tiles-l100-o99.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
-        xjin_strain_summary="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_thresh-corr{corr_thresh}-depth{depth_thresh}.xjin_strain_summary.tsv"
     params:
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
     shell:
         "echo {input} {params.cluster_info} | tr ' ' '\n' > {output}"
+
+
+rule xjin_benchmarking_grid_single_species_single_unit:
+    output:
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"
+        ),
+    input:
+        spgc=lambda w: [
+            f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
+            for specgene_params, ss_params, trnsfm_params, thresh_params in product(
+                ["ref-t25-p95"],
+                ["deepest-n1", "deepest-n5", "deepest-n10", "deepest-n20", "all"],
+                [5, 10, 20, 30],
+                [
+                    "corr0-depth250",
+                    "corr350-depth250",
+                    "corr250-depth250",
+                    "corr200-depth250",
+                    "corr150-depth250",
+                ],
+                # ["ref-t25-p95"],
+                # ["all"],
+                # [10],
+                # [
+                #     "corr350-depth250",
+                # ],
+            )
+        ],
+        # spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
+        # panphlan="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.panphlan.{unit}-xjin_strain_summary.tsv",
+
+
+rule xjin_benchmarking_grid_single_species:
+    output:
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"
+        ),
+    input:
+        uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
+        ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
+        cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
+
+
+rule xjin_benchmarking_grid_all_species:
+    output:
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.ALL_XJIN_SPECIES.flag"
+        ),
+    input:
+        lambda w: [
+            f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"
+            for species in config["species_group"]["XJIN_BENCHMARK"]
+        ],

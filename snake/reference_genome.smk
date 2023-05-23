@@ -63,6 +63,34 @@ rule eggnog_mapper_translated_orfs:
         """
 
 
+rule parse_emapper_output_to_gene_x_ko:
+    output: "{stem}.emapper.gene_x_ko.tsv"
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_ko.py",
+        emapper="{stem}.emapper.d/proteins.emapper.annotations",
+    shell:
+        "{input.script} {input.emapper} {output}"
+
+
+rule parse_emapper_output_to_gene_x_cog:
+    output: "{stem}.emapper.gene_x_cog.tsv"
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_cog.py",
+        emapper="{stem}.emapper.d/proteins.emapper.annotations",
+    shell:
+        "{input.script} {input.emapper} {output}"
+
+
+rule strain_emapper_output_to_agg_strain_gene:
+    output: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv"
+    input: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv"
+    run:
+        strain_gene_x_agg = pd.read_table(input[0])
+        result = (strain_gene_x_agg.groupby(wildcards.agg).apply(len) > 0).astype(int).to_frame(name=wildcards.strain)
+        result.to_csv(output[0], sep='\t')
+
+
+
 rule dbCAN_annotate_translated_orfs:
     output:
         dir=directory("{stem}.dbcan.d"),
@@ -321,7 +349,7 @@ rule assign_matching_genes_based_on_bitscore_ratio:
 # ascending integers.
 rule assign_matching_genes_based_on_tile_depth:
     output:
-        "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.tsv",
+        "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.uhgg-strain_gene.tsv",
     input:
         script="scripts/identify_strain_genes_from_tiling_depth.py",
         depth="{stemA}/species/sp-{species}/ALL_STRAINS.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",

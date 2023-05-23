@@ -14,6 +14,20 @@ config["species_group"] = (
     .species_id.apply(list)
 )
 
+config["species_group_to_sfacts_stem"] = (
+    pd.read_table("meta/species_group.tsv")
+    .astype(str)
+    .set_index(['species_id', 'species_group_id'])
+    .sfacts_stem
+)
+config["species_group_to_spgc_stem"] = (
+    pd.read_table("meta/species_group.tsv")
+    .astype(str)
+    .set_index(['species_id', 'species_group_id'])
+    .spgc_stem
+)
+
+
 config["genome"] = pd.read_table(
     "meta/genome.tsv", dtype=str, index_col=["genome_id"]
 ).dropna(subset=["genome_path"])

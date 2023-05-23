@@ -1,37 +1,40 @@
 #!/usr/bin/env python3
+# {input.script} {input.truth} {input.infer} {output}
 
 import pandas as pd
 import sys
 import scipy as sp
 import scipy.stats
 from lib.pandas_util import idxwhere
-from tqdm import tqdm
 import numpy as np
+from tqdm import tqdm
 
 
-def calculate_asymetric_statistics(match_matrix):
-    # TODO: Inline these calculations and drop approach to "asymetric" matching.
-    tp_orf = idxwhere(match_matrix.any(1))
-    fn_orf = idxwhere(~match_matrix.any(1))
-    tp_gene = idxwhere(match_matrix.any(0))
-    fp_gene = idxwhere(~match_matrix.any(0))
+def accuracy_stats(truth, predicted):
+    truth = set(truth)
+    predicted = set(predicted)
+    false_negatives = truth - predicted
+    false_positives = predicted - truth
+    true_positives = truth & predicted
 
-    n_tp_gene = len(tp_gene)
-    n_fp_gene = len(fp_gene)
-    n_fn_orf = len(fn_orf)
-    n_tp_orf = len(tp_orf)
+    n_t = len(truth)
+    n_p = len(predicted)
+    n_fn = len(false_negatives)
+    n_fp = len(false_positives)
+    n_tp = len(true_positives)
 
-    if (n_tp_gene + n_fp_gene) == 0:
-        precision = 0  # np.nan
+    if n_p > 0:
+        precision = n_tp / n_p
     else:
-        precision = n_tp_gene / (n_tp_gene + n_fp_gene)
-    if (n_tp_orf + n_fn_orf) == 0:
-        recall = 0  # np.nan
-    else:
-        recall = n_tp_orf / (n_tp_orf + n_fn_orf)
+        precision = np.nan
 
-    if np.isnan(precision) or np.isnan(recall):
-        f1 = 0  # np.nan
+    if n_t > 0:
+        recall = n_tp / n_t
+    else:
+        recall = np.nan
+
+    if np.isnan([precision, recall]).any():
+        f1 = np.nan
     else:
         f1 = sp.stats.hmean([precision, recall])
 
@@ -39,68 +42,27 @@ def calculate_asymetric_statistics(match_matrix):
 
 
 if __name__ == "__main__":
-    gene_matching_path = sys.argv[1]
-    corr_path = sys.argv[2]
-    depth_path = sys.argv[3]
-    thresh_path = sys.argv[4]
-    outpath = sys.argv[5]
+    truth_path = sys.argv[1]
+    infer_path = sys.argv[2]
+    outpath = sys.argv[3]
 
-    # Load data
-    # TODO: Change "matching gene" input to just a list.
-    matching_gene = (
-        pd.read_table(
-            gene_matching_path, names=["orf", "gene"], index_col=["orf", "gene"]
-        )
-        .assign(hit=True)
-        .unstack("orf", fill_value=False)
+    truth_genes = pd.read_table(truth_path, index_col=0)
+    assert truth_genes.shape[1] == 1
+    truth_genes = truth_genes.iloc[:, 0]
+    infer_genes = pd.read_table(infer_path, index_col=0).rename_axis(
+        columns="strain"
     )
-    corr = pd.read_table(corr_path, index_col=["gene_id", "strain"]).squeeze().unstack()
-    depth = (
-        pd.read_table(depth_path, index_col=["gene_id", "strain"]).squeeze().unstack()
-    )
-    thresh = pd.read_table(thresh_path, index_col=["strain"])
-
-    # Align data
-    gene_list = list(set(corr.index) | set(depth.index) | set(matching_gene.index))
-    depth = depth.reindex(index=gene_list, fill_value=0)
-    corr = corr.reindex(index=gene_list, fill_value=0)
-    matching_gene = matching_gene.reindex(gene_list, fill_value=False).T
-
-    # Align strains
-    strain_list = list(set(corr.columns) & set(depth.columns))
-    depth = depth[strain_list]
-    corr = corr[strain_list]
-
-    results = {}
-    for strain in tqdm(corr.columns):
-        # Classify genes
-        depth_and_corr_hit = idxwhere(
-            (corr[strain] >= thresh.correlation[strain])
-            & (depth[strain] >= thresh.depth_low[strain])
+    assert truth_genes.index.name == infer_genes.index.name
+    truth = set(idxwhere(truth_genes.astype(bool)))
+    out = dict()
+    for strain in tqdm(infer_genes.columns):
+        predicted = set(idxwhere(infer_genes[strain] == 1))
+        precision, recall, f1 = accuracy_stats(truth, predicted)
+        out[strain] = dict(
+            precision=precision,
+            recall=recall,
+            f1=f1,
         )
 
-        precision, recall, f1 = calculate_asymetric_statistics(
-            matching_gene.loc[:, depth_and_corr_hit]
-        )
-        results[strain] = [
-            precision,
-            recall,
-            f1,
-        ]
-
-    # Compile results
-    results = (
-        pd.DataFrame(
-            results,
-            index=[
-                "precision",
-                "recall",
-                "f1",
-            ],
-        )
-        .T.rename_axis(index="strain")
-        .sort_values("f1", ascending=False)
-    )
-
-    # Write output
-    results.to_csv(outpath, sep="\t")
+    out = pd.DataFrame(out).T.rename_axis(index="strain")
+    out.to_csv(outpath, sep="\t")

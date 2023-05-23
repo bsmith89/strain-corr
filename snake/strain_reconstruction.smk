@@ -118,6 +118,7 @@ rule calculate_species_depth_from_core_genes:
         """
 
 
+# NOTE: Hub-rule; comment out to reduce DAG building time.
 # NOTE: Because I use a species-specific species_depth.tsv,
 # in many of these files, samples with 0-depth (or maybe samples with
 # 0-depth for ALL species genes), are not even listed.
@@ -195,14 +196,16 @@ rule identify_strain_samples:
 
 rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
     output:
-        corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_correlation.tsv",
+        depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_depth_ratio.tsv",
     input:
         script="scripts/calculate_strain_partitioned_gene_stats.py",
         nospecies_samples="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_free_samples.list",
         strain_partitions="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
+    params:
+        trnsfm=lambda w: float(w.trnsfm) / 10
     shell:
         """
         {input.script} \
@@ -210,6 +213,7 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
                 {input.strain_partitions} \
                 {input.species_depth} \
                 {input.gene_depth} \
+                {params.trnsfm} \
                 {output.corr} \
                 {output.depth}
         """
@@ -240,12 +244,12 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
 # parameterize the filename by specgene parameters.
 rule pick_strain_gene_thresholds_by_quantiles_clipped:
     output:
-        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
+        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-corrq{corr}-depthq{depth}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds.py",
         species_gene="{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_gene.list",  # An alias of the pangenome and sfacts agnostic version.
-        strain_corr="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        strain_depth="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        strain_corr="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_correlation.tsv",
+        strain_depth="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_depth_ratio.tsv",
     wildcard_constraints:
         corr=integer_wc,
         depth=integer_wc,
@@ -274,7 +278,7 @@ rule pick_strain_gene_thresholds_by_quantiles_clipped:
 
 use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_thresholds_by_quantiles_clipped_fixed_depth with:
     output:
-        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-corrq{corr}-depth{depth}.strain_gene_threshold.tsv",
+        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-corrq{corr}-depth{depth}.strain_gene_threshold.tsv",
     params:
         strain_corr_quantile=lambda w: float(w.corr) / 1000,
         strain_depth_quantile=0.5,  # NOTE: Dummy value. Min=max; therefore depth is fixed. Resulting depth_threshold_high is actually the median.
@@ -286,7 +290,7 @@ use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_th
 
 use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_thresholds_by_fixed_depth_and_corr with:
     output:
-        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-corr{corr}-depth{depth}.strain_gene_threshold.tsv",
+        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-corr{corr}-depth{depth}.strain_gene_threshold.tsv",
     params:
         strain_corr_quantile=0.5,  # Dummy value. Min=max; therefore corr is fixed.
         strain_depth_quantile=0.5,  # NOTE: Dummy value. Min=max; therefore depth is fixed. Resulting depth_threshold_high is actually the median.
@@ -298,12 +302,12 @@ use rule pick_strain_gene_thresholds_by_quantiles_clipped as pick_strain_gene_th
 
 rule pick_strain_gene_thresholds_by_grid_search:
     output:
-        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-alpha{alpha}.strain_gene_threshold.tsv",
+        "{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}_thresh-alpha{alpha}.strain_gene_threshold.tsv",
     input:
         script="scripts/pick_strain_gene_thresholds_by_grid_search.py",
         species_gene="{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_gene.list",
-        strain_corr="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        strain_depth="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        strain_corr="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_correlation.tsv",
+        strain_depth="{stemA}.gtpro.{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{trnsfm}.strain_depth_ratio.tsv",
     params:
         resolution_corr=50,
         resolution_depth=50,
@@ -321,14 +325,14 @@ rule pick_strain_gene_thresholds_by_grid_search:
         """
 
 
-rule collect_strain_gene_hits:
+rule select_strain_gene_hits:
     output:
-        "{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.strain_gene.tsv",
+        "{stem}.spgc_{spgc_stem}_thresh-{thresh_params}.strain_gene.tsv",
     input:
-        script="scripts/construct_strain_genes_table.py",
-        thresholds="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}_thresh-{thresh_params}.strain_gene_threshold.tsv",
-        strain_corr="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_correlation.tsv",
-        strain_depth="{stem}.spgc_specgene-{specgene_params}_ss-{ss_params}.strain_depth_ratio.tsv",
+        script="scripts/select_strain_genes.py",
+        thresholds="{stem}.spgc_{spgc_stem}_thresh-{thresh_params}.strain_gene_threshold.tsv",
+        strain_corr="{stem}.spgc_{spgc_stem}.strain_correlation.tsv",
+        strain_depth="{stem}.spgc_{spgc_stem}.strain_depth_ratio.tsv",
     shell:
         """
         {input.script} \
@@ -337,6 +341,22 @@ rule collect_strain_gene_hits:
                 {input.thresholds} \
                 {output}
         """
+
+
+rule alias_final_strain_genes:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.spgc.strain_gene.tsv",
+    input:
+        source=lambda w: (
+            "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.strain_gene.tsv".format(
+                group=w.group, species=w.species, stemA=w.stemA,
+                spgc_stem=config["species_group_to_spgc_stem"][
+                    (w.species, w.group)
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:

@@ -14,8 +14,9 @@ if __name__ == "__main__":
     partition_path = sys.argv[2]
     species_depth_path = sys.argv[3]
     gene_depth_path = sys.argv[4]
-    corr_outpath = sys.argv[5]
-    depth_outpath = sys.argv[6]
+    trnsfm_exponent = float(sys.argv[5])
+    corr_outpath = sys.argv[6]
+    depth_outpath = sys.argv[7]
 
     info("Loading input data.")
     # Collect list of species-free samples.
@@ -59,8 +60,8 @@ if __name__ == "__main__":
             corr[strain] = pd.Series(
                 1
                 - cdist(
-                    species_depth.sel(sample=focal_samples).expand_dims(dict(_=1)),
-                    gene_depth.sel(sample=focal_samples).transpose("gene_id", "sample"),
+                    species_depth.sel(sample=focal_samples).pipe(lambda x: x ** trnsfm_exponent).expand_dims(dict(_=1)),
+                    gene_depth.sel(sample=focal_samples).pipe(lambda x: x ** trnsfm_exponent).transpose("gene_id", "sample"),
                     metric="cosine",
                 )[0],
                 index=gene_depth.gene_id,

@@ -3,6 +3,7 @@
 import xarray as xr
 import sys
 from lib.pandas_util import idxwhere
+import pandas as pd
 
 
 if __name__ == "__main__":
@@ -11,8 +12,7 @@ if __name__ == "__main__":
     depth_thresh = float(sys.argv[3])
     outpath = sys.argv[4]
 
-    depth = xr.load_dataarray(depth_inpath).sel(sample=sys.argv[2]).to_series()
+    depth = xr.load_dataarray(depth_inpath).sel(sample=strain_id).to_series()
     gene_hits = idxwhere(depth > depth_thresh)
-    with open(outpath, "w") as f:
-        for i, g in enumerate(gene_hits):
-            print(i, g, sep="\t", file=f)
+    output = pd.DataFrame(1, index=gene_hits, columns=[strain_id]).rename_axis(index="gene_id")
+    output.to_csv(outpath, sep='\t')
