@@ -36,7 +36,7 @@ rule run_panphlan_on_spgc_mapping:
         sample_list=lambda w: list(config["mgen_group"][w.group]),
         min_depth=0.0,
     conda:
-        "conda/panphlan.yaml"
+        "conda/panphlan_dev.yaml"
     threads: 2
     shell:
         """

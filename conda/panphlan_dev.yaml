@@ -1,0 +1,16 @@
+name: panphlan_dev
+channels:
+  - anaconda
+  - bioconda
+  - conda-forge
+  - r
+  - defaults
+dependencies:
+  - numpy
+  - scipy
+  - pandas
+  - bowtie2
+  - samtools
+  - matplotlib
+  - pip:
+    - -e /include/panphlan
