@@ -6842,87 +6842,87 @@ species_id	species_group_id	sfacts_stem	spgc_stem	comment
 104639	fmt_studies	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
 104643	fmt_studies	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
 104644	fmt_studies	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100003	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100018	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100026	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100029	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100035	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100038	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100044	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100046	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100060	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100062	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100074	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100076	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100080	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100138	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100142	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100146	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100148	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100150	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100159	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100203	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100208	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100212	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100214	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100226	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100236	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100254	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100289	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100296	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100760	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100901	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101292	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101294	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101302	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101303	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101309	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101310	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101313	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101314	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101315	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101316	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101319	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101321	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101334	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101337	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101359	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101374	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101380	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101385	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101420	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101440	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101490	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101493	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101704	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101711	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101830	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102293	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102327	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102328	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102340	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102395	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102454	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102455	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102469	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102470	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102480	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102483	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102492	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102530	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102544	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102549	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-102779	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-103681	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-103682	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-103683	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-103684	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-104158	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-104345	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100022	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100069	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100262	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100271	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-100878	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101306	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
-101429	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
+100003	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100018	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100026	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100029	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100035	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100038	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100044	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100046	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100060	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100062	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100074	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100076	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100080	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100138	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100142	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100146	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100148	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100150	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100159	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100203	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100208	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100212	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100214	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100226	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100236	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100254	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100289	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100296	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100760	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100901	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101292	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101294	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101302	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101303	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101309	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101310	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101313	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101314	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101315	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101316	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101319	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101321	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101334	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101337	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101359	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101374	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101380	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101385	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101420	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101440	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101490	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101493	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101704	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101711	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101830	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102293	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102327	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102328	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102340	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102395	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102454	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102455	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102469	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102470	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102480	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102483	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102492	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102530	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102544	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102549	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+102779	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+103681	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+103682	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+103683	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+103684	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+104158	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+104345	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100022	not_XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100069	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100262	not_XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100271	not_XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+100878	not_XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101306	XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
+101429	not_XJIN_BENCHMARK	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	the XJIN_BENCHMARK group should only be used to select species for benchmarking
