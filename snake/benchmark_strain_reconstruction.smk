@@ -90,12 +90,12 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         result.to_csv(output[0], sep="\t")
 
 
-rule assess_spgc_infered_strain_accuracy_uhgg:
+rule assess_infered_strain_accuracy_uhgg:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.uhgg-reconstruction_accuracy.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.uhgg-reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.uhgg-strain_gene.tsv",
+        infer="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.uhgg-strain_gene.tsv",
         truth="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
     group:
         "assess_gene_inference_benchmark"
@@ -108,86 +108,16 @@ rule assess_spgc_infered_strain_accuracy_uhgg:
         """
 
 
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_xjin_strain_accuracy_uhgg with:
+ruleorder: assess_infered_strain_accuracy_uhgg > assess_infered_strain_accuracy_other_unit
+
+
+use rule assess_infered_strain_accuracy_uhgg as assess_infered_strain_accuracy_other_unit with:
     output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.uhgg-reconstruction_accuracy.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.{unit}-reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.uhgg-strain_gene.tsv",
-        truth="data/group/xjin_hmp2/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
-
-
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_xjin_strain_accuracy_uhgg with:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.uhgg-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.uhgg-strain_gene.tsv",
-        truth="data/group/xjin_hmp2/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
-
-
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spgc_infered_strain_accuracy_ko with:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.ko-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.ko-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
-
-
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_strain_accuracy_ko with:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.ko-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.ko-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
-    input:
-        uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
-        ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
-        cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
-
-
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_strain_accuracy_ko with:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.ko-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.ko-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.ko-strain_gene.tsv",
-
-
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spgc_infered_strain_accuracy_cog with:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.{strain}.cog-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_{spgc_params}.cog-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
-
-
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_panphlan_infered_strain_accuracy_cog with:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.{strain}.cog-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.panphlan.cog-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
-
-
-# NOTE: This rule only works for group=XJIN_BENCHMARK.
-use rule assess_spgc_infered_strain_accuracy_uhgg as assess_spanda_infered_strain_accuracy_cog with:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.{strain}.cog-reconstruction_accuracy.tsv",
-    input:
-        script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spanda{spanda_params}.cog-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.cog-strain_gene.tsv",
+        infer="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv",
 
 
 # # NOTE: This hard-codes the "xjin_" prefix and finds the strain with the most
@@ -393,6 +323,7 @@ rule xjin_benchmarking_grid_single_species:
         uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
         ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
         cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
+        eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.eggnog-accuracy.xjin_benchmark_grid.flag",
 
 
 rule xjin_benchmarking_grid_all_species:

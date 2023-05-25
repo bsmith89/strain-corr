@@ -63,25 +63,18 @@ rule eggnog_mapper_translated_orfs:
         """
 
 
-rule parse_emapper_output_to_gene_x_ko:
-    output: "{stem}.emapper.gene_x_ko.tsv"
+rule parse_emapper_output_to_gene_x_unit:
+    output: "{stem}.emapper.gene_x_{unit}.tsv"
     input:
-        script="scripts/parse_emapper_output_to_gene_x_ko.py",
+        script="scripts/parse_emapper_output_to_gene_x_{unit}.py",
         emapper="{stem}.emapper.d/proteins.emapper.annotations",
     shell:
         "{input.script} {input.emapper} {output}"
 
 
-rule parse_emapper_output_to_gene_x_cog:
-    output: "{stem}.emapper.gene_x_cog.tsv"
-    input:
-        script="scripts/parse_emapper_output_to_gene_x_cog.py",
-        emapper="{stem}.emapper.d/proteins.emapper.annotations",
-    shell:
-        "{input.script} {input.emapper} {output}"
 
 
-rule strain_emapper_output_to_agg_strain_gene:
+rule aggregate_strain_emapper_output_by_unit:
     output: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv"
     input: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv"
     run:
