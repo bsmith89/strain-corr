@@ -153,6 +153,7 @@ rule compile_reference_genome_accuracy_info_for_spgc:
             f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
+        strain_meta="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-{thresh_params}.strain_meta.tsv",
     params:
         args=lambda w: [
             f"{strain}=data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
@@ -161,7 +162,7 @@ rule compile_reference_genome_accuracy_info_for_spgc:
     group:
         "assess_gene_inference_benchmark"
     shell:
-        "{input.script} {input.strain_samples} {input.species_free_samples} {input.species_depth} {input.strain_thresh} {params.args} > {output}"
+        "{input.script} {input.strain_meta} {input.strain_samples} {input.species_free_samples} {input.species_depth} {input.strain_thresh} {params.args} > {output}"
 
 
 # TODO: Combine all reference genomes into one table.
@@ -289,7 +290,7 @@ rule xjin_benchmarking_grid_single_species_single_unit:
             "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"
         ),
     input:
-        spgc=lambda w: [
+        spgc0=lambda w: [
             f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
             for specgene_params, ss_params, trnsfm_params, thresh_params in product(
                 ["ref-t25-p95"],
@@ -302,16 +303,19 @@ rule xjin_benchmarking_grid_single_species_single_unit:
                     "corr200-depth250",
                     "corr150-depth250",
                 ],
-                # ["ref-t25-p95"],
-                # ["all"],
-                # [10],
-                # [
-                #     "corr350-depth250",
-                # ],
             )
         ],
-        # spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
-        # panphlan="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.panphlan.{unit}-xjin_strain_summary.tsv",
+        spgc1=lambda w: [
+            f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
+            for specgene_params, ss_params, trnsfm_params, thresh_params in product(
+                ["denovo2-t30-n800"],
+                ["all"],
+                [30],
+                ["corr200-depth250"],
+            )
+        ],
+        spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
+        panphlan="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.panphlan.{unit}-xjin_strain_summary.tsv",
 
 
 rule xjin_benchmarking_grid_single_species:
@@ -324,6 +328,7 @@ rule xjin_benchmarking_grid_single_species:
         ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
         cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
         eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.eggnog-accuracy.xjin_benchmark_grid.flag",
+        top_eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.top_eggnog-accuracy.xjin_benchmark_grid.flag",
 
 
 rule xjin_benchmarking_grid_all_species:

@@ -342,14 +342,28 @@ rule select_strain_gene_hits:
                 {output}
         """
 
+rule compile_strain_spgc_metadata:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv",
+    input:
+        script="scripts/compile_spgc_results_metadata.py",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_gene.list",
+        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_depth.tsv",
+        strain_fit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
+        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
+        strain_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_gene.tsv",
+    conda: 'conda/sfacts.yaml'
+    shell:
+        "{input.script} {input.species_gene} {input.species_depth} {input.strain_fit} {input.strain_samples} {input.strain_gene} {output}"
+
 
 rule alias_final_strain_genes:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.spgc.strain_gene.tsv",
+        "data/group/{group}/species/sp-{species}/{stemA}.spgc.{stemB}",
     input:
         source=lambda w: (
-            "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.strain_gene.tsv".format(
-                group=w.group, species=w.species, stemA=w.stemA,
+            "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.{stemB}".format(
+                group=w.group, species=w.species, stemA=w.stemA, stemB=w.stemB,
                 spgc_stem=config["species_group_to_spgc_stem"][
                     (w.species, w.group)
                 ],

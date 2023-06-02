@@ -55,3 +55,6 @@ def read_table_lz4(path, *args, **kwargs):
     with subprocess.Popen(["lz4", "-dc", path], stdout=subprocess.PIPE) as proc:
         out = pd.read_table(proc.stdout, *args, **kwargs)
     return out
+
+def read_list(path):
+    return pd.read_table(path, names=['index'], index_col='index').index.tolist()
