@@ -124,3 +124,33 @@ rule link_dbcan_db:
 
 localrules:
     link_dbcan_db,
+
+
+rule link_een_mgen_dir:
+    output:
+        directory("raw/een-mgen/mgen"),
+    input:
+        "/pollard/data/projects/bsmith/een-mgen/raw/2023-06-16_dropbox_gladstone_een-metagenomes",
+    shell:
+        alias_recipe_norelative
+
+
+# rule link_een_gtpro_dir:
+#     output:
+#         directory("raw/een-mgen/gtpro"),
+#     input:
+#         "/pollard/data/projects/bsmith/een-mgen/raw/2023-06-01_aritra.mahapatra@tum.de/syncandshare.lrz.de/dl/fiL5YrfYpvTkm19DDBkrTe",
+#     shell:
+#         alias_recipe_norelative
+#
+#
+# rule link_een_mgen_gtpro_results:
+#     output:
+#         "data/reads/{mgen}/{r}.proc.gtpro_raw.gz",
+#     input:
+#         lambda w: "raw/een-mgen/gtpro/" + config["een_mgen_local_src"][w.r][w.mgen],
+#     shell:
+#         alias_recipe
+#
+#
+# ruleorder: link_een_mgen_gtpro_results > run_gtpro
