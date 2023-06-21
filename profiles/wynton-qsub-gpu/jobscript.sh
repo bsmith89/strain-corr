@@ -15,6 +15,7 @@ export CUDA_VISIBLE_DEVICES=${{SGE_GPU:-0}}
 echo CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES SGE_GPU=$SGE_GPU
 
 # source ./env
+export PROJECT_ROOT=$PWD
 #
 # mkdir -p /scratch/bsmith
 #

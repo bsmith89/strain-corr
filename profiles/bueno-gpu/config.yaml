@@ -5,8 +5,10 @@ keep-going: true
 latency-wait: 5
 resources: ['network_connections=3', 'mem_mb=500000', 'gpu=4']
 use-conda: true
+conda-prefix: "/pollard/home/bsmith/.snakemake/conda"
 conda-frontend: 'mamba'
 use-singularity: true
+singularity-prefix: "/pollard/home/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --nv

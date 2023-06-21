@@ -2,7 +2,7 @@ rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
 notemp: true
 local-cores: 6
 latency-wait: 180
-max-jobs-per-second: 10
+max-jobs-per-second: 100
 keep-going: true
 printshellcmds: true
 resources: 'network_connections=3'
@@ -12,11 +12,14 @@ default-resources:
   - 'walltime_hr=0'
   - 'walltime_min=29'
   - 'walltime_sec=59'
+  - 'device="gpu"'
   - 'gpu_mem_mb=1000'
   - 'outdir="log/"'
 use-conda: true
+conda-prefix: "/pollard/home/bsmith/.snakemake/conda"
 conda-frontend: 'mamba'
 use-singularity: true
+singularity-prefix: "/pollard/home/bsmith/.snakemake/singularity"
 singularity-args: >-
   --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
   --nv

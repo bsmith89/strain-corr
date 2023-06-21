@@ -10,6 +10,7 @@
 # # # FIXME: Why is SGE_GPU not set??
 #
 # source ./env
+export PROJECT_ROOT=$PWD
 #
 # mkdir -p /scratch/bsmith
 #

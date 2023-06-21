@@ -9,6 +9,7 @@ default-resources:
   - 'walltime_hr=0'
   - 'walltime_min=29'
   - 'walltime_sec=59'
+  - 'device="gpu"'
   - 'gpu_mem_mb=1000'
   - 'outdir="log/"'
 use-conda: true
