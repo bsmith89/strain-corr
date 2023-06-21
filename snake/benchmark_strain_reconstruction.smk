@@ -69,6 +69,9 @@ rule alias_spgc_gene_hits_as_uhgg_strain_gene:
         alias_recipe
 
 
+ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
+
+
 localrules:
     alias_spgc_gene_hits_as_uhgg_strain_gene,
 
@@ -76,6 +79,8 @@ localrules:
 rule aggregate_uhgg_strain_gene_by_annotation:
     output:
         "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
+    wildcard_constraints:
+        agg="eggnog|top_eggnog|cog|ko",
     input:
         uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
         agg="data/species/sp-{species}/pangenome.centroids.emapper.gene_x_{agg}.tsv",
@@ -90,13 +95,38 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         result.to_csv(output[0], sep="\t")
 
 
+# NOTE: (2023-06-13) This renaming brings spgc inferences into alignment with spanda and panphlan so
+# that the accuracy assessment rules below can be generic between all three.
+rule alias_spgc_xjin_hmp2_inferences_as_xjin_benchmark:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_{stemB}.uhgg-strain_gene.tsv",
+    input:
+        "data/group/xjin_hmp2/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_{stemB}.uhgg-strain_gene.tsv",
+    shell:
+        alias_recipe
+
+
+# NOTE: (2023-06-13) This rule order should mean that
+# alias_spgc_gene_hits_as_uhgg_strain_gene doesn't look for an XJIN_BENCHMARK
+# inference first.
+ruleorder: alias_spgc_xjin_hmp2_inferences_as_xjin_benchmark > alias_spgc_gene_hits_as_uhgg_strain_gene
+
+
+# NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
+# other units, because it's assigned based on tiling depth with a particular
+# centroidA, centroidB, mapping strategy, etc.
+# Also note that UHGG as an assessment unit isn't great. I could try switching
+# to "best hit" UHGG assignment, but I think the accuracy would look
+# misleadingly low...
+# TODO: Probably worth considering using the BLAST-based strain-ORF annotation
+# approach, though.
 rule assess_infered_strain_accuracy_uhgg:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.uhgg-reconstruction_accuracy.tsv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.uhgg-reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.uhgg-strain_gene.tsv",
-        truth="data/group/{group}/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.uhgg-strain_gene.tsv",
+        truth="data/group/xjin_hmp2/species/sp-{species}/genome/{strain}.tiles-l100-o99.gene{pangenome_params}.gene_matching-t30.uhgg-strain_gene.tsv",
     group:
         "assess_gene_inference_benchmark"
     shell:
@@ -113,15 +143,19 @@ ruleorder: assess_infered_strain_accuracy_uhgg > assess_infered_strain_accuracy_
 
 use rule assess_infered_strain_accuracy_uhgg as assess_infered_strain_accuracy_other_unit with:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.{unit}-reconstruction_accuracy.tsv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.{unit}-reconstruction_accuracy.tsv",
+    wildcard_constraints:
+        unit="eggnog|top_eggnog|cog|ko|eggnog_noshort|uhgg_noshort",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv",
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv",
         truth="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv",
 
 
 # # NOTE: This hard-codes the "xjin_" prefix and finds the strain with the most
 # # of these samples.
+# # TODO: (2023-06-13) Decide if I should be selecting the panphlan/spanda strain
+# # based on something like this.
 # rule match_xjin_strains:
 #     output:
 #         samples="data/group/xjin_hmp2/{stem}.spgc_ss-{ss_params}.xjin_sample_count.tsv",
@@ -150,13 +184,13 @@ rule compile_reference_genome_accuracy_info_for_spgc:
         species_depth="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-{specgene_params}.species_depth.tsv",
         strain_thresh="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-{thresh_params}.strain_gene_threshold.tsv",
         reference_genome_accuracy=lambda w: [
-            f"data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
+            f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
         strain_meta="data/group/xjin_hmp2/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm}_thresh-{thresh_params}.strain_meta.tsv",
     params:
         args=lambda w: [
-            f"{strain}=data/group/xjin_hmp2/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
+            f"{strain}=data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{w.specgene_params}_ss-xjin-{w.ss_params}_t-{w.trnsfm}_thresh-{w.thresh_params}.{strain}.{w.unit}-reconstruction_accuracy.tsv"
             for strain in species_genomes(w.species)
         ],
     group:
@@ -286,32 +320,26 @@ rule collect_files_for_strain_assessment:
 
 rule xjin_benchmarking_grid_single_species_single_unit:
     output:
-        touch(
-            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"
-        ),
+        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"),
     input:
         spgc0=lambda w: [
             f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
             for specgene_params, ss_params, trnsfm_params, thresh_params in product(
                 ["ref-t25-p95"],
-                ["deepest-n1", "deepest-n5", "deepest-n10", "deepest-n20", "all"],
-                [5, 10, 20, 30],
+                ["deepest-n1", "deepest-n10", "deepest-n20", "all"],
+                [10, 30],
                 [
-                    "corr0-depth250",
+                    "corr450-depth250",
+                    "corr400-depth250",
                     "corr350-depth250",
+                    "corr300-depth250",
                     "corr250-depth250",
                     "corr200-depth250",
                     "corr150-depth250",
+                    "corr100-depth250",
+                    "corr50-depth250",
+                    "corr0-depth250",
                 ],
-            )
-        ],
-        spgc1=lambda w: [
-            f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
-            for specgene_params, ss_params, trnsfm_params, thresh_params in product(
-                ["denovo2-t30-n800"],
-                ["all"],
-                [30],
-                ["corr200-depth250"],
             )
         ],
         spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
@@ -320,24 +348,18 @@ rule xjin_benchmarking_grid_single_species_single_unit:
 
 rule xjin_benchmarking_grid_single_species:
     output:
-        touch(
-            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"
-        ),
+        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"),
     input:
         uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
-        ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
-        cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
         eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.eggnog-accuracy.xjin_benchmark_grid.flag",
-        top_eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.top_eggnog-accuracy.xjin_benchmark_grid.flag",
 
 
 rule xjin_benchmarking_grid_all_species:
     output:
-        touch(
-            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.ALL_XJIN_SPECIES.flag"
-        ),
+        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.ALL_XJIN_SPECIES.flag"),
     input:
         lambda w: [
             f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"
-            for species in config["species_group"]["XJIN_BENCHMARK"]
+            for species in config["genome"].species_id.unique()
+            if species != "TODO"
         ],

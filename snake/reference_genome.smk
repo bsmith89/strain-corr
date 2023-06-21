@@ -417,8 +417,8 @@ use rule run_bowtie_species_pangenome_v22 as run_bowtie_species_pangenome_on_ref
 #     threads: 24
 
 
-# FIXME: This is also a hub rule, and extends another hub rule. Consider
-# commenting it out.
+# NOTE: Hub-rule (because it extends another hub rule).
+# Consider commenting it out.
 # NOTE: The "samples" here are actually reference strains, not samples.
 # Then the sample_pattern+sample_list trick is doing something extra tricky
 # where the species and strain are combined together.
@@ -440,8 +440,3 @@ use rule build_new_pangenome_profiling_db as build_new_pangenome_profiling_db_on
         ],
 
 
-use rule profile_pangenome_mapping_tally_aggregated_by_gene as profile_pangenome_mapping_tally_aggregated_by_gene_for_reference_genome_tiles with:
-    output:
-        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
-    input:
-        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.bam",

@@ -2,6 +2,11 @@ use rule start_shell as start_shell_panphlan with:
     conda:
         "conda/panphlan.yaml"
 
+use rule start_shell as start_shell_panphlan_dev with:
+    conda:
+        "conda/panphlan_dev.yaml"
+
+
 
 # NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
@@ -19,7 +24,7 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
 
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
 # "run_spanda_decompose" combined.
-# NOTE: I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
+# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
 # re-running the bowtie2 building and mapping steps.
 # This means that I process all xjin samples but take their counts from xjin_hmp2
 # pangenome profiling.

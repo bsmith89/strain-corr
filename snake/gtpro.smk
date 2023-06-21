@@ -140,6 +140,32 @@ rule gtpro_finish_processing_reads:
         )
 
 
+rule count_species_lines_from_both_reads_helper:
+    output:
+        "data/group/{group}/r.{proc}.gtpro_species_tally.tsv.args",
+    input:
+        reads=lambda w: [
+            f"data/reads/{mgen}/{r}.{w.proc}.gtpro_parse.tsv.bz2"
+            for mgen, r in product(
+                config["mgen_group"][w.group],
+                ["r1", "r2"],
+            )
+        ],
+    params:
+        mgen_list=lambda w: config["mgen_group"][w.group],
+        pattern=lambda w: f"data/reads/{{mgen}}/{{r}}.{w.proc}.gtpro_parse.tsv.bz2",
+    run:
+        with open(output[0], "w") as f:
+            for mgen in params.mgen_list:
+                print(
+                    mgen,
+                    params.pattern.format(mgen=mgen, r="r1"),
+                    params.pattern.format(mgen=mgen, r="r2"),
+                    sep="\t",
+                    file=f,
+                )
+
+
 rule count_species_lines_from_both_reads:
     output:
         "{stem}.gtpro_species_tally.tsv",
@@ -224,8 +250,28 @@ rule list_checkpoint_select_species:
         "for species in {params.obj}; do echo $species; done > {output}"
 
 
-# NOTE: Comment out this rule to speed up DAG evaluation.
-# Selects a single species from every file and concatenates.
+rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
+    output:
+        "data/group/{group}/{stem}.gtpro.tsv.bz2.args",
+    input:
+        reads=lambda w: [
+            f"data/reads/{mgen}/{w.stem}.gtpro_parse.tsv.bz2"
+            for mgen in config["mgen_group"][w.group]
+        ],
+    params:
+        mgen_list=lambda w: config["mgen_group"][w.group],
+        pattern=lambda w: f"data/reads/{{mgen}}/{w.stem}.gtpro_parse.tsv.bz2",
+    run:
+        with open(output[0], "w") as f:
+            for mgen in params.mgen_list:
+                print(
+                    mgen,
+                    params.pattern.format(mgen=mgen),
+                    sep="\t",
+                    file=f,
+                )
+
+
 rule concatenate_mgen_group_one_read_count_data_from_one_species:
     output:
         "{stemA}/species/sp-{species}/{r12}.{stemB}.gtpro.tsv.bz2",
@@ -249,8 +295,6 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         )
 
 
-# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
-# once it has been run for the focal group/species.
 rule merge_both_reads_species_count_data:
     output:
         "{stemA}/r.{stemB}.gtpro.tsv.bz2",

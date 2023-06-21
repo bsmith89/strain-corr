@@ -102,6 +102,8 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths:
     shell:
         alias_recipe
 
+localrules: alias_species_genes_from_reference_to_match_de_novo_paths
+
 
 rule calculate_species_depth_from_core_genes:
     output:
@@ -342,21 +344,6 @@ rule select_strain_gene_hits:
                 {output}
         """
 
-rule compile_strain_spgc_metadata:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv",
-    input:
-        script="scripts/compile_spgc_results_metadata.py",
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_gene.list",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_depth.tsv",
-        strain_fit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
-        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
-        strain_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_gene.tsv",
-    conda: 'conda/sfacts.yaml'
-    shell:
-        "{input.script} {input.species_gene} {input.species_depth} {input.strain_fit} {input.strain_samples} {input.strain_gene} {output}"
-
-
 rule alias_final_strain_genes:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.spgc.{stemB}",
@@ -371,6 +358,8 @@ rule alias_final_strain_genes:
         ),
     shell:
         alias_recipe
+
+localrules: alias_final_strain_genes
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:

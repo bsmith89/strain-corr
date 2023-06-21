@@ -374,6 +374,7 @@ rule profile_pangenome_depth_aggregated_by_gene:
         """
 
 
+# FIXME: (2023-06-13) Is this rule in conflict with extract_pangenome_mapping_tally_from_profile_database?
 rule profile_pangenome_mapping_tally_aggregated_by_gene:
     output:
         "{stemA}/reads/{mgen}/{stemB}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
@@ -399,31 +400,6 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         """
 
 
-rule profile_pangenome_mapping_coverage_aggregated_by_gene:
-    output:
-        "{stem}.pangenomes{centroid}.gene_coverage_tally-mapq{q}.tsv.lz4",
-    input:
-        "{stem}.pangenomes{centroid}.bam",
-    params:
-        mapq_thresh=lambda w: int(w.q),
-    conda:
-        "conda/midas.yaml"
-    threads: 1
-    resources:
-        walltime_hr=2,
-    shell:
-        """
-        samtools depth -@ {threads} --min-MQ {params.mapq_thresh} {input} \
-            | awk -v OFS='\t' '\\
-                BEGIN {{gene_id="__START__"; position_tally=0}} \\
-                $1==gene_id {{position_tally+=1}} \\
-                $1!=gene_id {{print gene_id, position_tally; gene_id=$1; position_tally=0}} \\
-                END {{print gene_id,position_tally}} \\
-                ' \
-            | (echo 'gene_id\ttally'; sed '1,1d') \
-            | lz4 -9 -zc > {output}.temp
-        mv {output}.temp {output}
-        """
 
 
 rule concatenate_pangenome_gene_info:
@@ -507,7 +483,7 @@ rule concatenate_reference_gene_lengths:
 ruleorder: concatenate_reference_gene_lengths > count_seq_lengths_nucl
 
 
-# FIXME: Hub rule. Commenting this out can greatly speed up
+# FIXME: Hub-rule. Commenting this out can greatly speed up
 # startup time for downstream tasks.
 # NOTE: I _think_ that "bowtie_params" may include the trailing "s" making this rule
 # apply to pangenomes75 just as well as pangenome75...?
@@ -604,8 +580,14 @@ rule build_new_pangenome_profiling_db:
         )
 
 
-# NOTE: Hub rule.
-rule extract_pangenome_mapping_tally_from_profile_database:
+# NOTE: (2023-06-13) The naming of this output file
+# makes it's relationship with
+# data/group/xjin_hmp2/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4
+# somewhat confusing.
+# This **species-specific** tally is extracted from
+# the pangenome profiling database, which was itself loaded
+# with the **all-species** mapping tallies.
+rule extract_one_species_pangenome_mapping_tally_from_profile_database:
     output:
         "data/group/xjin_hmp2/species/sp-{species}/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",
     input:

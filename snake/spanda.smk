@@ -69,7 +69,7 @@ rule extract_spanda_reference:
 #         """
 
 
-# NOTE: I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
+# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
 # re-running the bowtie2 building and mapping steps.
 # This means that I process all xjin samples but take their counts from xjin_hmp2
 # pangenome profiling.

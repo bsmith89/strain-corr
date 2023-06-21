@@ -2,6 +2,7 @@
 
 
 rule install_jupyter_kernel_default:
+    output: "install_jupyter_kernel_default"
     params:
         name="default",
     conda:
@@ -9,12 +10,19 @@ rule install_jupyter_kernel_default:
     shell:
         """
         python -m ipykernel install --user --name={params.name} --env PATH $PATH
+        # NOTE: This rule fails with a MissingOutputException even when the kernel is installed correctly.
         """
+
+use rule install_jupyter_kernel_default as install_jupter_conda_kernel with:
+    output: "install_jupyter_kernel.{conda}"
+    conda: lambda w: f"conda/{w.conda}.yaml"
 
 
 rule start_jupyter:
     params:
         port=config["jupyter_port"],
+    conda:
+        "conda/jupyter.yaml"
     shell:
         "jupyter lab --port={params.port} --notebook-dir nb/"
 
@@ -47,6 +55,12 @@ use rule start_shell as start_shell_seqtk with:
 use rule start_shell as start_shell_hsblastn with:
     conda:
         "conda/hsblastn.yaml"
+
+
+rule start_shell_any_conda:
+    output: "start_shell.{conda}"
+    conda: lambda w: f"conda/{w.conda}.yaml"
+    shell: "bash; echo 'Rule always fails due to MissingOutputException.'"
 
 
 rule visualize_rulegraph:
@@ -102,11 +116,13 @@ rule processed_notebook_to_html:
 
 
 rule serve_directory:
+    output: "serve_directory.{port}"
     params:
-        port=config["server_port"],
+        port=lambda w: int(w.port),
     shell:
         """
         python3 -m http.server {params.port}
+        echo 'Rule always fails due to MissingOutputException.'"
         """
 
 
