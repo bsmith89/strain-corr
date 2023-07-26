@@ -7,3 +7,5 @@ TODO:
     - whether high-coverage strains have lower entropy
     - whether comparisons between subjects look more different than within
 - [ ] TODO
+- [x] Export de-identified subject metadata from ucfmt2 database.
+    - see ucfmt2 project repository: lib.project_data.load_subject_table(con=con) where con=sqlite3.connect('sdata/database.db')
