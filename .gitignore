@@ -27,6 +27,7 @@ nb/profile_default
 # Data Directories
 log
 raw
+sraw
 ref
 data
 build
