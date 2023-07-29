@@ -323,7 +323,9 @@ rule alias_final_fit:
     input:
         source=lambda w: (
             "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.world.nc".format(
-                group=w.group, species=w.species, proc=w.proc,
+                group=w.group,
+                species=w.species,
+                proc=w.proc,
                 sfacts_stem=config["species_group_to_sfacts_stem"][
                     (w.species, w.group)
                 ],
@@ -332,7 +334,9 @@ rule alias_final_fit:
     shell:
         alias_recipe
 
-localrules: alias_final_fit
+
+localrules:
+    alias_final_fit,
 
 
 rule export_sfacts_comm:

@@ -17,13 +17,13 @@ config["species_group"] = (
 config["species_group_to_sfacts_stem"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
-    .set_index(['species_id', 'species_group_id'])
+    .set_index(["species_id", "species_group_id"])
     .sfacts_stem
 )
 config["species_group_to_spgc_stem"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
-    .set_index(['species_id', 'species_group_id'])
+    .set_index(["species_id", "species_group_id"])
     .spgc_stem
 )
 

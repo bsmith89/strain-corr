@@ -80,12 +80,12 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark:
         script="scripts/construct_spanda_count_matrix.py",
         samples=lambda w: [
             f"data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
-            for mgen in config["mgen_group"]['xjin']
+            for mgen in config["mgen_group"]["xjin"]
         ],
     params:
         sample_args=lambda w: [
             f"{mgen}=data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
-            for mgen in config["mgen_group"]['xjin']
+            for mgen in config["mgen_group"]["xjin"]
         ],
     shell:
         """
@@ -131,11 +131,13 @@ rule run_spanda_decompose:
 # NOTE: Converting pangenomes -> gene.
 rule convert_spanda_genes_table_to_strain_gene_format:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{pangenome_params}.spanda{spanda_params}.uhgg-strain_gene.tsv"
+        "data/group/{group}/species/sp-{species}/{stem}.gene{pangenome_params}.spanda{spanda_params}.uhgg-strain_gene.tsv",
     input:
-        "data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.spanda{spanda_params}.genefamily_strain.csv"
+        "data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.spanda{spanda_params}.genefamily_strain.csv",
     run:
         data = pd.read_csv(input[0]).rename_axis(index="gene_id")
-        strain_names = data.columns.to_series()[lambda x: x.str.startswith('strain')].values
+        strain_names = data.columns.to_series()[
+            lambda x: x.str.startswith("strain")
+        ].values
         data = data[strain_names]
-        data.to_csv(output[0], sep='\t')
+        data.to_csv(output[0], sep="\t")

@@ -2,7 +2,8 @@
 
 
 rule install_jupyter_kernel_default:
-    output: "install_jupyter_kernel_default"
+    output:
+        "install_jupyter_kernel_default",
     params:
         name="default",
     conda:
@@ -13,9 +14,12 @@ rule install_jupyter_kernel_default:
         # NOTE: This rule fails with a MissingOutputException even when the kernel is installed correctly.
         """
 
+
 use rule install_jupyter_kernel_default as install_jupter_conda_kernel with:
-    output: "install_jupyter_kernel.{conda}"
-    conda: lambda w: f"conda/{w.conda}.yaml"
+    output:
+        "install_jupyter_kernel.{conda}",
+    conda:
+        lambda w: f"conda/{w.conda}.yaml"
 
 
 rule start_jupyter:
@@ -116,7 +120,8 @@ rule processed_notebook_to_html:
 
 
 rule serve_directory:
-    output: "serve_directory.{port}"
+    output:
+        "serve_directory.{port}",
     params:
         port=lambda w: int(w.port),
     shell:

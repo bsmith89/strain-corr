@@ -64,7 +64,8 @@ rule eggnog_mapper_translated_orfs:
 
 
 rule parse_emapper_output_to_gene_x_unit:
-    output: "{stem}.emapper.gene_x_{unit}.tsv"
+    output:
+        "{stem}.emapper.gene_x_{unit}.tsv",
     input:
         script="scripts/parse_emapper_output_to_gene_x_{unit}.py",
         emapper="{stem}.emapper.d/proteins.emapper.annotations",
@@ -75,13 +76,18 @@ rule parse_emapper_output_to_gene_x_unit:
 
 
 rule aggregate_strain_emapper_output_by_unit:
-    output: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv"
-    input: "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv"
+    output:
+        "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv",
+    input:
+        "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv",
     run:
         strain_gene_x_agg = pd.read_table(input[0])
-        result = (strain_gene_x_agg.groupby(wildcards.agg).apply(len) > 0).astype(int).to_frame(name=wildcards.strain)
-        result.to_csv(output[0], sep='\t')
-
+        result = (
+            (strain_gene_x_agg.groupby(wildcards.agg).apply(len) > 0)
+            .astype(int)
+            .to_frame(name=wildcards.strain)
+        )
+        result.to_csv(output[0], sep="\t")
 
 
 rule dbCAN_annotate_translated_orfs:

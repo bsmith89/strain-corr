@@ -320,7 +320,9 @@ rule collect_files_for_strain_assessment:
 
 rule xjin_benchmarking_grid_single_species_single_unit:
     output:
-        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"),
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"
+        ),
     input:
         spgc0=lambda w: [
             (
@@ -339,13 +341,26 @@ rule xjin_benchmarking_grid_single_species_single_unit:
                 [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550],
             )
         ],
+        # # NOTE: (2023-06-13) This was previously for comparing reference and
+        # # denovo species-gene picking.
+        # spgc1=lambda w: [
+        #     f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
+        #     for specgene_params, ss_params, trnsfm_params, thresh_params in product(
+        #         ["denovo2-t30-n800"],
+        #         ["all"],
+        #         [30],
+        #         ["corr200-depth250"],
+        #     )
+        # ],
         spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
         panphlan="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.panphlan.{unit}-xjin_strain_summary.tsv",
 
 
 rule xjin_benchmarking_grid_single_species:
     output:
-        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"),
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"
+        ),
     input:
         uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
         ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
@@ -356,7 +371,9 @@ rule xjin_benchmarking_grid_single_species:
 
 rule xjin_benchmarking_grid_all_species:
     output:
-        touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.ALL_XJIN_SPECIES.flag"),
+        touch(
+            "data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.ALL_XJIN_SPECIES.flag"
+        ),
     input:
         lambda w: [
             f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"

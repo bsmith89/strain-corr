@@ -102,7 +102,9 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths:
     shell:
         alias_recipe
 
-localrules: alias_species_genes_from_reference_to_match_de_novo_paths
+
+localrules:
+    alias_species_genes_from_reference_to_match_de_novo_paths,
 
 
 rule calculate_species_depth_from_core_genes:
@@ -207,7 +209,7 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
     params:
-        trnsfm=lambda w: float(w.trnsfm) / 10
+        trnsfm=lambda w: float(w.trnsfm) / 10,
     shell:
         """
         {input.script} \
@@ -344,22 +346,26 @@ rule select_strain_gene_hits:
                 {output}
         """
 
+
 rule alias_final_strain_genes:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.spgc.{stemB}",
     input:
         source=lambda w: (
             "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.{stemB}".format(
-                group=w.group, species=w.species, stemA=w.stemA, stemB=w.stemB,
-                spgc_stem=config["species_group_to_spgc_stem"][
-                    (w.species, w.group)
-                ],
+                group=w.group,
+                species=w.species,
+                stemA=w.stemA,
+                stemB=w.stemB,
+                spgc_stem=config["species_group_to_spgc_stem"][(w.species, w.group)],
             )
         ),
     shell:
         alias_recipe
 
-localrules: alias_final_strain_genes
+
+localrules:
+    alias_final_strain_genes,
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:

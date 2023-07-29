@@ -2,6 +2,7 @@ use rule start_shell as start_shell_panphlan with:
     conda:
         "conda/panphlan.yaml"
 
+
 use rule start_shell as start_shell_panphlan_dev with:
     conda:
         "conda/panphlan_dev.yaml"
@@ -73,8 +74,10 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark:
 # NOTE: Converting pangenomes -> gene.
 rule convert_panphlan_genes_table_to_strain_gene_format:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{pangenome_params}.panphlan.uhgg-strain_gene.tsv"
+        "data/group/{group}/species/sp-{species}/{stem}.gene{pangenome_params}.panphlan.uhgg-strain_gene.tsv",
     input:
-        "data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.panphlan_hit.tsv"
+        "data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.panphlan_hit.tsv",
     run:
-        pd.read_table(input[0]).set_index('Unnamed: 0').rename_axis(index="gene_id").to_csv(output[0], sep='\t')
+        pd.read_table(input[0]).set_index("Unnamed: 0").rename_axis(
+            index="gene_id"
+        ).to_csv(output[0], sep="\t")
