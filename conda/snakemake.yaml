@@ -4,6 +4,7 @@ channels:
   - bioconda
 dependencies:
   - python=3.10
+  - snakemake
   - jupyterlab
   - matplotlib
   - ipython
@@ -27,5 +28,3 @@ dependencies:
   - snakefmt
   - pip:
     - daff
-    - panoptes-ui
-    - git+https://github.com/bsmith89/snakemake@feat/singularity-prefix-env-var#egg=snakemake

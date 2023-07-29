@@ -4,5 +4,7 @@ channels:
 dependencies:
   - python=3.10
   - jupyterlab
+  - notebook
   - black
   - jedi-language-server
+  - jupyterlab_code_formatter
