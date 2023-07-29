@@ -312,6 +312,20 @@ rule merge_both_reads_species_count_data:
         """
 
 
+# NOTE: Hub-rule
+rule load_metagenotype_from_merged_gtpro:
+    output:
+        "{stem}.gtpro.mgtp.nc",
+    input:
+        "{stem}.gtpro.tsv.bz2",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts load --gtpro-metagenotype {input} {output}
+        """
+
+
 # FIXME: Change script to output only a mapping sample\tdepth; no header, no second index.
 rule estimate_species_depth_from_metagenotype:
     output:
