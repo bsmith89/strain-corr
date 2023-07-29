@@ -323,23 +323,20 @@ rule xjin_benchmarking_grid_single_species_single_unit:
         touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.{unit}-accuracy.xjin_benchmark_grid.flag"),
     input:
         spgc0=lambda w: [
-            f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}.spgc_specgene-{specgene_params}_ss-xjin-{ss_params}_t-{trnsfm_params}_thresh-{thresh_params}.{w.unit}-xjin_strain_summary.tsv"
-            for specgene_params, ss_params, trnsfm_params, thresh_params in product(
+            (
+                f"data/group/XJIN_BENCHMARK/{w.stemA}.gtpro.{w.stemB}.gene{w.pangenome_params}"
+                f".spgc_specgene-{specgene_params}"
+                f"_ss-xjin-deepest-n{max_samples_param}"
+                f"_t-{trnsfm_params}"
+                f"_thresh-corr{corr_thresh_param}-depth{depth_thresh_param}"
+                f".{w.unit}-xjin_strain_summary.tsv"
+            )
+            for specgene_params, max_samples_param, trnsfm_params, depth_thresh_param, corr_thresh_param, in product(
                 ["ref-t25-p95"],
-                ["deepest-n1", "deepest-n10", "deepest-n20", "all"],
+                [1, 10, 20, 999],
                 [10, 30],
-                [
-                    "corr450-depth250",
-                    "corr400-depth250",
-                    "corr350-depth250",
-                    "corr300-depth250",
-                    "corr250-depth250",
-                    "corr200-depth250",
-                    "corr150-depth250",
-                    "corr100-depth250",
-                    "corr50-depth250",
-                    "corr0-depth250",
-                ],
+                [250],
+                [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550],
             )
         ],
         spanda="data/group/XJIN_BENCHMARK/{stemA}.gene{pangenome_params}.spanda-s2.{unit}-xjin_strain_summary.tsv",
@@ -351,6 +348,9 @@ rule xjin_benchmarking_grid_single_species:
         touch("data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.all_accuracy_xjin_benchmark_grid.flag"),
     input:
         uhgg="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.uhgg-accuracy.xjin_benchmark_grid.flag",
+        ko="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.ko-accuracy.xjin_benchmark_grid.flag",
+        cog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.cog-accuracy.xjin_benchmark_grid.flag",
+        top_eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.top_eggnog-accuracy.xjin_benchmark_grid.flag",
         eggnog="data/group/XJIN_BENCHMARK/{stemA}.gtpro.{stemB}.gene{pangenome_params}.eggnog-accuracy.xjin_benchmark_grid.flag",
 
 
