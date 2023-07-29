@@ -145,7 +145,7 @@ use rule assess_infered_strain_accuracy_uhgg as assess_infered_strain_accuracy_o
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.{unit}-reconstruction_accuracy.tsv",
     wildcard_constraints:
-        unit="eggnog|top_eggnog|cog|ko|eggnog_noshort|uhgg_noshort",
+        unit="eggnog|top_eggnog|cog|ko",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
         infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv",
