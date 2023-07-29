@@ -1,0 +1,10 @@
+name: papermill
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - black
+  - pip
+  - pip:
+    - papermill
