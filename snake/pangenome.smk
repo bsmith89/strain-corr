@@ -50,6 +50,8 @@ rule collect_multispecies_pangenome_centroids:
             require_in_species_group=True,
         ),
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    resources:
+        walltime_hr=12,
     conda:
         "conda/seqtk.yaml"
     shell:
@@ -424,6 +426,8 @@ rule concatenate_pangenome_gene_info:
             require_in_species_group=True,
         ),
         header="species_id	centroid_99	centroid_95	centroid_90	centroid_85	centroid_80	centroid_75",
+    resources:
+        walltime_hr=12,
     shell:
         """
         (

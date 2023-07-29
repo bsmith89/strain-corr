@@ -61,3 +61,8 @@ rule process_hmp2_metadata:
 
 
 config["figures"]["submission"] = []
+
+
+config["een_mgen_local_src"] = pd.read_table(
+    "meta/een-mgen/gtpro_local.tsv", index_col="library_id"
+)
