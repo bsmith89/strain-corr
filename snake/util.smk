@@ -41,30 +41,20 @@ use rule start_ipython as start_ipython_toolz with:
         "conda/toolz.yaml"
 
 
-rule start_shell:
+rule start_shell_any_conda:
+    output:
+        "start_shell.{conda}",
+    conda:
+        lambda w: f"conda/{w.conda}.yaml"
     shell:
-        "bash"
+        "bash; echo 'Rule always fails due to MissingOutputException.'"
 
 
-use rule start_shell as start_shell_toolz with:
+use rule start_shell_any_conda as start_shell with:
+    output:
+        "start_shell",
     conda:
         "conda/toolz.yaml"
-
-
-use rule start_shell as start_shell_seqtk with:
-    conda:
-        "conda/seqtk.yaml"
-
-
-use rule start_shell as start_shell_hsblastn with:
-    conda:
-        "conda/hsblastn.yaml"
-
-
-rule start_shell_any_conda:
-    output: "start_shell.{conda}"
-    conda: lambda w: f"conda/{w.conda}.yaml"
-    shell: "bash; echo 'Rule always fails due to MissingOutputException.'"
 
 
 rule visualize_rulegraph:
