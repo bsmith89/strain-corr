@@ -1,3 +1,7 @@
+# TODO: DB-UPDATE: For all XJIN_BENCHMARK rules, convert from xjin_ucfmt_hmp2.
+# Also, add _new suffix where appropriate.
+
+
 rule select_xjin_samples:
     output:
         "{stem}.spgc_ss-xjin-all.strain_samples.tsv",

@@ -18,6 +18,25 @@ rule collect_species_pangenome_centroids:
         """
 
 
+rule collect_species_pangenome_centroids_new:
+    output:
+        fn="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.fn",
+    input:
+        fn="ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn",
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+    params:
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    conda:
+        "conda/seqtk.yaml"
+    shell:
+        """
+        seqtk subseq \
+                {input.fn} \
+                <(cat {input.gene_info} | cut -f{params.col} | sort | uniq) \
+            > {output.fn}
+        """
+
+
 rule collect_multispecies_pangenome_centroids:
     output:
         fn="data/group/{group}/r.{proc}.pangenomes{centroid}.bt2.d/centroids.fn",
@@ -64,6 +83,59 @@ rule collect_multispecies_pangenome_centroids:
             seqtk subseq \
                     $fasta_path \
                     <(lz4 -dc $gene_info_path | cut -f{params.col} | sort | uniq)
+            echo -n "$species " >&2
+        done \
+            > {output.fn}
+        echo "" >&2
+        """
+
+
+rule collect_multispecies_pangenome_centroids_new:
+    output:
+        fn="data/group/{group}/r.{proc}.pangenomes{centroid}_new.bt2.d/centroids.fn",
+    input:
+        fasta=lambda w: [
+            f"ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn"
+            for species in checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
+        gene_info=lambda w: [
+            f"ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt"
+            for species in checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
+    params:
+        fasta_pattern="ref/midasdb_uhgg_new/pangenomes/$species/centroids.ffn",
+        gene_info_pattern="ref/midasdb_uhgg_new/pangenomes/$species/gene_info.txt",
+        species_list=lambda w: checkpoint_select_species(
+            f"data/group/{w.group}/r.proc.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=2,
+            require_in_species_group=True,
+        ),
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    resources:
+        walltime_hr=12,
+    conda:
+        "conda/seqtk.yaml"
+    shell:
+        """
+        echo "Collecting representative sequences."
+        for species in {params.species_list}
+        do
+            fasta_path={params.fasta_pattern}
+            gene_info_path={params.gene_info_pattern}
+            seqtk subseq \
+                    $fasta_path \
+                    <(cat $gene_info_path | cut -f{params.col} | sort | uniq)
             echo -n "$species " >&2
         done \
             > {output.fn}
@@ -162,6 +234,18 @@ use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_species_pangenome_v0
 use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangenome_v22 with:
     output:
         "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}-v22.{bam_or_cram}",
+    params:
+        extra_flags="--ignore-quals --end-to-end --very-sensitive",
+        seed=0,
+
+
+use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangenome_v22_new with:
+    output:
+        "data/group/{group}/reads/{mgen}/r.{proc}.pangenomes{centroid}_new-v22.{bam_or_cram}",
+    input:
+        db="data/group/{group}/r.{proc}.pangenomes{centroid}_new.bt2.d/centroids.bt2db",
+        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     params:
         extra_flags="--ignore-quals --end-to-end --very-sensitive",
         seed=0,
@@ -445,6 +529,49 @@ rule concatenate_pangenome_gene_info:
         """
 
 
+# TODO: Figure out what downstram rules use pangenomes.gene_info.tsv.lz4 and
+# make a *_new version taking this input.
+rule concatenate_pangenome_gene_info_new:
+    output:
+        "data/group/{group}/r.{proc}.pangenomes_new.gene_info.tsv.lz4",
+    input:
+        genes=lambda w: [
+            f"ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt"
+            for species in checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
+    params:
+        gene_pattern="ref/midasdb_uhgg_new/pangenomes/$species/gene_info.txt",
+        species_list=lambda w: checkpoint_select_species(
+            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=2,
+            require_in_species_group=True,
+        ),
+        header="species_id	centroid_99	centroid_95	centroid_90	centroid_85	centroid_80	centroid_75",
+    resources:
+        walltime_hr=12,
+    shell:
+        """
+        (
+            echo "{params.header}"
+            for species in {params.species_list}
+            do
+                path="{params.gene_pattern}"
+                echo -n "$species " >&2
+                cat $path | sed '1,1d' | awk -v OFS='\t' -v species=$species '{{print species,$2,$3,$4,$5,$6,$7}}' | sort -k2,2 | uniq
+            done
+        ) \
+                | lz4 -9 -zc \
+            > {output}
+        echo "" >&2
+        """
+
+
 # TODO: Generalize to other centroid definitions.
 rule concatenate_reference_gene_lengths:
     output:
@@ -461,6 +588,46 @@ rule concatenate_reference_gene_lengths:
         ],
     params:
         gene_pattern="ref/midasdb_uhgg_gene_annotations/sp-$species.gene99_annotations.tsv",
+        species_list=lambda w: checkpoint_select_species(
+            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+            cvrg_thresh=0.2,
+            num_samples=2,
+            require_in_species_group=True,
+        ),
+        header="gene_id	nlength",
+    shell:
+        """
+        (
+            echo "{params.header}"
+            for species in {params.species_list}
+            do
+                path="{params.gene_pattern}"
+                echo -n "$species " >&2
+                cut -f1,3 $path
+            done
+        ) \
+            > {output}
+        echo "" >&2
+        """
+
+
+# TODO: Generalize to other centroid definitions.
+# TODO: DB-UPDATE: Take from new DB
+rule concatenate_reference_gene_lengths_new:
+    output:
+        "data/group/{group}/r.{proc}.pangenomes99_new.nlength.tsv",
+    input:
+        genes=lambda w: [
+            f"ref/midasdb_uhgg_new/pangenomes/{species}/genes.len"
+            for species in checkpoint_select_species(
+                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+                cvrg_thresh=0.2,
+                num_samples=2,
+                require_in_species_group=True,
+            )
+        ],
+    params:
+        gene_pattern="ref/midasdb_uhgg_new/pangenomes/$species/genes.len",
         species_list=lambda w: checkpoint_select_species(
             f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
             cvrg_thresh=0.2,
@@ -584,6 +751,117 @@ rule build_new_pangenome_profiling_db:
         )
 
 
+# FIXME: Hub-rule. Commenting this out can greatly speed up
+# startup time for downstream tasks.
+# NOTE: I _think_ that "bowtie_params" may include the trailing "s" making this rule
+# apply to pangenomes75 just as well as pangenome75...?
+# # FIXME: Why does this rule get superseded with the former (not *_new) version
+# # when that rule is not commented out?
+rule build_new_pangenome_profiling_db_new:
+    output:
+        protected(
+            "data/group/{group}/r.{proc}.pangenomes{centroid}_new-{bowtie_params}.db"
+        ),
+    input:
+        samples=lambda w: [
+            f"data/group/{w.group}/reads/{mgen}/r.{w.proc}.pangenomes{w.centroid}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        genes="data/group/{group}/r.{proc}.pangenomes_new.gene_info.tsv.lz4",
+        nlength="data/group/{group}/r.{proc}.pangenomes99_new.nlength.tsv",
+    params:
+        sample_pattern="data/group/{group}/reads/$sample/r.{proc}.pangenomes{centroid}_new-{bowtie_params}.gene_mapping_tally.tsv.lz4",
+        sample_list=lambda w: list(config["mgen_group"][w.group]),
+    conda:
+        "conda/toolz.yaml"
+    threads: 1
+    resources:
+        walltime_hr=24,
+        mem_mb=100_000,
+        pmem=100_000 // 1,
+    shell:
+        dd(
+            """
+        db=$(mktemp)
+        echo Writing to temporary db path: $db
+        rm -rf $db
+
+        sqlite3 $db <<EOF
+        CREATE TABLE _gene (
+            species TEXT
+          , gene_id TEXT PRIMARY KEY
+          , centroid_95 TEXT
+          , centroid_90 TEXT
+          , centroid_85 TEXT
+          , centroid_80 TEXT
+          , centroid_75 TEXT
+        );
+        CREATE INDEX gene__species ON _gene (species);
+
+        CREATE TABLE _gene_length (
+            gene_id TEXT PRIMARY KEY REFERENCES _gene(gene_id)
+          , nlength INT
+        );
+
+        CREATE VIEW gene AS
+        SELECT
+            species
+          , gene_id
+          , nlength
+          , gene_id AS centroid_99
+          , centroid_95
+          , centroid_90
+          , centroid_85
+          , centroid_80
+          , centroid_75
+        FROM _gene
+        JOIN _gene_length USING (gene_id);
+
+        CREATE TABLE sample_x_gene (
+            sample TEXT
+          , gene_id TEXT REFERENCES _gene(gene_id)
+          , tally INT
+          , PRIMARY KEY (sample, gene_id)
+        );
+        CREATE INDEX sample_x_gene__gene_id ON sample_x_gene (gene_id);
+        EOF
+
+        # NOTE: That this monstrosity is a one-liner importing data from STDIN while also setting PRAGMAs.
+        echo "Loading mapping tally data." >&2
+        for sample in {params.sample_list}
+        do
+            path="{params.sample_pattern}"
+            echo -n '.' >&2
+            lz4 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
+        done | sqlite3 -separator '\t' $db \
+                -cmd ' \
+                    PRAGMA journal_mode=OFF; \
+                    PRAGMA synchronous=OFF; \
+                    PRAGMA locking_mode=SHARED; \
+                    PRAGMA temp_store=MEMORY; \
+                    PRAGMA cache_size=1000000; \
+                    PRAGMA mmap_size=268435456; \
+                    ' \
+                '.import /dev/stdin sample_x_gene'
+        echo '' >&2
+        echo '' >&2
+
+        echo "Loading gene lists." >&2
+        lz4 -dc {input.genes} \
+                | sed '1,1d' \
+                | tqdm \
+            | sqlite3 -separator '\t' $db '.import /dev/stdin _gene'
+
+        echo "Loading gene lengths." >&2
+        cat {input.nlength} \
+            | sqlite3 -separator '\t' $db '.import /dev/stdin _gene_length'
+
+        echo "DONE" >&2
+        mv $db {output}
+        """
+        )
+
+
 # NOTE: (2023-06-13) The naming of this output file
 # makes it's relationship with
 # data/group/xjin_hmp2/reads/{mgen}/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4
@@ -638,6 +916,28 @@ rule load_one_species_pangenome2_depth_into_netcdf:
         """
 
 
+rule load_one_species_pangenome2_depth_into_netcdf_new:
+    output:
+        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
+    input:
+        script="scripts/load_one_species_pangenome2_depth_into_netcdf.py",
+        db="{stemA}/{stemB}.pangenomes{centroidA}_new-{bowtie_params}.db",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
+    conda:
+        "conda/toolz.yaml"
+    threads: 1
+    resources:
+        walltime_hr=12,
+        mem_mb=20_000,
+        pmem=20_000 // 1,
+    shell:
+        """
+        {input.script} {input.db} {wildcards.species} {wildcards.centroidB} {output}
+        """
+
+
 rule concatenate_pangenome_depth_from_samples:
     output:
         "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{centroid}-{mapping_params}.gene_depth.tsv.lz4",
@@ -664,53 +964,3 @@ rule concatenate_pangenome_depth_from_samples:
         """
 
 
-# NOTE: The approach skips the sqlite3-based aggregation and filtering.
-# FIXME: Use the standard depth2 pipeline for combining read count data across samples.
-# TODO: Remove this rule, if I'm never doing single-species pangenome depths.
-rule load_one_species_pangenome3_depth_into_netcdf:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}.depth3.nc",
-    input:
-        script="scripts/generic_netcdf_loader.py",
-        depths="data/group/{group}/species/sp-{species}/{stemB}.pangenome{centroidA}-{bowtie_params}.gene_depth.tsv.lz4",
-    wildcard_constraints:
-        centroidA="99|95|90|85|80|75",
-    conda:
-        "conda/toolz.yaml"
-    threads: 1
-    resources:
-        walltime_hr=12,
-        mem_mb=20_000,
-        pmem=20_000 // 1,
-    shell:
-        """
-        lz4 -dc {input.depths} | tqdm | {input.script} sample,gene_id {output}
-        """
-
-
-rule aggregate_gene_depth_by_centroid:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth3.nc",
-    input:
-        script="scripts/aggregate_gene_depth_by_centroid.py",
-        depth="data/group/{group}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}.depth3.nc",
-        cluster_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
-    wildcard_constraints:
-        centroidB="75|80|85|90|95",
-    params:
-        aggregate_genes_by=lambda w: {
-            "99": "centroid_99",
-            "95": "centroid_95",
-            "90": "centroid_90",
-            "85": "centroid_85",
-            "80": "centroid_80",
-            "75": "centroid_75",
-        }[w.centroidB],
-    shell:
-        """
-        {input.script} \
-                {input.depth} \
-                <(lz4cat {input.cluster_info}) \
-                {params.aggregate_genes_by} \
-                {output}
-        """

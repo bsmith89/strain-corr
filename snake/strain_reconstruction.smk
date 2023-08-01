@@ -12,6 +12,29 @@ rule combine_midasdb_all_gene_annotations:
         """
 
 
+rule combine_midasdb_all_gene_annotations_new:
+    output:
+        "data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
+    input:
+        genome=lambda w: [
+            f"ref/midasdb_uhgg_new/gene_annotations/{w.species}/{genome}/{genome}.tsv.lz4"
+            for genome in config["midasdb_uhgg_new_species_genome"][w.species]
+        ],
+    params:
+        genome_pattern="ref/midasdb_uhgg_new/gene_annotations/{species}/$genome/$genome.tsv.lz4",
+        genome_list=lambda w: config["midasdb_uhgg_new_species_genome"][w.species],
+    shell:
+        """
+        for genome in {params.genome_list}
+        do
+            echo -n . >&2
+            lz4 -dc {params.genome_pattern} \
+                    | awk '$1 != "locus_tag" && $2 != "gene"'
+        done > {output}
+        echo "" >&2
+        """
+
+
 # TODO: The aggregated gene_annotations.tsv files could/should go into each
 # individual species directory.
 rule filter_midasdb_all_gene_annotations_by_centroid:
@@ -20,6 +43,29 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
     input:
         annot="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene_annotations.tsv",
         centroids_list="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+    params:
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    shell:
+        """
+        grep -Ff \
+            <( \
+                lz4cat {input.centroids_list} \
+                | cut -f{params.col} \
+                | sed '1,1d' \
+                | sort \
+                | uniq \
+                ) \
+            {input.annot} \
+            > {output}
+        """
+
+
+rule filter_midasdb_all_gene_annotations_by_centroid_new:
+    output:
+        "data/species/sp-{species}/midasdb_uhgg_new.gene{centroid}_annotations.tsv",
+    input:
+        annot="data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
+        centroids_list="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
     params:
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     shell:
@@ -374,5 +420,15 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
         genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+    shell:
+        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
+
+
+rule convert_midasdb_species_gene_list_to_reference_genome_table_new:
+    output:
+        "data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+    input:
+        script="scripts/convert_gene_info_to_genome_table.py",
+        genes="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"

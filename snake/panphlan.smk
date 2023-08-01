@@ -16,7 +16,22 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
     input:
         script="scripts/construct_panphlan_pangenome_from_midas.py",
         gene_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+        # FIXME: The below should actual be moved to a param and replaced with the download flag.
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+    params:
+        centroid=lambda w: int(w.centroid),
+    shell:
+        "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {output}"
+
+
+# NOTE: Hub-rule
+rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
+    output:
+        "ref/panphlan/{species}.midasdb_uhgg_pangenome{centroid}_new.tsv",
+    input:
+        script="scripts/construct_panphlan_pangenome_from_midas.py",
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        cluster_info="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
     params:
         centroid=lambda w: int(w.centroid),
     shell:

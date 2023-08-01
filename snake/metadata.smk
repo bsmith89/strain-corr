@@ -66,3 +66,12 @@ config["figures"]["submission"] = []
 config["een_mgen_local_src"] = pd.read_table(
     "meta/een-mgen/gtpro_local.tsv", index_col="library_id"
 )
+
+config["midasdb_uhgg_new_species_genome"] = (
+    pd.read_table(
+        "ref/midasdb_uhgg_new/genomes.tsv",
+        dtype=str,
+    )
+    .groupby("species")
+    .genome.apply(list)
+)

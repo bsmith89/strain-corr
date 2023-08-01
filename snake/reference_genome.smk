@@ -189,6 +189,23 @@ rule alias_midas_uhgg_pangenome_cds:
         """
 
 
+localrules:
+    alias_midas_uhgg_pangenome_cds,
+
+
+rule alias_midas_uhgg_pangenome_cds_new:
+    output:
+        "data/species/sp-{species}/pangenome_new.centroids.fn",
+    input:
+        fasta="ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn",
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_midas_uhgg_pangenome_cds_new,
+
+
 # rule blastn_midasdb_uhgg_against_genome:
 #     output:
 #         "{stemA}/species/sp-{species}/genome/midas_uhgg_pangenome.{stemB}-blastn.tsv",
@@ -207,6 +224,19 @@ rule blastn_genome_against_midasdb_uhgg:
     input:
         query="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn",
         subject="data/species/sp-{species}/pangenome.centroids.fn",
+    threads: 1
+    shell:
+        """
+        blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
+        """
+
+
+rule blastn_genome_against_midasdb_uhgg_new:
+    output:
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-blastn.tsv",
+    input:
+        query="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn",
+        subject="data/species/sp-{species}/pangenome_new.centroids.fn",
     threads: 1
     shell:
         """
@@ -318,13 +348,42 @@ rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
             "80": "centroid_80",
             "75": "centroid_75",
         }[w.centroid],
-        gene_clust="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+        gene_clust="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",  # TODO: DB-UPDATE: Use new DB here.
     shell:
         """
         {input.script} \
                 {input.orf_x_orf} \
                 {input.orf_x_midas} \
                 {params.gene_clust} \
+                {params.aggregate_genes_by} \
+                {output}
+        """
+
+rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes_new:
+    output:
+        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-{blastn_or_p}.bitscore_ratio-c{centroid}.tsv",
+    input:
+        script="scripts/calculate_bitscore_ratio_for_gene_matching.py",
+        orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-{blastn_or_p}.tsv",
+        orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-{blastn_or_p}.tsv",
+        gene_clust="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
+    wildcard_constraints:
+        blastn_or_p="blastn|blastp",
+    params:
+        aggregate_genes_by=lambda w: {
+            "99": "centroid_99",
+            "95": "centroid_95",
+            "90": "centroid_90",
+            "85": "centroid_85",
+            "80": "centroid_80",
+            "75": "centroid_75",
+        }[w.centroid],
+    shell:
+        """
+        {input.script} \
+                {input.orf_x_orf} \
+                {input.orf_x_midas} \
+                {input.gene_clust} \
                 {params.aggregate_genes_by} \
                 {output}
         """
@@ -366,6 +425,15 @@ use rule run_bowtie_multispecies_pangenome_v22 as run_bowtie_multispecies_pangen
         "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}-v22.{bam_or_cram}",
     input:
         db="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d/centroids.bt2db",
+        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+
+
+use rule run_bowtie_multispecies_pangenome_v22 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22_new with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_new-v22.{bam_or_cram}",
+    input:
+        db="data/group/{group}/r.proc.pangenomes{centroid}_new.bt2.d/centroids.bt2db",
         r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
         r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
 
@@ -428,21 +496,28 @@ use rule run_bowtie_species_pangenome_v22 as run_bowtie_species_pangenome_on_ref
 # NOTE: The "samples" here are actually reference strains, not samples.
 # Then the sample_pattern+sample_list trick is doing something extra tricky
 # where the species and strain are combined together.
-use rule build_new_pangenome_profiling_db as build_new_pangenome_profiling_db_on_reference_genome_tiles with:
+use rule build_new_pangenome_profiling_db_new as build_new_pangenome_profiling_db_on_reference_genome_tiles_new with:
     output:
-        protected("data/group/{group}/ALL_STRAINS.{stem}.pangenome{bowtie_params}.db"),
+        protected(
+            "data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}_new-{bowtie_params}.db"
+        ),
     input:
         samples=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenome{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
             for strain, species in config["genome"].species_id.items()
         ],
-        genes="data/group/{group}/r.proc.pangenomes.gene_info.tsv.lz4",
-        nlength="data/group/{group}/r.proc.pangenomes99.nlength.tsv",
+        genes="data/group/{group}/r.proc.pangenomes_new.gene_info.tsv.lz4",
+        nlength="data/group/{group}/r.proc.pangenomes99_new.nlength.tsv",
     params:
-        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenome{bowtie_params}.gene_mapping_tally.tsv.lz4",
+        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}_new-{bowtie_params}.gene_mapping_tally.tsv.lz4",
         sample_list=lambda w: [
             f"sp-{species}/genome/{strain}"
             for strain, species in config["genome"].species_id.items()
         ],
 
 
+use rule profile_pangenome_mapping_tally_aggregated_by_gene as profile_pangenome_mapping_tally_aggregated_by_gene_for_reference_genome_tiles with:
+    output:
+        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
+    input:
+        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.bam",

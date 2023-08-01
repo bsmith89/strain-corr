@@ -16,8 +16,10 @@ rule compile_strain_spgc_metadata:
 
 rule compile_spgc_to_ref_strain_report:
     output:
+        gene_stats="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.gene_stats.tsv",
+        spgc_strain_stats="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.spgc_strain_stats.tsv",
+        ref_strain_stats="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.ref_strain_stats.tsv",
         html="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.spgc_ref_comparison.html",
-        strain_mwas="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_mwas.tsv",
     input:
         nb="nb/prototype_compare_spgc_and_refs.ipynb",
         species_taxonomy="ref/gtpro/species_taxonomy_ext.tsv",
@@ -51,9 +53,10 @@ rule compile_spgc_to_ref_strain_report:
         nb="nb/papermill/data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.spgc_ref_comparison.ipynb",
     conda:
         "conda/papermill.yaml"
+    threads: 1
     resources:
-        mem_mb=100_000,
-        pmem=100_000,
+        mem_mb=30_000,
+        pmem=30_000,
         walltime_hr=12,
     shell:
         """
