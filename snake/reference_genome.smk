@@ -1,13 +1,3 @@
-use rule start_shell as start_shell_eggnog with:
-    conda:
-        "conda/eggnog.yaml"
-
-
-use rule start_shell as start_shell_dbcan with:
-    conda:
-        "conda/dbcan.yaml"
-
-
 rule link_reference_genome:
     output:
         "data/species/sp-{species}/genome/{genome}.fn",
