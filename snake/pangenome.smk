@@ -918,23 +918,34 @@ rule load_one_species_pangenome2_depth_into_netcdf:
 
 rule load_one_species_pangenome2_depth_into_netcdf_new:
     output:
-        "{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
-        script="scripts/load_one_species_pangenome2_depth_into_netcdf.py",
-        db="{stemA}/{stemB}.pangenomes{centroidA}_new-{bowtie_params}.db",
+        script="scripts/merge_pangenomes_depth.py",
+        samples=lambda w: [
+            f"data/group/{w.group}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
     wildcard_constraints:
         centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
+    params:
+        args=lambda w: [
+            f"{mgen}=data/group/{w.group}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"][w.group]
+        ],
+        centroidB_col=lambda w: f"centroid_{w.centroidB}"
     conda:
         "conda/toolz.yaml"
     threads: 1
     resources:
-        walltime_hr=12,
+        walltime_hr=24,
         mem_mb=20_000,
         pmem=20_000 // 1,
     shell:
         """
-        {input.script} {input.db} {wildcards.species} {wildcards.centroidB} {output}
+        {input.script} {input.gene_length} {input.gene_info} {params.centroidB_col} {output} {params.args}
         """
 
 
