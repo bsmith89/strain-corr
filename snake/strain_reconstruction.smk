@@ -89,6 +89,21 @@ rule select_species_core_genes_from_reference:
     input:
         script="scripts/select_high_prevalence_species_genes.py",
         copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75",
+    params:
+        trim_quantile=lambda w: float(w.trim_quantile) / 100,
+        prevalence=lambda w: float(w.prevalence) / 100,
+    shell:
+        "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
+
+
+rule select_species_core_genes_from_reference_new:
+    output:
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
+    input:
+        script="scripts/select_high_prevalence_species_genes.py",
+        copy_number="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
     params:
         trim_quantile=lambda w: float(w.trim_quantile) / 100,
         prevalence=lambda w: float(w.prevalence) / 100,
@@ -115,12 +130,12 @@ rule select_species_core_genes_de_novo:
 # TODO: Use strain-partitioning from a different step to avoid redundant code.
 rule select_species_core_genes_de_novo_with_dereplication:
     output:
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n{n_genes}.species_gene.list",
-        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n{n_genes}.species_correlation.tsv",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-denovo2-t30-n{n_genes}.species_gene.list",
+        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-denovo2-t30-n{n_genes}.species_correlation.tsv",
     input:
         script="scripts/select_highly_correlated_species_genes_with_dereplication.py",
         species_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.depth2.nc",
     params:
         diss_thresh=0.3,
         trnsf_root=2,
@@ -145,12 +160,29 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     input:
         "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
+    shell:
+        alias_recipe
+
+# TODO: Use this in place of midasuhgg* everywhere.
+rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    input:
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_new.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
     shell:
         alias_recipe
 
 
 localrules:
-    alias_species_genes_from_reference_to_match_de_novo_paths,
+    alias_species_genes_from_reference_to_match_de_novo_paths, alias_species_genes_from_reference_to_match_de_novo_paths_new,
+
+
 
 
 rule calculate_species_depth_from_core_genes:
@@ -393,16 +425,18 @@ rule select_strain_gene_hits:
         """
 
 
+# FIXME: As of 2023-08-11, dropped all but *.strain_gene.tsv outputs from
+# this rule for better reasoning.
 rule alias_final_strain_genes:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.spgc.{stemB}",
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.{stemB}".format(
+            "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc_{spgc_stem}.strain_gene.tsv".format(
                 group=w.group,
                 species=w.species,
-                stemA=w.stemA,
-                stemB=w.stemB,
+                stem=w.stem,
+                pangenome_params=w.pangenome_params,
                 spgc_stem=config["species_group_to_spgc_stem"][(w.species, w.group)],
             )
         ),

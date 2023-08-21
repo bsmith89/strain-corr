@@ -18,18 +18,21 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
         gene_info="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
         # FIXME: The below should actual be moved to a param and replaced with the download flag.
         cluster_info="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75",
     params:
         centroid=lambda w: int(w.centroid),
     shell:
         "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {output}"
 
 
+
 # NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
     output:
-        "ref/panphlan/{species}.midasdb_uhgg_pangenome{centroid}_new.tsv",
+        "data/species/sp-{species}/midasdb_uhgg_pangenome{centroid}_new.tsv",
     input:
-        script="scripts/construct_panphlan_pangenome_from_midas.py",
+        script="scripts/construct_panphlan_pangenome_from_midas_new.py",
         gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
         cluster_info="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
     params:
@@ -52,11 +55,13 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark:
     input:
         pangenome="ref/panphlan/{species}.midasdb_uhgg_pangenome{centroidB}.tsv",
         samples=lambda w: [
-            f"data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/r.{w.stem}.pangenomes{w.centroidA}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            f"data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/reads/{mgen}/r.{w.stem}.pangenomes{w.centroidA}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
             for mgen in config["mgen_group"]["xjin"]
         ],
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
     params:
-        sample_pattern="data/group/xjin_hmp2/species/sp-{species}/reads/$sample/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",
+        sample_pattern="data/group/xjin_ucfmt_hmp2/species/sp-{species}/reads/$sample/r.{stem}.pangenomes{centroidA}-{bowtie_params}.gene_mapping_tally.tsv.lz4",
         sample_list=lambda w: list(config["mgen_group"]["xjin"]),
         min_depth=0,
         left_max=1_000_000,
@@ -74,6 +79,54 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark:
         do
             echo $sample >&2
             lz4 -dc {params.sample_pattern} | sed '1,1d' > $tmpdir/$sample
+        done
+        panphlan_profiling.py -i $tmpdir \
+                -p {input.pangenome} \
+                --left_max {params.left_max} --right_min {params.right_min} \
+                --min_coverage {params.min_depth} \
+                --o_matrix {output.hit} \
+                --o_covmat {output.depth} \
+                --o_idx {output.thresh}
+        rm -r $tmpdir
+        """
+
+# NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
+# "run_spanda_decompose" combined.
+# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
+# re-running the bowtie2 building and mapping steps.
+# This means that I process all xjin samples but take their counts from xjin_hmp2
+# pangenome profiling.
+# FIXME: I need a new way to build the species-specific mapping tallies for each species.
+rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
+    output:
+        hit="data/group/XJIN_BENCHMARK/species/sp-{species}/r.{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
+        depth="data/group/XJIN_BENCHMARK/species/sp-{species}/r.{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
+        thresh="data/group/XJIN_BENCHMARK/species/sp-{species}/r.{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
+    input:
+        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_new.tsv",
+        samples=lambda w: [
+            f"data/group/xjin_ucfmt_hmp2/reads/{mgen}/r.{w.stem}.pangenome{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+    params:
+        sample_pattern="data/group/xjin_ucfmt_hmp2/reads/$sample/r.{stem}.pangenome{centroidA}_new-{bowtie_params}.gene_mapping_tally.tsv.lz4",
+        sample_list=lambda w: list(config["mgen_group"]["xjin"]),
+        min_depth=0,
+        left_max=1_000_000,
+        right_min=0,
+    conda:
+        "conda/panphlan_dev.yaml"
+    threads: 2
+    resources:
+        walltime_hr=12,
+    shell:
+        """
+        tmpdir=$(mktemp -d)
+        echo Reading sample depths from database into $tmpdir >&2
+        for sample in {params.sample_list}
+        do
+            echo $sample >&2
+            lz4 -dc {params.sample_pattern} | sed '1,1d' | {{ grep -Ff <(cut -f2 {input.pangenome}) || [[ $? == 1 ]]; }} > $tmpdir/$sample
         done
         panphlan_profiling.py -i $tmpdir \
                 -p {input.pangenome} \

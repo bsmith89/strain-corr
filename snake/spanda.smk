@@ -79,17 +79,38 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark:
     input:
         script="scripts/construct_spanda_count_matrix.py",
         samples=lambda w: [
-            f"data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
+            f"data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
             for mgen in config["mgen_group"]["xjin"]
         ],
     params:
         sample_args=lambda w: [
-            f"{mgen}=data/group/xjin_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
+            f"{mgen}=data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
             for mgen in config["mgen_group"]["xjin"]
         ],
     shell:
         """
         {input.script} {output} {params.sample_args}
+        """
+
+
+rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemB}.pangenome{centroid}_new-{pangenome_params}.spanda_counts.csv",
+    input:
+        script="scripts/merge_pangenomes_tallies_for_spanda.py",
+        samples=lambda w: [
+            f"data/group/xjin_ucfmt_hmp2/reads/{mgen}/{w.stemB}.pangenome{w.centroid}_new-{w.pangenome_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+    params:
+        sample_args=lambda w: [
+            f"{mgen}=data/group/xjin_ucfmt_hmp2/reads/{mgen}/{w.stemB}.pangenome{w.centroid}_new-{w.pangenome_params}.gene_mapping_tally.tsv.lz4"
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+    shell:
+        """
+        {input.script} {input.gene_info} {output} {params.sample_args}
         """
 
 
@@ -100,6 +121,8 @@ rule run_spanda_decompose:
     input:
         data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}.spanda_counts.csv",
         pangenome="ref/panphlan/{species}.midasdb_uhgg_pangenome{centroidB}.tsv",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
     params:
         outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
         max_strains=lambda w: int(w.nstrain),
@@ -110,6 +133,41 @@ rule run_spanda_decompose:
     threads: 12
     resources:
         walltime_hr=12,
+    shell:
+        """
+        tmpdir=$(mktemp -d)
+        ln -rs {input.pangenome} $tmpdir/{wildcards.species}_pangenome.csv
+        echo $tmpdir/{wildcards.species}_pangenome.csv
+        Rscript include/StrainPanDA/bin/run_strainpandar.r \
+                --counts {input.data} \
+                --reference $tmpdir \
+                --output {params.outstem} \
+                --threads {threads} \
+                --max_rank {params.max_strains} \
+                --rank {params.expect_strains} \
+                --libstrainpandar {params.libstrainpandar} \
+                --noextras \
+                --minsamples 1
+        """
+
+
+rule run_spanda_decompose_new:
+    output:
+        gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",
+        sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
+    input:
+        data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}.spanda_counts.csv",
+        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_new.tsv",
+    params:
+        outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
+        max_strains=lambda w: int(w.nstrain),
+        expect_strains=lambda w: int(w.nstrain),
+        libstrainpandar="include/StrainPanDA/src/strainpandar",
+    singularity:
+        config["container"]["spanda"]
+    threads: 4
+    resources:
+        walltime_hr=24,
     shell:
         """
         tmpdir=$(mktemp -d)

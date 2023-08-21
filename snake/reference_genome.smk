@@ -233,6 +233,38 @@ rule blastn_genome_against_midasdb_uhgg_new:
         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
         """
 
+rule assign_matching_genes_based_on_best_blastn_hit:
+    output:
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-blastn.gene_matching-best.tsv",
+    input:
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-blastn.tsv",
+    shell:
+        """
+        sort -k1,1 -k12,12rn {input} | sort -k1,1 -u | cut -f1,2 > {output}
+        """
+
+
+rule aggreggate_top_blastn_hits_by_midasdb_centroid:
+    output:
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-blastn.gene_matching-best-c{centroid}.uhggtop-strain_gene.tsv",
+    input:
+        script="scripts/identify_strain_genes_from_top_blastn_hits.py",
+        hit="{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-blastn.gene_matching-best.tsv",
+        gene_clust="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
+    params:
+        aggregate_genes_by=lambda w: {
+            "99": "centroid_99",
+            "95": "centroid_95",
+            "90": "centroid_90",
+            "85": "centroid_85",
+            "80": "centroid_80",
+            "75": "centroid_75",
+        }[w.centroid],
+    shell:
+        """
+        {input.script} {input.gene_clust} {params.aggregate_genes_by} {input.hit} {output}
+        """
+
 
 rule blastn_genome_against_genome:
     output:
@@ -397,16 +429,15 @@ rule assign_matching_genes_based_on_bitscore_ratio:
 # ascending integers.
 rule assign_matching_genes_based_on_tile_depth:
     output:
-        "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.uhgg-strain_gene.tsv",
+        "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.uhggtiles-strain_gene.tsv",
     input:
         script="scripts/identify_strain_genes_from_tiling_depth.py",
         depth="{stemA}/species/sp-{species}/ALL_STRAINS.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
     params:
         thresh=lambda w: int(w.thresh),
-        strain_id=lambda w: f"sp-{w.species}/genome/{w.strain}",
     shell:
         """
-        {input.script} {input.depth} {params.strain_id} {params.thresh} {output}
+        {input.script} {input.depth} {wildcards.strain} {params.thresh} {output}
         """
 
 
@@ -481,33 +512,20 @@ use rule run_bowtie_species_pangenome_v22 as run_bowtie_species_pangenome_on_ref
 #     threads: 24
 
 
-# NOTE: Hub-rule (because it extends another hub rule).
-# Consider commenting it out.
-# NOTE: The "samples" here are actually reference strains, not samples.
-# Then the sample_pattern+sample_list trick is doing something extra tricky
-# where the species and strain are combined together.
-use rule build_new_pangenome_profiling_db_new as build_new_pangenome_profiling_db_on_reference_genome_tiles_new with:
+use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
     output:
-        protected(
-            "data/group/{group}/ALL_STRAINS.{stem}.pangenomes{centroid}_new-{bowtie_params}.db"
-        ),
+        "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
+        script="scripts/merge_pangenomes_depth.py",
         samples=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/genome/{strain}.{w.stem}.pangenomes{w.centroid}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
-            for strain, species in config["genome"].species_id.items()
+            f"data/group/{w.group}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for genome, species in config["genome"].species_id.items()
         ],
-        genes="data/group/{group}/r.proc.pangenomes_new.gene_info.tsv.lz4",
-        nlength="data/group/{group}/r.proc.pangenomes99_new.nlength.tsv",
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
     params:
-        sample_pattern="data/group/{group}/species/$sample.{stem}.pangenomes{centroid}_new-{bowtie_params}.gene_mapping_tally.tsv.lz4",
-        sample_list=lambda w: [
-            f"sp-{species}/genome/{strain}"
-            for strain, species in config["genome"].species_id.items()
+        args=lambda w: [
+            f"{genome}=data/group/{w.group}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
+            for genome, species in config["genome"].species_id.items()
         ],
-
-
-use rule profile_pangenome_mapping_tally_aggregated_by_gene as profile_pangenome_mapping_tally_aggregated_by_gene_for_reference_genome_tiles with:
-    output:
-        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
-    input:
-        "{stemA}/species/sp-{species}/genome/{genome}.{stem}.pangenome{mapping_params}.bam",
+        centroidB_col=lambda w: f"centroid_{w.centroidB}"
