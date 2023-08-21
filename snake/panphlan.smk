@@ -1,12 +1,3 @@
-use rule start_shell as start_shell_panphlan with:
-    conda:
-        "conda/panphlan.yaml"
-
-
-use rule start_shell as start_shell_panphlan_dev with:
-    conda:
-        "conda/panphlan_dev.yaml"
-
 
 
 # NOTE: Hub-rule
