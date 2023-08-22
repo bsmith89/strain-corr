@@ -6,6 +6,7 @@
 # Tool-specific hidden-caches.
 .DS_Store
 .ipynb_checkpoints
+nb/.virtual_documents
 __pycache__
 .bash_history
 .parallel
