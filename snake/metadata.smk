@@ -17,13 +17,13 @@ config["species_group"] = (
 config["species_group_to_sfacts_stem"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
-    .set_index(['species_id', 'species_group_id'])
+    .set_index(["species_id", "species_group_id"])
     .sfacts_stem
 )
 config["species_group_to_spgc_stem"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
-    .set_index(['species_id', 'species_group_id'])
+    .set_index(["species_id", "species_group_id"])
     .spgc_stem
 )
 
@@ -31,7 +31,15 @@ config["species_group_to_spgc_stem"] = (
 config["genome"] = pd.read_table(
     "meta/genome.tsv", dtype=str, index_col=["genome_id"]
 ).dropna(subset=["genome_path"])
-# config["species_to_genome"] = pd.read_table("meta/genome.tsv").groupby("species_id").apply(lambda x: x.genome_id.tolist())
+
+
+# NOTE: This function is used, e.g. in snake/reference_genome.smk and
+# snake/benchmark_strain_reconstruction.smk to gather a list of reference
+# genomes for each species.
+def species_genomes(species):
+    strain_list = idxwhere(config["genome"].species_id == species)
+    # assert len(strain_list) > 0
+    return strain_list
 
 
 config["species_to_panphlan"] = pd.read_table(
@@ -61,3 +69,17 @@ rule process_hmp2_metadata:
 
 
 config["figures"]["submission"] = []
+
+
+config["een_mgen_local_src"] = pd.read_table(
+    "meta/een-mgen/gtpro_local.tsv", index_col="library_id"
+)
+
+config["midasdb_uhgg_new_species_genome"] = (
+    pd.read_table(
+        "ref/midasdb_uhgg_new/genomes.tsv",
+        dtype=str,
+    )
+    .groupby("species")
+    .genome.apply(list)
+)

@@ -12,6 +12,29 @@ rule combine_midasdb_all_gene_annotations:
         """
 
 
+rule combine_midasdb_all_gene_annotations_new:
+    output:
+        "data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
+    input:
+        genome=lambda w: [
+            f"ref/midasdb_uhgg_new/gene_annotations/{w.species}/{genome}/{genome}.tsv.lz4"
+            for genome in config["midasdb_uhgg_new_species_genome"][w.species]
+        ],
+    params:
+        genome_pattern="ref/midasdb_uhgg_new/gene_annotations/{species}/$genome/$genome.tsv.lz4",
+        genome_list=lambda w: config["midasdb_uhgg_new_species_genome"][w.species],
+    shell:
+        """
+        for genome in {params.genome_list}
+        do
+            echo -n . >&2
+            lz4 -dc {params.genome_pattern} \
+                    | awk '$1 != "locus_tag" && $2 != "gene"'
+        done > {output}
+        echo "" >&2
+        """
+
+
 # TODO: The aggregated gene_annotations.tsv files could/should go into each
 # individual species directory.
 rule filter_midasdb_all_gene_annotations_by_centroid:
@@ -37,12 +60,50 @@ rule filter_midasdb_all_gene_annotations_by_centroid:
         """
 
 
+rule filter_midasdb_all_gene_annotations_by_centroid_new:
+    output:
+        "data/species/sp-{species}/midasdb_uhgg_new.gene{centroid}_annotations.tsv",
+    input:
+        annot="data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
+        centroids_list="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+    params:
+        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+    shell:
+        """
+        grep -Ff \
+            <( \
+                lz4cat {input.centroids_list} \
+                | cut -f{params.col} \
+                | sed '1,1d' \
+                | sort \
+                | uniq \
+                ) \
+            {input.annot} \
+            > {output}
+        """
+
+
 rule select_species_core_genes_from_reference:
     output:
         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes.py",
         copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
+    wildcard_constraints:
+        centroid="99|95|90|85|80|75",
+    params:
+        trim_quantile=lambda w: float(w.trim_quantile) / 100,
+        prevalence=lambda w: float(w.prevalence) / 100,
+    shell:
+        "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
+
+
+rule select_species_core_genes_from_reference_new:
+    output:
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
+    input:
+        script="scripts/select_high_prevalence_species_genes.py",
+        copy_number="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
     params:
         trim_quantile=lambda w: float(w.trim_quantile) / 100,
         prevalence=lambda w: float(w.prevalence) / 100,
@@ -69,12 +130,12 @@ rule select_species_core_genes_de_novo:
 # TODO: Use strain-partitioning from a different step to avoid redundant code.
 rule select_species_core_genes_de_novo_with_dereplication:
     output:
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n{n_genes}.species_gene.list",
-        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-denovo2-t30-n{n_genes}.species_correlation.tsv",
+        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-denovo2-t30-n{n_genes}.species_gene.list",
+        species_corr="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.spgc_specgene-denovo2-t30-n{n_genes}.species_correlation.tsv",
     input:
         script="scripts/select_highly_correlated_species_genes_with_dereplication.py",
         species_depth="data/group/{group}/{stemA}.gtpro.species_depth.tsv",
-        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
+        gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{pangenome_params}.depth2.nc",
     params:
         diss_thresh=0.3,
         trnsf_root=2,
@@ -99,10 +160,29 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     input:
         "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
     shell:
         alias_recipe
 
-localrules: alias_species_genes_from_reference_to_match_de_novo_paths
+
+# TODO: Use this in place of midasuhgg* everywhere.
+rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    input:
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_new.spgc_specgene-ref-{specgene_params}.species_gene.list",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_species_genes_from_reference_to_match_de_novo_paths,
+    alias_species_genes_from_reference_to_match_de_novo_paths_new,
 
 
 rule calculate_species_depth_from_core_genes:
@@ -207,7 +287,7 @@ rule calculate_strain_specific_correlation_and_depth_ratio_of_genes:
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{bowtie_params}-agg{centroidB}.depth2.nc",
     params:
-        trnsfm=lambda w: float(w.trnsfm) / 10
+        trnsfm=lambda w: float(w.trnsfm) / 10,
     shell:
         """
         {input.script} \
@@ -344,22 +424,28 @@ rule select_strain_gene_hits:
                 {output}
         """
 
+
+# FIXME: As of 2023-08-11, dropped all but *.strain_gene.tsv outputs from
+# this rule for better reasoning.
 rule alias_final_strain_genes:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.spgc.{stemB}",
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/{group}/species/sp-{species}/{stemA}.spgc_{spgc_stem}.{stemB}".format(
-                group=w.group, species=w.species, stemA=w.stemA, stemB=w.stemB,
-                spgc_stem=config["species_group_to_spgc_stem"][
-                    (w.species, w.group)
-                ],
+            "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc_{spgc_stem}.strain_gene.tsv".format(
+                group=w.group,
+                species=w.species,
+                stem=w.stem,
+                pangenome_params=w.pangenome_params,
+                spgc_stem=config["species_group_to_spgc_stem"][(w.species, w.group)],
             )
         ),
     shell:
         alias_recipe
 
-localrules: alias_final_strain_genes
+
+localrules:
+    alias_final_strain_genes,
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
@@ -368,5 +454,15 @@ rule convert_midasdb_species_gene_list_to_reference_genome_table:
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
         genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
+    shell:
+        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
+
+
+rule convert_midasdb_species_gene_list_to_reference_genome_table_new:
+    output:
+        "data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+    input:
+        script="scripts/convert_gene_info_to_genome_table.py",
+        genes="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"

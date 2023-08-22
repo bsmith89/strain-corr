@@ -1,5 +1,4 @@
-
-name: prodigal
+name: seqtk
 channels:
   - conda-forge
   - bioconda

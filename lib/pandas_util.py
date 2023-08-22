@@ -1,5 +1,6 @@
 import pandas as pd
 import subprocess
+from io import StringIO
 
 
 def idxwhere(condition, x=None):
@@ -56,5 +57,19 @@ def read_table_lz4(path, *args, **kwargs):
         out = pd.read_table(proc.stdout, *args, **kwargs)
     return out
 
+
+def read_table_lz4_filter(path, filt, *args, **kwargs):
+    buff = StringIO()
+    with subprocess.Popen(["lz4", "-dc", path], stdout=subprocess.PIPE) as proc:
+        lines_unfiltered = (line.decode() for line in proc.stdout)
+        lines_filtered = (
+            line for i, line in enumerate(lines_unfiltered) if filt(i, line)
+        )
+        buff.writelines(lines_filtered)
+        buff.seek(0)
+        out = pd.read_table(buff, *args, **kwargs)
+    return out
+
+
 def read_list(path):
-    return pd.read_table(path, names=['index'], index_col='index').index.tolist()
+    return pd.read_table(path, names=["index"], index_col="index").index.tolist()

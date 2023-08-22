@@ -1,0 +1,11 @@
+name: jupyter
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - notebook
+  - black
+  - isort
+  - jedi-language-server
+  - jupyterlab_code_formatter

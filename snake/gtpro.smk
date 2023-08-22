@@ -12,6 +12,10 @@ rule download_gtpro_reference_core_snps:
         curl_recipe
 
 
+localrules:
+    download_gtpro_reference_core_snps,
+
+
 rule run_gtpro:
     output:
         temp("{stem}.gtpro_raw.gz"),
@@ -172,7 +176,7 @@ rule count_species_lines_from_both_reads:
     input:
         script="scripts/tally_gtpro_species_lines.sh",
         helper="{stem}.gtpro_species_tally.tsv.args",
-    threads: 24
+    threads: 12
     shell:
         r"""
         parallel --colsep='\t' --bar -j {threads} \
@@ -309,6 +313,20 @@ rule merge_both_reads_species_count_data:
     shell:
         """
         {input.script} {input.r1} {input.r2} {output}
+        """
+
+
+# NOTE: Hub-rule
+rule load_metagenotype_from_merged_gtpro:
+    output:
+        "{stem}.gtpro.mgtp.nc",
+    input:
+        "{stem}.gtpro.tsv.bz2",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        python3 -m sfacts load --gtpro-metagenotype {input} {output}
         """
 
 

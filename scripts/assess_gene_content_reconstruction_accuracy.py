@@ -52,7 +52,7 @@ if __name__ == "__main__":
     infer_genes = pd.read_table(infer_path, index_col=0).rename_axis(
         columns="strain"
     )
-    assert truth_genes.index.name == infer_genes.index.name
+    assert truth_genes.index.name == infer_genes.index.name, (truth_genes.index.name, infer_genes.index.name)
     truth = set(idxwhere(truth_genes.astype(bool)))
     out = dict()
     for strain in tqdm(infer_genes.columns):
@@ -65,4 +65,4 @@ if __name__ == "__main__":
         )
 
     out = pd.DataFrame(out).T.rename_axis(index="strain")
-    out.to_csv(outpath, sep="\t")
+    out.sort_values('f1', ascending=False)[["f1", "precision", "recall"]].to_csv(outpath, sep="\t")
