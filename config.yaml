@@ -5,4 +5,4 @@ container:
 MAX_THREADS: 4
 USE_CUDA: 0
 ALL:
-  - 'TODO'
+  - 'data/group/xjin_ucfmt_hmp2/r.proc.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr100-depth250.spgc_ref_comparison.html.SELECT_SPECIES.flag'
