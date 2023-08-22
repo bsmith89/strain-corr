@@ -1,5 +1,3 @@
-
-
 # NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
     output:
@@ -15,7 +13,6 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg:
         centroid=lambda w: int(w.centroid),
     shell:
         "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {output}"
-
 
 
 # NOTE: Hub-rule
@@ -80,6 +77,7 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark:
                 --o_idx {output.thresh}
         rm -r $tmpdir
         """
+
 
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
 # "run_spanda_decompose" combined.

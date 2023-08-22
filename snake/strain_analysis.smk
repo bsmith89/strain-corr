@@ -48,7 +48,9 @@ rule compile_spgc_to_ref_strain_report_new:
         output_path_args=lambda w, output: [
             f"-p {k}_outpath {v}" for k, v in output.items()
         ],
-        extra_args=lambda w: [f"-r species_id {w.species} -r show_unimportant_figures ''"],
+        extra_args=lambda w: [
+            f"-r species_id {w.species} -r show_unimportant_figures ''"
+        ],
     log:
         nb="nb/papermill/data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.spgc_ref_comparison.ipynb",
     conda:
@@ -63,5 +65,3 @@ rule compile_spgc_to_ref_strain_report_new:
         papermill {input.nb} {log.nb} {params.extra_args} {params.input_path_args} {params.output_path_args}
         jupyter nbconvert --to html --embed-images {log.nb} --stdout > {output.html}
         """
-
-

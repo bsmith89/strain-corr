@@ -166,6 +166,7 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths:
     shell:
         alias_recipe
 
+
 # TODO: Use this in place of midasuhgg* everywhere.
 rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
     output:
@@ -180,9 +181,8 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
 
 
 localrules:
-    alias_species_genes_from_reference_to_match_de_novo_paths, alias_species_genes_from_reference_to_match_de_novo_paths_new,
-
-
+    alias_species_genes_from_reference_to_match_de_novo_paths,
+    alias_species_genes_from_reference_to_match_de_novo_paths_new,
 
 
 rule calculate_species_depth_from_core_genes:

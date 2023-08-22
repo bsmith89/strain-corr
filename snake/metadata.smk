@@ -31,7 +31,15 @@ config["species_group_to_spgc_stem"] = (
 config["genome"] = pd.read_table(
     "meta/genome.tsv", dtype=str, index_col=["genome_id"]
 ).dropna(subset=["genome_path"])
-# config["species_to_genome"] = pd.read_table("meta/genome.tsv").groupby("species_id").apply(lambda x: x.genome_id.tolist())
+
+
+# NOTE: This function is used, e.g. in snake/reference_genome.smk and
+# snake/benchmark_strain_reconstruction.smk to gather a list of reference
+# genomes for each species.
+def species_genomes(species):
+    strain_list = idxwhere(config["genome"].species_id == species)
+    # assert len(strain_list) > 0
+    return strain_list
 
 
 config["species_to_panphlan"] = pd.read_table(

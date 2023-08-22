@@ -33,22 +33,6 @@ rule subsample_xjin_samples_for_benchmarking:
         """
 
 
-# # TODO: Parameterize this rule (or a child of this rule) by the partition of
-# # the strain_samples map.
-# # NOTE: I could also parameterize the main rule, instead of splitting this one
-# # out, but it will require handling filenames somehow.
-# use rule calculate_strain_specific_correlation_and_depth_ratio_of_genes as calculate_strain_specific_correlation_and_depth_ratio_of_genes_with_subsampling with:
-#     output:
-#         corr="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_correlation.tsv",
-#         depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{centroidA}-{params}-agg{centroidB}.spgc.strain_depth_ratio.tsv",
-#     input:
-#         script="scripts/calculate_strain_partitioned_gene_stats.py",
-#         nospecies_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_free_samples.list",
-#         strain_partitions="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.strain_samples.tsv",
-#         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.gene{centroidA}-{params}-agg{centroidB}.spgc.species_depth.tsv",
-#         gene_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{centroidA}-{params}-agg{centroidB}.depth2.nc",
-
-
 rule select_highest_depth_xjin_samples_for_benchmarking:
     output:
         "{stemA}.gtpro.{stemB}.spgc_ss-xjin-deepest-n{n_samples}.strain_samples.tsv",
@@ -151,8 +135,8 @@ localrules:
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
 # other units, because it's assigned based on tiling depth with a particular
 # centroidA, centroidB, mapping strategy, etc.
-# Also note that UHGG as an assessment unit isn't great. I could try switching
-# to "best hit" UHGG assignment, but I think the accuracy would look
+# Also note that UHGG tiles as an assessment unit isn't great. I could try
+# switching to "best hit" UHGG assignment, but I think the accuracy would look
 # misleadingly low...
 rule assess_infered_strain_accuracy_uhgg_tiles:
     output:
@@ -192,28 +176,6 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_new-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
-# # NOTE: This hard-codes the "xjin_" prefix and finds the strain with the most
-# # of these samples.
-# # TODO: (2023-06-13) Decide if I should be selecting the panphlan/spanda strain
-# # based on something like this.
-# rule match_xjin_strains:
-#     output:
-#         samples="data/group/xjin_hmp2/{stem}.spgc_ss-{ss_params}.xjin_sample_count.tsv",
-#     input:
-#         samples="data/group/xjin_hmp2/{stem}.spgc_ss-{ss_params}.strain_samples.tsv",
-#     params:
-#         pattern="^xjin_"
-#     shell:
-#         """
-#         awk '$2~/{params.pattern}/ {{print $0}}' {input} \
-#                 | cut -f1 \
-#                 | sort \
-#                 | uniq -c \
-#                 | awk -v OFS="\t" '{{print $2,$1}}' \
-#             > {output}
-#         """
-
-
 # NOTE: This rule is required because multiple reference genomes may be present for a given species.
 rule compile_reference_genome_accuracy_info:
     output:
@@ -233,8 +195,6 @@ rule compile_reference_genome_accuracy_info:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {params.args} > {output}"
-
-
 
 
 rule xjin_compare_tool_accuracy_single_species_single_unit:
@@ -281,5 +241,3 @@ rule xjin_accuracy_grid:
 
 localrules:
     xjin_accuracy_grid,
-
-

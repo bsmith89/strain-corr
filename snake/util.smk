@@ -1,25 +1,18 @@
 # Install Jupyter Kernels
 
 
-rule install_jupyter_kernel_default:
+rule install_jupter_conda_kernel:
     output:
-        "install_jupyter_kernel_default",
+        "install_jupyter_kernel.{conda}",
     params:
         name="default",
     conda:
-        "conda/toolz.yaml"
+        lambda w: f"conda/{w.conda}.yaml"
     shell:
         """
         python -m ipykernel install --user --name={params.name} --env PATH $PATH
         # NOTE: This rule fails with a MissingOutputException even when the kernel is installed correctly.
         """
-
-
-use rule install_jupyter_kernel_default as install_jupter_conda_kernel with:
-    output:
-        "install_jupyter_kernel.{conda}",
-    conda:
-        lambda w: f"conda/{w.conda}.yaml"
 
 
 rule start_jupyter:
@@ -31,14 +24,22 @@ rule start_jupyter:
         "jupyter lab --port={params.port} --notebook-dir nb/"
 
 
-rule start_ipython:
+rule start_jupyter_nb:
+    params:
+        port=config["jupyter_port"],
+    conda:
+        "conda/jupyter.yaml"
+    shell:
+        "jupyter notebook --port={params.port} --notebook-dir nb/"
+
+
+rule start_ipython_any_conda:
+    output:
+        "start_ipython.{conda}",
+    conda:
+        lambda w: f"conda/{w.conda}.yaml"
     shell:
         "ipython"
-
-
-use rule start_ipython as start_ipython_toolz with:
-    conda:
-        "conda/toolz.yaml"
 
 
 rule start_shell_any_conda:
@@ -92,19 +93,6 @@ rule dot_to_pdf:
         dd(
             """
         dot -Tpdf < {input} > {output}
-        """
-        )
-
-
-rule processed_notebook_to_html:
-    output:
-        "build/{stem}.ipynb.html",
-    input:
-        "build/{stem}.ipynb",
-    shell:
-        dd(
-            """
-        jupyter nbconvert -t html {input} {output}
         """
         )
 

@@ -34,45 +34,11 @@ rule extract_spanda_reference:
         """
 
 
-# rule collect_panphlan_spanda_group:
-#     output:
-#         hit="data/group/{group}/species/sp-{species}/r.{stem}.panphlan_spanda_hit.tsv",
-#         depth="data/group/{group}/species/sp-{species}/r.{stem}.panphlan_spanda_depth.tsv",
-#         thresh="data/group/{group}/species/sp-{species}/r.{stem}.panphlan_spanda_thresh.tsv",
-#     input:
-#         pangenome="ref/strainpanda/{species}",
-#         samples=lambda w: [
-#             f"data/species/sp-{w.species}/reads/{mgen}/r.{w.stem}.panphlan_spanda_map.tsv"
-#             for mgen in config["mgen_group"][w.group]
-#         ],
-#     params:
-#         spanda_species=lambda w: config["species_to_spanda"][w.species],
-#         sample_pattern="data/species/sp-{species}/reads/$sample/r.{stem}.panphlan_spanda_map.tsv",
-#         sample_list=lambda w: list(config["mgen_group"][w.group]),
-#     conda:
-#         "conda/panphlan.yaml"
-#     threads: 2
-#     shell:
-#         """
-#         tmpdir=$(mktemp -d)
-#         echo linking samples into $tmpdir >&2
-#         for sample in {params.sample_list}
-#         do
-#             ln -rs {params.sample_pattern} $tmpdir/$sample
-#         done
-#         panphlan_profiling.py -i $tmpdir \
-#                 -p {input.pangenome}/panphlan_{params.spanda_species}_pangenome.csv \
-#                 --o_matrix {output.hit} \
-#                 --o_covmat {output.depth} \
-#                 --o_idx {output.thresh}
-#         rm -r $tmpdir
-#         """
-
-
-# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
-# re-running the bowtie2 building and mapping steps.
-# This means that I process all xjin samples but take their counts from xjin_hmp2
-# pangenome profiling.
+# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that
+# this table does not require re-running the bowtie2 building and mapping
+# steps.
+# This means that I process all xjin samples but take their counts from
+# xjin_hmp2 pangenome profiling.
 rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spanda_counts.csv",

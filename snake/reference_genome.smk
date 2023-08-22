@@ -9,6 +9,8 @@ rule link_reference_genome:
         alias_recipe
 
 
+# NOTE: Emapper can take a long time to run.
+# Testing can be done on 100035 because it has very few genes in its pangenome.
 rule eggnog_mapper_translated_orfs:
     output:
         "{stem}.emapper.d/proteins.emapper.annotations",
@@ -49,7 +51,6 @@ rule eggnog_mapper_translated_orfs:
                 --output_dir {params.outdir}.temp \
                 --output 'proteins'
         mv {params.outdir}.temp {params.outdir}
-        # TODO  # Test on 100035 because it has very few genes
         """
 
 
@@ -61,8 +62,6 @@ rule parse_emapper_output_to_gene_x_unit:
         emapper="{stem}.emapper.d/proteins.emapper.annotations",
     shell:
         "{input.script} {input.emapper} {output}"
-
-
 
 
 rule aggregate_strain_emapper_output_by_unit:
@@ -196,18 +195,6 @@ localrules:
     alias_midas_uhgg_pangenome_cds_new,
 
 
-# rule blastn_midasdb_uhgg_against_genome:
-#     output:
-#         "{stemA}/species/sp-{species}/genome/midas_uhgg_pangenome.{stemB}-blastn.tsv",
-#     input:
-#         query="data/species/sp-{species}/pangenome.centroids.fn",
-#         subject="{stemA}/species/sp-{species}/genome/{stemB}.fn",
-#     shell:
-#         """
-#         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
-#         """
-
-
 rule blastn_genome_against_midasdb_uhgg:
     output:
         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.tsv",
@@ -232,6 +219,7 @@ rule blastn_genome_against_midasdb_uhgg_new:
         """
         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
         """
+
 
 rule assign_matching_genes_based_on_best_blastn_hit:
     output:
@@ -306,42 +294,6 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
         db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
 
 
-# rule blast_midasdb_uhgg_against_genome:
-#     output:
-#         "{stemA}/species/sp-{species}/genome/midas_uhgg_pangenome.{stemB}-blastx.tsv",
-#     input:
-#         db="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.dmnd",
-#         fa="data/species/sp-{species}/pangenome.centroids.tran.fa",
-#     params:
-#         db_stem="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran",
-#     threads: 4
-#     shell:
-#         """
-#         diamond blastp --threads {threads} --db {params.db_stem} --query {input.fa} > {output}
-#         """
-
-
-# rule blast_genome_against_midasdb_uhgg:
-#     output:
-#         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastx.tsv",
-#     input:
-#         fa="{stemA}/species/sp-{species}/genome/{stemB}.cds.tran.fa",
-#         db="data/species/sp-{species}/pangenome.centroids.tran.dmnd",
-#     params:
-#         db_stem="data/species/sp-{species}/pangenome.centroids.tran.dmnd",
-#     threads: 4
-#     shell:
-#         """
-#         diamond blastp --threads {threads} --db {params.db_stem} --query {input.fa} > {output}
-#         """
-
-
-def species_genomes(species):
-    strain_list = idxwhere(config["genome"].species_id == species)
-    # assert len(strain_list) > 0
-    return strain_list
-
-
 rule debug_species_genomes:
     output:
         "debug_{species}_genomes.flag",
@@ -351,41 +303,12 @@ rule debug_species_genomes:
         "echo {params.test}; false"
 
 
-rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes:
-    output:
-        "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-{blastn_or_p}.bitscore_ratio-c{centroid}.tsv",
-    input:
-        script="scripts/calculate_bitscore_ratio_for_gene_matching.py",
-        orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-{blastn_or_p}.tsv",
-        orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-{blastn_or_p}.tsv",
-        midasdb=ancient("ref/midasdb_uhgg"),
-    wildcard_constraints:
-        blastn_or_p="blastn|blastp",
-    params:
-        aggregate_genes_by=lambda w: {
-            "99": "centroid_99",
-            "95": "centroid_95",
-            "90": "centroid_90",
-            "85": "centroid_85",
-            "80": "centroid_80",
-            "75": "centroid_75",
-        }[w.centroid],
-        gene_clust="ref/midasdb_uhgg/pangenomes/{species}/cluster_info.txt",  # TODO: DB-UPDATE: Use new DB here.
-    shell:
-        """
-        {input.script} \
-                {input.orf_x_orf} \
-                {input.orf_x_midas} \
-                {params.gene_clust} \
-                {params.aggregate_genes_by} \
-                {output}
-        """
-
 rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes_new:
     output:
         "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-{blastn_or_p}.bitscore_ratio-c{centroid}.tsv",
     input:
         script="scripts/calculate_bitscore_ratio_for_gene_matching.py",
+        # NOTE: orf_x_orf is used to get the maximum possible bitscore for each ORF.
         orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-{blastn_or_p}.tsv",
         orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-{blastn_or_p}.tsv",
         gene_clust="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
@@ -424,9 +347,29 @@ rule assign_matching_genes_based_on_bitscore_ratio:
         """
 
 
+use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22_new with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_new-v22.{bam_or_cram}",
+    input:
+        db="data/group/{group}/r.proc.pangenomes{centroid}_new.bt2.d/centroids.bt2db",
+        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+    threads: 1
+
+
+use rule run_bowtie_species_pangenome_v22_new as run_bowtie_species_pangenome_on_reference_genome_tiles_v22_new with:
+    output:
+        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenome{centroid}_new-v22.{bam_or_cram}",
+    input:
+        db="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.bt2db",
+        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+
+
 # NOTE: So-as to re-use the "gene matching" instrument designed for
 # blastn-based accuracy assessment, here we "label" each gene with arbitrary,
-# ascending integers.
+# ascending integers. (In other words, genes are no longer mapped to ORFs, so we
+# use ascending integers as "dummy" ORF IDs, in order to keep the file format the same.)
 rule assign_matching_genes_based_on_tile_depth:
     output:
         "{stemA}/species/sp-{species}/genome/{strain}.tiles-{tile_params}.gene{centroidA}-{params}-agg{centroidB}.gene_matching-t{thresh}.uhggtiles-strain_gene.tsv",
@@ -439,77 +382,6 @@ rule assign_matching_genes_based_on_tile_depth:
         """
         {input.script} {input.depth} {wildcards.strain} {params.thresh} {output}
         """
-
-
-use rule run_bowtie_multispecies_pangenome_v22 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22 with:
-    output:
-        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}-v22.{bam_or_cram}",
-    input:
-        db="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d/centroids.bt2db",
-        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-
-
-use rule run_bowtie_multispecies_pangenome_v22 as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22_new with:
-    output:
-        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_new-v22.{bam_or_cram}",
-    input:
-        db="data/group/{group}/r.proc.pangenomes{centroid}_new.bt2.d/centroids.bt2db",
-        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-
-
-use rule run_bowtie_species_pangenome_v22 as run_bowtie_species_pangenome_on_reference_genome_tiles_v22 with:
-    output:
-        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenome{centroid}-v22.{bam_or_cram}",
-    input:
-        db="data/species/sp-{species}/pangenome{centroid}.bt2.d/centroids.bt2db",
-        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-
-
-# rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10:
-#     output:
-#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v10.bam",
-#     input:
-#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
-#         tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
-#     wildcard_constraints:
-#         centroid="99|95|90|85|80|75"
-#     params:
-#         extra_flags="",
-#         seed=0,
-#     conda:
-#         "conda/midas.yaml"
-#     threads: 24
-#     resources:
-#         walltime_hr=24,
-#         mem_mb=100_000,
-#         pmem=100_000 // 24,
-#     shell:
-#         """
-#         bowtie2 --no-unal --local --very-sensitive-local \
-#             -x {input.bt2_dir}/centroids \
-#             --threads {threads} --mm -q \
-#             -U {input.tiles} \
-#             --seed {params.seed} \
-#             {params.extra_flags} \
-#             | samtools view --threads 2 -u \
-#             | samtools sort --threads {threads} -u -T {output} \
-#             | samtools view --threads 2 -O BAM --reference {input.bt2_dir}/centroids.fn -t {input.bt2_dir}/centroids.fn.fai -o {output}
-#         """
-#
-#
-# use rule run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v10_cram as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v13_cram with:
-#     output:
-#         "data/group/{group}/species/sp-{species}/genome/{stem}.pangenomes{centroid}-v13.cram",
-#     input:
-#         bt2_dir="data/group/{group}/r.proc.pangenomes{centroid}.bt2.d",  # Assumes `proc` infix.
-#         tiles="data/species/sp-{species}/genome/{stem}.fq.gz",
-#     params:
-#         extra_flags="--all",
-#         seed=0,
-#     threads: 24
 
 
 use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
@@ -528,4 +400,4 @@ use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_p
             f"{genome}=data/group/{w.group}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
             for genome, species in config["genome"].species_id.items()
         ],
-        centroidB_col=lambda w: f"centroid_{w.centroidB}"
+        centroidB_col=lambda w: f"centroid_{w.centroidB}",
