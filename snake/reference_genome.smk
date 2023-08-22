@@ -51,6 +51,7 @@ rule eggnog_mapper_translated_orfs:
                 --output_dir {params.outdir}.temp \
                 --output 'proteins'
         mv {params.outdir}.temp {params.outdir}
+        # TODO  # Test on 100035 because it has very few genes
         """
 
 
