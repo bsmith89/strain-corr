@@ -11,21 +11,6 @@ rule patch_sfinder:
         """
 
 
-use rule start_jupyter as start_jupyter_sfinder with:
-    conda:
-        "conda/sfinder.yaml"
-
-
-use rule start_ipython as start_ipython_sfinder with:
-    conda:
-        "conda/sfinder.yaml"
-
-
-use rule start_shell as start_shell_sfinder with:
-    conda:
-        "conda/sfinder.yaml"
-
-
 rule metagenotype_tsv_to_sfinder_aln:
     output:
         cpickle="{stem}.sfinder.aln.cpickle",

@@ -1,23 +1,6 @@
 # Same as sfacts, but with an environment defined by conda/sfacts.yaml
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
-use rule start_ipython as start_ipython_sfacts with:
-    conda:
-        "conda/sfacts.yaml"
-
-
-use rule start_shell as start_shell_sfacts with:
-    conda:
-        "conda/sfacts.yaml"
-
-
-use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
-    params:
-        name="sfacts",
-    conda:
-        "conda/sfacts.yaml"
-
-
 rule compile_species_variation_from_vcf:
     output:
         "data/species/sp-{species}/gtpro_ref.mgtp.nc",
