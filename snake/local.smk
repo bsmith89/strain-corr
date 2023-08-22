@@ -55,15 +55,6 @@ rule link_gtpro_snps_dict:
         alias_recipe_norelative
 
 
-rule link_midasdb_uhgg:
-    output:
-        directory("ref/midasdb_uhgg"),
-    input:
-        ancient("/pollard/scratch/bsmith/midasdb_uhgg/"),
-    shell:
-        alias_recipe_norelative
-
-
 rule link_xjin_mgen_data:
     output:
         directory("raw/mgen/xjin"),
@@ -73,7 +64,7 @@ rule link_xjin_mgen_data:
         alias_recipe_norelative
 
 
-rule linkage_xjin_genomes_data:
+rule link_xjin_genomes_data:
     output:
         directory("raw/genomes/xjin"),
     input:
@@ -135,22 +126,23 @@ rule link_een_mgen_dir:
         alias_recipe_norelative
 
 
-# rule link_een_gtpro_dir:
-#     output:
-#         directory("raw/een-mgen/gtpro"),
-#     input:
-#         "/pollard/data/projects/bsmith/een-mgen/raw/2023-06-01_aritra.mahapatra@tum.de/syncandshare.lrz.de/dl/fiL5YrfYpvTkm19DDBkrTe",
-#     shell:
-#         alias_recipe_norelative
-#
-#
-# rule link_een_mgen_gtpro_results:
-#     output:
-#         "data/reads/{mgen}/{r}.proc.gtpro_raw.gz",
-#     input:
-#         lambda w: "raw/een-mgen/gtpro/" + config["een_mgen_local_src"][w.r][w.mgen],
-#     shell:
-#         alias_recipe
-#
-#
-# ruleorder: link_een_mgen_gtpro_results > run_gtpro
+rule link_new_gtpro_reference_genotypes:
+    output:
+        "data/species/sp-{species}/midasdb.geno.nc",
+    input:
+        "/pollard/data/projects/bsmith/PGeSM/data/species/{species}/genome.norm.tiles-l500-o31.geno.nc",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_arbitrary_new_midas_db_file:
+    output:
+        "ref/midasdb_uhgg_new/{stem}",
+    input:
+        "/pollard/data/midas2-db/midas2db-uhgg-v1/{stem}",
+    shell:
+        alias_recipe_norelative
+
+
+localrules:
+    link_arbitrary_new_midas_db_file,
