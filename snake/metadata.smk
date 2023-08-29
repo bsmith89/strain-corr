@@ -1,4 +1,5 @@
 # {{{2 Data Configuration
+from hashlib import md5
 
 config["mgen"] = pd.read_table("meta/mgen_to_reads.tsv", index_col="mgen_id")
 _mgen_group = pd.read_table("meta/mgen_group.tsv")
@@ -11,8 +12,23 @@ config["species_group"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
     .groupby("species_group_id")
-    .species_id.apply(list)
+    .species_id.apply(lambda x: sorted(list(set(x))))
 )
+
+
+def hash_set_from_iterable(species_set):
+    """A constant hash for any finite iterable with the same elements."""
+    return md5(str(sorted(list(set(species_set)))).encode("utf-8")).hexdigest()
+
+
+config["species_group_to_hash"] = {}
+config["hash_to_species_set"] = {}
+for species_group in config["species_group"].keys():
+    species_set = sorted(list(set(config["species_group"][species_group])))
+    _hash = str(hash_set_from_iterable(species_set))
+    config["species_group_to_hash"][species_group] = _hash
+    config["hash_to_species_set"][_hash] = species_set
+
 
 config["species_group_to_sfacts_stem"] = (
     pd.read_table("meta/species_group.tsv")

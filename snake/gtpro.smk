@@ -345,27 +345,17 @@ rule estimate_species_depth_from_metagenotype:
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
-rule estimate_all_species_depths:
+rule estimate_all_species_depths_in_group:
     output:
         "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
     input:
         species=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     params:
         header="sample	species_id	depth",
-        species_list=lambda w: checkpoint_select_species(
-            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-            cvrg_thresh=0.2,
-            num_samples=2,
-            require_in_species_group=True,
-        ),
+        species_list=lambda w: config["species_group"][w.group],
         species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv",
     shell:
         """
@@ -399,10 +389,5 @@ rule construct_files_for_all_select_species:
     input:
         lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],

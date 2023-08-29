@@ -358,22 +358,12 @@ rule calculate_all_strain_depths:
         species="data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
         strains=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     params:
         args=lambda w: [
             f"{species}=data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=1,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     shell:
         """

@@ -145,12 +145,12 @@ rule combine_strain_genome_gtpro_data_loadable:
         "data/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:
         strain=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.tiles-l100-o99.gtpro_parse.tsv.bz2"
+            f"data/species/sp-{w.species}/genome/{strain}.tiles-l500-o31.gtpro_parse.tsv.bz2"
             for strain in species_genomes(w.species)
         ],
     params:
         strain_list=lambda w: species_genomes(w.species),
-        pattern="data/species/sp-{species}/genome/$strain.tiles-l100-o99.gtpro_parse.tsv.bz2",
+        pattern="data/species/sp-{species}/genome/$strain.tiles-l500-o31.gtpro_parse.tsv.bz2",
     shell:
         """
         for strain in {params.strain_list}
@@ -350,21 +350,41 @@ rule assign_matching_genes_based_on_bitscore_ratio:
 
 use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pangenome_on_reference_genome_tiles_v22_new with:
     output:
-        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_new-v22.{bam_or_cram}",
+        "data/hash/{hash}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_new-v22.{bam_or_cram}",
     input:
-        db="data/group/{group}/r.proc.pangenomes{centroid}_new.bt2.d/centroids.bt2db",
+        db="data/hash/{hash}/pangenomes{centroid}_new.bt2.d/centroids.bt2db",
         r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
         r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
     threads: 1
 
 
-use rule run_bowtie_species_pangenome_v22_new as run_bowtie_species_pangenome_on_reference_genome_tiles_v22_new with:
+use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
     output:
-        "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenome{centroid}_new-v22.{bam_or_cram}",
+        "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
-        db="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.bt2db",
-        r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
-        r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+        script="scripts/merge_pangenomes_depth.py",
+        samples=lambda w: [
+            "data/hash/{_hash}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+                w=w,
+                genome=genome,
+                species=species,
+                _hash=config["species_group_to_hash"][w.group],
+            )
+            for genome, species in config["genome"].species_id.items()
+        ],
+        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
+    params:
+        args=lambda w: [
+            "{genome}=data/hash/{_hash}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+                w=w,
+                genome=genome,
+                species=species,
+                _hash=config["species_group_to_hash"][w.group],
+            )
+            for genome, species in config["genome"].species_id.items()
+        ],
+        centroidB_col=lambda w: f"centroid_{w.centroidB}",
 
 
 # NOTE: So-as to re-use the "gene matching" instrument designed for
@@ -383,22 +403,3 @@ rule assign_matching_genes_based_on_tile_depth:
         """
         {input.script} {input.depth} {wildcards.strain} {params.thresh} {output}
         """
-
-
-use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
-    output:
-        "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
-    input:
-        script="scripts/merge_pangenomes_depth.py",
-        samples=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
-            for genome, species in config["genome"].species_id.items()
-        ],
-        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
-        gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
-    params:
-        args=lambda w: [
-            f"{genome}=data/group/{w.group}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4"
-            for genome, species in config["genome"].species_id.items()
-        ],
-        centroidB_col=lambda w: f"centroid_{w.centroidB}",
