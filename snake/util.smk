@@ -5,7 +5,7 @@ rule install_jupter_conda_kernel:
     output:
         "install_jupyter_kernel.{conda}",
     params:
-        name="default",
+        name="{conda}",
     conda:
         lambda w: f"conda/{w.conda}.yaml"
     shell:
