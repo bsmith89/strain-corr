@@ -39,39 +39,27 @@ rule extract_spanda_reference:
 # steps.
 # This means that I process all xjin samples but take their counts from
 # xjin_hmp2 pangenome profiling.
-rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark:
+rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spanda_counts.csv",
     input:
-        script="scripts/construct_spanda_count_matrix.py",
-        samples=lambda w: [
-            f"data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
-            for mgen in config["mgen_group"]["xjin"]
-        ],
-    params:
-        sample_args=lambda w: [
-            f"{mgen}=data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4"
-            for mgen in config["mgen_group"]["xjin"]
-        ],
-    shell:
-        """
-        {input.script} {output} {params.sample_args}
-        """
-
-
-rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemB}.pangenome{centroid}_new-{pangenome_params}.spanda_counts.csv",
-    input:
         script="scripts/merge_pangenomes_tallies_for_spanda.py",
         samples=lambda w: [
-            f"data/group/xjin_ucfmt_hmp2/reads/{mgen}/{w.stemB}.pangenome{w.centroid}_new-{w.pangenome_params}.gene_mapping_tally.tsv.lz4"
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4".format(
+                w=w,
+                mgen=mgen,
+                _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
+            )
             for mgen in config["mgen_group"]["xjin"]
         ],
         gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
     params:
         sample_args=lambda w: [
-            f"{mgen}=data/group/xjin_ucfmt_hmp2/reads/{mgen}/{w.stemB}.pangenome{w.centroid}_new-{w.pangenome_params}.gene_mapping_tally.tsv.lz4"
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4".format(
+                w=w,
+                mgen=mgen,
+                _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
+            )
             for mgen in config["mgen_group"]["xjin"]
         ],
     shell:
