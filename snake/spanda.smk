@@ -84,7 +84,7 @@ rule run_spanda_decompose:
         libstrainpandar="include/StrainPanDA/src/strainpandar",
     singularity:
         config["container"]["spanda"]
-    threads: 12
+    threads: 4
     resources:
         walltime_hr=12,
     shell:

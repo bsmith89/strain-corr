@@ -53,7 +53,7 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
         echo Reading sample depths from database into $tmpdir >&2
         for sample in {params.sample_list}
         do
-            echo $sample >&2
+            # echo $sample >&2
             lz4 -dc {params.sample_pattern} | sed '1,1d' | {{ grep -Ff <(cut -f2 {input.pangenome}) || [[ $? == 1 ]]; }} > $tmpdir/$sample
         done
         panphlan_profiling.py -i $tmpdir \

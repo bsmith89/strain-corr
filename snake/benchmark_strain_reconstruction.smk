@@ -123,7 +123,7 @@ rule alias_spgc_xjin_inferences_to_match_other_tools:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/r.proc.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
     input:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
+        "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
     shell:
         alias_recipe
 
@@ -137,7 +137,7 @@ localrules:
 # centroidA, centroidB, mapping strategy, etc.
 # Also note that UHGG tiles as an assessment unit isn't great. I could try
 # switching to "best hit" UHGG assignment, but I think the accuracy would look
-# misleadingly low...
+# misleadingly low for all of the tools...
 rule assess_infered_strain_accuracy_uhgg_tiles:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{strain}.uhggtiles-reconstruction_accuracy.tsv",
@@ -176,42 +176,6 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_new-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
-# NOTE: This rule is required because multiple reference genomes may be present for a given species.
-rule compile_reference_genome_accuracy_info:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.{unit}-xjin_strain_summary.tsv",
-    input:
-        script="scripts/compile_reference_genome_accuracy_info2.py",
-        reference_genome_accuracy=lambda w: [
-            f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stem}.{genome}.{w.unit}-reconstruction_accuracy.tsv"
-            for genome in species_genomes(w.species)
-        ],
-    params:
-        args=lambda w: [
-            f"{genome}=data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stem}.{genome}.{w.unit}-reconstruction_accuracy.tsv"
-            for genome in species_genomes(w.species)
-        ],
-    group:
-        "assess_gene_inference_benchmark"
-    shell:
-        "{input.script} {params.args} > {output}"
-
-
-rule xjin_compare_tool_accuracy_single_species_single_unit:
-    output:
-        touch(
-            "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.{unit}-accuracy.ALL_TOOLS.flag"
-        ),
-    input:
-        spgc="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spgc-fit.{unit}-xjin_strain_summary.tsv",
-        spanda="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spanda-s2.{unit}-xjin_strain_summary.tsv",
-        panphlan="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.panphlan.{unit}-xjin_strain_summary.tsv",
-    shell:
-        "echo {input} > {output}"
-
-
-localrules:
-    xjin_compare_tool_accuracy_single_species_single_unit,
 
 
 rule xjin_accuracy_grid:
@@ -219,9 +183,9 @@ rule xjin_accuracy_grid:
         touch("data/group/XJIN_BENCHMARK/{stem}.ACCURACY_BENCHMARK_GRID.flag"),
     input:
         lambda w: [
-            f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{tool}.{unit}-xjin_strain_summary.tsv"
-            for species, tool, unit in product(
-                config["genome"].species_id.unique(),
+            f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{tool}.{genome}.{unit}-reconstruction_accuracy.tsv"
+            for (genome, species), tool, unit in product(
+                config["genome"].species_id.items(),
                 [
                     "spgc-fit",
                 "spanda-s2",
