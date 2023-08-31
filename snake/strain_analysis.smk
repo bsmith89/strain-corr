@@ -68,3 +68,29 @@ rule compile_spgc_to_ref_strain_report_new:
         papermill {input.nb} {log.nb} {params.extra_args} {params.input_path_args} {params.output_path_args}
         jupyter nbconvert --to html --embed-images {log.nb} --stdout > {output.html}
         """
+
+
+# NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
+rule alias_spgc_analysis_outputs:
+    output:
+        # "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene{w.gene_params}.spgc-fit.{stemB}",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc-fit.{stemB}"
+    input:
+            # "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene{w.gene_params}.{spgc_params}.{w.stemB}".format(
+        source=lambda w: (
+            "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_new-v22-agg75.spgc_{spgc_params}.{w.stemB}".format(
+                w=w,
+                spgc_params=config["species_group_to_spgc_stem"][
+                    (w.species, w.group)
+                ],
+                sfacts_params=config["species_group_to_sfacts_stem"][
+                    (w.species, w.group)
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_spgc_analysis_outputs,

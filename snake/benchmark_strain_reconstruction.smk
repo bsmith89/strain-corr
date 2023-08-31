@@ -48,20 +48,33 @@ rule select_highest_depth_xjin_samples_for_benchmarking:
         """
 
 
-rule alias_spgc_gene_hits_as_uhgg_strain_gene:
+# NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
+rule alias_spgc_gene_hits_for_benchmarking:
     output:
-        "{stemA}.spgc{stemB}.uhgg-strain_gene.tsv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-fit.uhgg-strain_gene.tsv",
     input:
-        "{stemA}.spgc{stemB}.strain_gene.tsv",
+        source=lambda w: (
+            "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc_{spgc_stem}.strain_gene.tsv".format(
+                species=w.species,
+                stem=w.stem,
+                pangenome_params=w.pangenome_params,
+                spgc_stem=config["species_group_to_spgc_stem"][
+                    (w.species, "xjin_ucfmt_hmp2")
+                ],
+                sfacts_stem=config["species_group_to_sfacts_stem"][
+                    (w.species, "xjin_ucfmt_hmp2")
+                ],
+            )
+        ),
     shell:
         alias_recipe
 
 
-ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
-
-
 localrules:
-    alias_spgc_gene_hits_as_uhgg_strain_gene,
+    alias_spgc_gene_hits_for_benchmarking,
+
+
+# ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
 
 
 rule aggregate_uhgg_strain_gene_by_annotation:
@@ -99,37 +112,6 @@ localrules:
     alias_xjin_tiles_as_xjin_benchmark,
 
 
-rule select_dominant_xjin_sfacts_strains_for_benchmark:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.strain_gene.tsv",
-    input:
-        script="scripts/select_dominant_strain_in_sample_subset.py",
-        hits="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.strain_gene.tsv",
-        comm="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.comm.tsv",
-        sample_list="meta/XJIN_BENCHMARK/mgen.tsv",
-    shell:
-        "{input.script} {input.comm} {input.sample_list} {input.hits} > {output}"
-
-
-# NOTE: (2023-06-13) This rule order should mean that
-# alias_spgc_gene_hits_as_uhgg_strain_gene doesn't look for an XJIN_BENCHMARK
-# inference first.
-ruleorder: select_dominant_xjin_sfacts_strains_for_benchmark > alias_spgc_gene_hits_as_uhgg_strain_gene > select_strain_gene_hits
-
-
-# NOTE: (2023-06-13) This renaming brings spgc inferences into alignment with spanda and panphlan so
-# that the accuracy assessment rules below can be generic between all three.
-rule alias_spgc_xjin_inferences_to_match_other_tools:
-    output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/r.proc.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
-    input:
-        "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_spgc_xjin_inferences_to_match_other_tools,
 
 
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the

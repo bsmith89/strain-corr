@@ -437,29 +437,6 @@ rule select_strain_gene_hits:
         """
 
 
-# FIXME: As of 2023-08-11, dropped all but *.strain_gene.tsv outputs from
-# this rule for better reasoning.
-rule alias_final_strain_genes:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
-    input:
-        source=lambda w: (
-            "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc_{spgc_stem}.strain_gene.tsv".format(
-                group=w.group,
-                species=w.species,
-                stem=w.stem,
-                pangenome_params=w.pangenome_params,
-                spgc_stem=config["species_group_to_spgc_stem"][(w.species, w.group)],
-            )
-        ),
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_final_strain_genes,
-
-
 rule convert_midasdb_species_gene_list_to_reference_genome_table:
     output:
         "ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
