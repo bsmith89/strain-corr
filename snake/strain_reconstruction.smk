@@ -241,6 +241,18 @@ rule identify_strain_samples:
         """
 
 
+rule aggregate_strain_metagenotype:
+    output:
+        "{stem}.gtpro.{strain_fit_params}.spgc_ss-all.strain_mgtp.nc",
+    input:
+        script="scripts/aggregate_strain_metagenotypes_across_strain_samples.py",
+        mgtp="{stem}.gtpro.mgtp.nc",
+        mapping="{stem}.gtpro.{strain_fit_params}.spgc_ss-all.strain_samples.tsv",
+    conda: 'conda/sfacts.yaml'
+    shell:
+        "{input.script} {input.mapping} {input.mgtp} {output}"
+
+
 # rule partition_strain_samples_method1:
 #     output:
 #         nospecies="data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc.species_free_samples.list",

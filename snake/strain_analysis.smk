@@ -5,13 +5,13 @@ rule compile_strain_spgc_metadata:
         script="scripts/compile_spgc_results_metadata.py",
         species_gene="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_gene.list",
         species_depth="data/group/{group}/species/sp-{species}/{stemA}.gene{gene_params}.spgc_specgene-{specgene_params}.species_depth.tsv",
-        strain_fit="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.world.nc",
+        spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_mgtp.nc",
         strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
         strain_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_gene.tsv",
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.species_gene} {input.species_depth} {input.strain_fit} {input.strain_samples} {input.strain_gene} {output}"
+        "{input.script} {input.species_gene} {input.species_depth} {input.spgc_agg_mgtp} {input.strain_samples} {input.strain_gene} {output}"
 
 
 rule compile_spgc_to_ref_strain_report_new:
@@ -26,6 +26,7 @@ rule compile_spgc_to_ref_strain_report_new:
         species_taxonomy="ref/gtpro/species_taxonomy_ext.tsv",
         sample_to_spgc="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.strain_samples.tsv",
         sfacts_fit="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.world.nc",
+        spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.strain_mgtp.nc",
         # ref_geno="data/species/sp-{species}/gtpro_ref.mgtp.nc",  # Original
         ref_geno="data/species/sp-{species}/midasdb.geno.nc",  # Re-calculated
         spgc_meta="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",

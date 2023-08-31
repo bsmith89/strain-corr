@@ -10,7 +10,7 @@ import warnings
 if __name__ == "__main__":
     species_gene_list_path = sys.argv[1]
     species_depth_path = sys.argv[2]
-    strain_fit_path = sys.argv[3]
+    spgc_agg_mgtp_inpath = sys.argv[3]
     sample_to_strain_path = sys.argv[4]
     strain_gene_path = sys.argv[5]
     outpath = sys.argv[6]
@@ -20,7 +20,6 @@ if __name__ == "__main__":
     species_depth = pd.read_table(
         species_depth_path, names=["sample", "depth"], index_col="sample"
     ).depth
-    strain_fit = sf.World.load(strain_fit_path)
     sample_to_strain = pd.read_table(sample_to_strain_path, index_col="sample").strain
     strain_gene = pd.read_table(strain_gene_path, index_col="gene_id").rename_axis(
         columns="strain"
@@ -55,12 +54,7 @@ if __name__ == "__main__":
         exit(0)
 
     # Strain genotype entropy
-    strain_total_mgtp = sf.Metagenotype(
-        strain_fit.metagenotype.data.sel(sample=sample_to_strain.index)
-        .groupby(sample_to_strain.to_xarray())
-        .sum()
-        .rename(strain="sample")
-    )
+    strain_total_mgtp = sf.Metagenotype.load(spgc_agg_mgtp_inpath)
     strain_metagenotype_entropy = strain_total_mgtp.entropy()
 
     # Species genes
