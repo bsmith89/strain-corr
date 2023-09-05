@@ -60,12 +60,15 @@ rule compile_spgc_to_ref_strain_report_new:
         "conda/papermill.yaml"
     threads: 1
     resources:
-        mem_mb=30_000,
-        pmem=30_000,
+        mem_mb=10_000,
+        pmem=10_000,
         walltime_hr=12,
+        papermill_flags='--no-progress-bar',
     shell:
         """
-        papermill {input.nb} {log.nb} {params.extra_args} {params.input_path_args} {params.output_path_args}
+        echo "Running {log.nb}"
+        papermill {input.nb} {log.nb} {params.extra_args} {resources.papermill_flags} {params.input_path_args} {params.output_path_args}
+        echo "Rendering {output.html}"
         jupyter nbconvert --to html --embed-images {log.nb} --stdout > {output.html}
         """
 

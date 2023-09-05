@@ -316,7 +316,6 @@ rule merge_both_reads_species_count_data:
         """
 
 
-# NOTE: Hub-rule
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgtp.nc",

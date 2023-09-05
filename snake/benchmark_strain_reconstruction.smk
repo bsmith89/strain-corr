@@ -74,6 +74,54 @@ localrules:
     alias_spgc_gene_hits_for_benchmarking,
 
 
+rule alias_spgc_depth_only_gene_hits_for_benchmarking:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv",
+    input:
+        source=lambda w: (
+            "data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr0-depth{w.thresh}.strain_gene.tsv".format(
+                w=w,
+                sfacts_stem=config["species_group_to_sfacts_stem"][
+                    (w.species, "xjin_ucfmt_hmp2")
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
+
+
+# FIXME: Consider moving this to a different snakefile.
+rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{centroid}.nnmatched-m{min_diss}.uhgg-strain_gene.tsv",
+    input:
+        script="scripts/predict_gene_content_by_nearest_neighbor.py",
+        spgc_geno="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_mgtp.nc",
+        ref_geno="data/species/sp-{species}/midasdb.geno.nc",
+        ref_gene="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+    params:
+        min_geno_diss=lambda w: int(w.min_diss) / 1000,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        "{input.script} {input.spgc_geno} {input.ref_geno} {params.min_geno_diss} {input.ref_gene} {output}"
+
+
+# NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
+rule alias_nnmatched_predictions_for_benchmarking:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gene{centroidA}-{pangenome_params}-agg{centroidB}.nnmatched{nnmatch_params}.uhgg-strain_gene.tsv",
+    input:
+        lambda w: "data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.centroidB}.nnmatched{w.nnmatch_params}.uhgg-strain_gene.tsv".format(
+            w=w,
+            sfacts_stem=config["species_group_to_sfacts_stem"][
+                (w.species, "xjin_ucfmt_hmp2")
+            ],
+        ),
+    shell:
+        alias_recipe
+
+
 # ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
 
 
@@ -171,7 +219,13 @@ rule xjin_accuracy_grid:
                 [
                     "spgc-fit",
                 "spanda-s2",
+                "spanda-s3",
+                "spanda-s4",
                 "panphlan",
+                "nnmatched-m0",
+                "nnmatched-m1",
+                "nnmatched-m10",
+                "spgc-depth250",
             ],
             [
                 "uhggtop",
