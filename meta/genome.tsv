@@ -32,7 +32,7 @@ Bacteroides-fragilis-3-1-12_MAF-2	100236	raw/genomes/xjin/Bacteroides-fragilis-3
 Odoribacter-splanchnicus-DSM-20712_MAF-2	100254	raw/genomes/xjin/Odoribacter-splanchnicus-DSM-20712_MAF-2.fa	xjin_100254_a	
 Anaerobutyricum-hallii-DSM-3353_MAF-2	100262	raw/genomes/xjin/Anaerobutyricum-hallii-DSM-3353_MAF-2.fa	Anaerobutyricum_hallii_DSM_3353_MAF_2	no xjin samples in metagenotype dataset after filtering;
 Roseburia-inulinivorans-DSM-16841_MAF-2	100271	raw/genomes/xjin/Roseburia-inulinivorans-DSM-16841_MAF-2.fa	Roseburia_inulinivorans_DSM_16841_MAF_2	no xjin samples in metagenotype dataset after filtering;
-Bacteroides-coprophilus-DSM-18228_MAF-2	100273	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset;
+Bacteroides-coprophilus-DSM-18228_MAF-2	TODO	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset; changed 100273 to TODO because that species wasn't found in the xjin_ucfmt_hmp2 dataset;
 Prevotella-buccae-D17_MAF-2	100289	raw/genomes/xjin/Prevotella-buccae-D17_MAF-2.fa	xjin_100289_a	
 Peptostreptococcus-anaerobius-ATCC-27337_MAF-2	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	xjin_100296_a	two (very similar) strains identified in sfacts37-s85-seed0; loss of samples due to strain mixture and 'wrong' strain is dominant; TODO: Try sfacts37-s85-seed1;
 Prevotella-buccalis-ATCC-35310_MAF-2	100760	raw/genomes/xjin/Prevotella-buccalis-ATCC-35310_MAF-2.fa	xjin_100760_a	UHGG species number matched based on genus and process of elimination with two other Prevotella
