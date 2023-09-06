@@ -92,7 +92,7 @@ rule compile_spgc_to_ref_strain_report_new:
         mem_mb=10_000,
         pmem=10_000,
         walltime_hr=12,
-        papermill_flags='--no-progress-bar',
+        papermill_flags="--no-progress-bar",
     shell:
         """
         echo "Running {log.nb}"
@@ -106,15 +106,13 @@ rule compile_spgc_to_ref_strain_report_new:
 rule alias_spgc_analysis_outputs:
     output:
         # "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene{w.gene_params}.spgc-fit.{stemB}",
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc-fit.{stemB}"
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc-fit.{stemB}",
     input:
-            # "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene{w.gene_params}.{spgc_params}.{w.stemB}".format(
+        # "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene{w.gene_params}.{spgc_params}.{w.stemB}".format(
         source=lambda w: (
             "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_new-v22-agg75.spgc_{spgc_params}.{w.stemB}".format(
                 w=w,
-                spgc_params=config["species_group_to_spgc_stem"][
-                    (w.species, w.group)
-                ],
+                spgc_params=config["species_group_to_spgc_stem"][(w.species, w.group)],
                 sfacts_params=config["species_group_to_sfacts_stem"][
                     (w.species, w.group)
                 ],
