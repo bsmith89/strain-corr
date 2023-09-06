@@ -1,4 +1,4 @@
-rule compile_strain_spgc_metadata:
+rule compile_spgc_strain_metadata:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv",
     input:
@@ -12,6 +12,35 @@ rule compile_strain_spgc_metadata:
         "conda/sfacts.yaml"
     shell:
         "{input.script} {input.species_gene} {input.species_depth} {input.spgc_agg_mgtp} {input.strain_samples} {input.strain_gene} {output}"
+
+
+rule filter_hmp2_spgc_strains:
+    output:
+        "data/group/xjin_ucfmt_hmp2/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_filt-s90-d100-a1.tsv",
+    input:
+        script="scripts/filter_spgc_strains.py",
+        meta="data/group/xjin_ucfmt_hmp2/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
+        sample_to_strain="data/group/xjin_ucfmt_hmp2/{stem}.spgc_ss-{ss}.strain_samples.tsv",
+        mgen="meta/hmp2/mgen.tsv",
+    params:
+        min_species_genes_frac=90 / 100,
+        min_total_depth=100 / 100,
+        gene_count_outlier_alpha=1 / 1000,
+    shell:
+        "{input.script} {input.meta} {input.sample_to_strain} <(cut -f1 {input.mgen}) {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {output}"
+
+
+rule compute_reference_and_spgc_pairwise_genotype_dissimilarities:
+    output:
+        spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_pdist.pkl",
+    input:
+        script="scripts/calculate_ref_and_spgc_pairwise_genotype_dissimilarity.py",
+        spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.strain_mgtp.nc",
+        ref_geno="data/species/sp-{species}/midasdb.geno.nc",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        "{input.script} {input.spgc_agg_mgtp} {input.ref_geno} {output}"
 
 
 rule compile_spgc_to_ref_strain_report_new:
