@@ -163,6 +163,20 @@ localrules:
     alias_xjin_tiles_as_xjin_benchmark,
 
 
+rule match_strains_to_genomes_based_on_genotype:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{pangen_params}.spgc{spgc_params}.{strain}.geno_matching_stats.tsv",
+    input:
+        script="scripts/match_strains_to_genomes_in_sample_subset.py",
+        strain_geno="data/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",
+        # TODO: Consider whether it's okay that I'm getting the spgc genotype from the full sample set, not just ss-xjin-all
+        spgc_geno="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_mgtp.nc",
+        strain_sample="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-xjin-all.strain_samples.tsv",
+        species_depth="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gene{pangen_params}.spgc{spgc_params}.species_depth.tsv",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.species_depth} {input.strain_sample} {output}"
 
 
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
@@ -220,7 +234,8 @@ rule xjin_accuracy_grid:
             for (genome, species), tool, unit in product(
                 config["genome"].species_id.items(),
                 [
-                    "spgc-fit",
+                "spgc-fit",
+                "spgc-depth250",
                 "spanda-s2",
                 "spanda-s3",
                 "spanda-s4",
@@ -228,7 +243,7 @@ rule xjin_accuracy_grid:
                 "nnmatched-m0",
                 "nnmatched-m1",
                 "nnmatched-m10",
-                "spgc-depth250",
+                "nnmatched-m50",
             ],
             [
                 "uhggtop",
