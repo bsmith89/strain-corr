@@ -99,12 +99,15 @@ rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
         spgc_geno="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_mgtp.nc",
         ref_geno="data/species/sp-{species}/midasdb.geno.nc",
         ref_gene="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+        ref_meta="ref/uhgg_genomes_all_4644.tsv",
     params:
         min_geno_diss=lambda w: int(w.min_diss) / 1000,
+        min_completeness=0.9,
+        max_contamination=0.02,
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.spgc_geno} {input.ref_geno} {params.min_geno_diss} {input.ref_gene} {output}"
+        "{input.script} {input.spgc_geno} {input.ref_geno} {params.min_geno_diss} {input.ref_gene} {input.ref_meta} {wildcards.species} {params.min_completeness} {params.max_contamination} {output}"
 
 
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
