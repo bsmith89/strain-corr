@@ -1,9 +1,8 @@
 # Install Jupyter Kernels
 
 
-rule install_jupter_conda_kernel:
-    output:
-        "install_jupyter_kernel.{conda}",
+rule install_jupyter_kernel:
+    output: "install_jupyter_kernel.{conda}"
     params:
         name="{conda}",
     conda:
