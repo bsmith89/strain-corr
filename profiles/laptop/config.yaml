@@ -5,13 +5,8 @@ keep-going: true
 resources: ['network_connections=3', 'mem_mb=8000']
 latency-wait: 5
 use-conda: true
-conda-prefix: "/Users/byronsmith/.snakemake/conda"
+conda-prefix: "/Users/bsmith/.snakemake/conda"
 conda-frontend: 'mamba'
-use-singularity: true
-singularity-prefix: "/Users/byronsmith/.snakemake/singularity"
-singularity-args: >-
-  --env CONDA_PKGS_DIRS=$HOME/.snakemake/conda/pkgs
-  --bind $TMPDIR,$HOME,$PWD/include:/include
 config:
   - 'USE_CUDA=0'
   - 'MAX_THREADS=24'
