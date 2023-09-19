@@ -13,7 +13,7 @@ if __name__ == "__main__":
     mgtp = sf.data.Metagenotype.load(mgtp_inpath)
     sample_to_strain = pd.read_table(
         sample_to_strain_inpath, index_col="sample"
-    ).squeeze()
+    ).strain
 
     observed_mgtp = sf.Metagenotype(
         mgtp.data.sel(sample=sample_to_strain.index)

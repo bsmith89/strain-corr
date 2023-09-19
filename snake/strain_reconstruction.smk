@@ -83,21 +83,6 @@ rule filter_midasdb_all_gene_annotations_by_centroid_new:
         """
 
 
-rule select_species_core_genes_from_reference:
-    output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
-    input:
-        script="scripts/select_high_prevalence_species_genes.py",
-        copy_number="ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
-    wildcard_constraints:
-        centroid="99|95|90|85|80|75",
-    params:
-        trim_quantile=lambda w: float(w.trim_quantile) / 100,
-        prevalence=lambda w: float(w.prevalence) / 100,
-    shell:
-        "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
-
-
 rule select_species_core_genes_from_reference_new:
     output:
         species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
@@ -109,6 +94,21 @@ rule select_species_core_genes_from_reference_new:
         prevalence=lambda w: float(w.prevalence) / 100,
     shell:
         "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
+
+
+# TODO: Go through and figure out where the "-t{trim_quantile}-" infix shows up.
+# NOTE: Unlike select_species_core_genes_from_reference_new, this approach doesn't filter
+# down to single copy genes or anything like that. Just looks for high-prevalence genes.
+rule select_species_core_genes_from_filtered_reference_new:
+    output:
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref2-p{prevalence}.species_gene.list",
+    input:
+        script="scripts/select_high_prevalence_species_genes2.py",
+        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_new.strain_gene.prevalence-pseudo0.tsv",
+    params:
+        thresh=lambda w: float(w.prevalence) / 100,
+    shell:
+        "{input.script} {input.prevalence} {params.thresh} {output}"
 
 
 rule select_species_core_genes_de_novo:
@@ -180,6 +180,19 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
         alias_recipe
 
 
+# TODO: Use this in place of midasuhgg* everywhere.
+rule alias_species_genes_from_filtered_reference_to_match_de_novo_paths_new:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.spgc_specgene-ref2-{specgene_params}.species_gene.list",
+    input:
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_new.spgc_specgene-ref2-{specgene_params}.species_gene.list",
+    wildcard_constraints:
+        centroidA="99|95|90|85|80|75",
+        centroidB="99|95|90|85|80|75",
+    shell:
+        alias_recipe
+
+
 localrules:
     alias_species_genes_from_reference_to_match_de_novo_paths,
     alias_species_genes_from_reference_to_match_de_novo_paths_new,
@@ -243,12 +256,15 @@ rule identify_strain_samples:
 
 rule aggregate_strain_metagenotype:
     output:
-        "{stem}.gtpro.{strain_fit_params}.spgc_ss-all.strain_mgtp.nc",
+        "{stem}.gtpro.{strain_fit_params}.spgc_ss-all.mgtp.nc",
     input:
         script="scripts/aggregate_strain_metagenotypes_across_strain_samples.py",
         mgtp="{stem}.gtpro.mgtp.nc",
         mapping="{stem}.gtpro.{strain_fit_params}.spgc_ss-all.strain_samples.tsv",
-    conda: 'conda/sfacts.yaml'
+    conda:
+        "conda/sfacts.yaml"
+    resources:
+        mem_mb=10_000,
     shell:
         "{input.script} {input.mapping} {input.mgtp} {output}"
 
@@ -421,7 +437,7 @@ rule pick_strain_gene_thresholds_by_grid_search:
 
 rule select_strain_gene_hits:
     output:
-        "{stem}.spgc_{spgc_stem}_thresh-{thresh_params}.strain_gene.tsv",
+        "{stem}.spgc_{spgc_stem}_thresh-{thresh_params}.uhgg-strain_gene.tsv",
     input:
         script="scripts/select_strain_genes.py",
         thresholds="{stem}.spgc_{spgc_stem}_thresh-{thresh_params}.strain_gene_threshold.tsv",
@@ -435,6 +451,23 @@ rule select_strain_gene_hits:
                 {input.thresholds} \
                 {output}
         """
+
+
+rule aggregate_uhgg_strain_gene_by_annotation:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
+    wildcard_constraints:
+        agg="eggnog|top_eggnog|cog|ko",
+    input:
+        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
+        uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
+        agg="data/species/sp-{species}/pangenome.centroids.emapper.gene_x_{agg}.tsv",
+    group:
+        "assess_gene_inference_benchmark"
+    shell:
+        "{input.script} {input.uhgg} {input.agg} {wildcards.agg} {output}"
+
+
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:

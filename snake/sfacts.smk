@@ -64,6 +64,10 @@ rule subset_metagenotype:
         "{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgtp.nc",
     input:
         "{stem}.mgtp.nc",
+    wildcard_constraints:
+        num_positions=integer_wc,
+        block_number=integer_wc,
+        seed=integer_wc,
     params:
         seed=lambda w: int(w.seed),
         num_positions=lambda w: int(w.num_positions),
@@ -300,26 +304,6 @@ rule cleanup_fit:
         """
 
 
-rule alias_final_fit:
-    output:
-        "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.sfacts-fit.world.nc",
-    input:
-        source=lambda w: (
-            "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.world.nc".format(
-                group=w.group,
-                species=w.species,
-                proc=w.proc,
-                sfacts_stem=config["species_group_to_sfacts_stem"][
-                    (w.species, w.group)
-                ],
-            )
-        ),
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_final_fit,
 
 
 rule export_sfacts_comm:

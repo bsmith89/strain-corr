@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
     # NOTE (2023-09-03): This renaming is only necessary because I fudged the
     # MIDASDB labels.
-    ref_geno = xr.load_dataarray(ref_geno_inpath).rename({"genome_id": "strain"}).T
-    ref_geno["strain"] = ref_geno.strain.to_series().map(
+    ref_geno = sf.Metagenotype.load(ref_geno_inpath)
+    ref_geno["sample"] = ref_geno.sample.to_series().map(
         lambda s: "UHGG" + s[len("GUT_GENOME") :]
     )
     ref_geno = ref_geno.sel(strain=ref_list)

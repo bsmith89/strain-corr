@@ -15,37 +15,6 @@ rule select_xjin_samples:
         """
 
 
-# This will shuffle the order of lines in the samples map (reproducibly based on seed)
-# and then take the top n_samples for each strain and write out a strain_samples
-# file, but with fewer lines.
-rule subsample_xjin_samples_for_benchmarking:
-    output:
-        "{stem}.spgc_ss-xjin-seed{seed}-n{n_samples}.strain_samples.tsv",
-    input:
-        script="scripts/subsample_strain_samples_for_benchmarking.py",
-        samples="{stem}.spgc_ss-xjin-all.strain_samples.tsv",
-    params:
-        seed=lambda w: int(w.seed),
-        n_samples=lambda w: int(w.n_samples),
-    shell:
-        """
-        {input.script} {params.seed} {params.n_samples} {input.samples} {output}
-        """
-
-
-rule select_highest_depth_xjin_samples_for_benchmarking:
-    output:
-        "{stemA}.gtpro.{stemB}.spgc_ss-xjin-deepest-n{n_samples}.strain_samples.tsv",
-    input:
-        script="scripts/select_highest_depth_strain_samples_for_benchmarking.py",
-        depth="{stemA}.gtpro.species_depth.tsv",
-        samples="{stemA}.gtpro.{stemB}.spgc_ss-xjin-all.strain_samples.tsv",
-    params:
-        n_samples=lambda w: int(w.n_samples),
-    shell:
-        """
-        {input.script} {params.n_samples} {input.depth} {input.samples} {output}
-        """
 
 
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
@@ -54,7 +23,7 @@ rule alias_spgc_gene_hits_for_benchmarking:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-fit.uhgg-strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc_{spgc_stem}.strain_gene.tsv".format(
+            "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc_{spgc_stem}.uhgg-strain_gene.tsv".format(
                 species=w.species,
                 stem=w.stem,
                 pangenome_params=w.pangenome_params,
@@ -79,7 +48,7 @@ rule alias_spgc_depth_only_gene_hits_for_benchmarking:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr0-depth{w.thresh}.strain_gene.tsv".format(
+            "data/group/xjin_ucfmt_hmp2/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
                 w=w,
                 sfacts_stem=config["species_group_to_sfacts_stem"][
                     (w.species, "xjin_ucfmt_hmp2")
@@ -96,8 +65,8 @@ rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{centroid}.nnmatched-m{min_diss}.uhgg-strain_gene.tsv",
     input:
         script="scripts/predict_gene_content_by_nearest_neighbor.py",
-        spgc_geno="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_mgtp.nc",
-        ref_geno="data/species/sp-{species}/midasdb.geno.nc",
+        spgc_geno="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
+        ref_geno="data/species/sp-{species}/midasdb.mgtp.nc",
         ref_gene="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
         ref_meta="ref/uhgg_genomes_all_4644.tsv",
     params:
@@ -128,25 +97,6 @@ rule alias_nnmatched_predictions_for_benchmarking:
 # ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
 
 
-rule aggregate_uhgg_strain_gene_by_annotation:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
-    wildcard_constraints:
-        agg="eggnog|top_eggnog|cog|ko",
-    input:
-        uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
-        agg="data/species/sp-{species}/pangenome.centroids.emapper.gene_x_{agg}.tsv",
-    group:
-        "assess_gene_inference_benchmark"
-    run:
-        gene_table = pd.read_table(input.uhgg, index_col="gene_id")
-        agg = pd.read_table(input.agg, index_col="gene_id").squeeze()
-        result = (
-            gene_table.astype(bool).join(agg).groupby(wildcards.agg).any().astype(int)
-        )
-        result.to_csv(output[0], sep="\t")
-
-
 rule alias_xjin_tiles_as_xjin_benchmark:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/genome/{strain}.tiles-{paramsA}.gene{pangenome_params}.gene_matching-{paramsB}.uhggtiles-strain_gene.tsv",
@@ -170,13 +120,15 @@ rule match_strains_to_genomes_based_on_genotype:
         script="scripts/match_strains_to_genomes_in_sample_subset.py",
         strain_geno="data/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",
         # TODO: Consider whether it's okay that I'm getting the spgc genotype from the full sample set, not just ss-xjin-all
-        spgc_geno="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_mgtp.nc",
+        spgc_geno="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         strain_sample="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-xjin-all.strain_samples.tsv",
         species_depth="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gene{pangen_params}.spgc{spgc_params}.species_depth.tsv",
+        mgen_list="meta/XJIN_BENCHMARK/mgen.tsv",
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.species_depth} {input.strain_sample} {output}"
+        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.species_depth} {input.strain_sample} {input.mgen_list} {output}"
+
 
 
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
@@ -229,12 +181,12 @@ rule xjin_accuracy_grid:
     output:
         touch("data/group/XJIN_BENCHMARK/{stem}.ACCURACY_BENCHMARK_GRID.flag"),
     input:
-        lambda w: [
+        bench=lambda w: [
             f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{tool}.{genome}.{unit}-reconstruction_accuracy.tsv"
             for (genome, species), tool, unit in product(
                 config["genome"].species_id.items(),
                 [
-                "spgc-fit",
+                    "spgc-fit",
                 "spgc-depth250",
                 "spanda-s2",
                 "spanda-s3",
@@ -252,6 +204,24 @@ rule xjin_accuracy_grid:
             ],
         )
         if species != "TODO"
+        ],
+        # sfacts_match=lambda w: [
+        #     f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.spgc-fit.{genome}.geno_matching_stats.tsv"
+        #     for genome, species in config["genome"].species_id.items()
+        #     if species != "TODO"
+        # ],
+    shell:
+        "cat {input} > {output}"
+
+
+rule xjin_spgc_strain_match_grid:
+    output:
+        touch("data/group/XJIN_BENCHMARK/{stem}.STRAIN_MATCH_BENCHMARK_GRID.flag"),
+    input:
+        sfacts_match=lambda w: [
+            f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{genome}.geno_matching_stats.tsv"
+            for genome, species in config["genome"].species_id.items()
+            if species != "TODO"
         ],
     shell:
         "cat {input} > {output}"

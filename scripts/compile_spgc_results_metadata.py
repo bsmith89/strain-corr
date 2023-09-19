@@ -13,7 +13,8 @@ if __name__ == "__main__":
     spgc_agg_mgtp_inpath = sys.argv[3]
     sample_to_strain_path = sys.argv[4]
     strain_gene_path = sys.argv[5]
-    outpath = sys.argv[6]
+    ambig_thresh = float(sys.argv[6])
+    outpath = sys.argv[7]
 
     # Load data
     species_gene_list = read_list(species_gene_list_path)
@@ -41,12 +42,13 @@ if __name__ == "__main__":
         )
         with open(outpath, "w") as f:
             print(
-                "strain",
+                "genome_id",
                 "num_sample",
                 "max_depth",
                 "sum_depth",
                 "species_gene_frac",
                 "num_genes",
+                "num_geno_positions",
                 "strain_metagenotype_entropy",
                 sep="\t",
                 file=f,
@@ -56,6 +58,9 @@ if __name__ == "__main__":
     # Strain genotype entropy
     strain_total_mgtp = sf.Metagenotype.load(spgc_agg_mgtp_inpath)
     strain_metagenotype_entropy = strain_total_mgtp.entropy()
+    num_confident_geno_positions = (
+        strain_total_mgtp.dominant_allele_fraction() > (1 - ambig_thresh)
+    ).sum("position").rename(sample="strain")
 
     # Species genes
     species_gene_frac = strain_gene.reindex(species_gene_list, fill_value=0).mean(0)
@@ -79,9 +84,10 @@ if __name__ == "__main__":
             ),  # Strain counts get annoyingly retyped as floats.
             species_gene_frac=species_gene_frac,
             num_genes=num_genes,
+            num_geno_positions=num_confident_geno_positions,
             strain_metagenotype_entropy=strain_metagenotype_entropy,
         )
     )
 
     # Write output
-    strain_sample_meta.to_csv(outpath, sep="\t")
+    strain_sample_meta.rename_axis(index="genome_id").to_csv(outpath, sep="\t")
