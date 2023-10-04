@@ -130,6 +130,26 @@ rule match_strains_to_genomes_based_on_genotype:
         "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.species_depth} {input.strain_sample} {input.mgen_list} {output}"
 
 
+# NOTE: Which is better place to alias-in strain matching requirements? alias_species_specific_sfacts_comm or here?
+rule alias_spgc_strain_match_for_benchmarking:
+    output:
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc_{spgc_stem}.{strain}.geno_matching_stats.tsv",
+    input:
+        source=lambda w: (
+            "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc_{spgc_stem}.{strain}.geno_matching_stats.tsv".format(
+                species=w.species,
+                stem=w.stem,
+                pangenome_params=w.pangenome_params,
+                strain=w.strain,
+                sfacts_stem=config["species_group_to_sfacts_stem"][
+                    (w.species, "xjin_ucfmt_hmp2")
+                ],
+                spgc_stem=w.spgc_stem,
+            ),
+        ),
+    shell:
+        alias_recipe
+
 
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
 # other units, because it's assigned based on tiling depth with a particular

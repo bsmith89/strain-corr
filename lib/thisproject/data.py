@@ -1,6 +1,7 @@
 import pandas as pd
 
 
+
 def load_species_taxonomy(path):
     species_taxonomy = (
         pd.read_table(path, names=["genome_id", "species_id", "taxonomy_string"])

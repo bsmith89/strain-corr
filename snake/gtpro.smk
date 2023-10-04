@@ -26,20 +26,38 @@ rule run_gtpro:
         db_l=32,
         db_m=36,
         db_name="ref/gtpro/20190723_881species",
-    threads: 4
+    threads: 8
     resources:
-        mem_mb=60000,
-        pmem=60000 // 4,
-        walltime_hr=4,
+        mem_mb=10000,
+        pmem=10000 // 8,
+        walltime_hr=8,
     container:
         config["container"]["gtpro"]
     shell:
-        dd(
-            """
-        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -f -o {output} {input.r}
-        mv {output}.tsv.gz {output}
         """
-        )
+        (gzip -dc {input.r} || true) | GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} > {output}.temp
+        gzip -c {output}.temp > {output}
+        rm {output}.temp
+        """
+    # # FIXME: Replace old resources
+    # threads: 4
+    # resources:
+    #     mem_mb=60000,
+    #     pmem=60000 // 4,
+    #     walltime_hr=4,
+    # # NOTE (2023-09-24): "gtpro" container fails while toolz succeeds, now.
+    # container:
+    #     config["container"]["gtpro"]
+    # shell:
+    #     dd(
+    #         """
+    #     tmpdir=$(mktemp -d)
+    #     echo $tmpdir
+    #     ln -s $(realpath {input.r}) $tmpdir/r.fastq.gz
+    #     GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -C $tmpdir r.fastq.gz
+    #     mv $tmpdir/r__gtpro__20190723_881species.tsv.gz {output}
+    #     """
+    #     )
 
 
 rule load_gtpro_snp_dict:
@@ -382,11 +400,21 @@ rule gather_mgen_group_for_all_species:
         "touch {output}"
 
 
-rule construct_files_for_all_select_species:
+# TODO: Move this rule to a more obvious location.
+rule construct_group_files_for_all_select_species:
     output:
-        touch("data/group/{group}/r.{proc}.gtpro.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/{stem}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
+            f"data/group/{w.group}/species/sp-{species}/{w.stem}"
+            for species in config["species_group"][w.group]
+        ],
+
+rule construct_groupfree_files_for_all_select_species:
+    output:
+        touch("data/group/{group}/{stem}.SELECT_SPECIES.flag"),
+    input:
+        lambda w: [
+            f"data/species/sp-{species}/{w.stem}"
             for species in config["species_group"][w.group]
         ],

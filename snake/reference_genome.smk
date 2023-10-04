@@ -76,7 +76,7 @@ rule aggregate_strain_emapper_output_by_unit:
             (strain_gene_x_agg.groupby(wildcards.agg).apply(len) > 0)
             .astype(int)
             .to_frame(name=wildcards.strain)
-        )
+        ).rename_axis(index="gene_id")
         result.to_csv(output[0], sep="\t")
 
 

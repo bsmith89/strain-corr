@@ -1,3 +1,18 @@
+rule download_cog_definitions:
+    output: "ref/cog-20.meta.tsv"
+    params:
+        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/cog-20.def.tab"
+    shell:
+        curl_recipe
+
+rule download_cog_categories:
+    output: "ref/cog-20.categories.tsv"
+    params:
+        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/fun-20.tab"
+    shell:
+        curl_recipe
+
+
 rule compile_spgc_strain_metadata:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv",
@@ -63,7 +78,7 @@ rule ref_gene_copy_number_to_presence_table:
 # calling.
 rule collect_filtering_metadata_for_uhgg_ref_strains:
     output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_new.strain_meta-complete90-contam2-pos100.tsv",
+        "data/species/sp-{species}/midasdb.gene{centroid}_new.strain_meta-complete90-contam5-pos100.tsv",
     input:
         script="scripts/filter_ref_strains.py",  # TODO
         meta="ref/uhgg_genomes_all_4644.tsv",
@@ -72,7 +87,9 @@ rule collect_filtering_metadata_for_uhgg_ref_strains:
         genes="data/species/sp-{species}/midasdb.gene{centroid}_new.uhgg-strain_gene.tsv",
     params:
         min_completeness=90 / 100,
-        max_contamination=2 / 100,
+        # NOTE (2023-09-19): Some species (e.g.) 102386 have refs with only >2% contam (duplication?);
+        # TODO: Increase this threshold to 5%.
+        max_contamination=5 / 100,
         min_positions=100,
     shell:
         "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
@@ -105,7 +122,7 @@ rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
         # NOTE: I decided I don't want to filter strains before co-clustering.
         # # NOTE: The filtering recipe is only currently implemented for xjin_ucfmt_hmp2.
         # spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
-        # ref_filt="data/species/sp-{species}/midasdb.strain_meta-complete90-contam2-pos0.tsv",
+        # ref_filt="data/species/sp-{species}/midasdb.strain_meta-complete90-contam5-pos0.tsv",
     params:
         thresh=10 / 1000,
     conda:
@@ -116,29 +133,30 @@ rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
 
 rule combine_all_ref_and_spgc_metadata_and_clustering:
     output:
-        "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.strain_meta_for_analysis.tsv",
+        "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.strain_meta_for_analysis.tsv",
     input:
         script="scripts/combine_all_ref_and_spgc_metadata_and_clustering.py",
         spgc="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
-        ref="data/species/sp-{species}/midasdb.gene{centroidB}_new.strain_meta-complete90-contam2-pos100.tsv",
+        ref="data/species/sp-{species}/midasdb.gene{centroidB}_new.strain_meta-complete90-contam5-pos100.tsv",
         geno_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_pdist-mask10-pseudo10.pkl",
-        # TODO: Consider other prevalence thresholds besides 5x:
-        gene_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.genefilt-pseudo1-ratio5_jaccard_pdist.pkl",
+        # TODO: Consider other prevalence thresholds besides 5x? 0x means no filtering.
+        gene_raw_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio0_jaccard_pdist.pkl",
+        gene_filt_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio10_jaccard_pdist.pkl",
         clust="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_pdist-mask10-pseudo10.coclust-10.tsv",
     shell:
-        "{input.script} {input.spgc} {input.ref} {input.geno_pdist} {input.gene_pdist} {input.clust} {output}"
+        "{input.script} {input.spgc} {input.ref} {input.geno_pdist} {input.gene_raw_pdist} {input.gene_filt_pdist} {input.clust} {output}"
 
 
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 rule calculate_gene_prevalence_in_ref_genomes:
     output:
-        "{stem}/midasdb.gene75_new.uhgg-strain_gene.prevalence-pseudo{pseudo}.tsv",
+        "{stem}/midasdb.gene75_new.{unit}-strain_gene.prevalence.tsv",
     input:
         script="scripts/strain_gene_to_prevalence.py",
-        gene="{stem}/midasdb.gene75_new.uhgg-strain_gene.tsv",
-        filt="{stem}/midasdb.gene75_new.strain_meta-complete90-contam2-pos100.tsv",
+        gene="{stem}/midasdb.gene75_new.{unit}-strain_gene.tsv",
+        filt="{stem}/midasdb.gene75_new.strain_meta-complete90-contam5-pos100.tsv",
     params:
-        pseudo=lambda w: int(w.pseudo),
+        pseudo=0,
     shell:
         "{input.script} {input.gene} {input.filt} {params.pseudo} {output}"
 
@@ -146,15 +164,39 @@ rule calculate_gene_prevalence_in_ref_genomes:
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 rule calculate_gene_prevalence_in_spgc_genomes:
     output:
-        "{stemA}.spgc{stemB}.uhgg-strain_gene.prevalence-hmp2-pseudo{pseudo}.tsv",
+        "{stemA}.spgc{stemB}.{unit}-strain_gene.prevalence-hmp2.tsv",
     input:
         script="scripts/strain_gene_to_prevalence.py",
-        gene="{stemA}.spgc{stemB}.uhgg-strain_gene.tsv",
+        gene="{stemA}.spgc{stemB}.{unit}-strain_gene.tsv",
         filt="{stemA}.spgc{stemB}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
     params:
-        pseudo=lambda w: int(w.pseudo),
+        pseudo=0,
     shell:
         "{input.script} {input.gene} {input.filt} {params.pseudo} {output}"
+
+
+rule count_pangenome_fractions_across_genomes:
+    output:
+        "{stem}.{unit}-strain_gene.prevalence_class_fraction.tsv",
+    input:
+        script="scripts/count_pangenome_fractions_across_genomes.py",
+        prevalence="{stem}.{unit}-strain_gene.prevalence.tsv",
+        gene="{stem}.{unit}-strain_gene.tsv",
+    params:
+        core_vs_shell=0.9,
+        shell_vs_cloud=0.15,
+    shell:
+        "{input.script} {input.prevalence} {input.gene} {params.core_vs_shell} {params.shell_vs_cloud} {output}"
+
+
+use rule count_pangenome_fractions_across_genomes as count_pangenome_fractions_across_hmp2_genomes with:
+    output:
+        "{stemA}.spgc{stemB}.{unit}-strain_gene.prevalence_class_fraction-hmp2.tsv",
+    input:
+        script="scripts/count_pangenome_fractions_across_genomes.py",
+        prevalence="{stemA}.spgc{stemB}.{unit}-strain_gene.prevalence-hmp2.tsv",
+        gene="{stemA}.spgc{stemB}.{unit}-strain_gene.tsv",
+
 
 
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
@@ -162,34 +204,31 @@ rule calculate_gene_prevalence_in_spgc_genomes:
 # TODO: Drop unecessary parts of the filenames. Only stems that are important are species and centroidB
 rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.genefilt-pseudo{pseudo}-ratio{ratio}_jaccard_pdist.pkl",
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio{ratio}_{metric}_pdist.pkl",
     input:
         script="scripts/compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities.py",
-        spgc="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
-        ref="data/species/sp-{species}/midasdb.gene{centroidB}_new.uhgg-strain_gene.tsv",
-        # NOTE: Prevalence tables are already calculated from filtered genome sets, so I'm free
-        # to calculate pairwise distances after gene filtering based on these.
-        spgc_prevalence="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.prevalence-hmp2-pseudo{pseudo}.tsv",
-        ref_prevalence="data/species/sp-{species}/midasdb.gene{centroidB}_new.uhgg-strain_gene.prevalence-pseudo1.tsv",
+        spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
+        ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_new.{unit}-strain_gene.tsv",
+        ref_filt="data/species/sp-{species}/midasdb.gene75_new.strain_meta-complete90-contam5-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv"
     params:
+        # NOTE: 0 is a special "ratio" where no filtering will be performed.
         maximum_prevalence_ratio=lambda w: int(w.ratio),
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.spgc} {input.ref} {input.spgc_prevalence} {input.ref_prevalence} {params.maximum_prevalence_ratio} {output}"
+        "{input.script} {input.spgc_gene} {input.ref_gene} {input.spgc_filt} {input.ref_filt} {params.maximum_prevalence_ratio} {wildcards.metric} {output}"
 
 
 rule cluster_genes_based_on_cooccurence_in_spgc_strains:
     output:
-        "{stem}/midasdb.gene_clust-t1.tsv",
+        "data/group/{stem}.uhgg-strain_gene.gene_clust-t10.tsv",
     input:
         script="scripts/cluster_genes_based_on_cooccurence.py",
-        # FIXME: I may need to use more descriptive filenames to differentate
-        # between the ref and spgc versions of this rule.
-        gene="{stem}/gene75_new.uhgg-strain_gene.tsv", # FIXME: gene="SPGC" gene content, not ref.
-        filt="{stem}/midasdb.strain_meta-complete90-contam2-pos100.tsv",
+        gene="data/group/{stem}.uhgg-strain_gene.tsv",
+        filt="data/group/{stem}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
     params:
-        thresh=1 / 100,
+        thresh=10 / 100,
     conda:
         "conda/toolz2.yaml"
     shell:
@@ -198,40 +237,40 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
 
 rule cluster_genes_based_on_cooccurence_in_ref_strains:
     output:
-        "{stem}.gene_clust-t1.tsv",
+        "data/species/{stem}.uhgg-strain_gene.gene_clust-t10.tsv",
     input:
         script="scripts/cluster_genes_based_on_cooccurence.py",
-        # FIXME: I may need to use more descriptive filenames to differentate
-        # between the ref and spgc versions of this rule.
-        gene="{stem}.uhgg-strain_gene.tsv",
-        filt="{stem}.strain_meta-s90-d100-a1.tsv",
+        gene="data/species/{stem}.uhgg-strain_gene.tsv",
+        filt="data/species/{stem}.strain_meta-complete90-contam5-pos100.tsv",
     params:
-        thresh=1 / 100,
+        thresh=10 / 100,
     conda:
         "conda/toolz2.yaml"
     shell:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-rule calculate_morans_i_in_ref_strains:
+rule calculate_morans_i_for_both_ref_and_spgc_strains:
     output:
-        "{stem}/midasdb.morans_i.tsv",
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
     input:
-        script="scripts/calculate_morans_i.py",  # TODO
-        gene="{stem}/gene75_new.uhgg-strain_gene.tsv",
-        pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_pdist-mask{thresh}-pseudo{pseudo}.pkl",
-        filt="{stem}/midasdb.strain_meta-complete90-contam2-pos100.tsv",
+        script="scripts/calculate_morans_i.py",
+        ref_gene="data/species/sp-{species}/midasdb.gene75_new.uhgg-strain_gene.tsv",
+        ref_filt="data/species/sp-{species}/midasdb.gene75_new.strain_meta-complete90-contam5-pos100.tsv",
+        spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
+        pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_pdist-mask10-pseudo10.pkl",
     shell:
-        "{input.script} {input.gene} {input.pdist} {input.filt} {output}"
+        "{input.script} {input.spgc_gene} {input.spgc_filt} {input.ref_gene} {input.ref_filt} {input.pdist} {output}"
 
 
 rule compile_gene_metadata:
     output:
         meta="data/species/sp-{species}/midasdb.gene_meta.tsv",
-        cog_category="data/species/sp-{species}/midasdb.gene_x_cog_category.tsv",
+        cog_matrix="data/species/sp-{species}/midasdb.gene_x_cog_category.tsv",
         # cog="data/species/sp-{species}/pangenome_new.centroids.emapper.gene_x_eggnog.tsv"  # NOTE: This file is already created and maps to eggnog IDs.
     input:
-        script="scripts/compile_midasdb_gene_metadata.py",  # TODO
+        script="scripts/compile_midasdb_gene_metadata.py",
         emapper="data/species/sp-{species}/pangenome_new.centroids.emapper.d/proteins.emapper.annotations",
         nlength="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
         cog_category="ref/cog-20.meta.tsv",
@@ -257,6 +296,21 @@ rule perform_ibd_association_test_with_hmp2_strains:
     shell:
         "{input.script} {input.comm} {input.gene} {input.filt} {input.mgen} {input.preparation} {input.stool} {input.subject} {params.frac_thresh} {params.num_thresh} {output}"
 
+
+rule select_dominant_ucfmt_donor_strain_genes:
+    output:
+        "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{stemB}.{spgc}.uhgg-strain_gene-ucfmt.tsv",
+    input:
+        script="scripts/select_dominant_ucfmt_donor_strain_genes.py",
+        comm="data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.comm.tsv",
+        mgen_meta="meta/ucfmt/mgen.tsv",
+        sample_meta="meta/ucfmt/sample.tsv",
+        subject_meta="meta/ucfmt/subject.tsv",
+        gene="data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{stemB}.{spgc}.uhgg-strain_gene.tsv",
+    params:
+        detection_thresh=0.2,
+    shell:
+        "{input.script} {input.comm} {params.detection_thresh} {input.mgen_meta} {input.sample_meta} {input.subject_meta} {input.gene} {output}"
 
 # FIXME: This notebook is too intense and slowing down my development. Split out components
 # into individual scripts for
@@ -326,7 +380,6 @@ rule compile_spgc_to_ref_strain_report_new:
         jupyter nbconvert --to html --embed-images {log.nb} --stdout > {output.html}
         """
 
-
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
 rule alias_spgc_analysis_outputs:
     output:
@@ -349,3 +402,16 @@ rule alias_spgc_analysis_outputs:
 
 localrules:
     alias_spgc_analysis_outputs,
+
+
+# NOTE: This ruleorder section is a place to clear up ambiguity about whether the pipeline should be run on the full sfacts and spgc spec (yes)
+# or on previously aliased files (no).
+# When I get errors like this:
+#
+# > AmbiguousRuleException: Rules count_pangenome_fractions_across_genomes and
+# alias_spgc_analysis_outputs are ambiguous for the file
+# data/group/xjin_ucfmt_hmp2/species/sp-100022/r.proc.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc-fit.uhgg-
+# strain_gene.prevalence_class_fraction-hmp2.tsv.
+# 
+# I can just add that rule to the end of the list.
+ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > count_pangenome_fractions_across_hmp2_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > select_dominant_ucfmt_donor_strain_genes

@@ -84,6 +84,14 @@ rule process_hmp2_metadata:
         """
 
 
+rule download_uhgg_metadata:
+    output: "ref/uhgg_genomes_all_v2.tsv"
+    params:
+        url="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/genomes-all_metadata.tsv"
+    shell:
+        curl_recipe
+
+
 config["figures"]["submission"] = []
 
 

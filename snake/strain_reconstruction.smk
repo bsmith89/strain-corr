@@ -455,19 +455,19 @@ rule select_strain_gene_hits:
 
 rule aggregate_uhgg_strain_gene_by_annotation:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
+        "{stemA}/species/sp-{species}/{stemB}.{agg}-strain_gene.tsv",
+        # "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
     wildcard_constraints:
         agg="eggnog|top_eggnog|cog|ko",
     input:
         script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
-        uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
+        uhgg="{stemA}/species/sp-{species}/{stemB}.uhgg-strain_gene.tsv",
+        # uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
         agg="data/species/sp-{species}/pangenome.centroids.emapper.gene_x_{agg}.tsv",
     group:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.uhgg} {input.agg} {wildcards.agg} {output}"
-
-
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table:

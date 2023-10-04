@@ -43,13 +43,16 @@ if __name__ == "__main__":
 
     # NOTE (2023-09-03): This renaming is only necessary because I fudged the
     # MIDASDB labels.
-    ref_geno = sf.Metagenotype.load(ref_geno_inpath)
-    ref_geno["sample"] = ref_geno.sample.to_series().map(
-        lambda s: "UHGG" + s[len("GUT_GENOME") :]
+    ref_geno = (
+        sf.Metagenotype.load(ref_geno_inpath)
+        .rename_coords(sample=lambda s: "UHGG" + s[len("GUT_GENOME") :])
+        .sel(sample=ref_list)
     )
-    ref_geno = ref_geno.sel(strain=ref_list)
-    ref_has_counts = ref_geno.to_pandas().isna()
-    ref_geno = sf.data.Genotype(ref_geno.fillna(0.5))
+    ref_has_counts = ref_geno.total_counts().to_pandas().isna()
+    ref_geno = ref_geno.to_estimated_genotype()
+    assert (
+        False
+    ), "TODO: Fix this script. It's current broken, and assigns the same reference to every genotype."
 
     spgc_has_counts = (
         (spgc_agg_mgtp.total_counts() > 0).to_pandas().rename_axis(index="strain")
