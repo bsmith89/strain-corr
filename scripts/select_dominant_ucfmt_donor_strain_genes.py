@@ -5,7 +5,7 @@ import sys
 from lib.pandas_util import idxwhere
 
 
-MIN_NUM_DONOR_SAMPLES = 1
+MIN_NUM_DONOR_SAMPLES = 2
 MIN_NUM_SUBJECTS = 2
 
 
