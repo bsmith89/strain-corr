@@ -76,7 +76,7 @@ if __name__ == "__main__":
     )
 
     gene_x_cog_category.columns = ["gene_id", "cog_category"]
-    gene_x_cog_category = gene_x_cog_category.set_index("gene_id").cog_category
+    gene_x_cog_category = gene_x_cog_category.set_index("gene_id").cog_category[lambda x: ~x.isin(['S'])]
     no_cog_category_gene_list = list(
         set(gene_annotation.index) - set(gene_x_cog_category.index)
     )
