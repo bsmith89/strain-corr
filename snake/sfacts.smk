@@ -224,6 +224,29 @@ rule fit_sfacts:
         """
 
 
+rule cleanup_sfacts_fit:
+    output:
+        "{stem}.clean-m{m}-e{e}.world.nc",
+    input:
+        "{stem}.world.nc",
+    params:
+        metagenotype_error_thresh=lambda w: int(w.m) / 100,
+        entropy_error_thresh=lambda w: int(w.e) / 100,
+        monte_carlo_draws=10,
+        random_seed=0,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts cleanup_fit2 \
+                --metagenotype-error {params.metagenotype_error_thresh} \
+                --entropy-error {params.entropy_error_thresh} \
+                --monte-carlo-draws {params.monte_carlo_draws} \
+                --random-seed {params.random_seed} \
+                {input} {output}
+        """
+
+
 rule refit_genotypes_sfacts:
     output:
         fit="data/{stemA}.fit-{stemB}.refit-sfacts{strategy}-seed{seed}.world.nc",
