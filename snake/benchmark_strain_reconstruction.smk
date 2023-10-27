@@ -60,6 +60,7 @@ rule alias_spgc_depth_only_gene_hits_for_benchmarking:
 
 
 # FIXME: Consider moving this to a different snakefile.
+# FIXME: Use the hamming distance calculator script rather than repeating myself.
 rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
     output:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{centroid}.nnmatched-m{min_diss}.uhgg-strain_gene.tsv",
@@ -72,7 +73,7 @@ rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
     params:
         min_geno_diss=lambda w: int(w.min_diss) / 1000,
         min_completeness=0.9,
-        max_contamination=0.02,
+        max_contamination=0.02,  # FIXME: Make sure I'm explainingt his procedure correctly.
     conda:
         "conda/sfacts.yaml"
     shell:
@@ -151,6 +152,11 @@ rule alias_spgc_strain_match_for_benchmarking:
         alias_recipe
 
 
+# NOTE: (2023-10-18) By order the aliasing rule before the ambigious rule, I'm (counterintuitively)
+# causing the aliasing to happen later in the pipeline.
+ruleorder: alias_spgc_strain_match_for_benchmarking > match_strains_to_genomes_based_on_genotype
+
+
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
 # other units, because it's assigned based on tiling depth with a particular
 # centroidA, centroidB, mapping strategy, etc.
@@ -203,8 +209,9 @@ rule xjin_accuracy_grid:
     input:
         bench=lambda w: [
             f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{tool}.{genome}.{unit}-reconstruction_accuracy.tsv"
-            for (genome, species), tool, unit in product(
-                config["genome"].species_id.items(),
+            for species in config["species_group"]["xjin_ucfmt_hmp2"]
+            for genome, tool, unit in product(
+                species_group_genomes(species, "XJIN_BENCHMARK"),
                 [
                     "spgc-fit",
                 "spgc-depth250",

@@ -349,6 +349,7 @@ use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pa
     threads: 1
 
 
+# NOTE: Hub-rule paired with it's parent.
 use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
     output:
         "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
@@ -358,7 +359,6 @@ use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_p
             "data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 genome=genome,
-                species=species,
                 _hash=config["species_group_to_hash"][w.group],
             )
             for genome in species_group_genomes(w.species, w.group)

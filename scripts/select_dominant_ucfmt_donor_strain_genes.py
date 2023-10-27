@@ -85,11 +85,11 @@ if __name__ == "__main__":
 
     donor_strain = dict(
         strain_selection
-        # Require >1 recipients and >1 donor samples.
-        # NOTE: This excludes all donors except D0097 and D0044.
+        # Require enough distinct recipients and enough donor samples.
+        # NOTE: If MIN_NUM_DONOR_SAMPLES > 1, this will exclude all donors except D0097 and D0044.
         [
             lambda x: (x.num_donor_sample >= MIN_NUM_DONOR_SAMPLES)
-            & (x.num_subject > MIN_NUM_SUBJECTS)
+            & (x.num_subject >= MIN_NUM_SUBJECTS)
             & (x.passes_filter)
         ]
         .groupby("donor_subject_id")

@@ -297,12 +297,29 @@ rule perform_ibd_association_test_with_hmp2_strains:
         "{input.script} {input.comm} {input.gene} {input.filt} {input.mgen} {input.preparation} {input.stool} {input.subject} {params.frac_thresh} {params.num_thresh} {output}"
 
 
+rule collect_filtering_metadata_for_ucfmt_spgc_strains:
+    output:
+        "data/group/xjin_ucfmt_hmp2/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-ucfmt-s90-d100-a1-pos100.tsv",
+    input:
+        script="scripts/filter_spgc_strains.py",
+        meta="data/group/xjin_ucfmt_hmp2/{stem}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
+        sample_to_strain="data/group/xjin_ucfmt_hmp2/{stem}.spgc_ss-{ss}.strain_samples.tsv",
+        mgen="meta/ucfmt/mgen.tsv",
+    params:
+        min_species_genes_frac=90 / 100,
+        min_total_depth=100 / 100,
+        gene_count_outlier_alpha=1 / 1000,
+        min_geno_positions=100,
+    shell:
+        "{input.script} {input.meta} {input.sample_to_strain} <(cut -f1 {input.mgen}) {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.min_geno_positions} {output}"
+
 rule select_dominant_ucfmt_donor_strain_genes:
     output:
         "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{stemB}.{spgc}.uhgg-strain_gene-ucfmt.tsv",
     input:
         script="scripts/select_dominant_ucfmt_donor_strain_genes.py",
         comm="data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.comm.tsv",
+        spgc_filt="data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{stemB}.{spgc}.strain_meta-ucfmt-s90-d100-a1-pos100.tsv",
         mgen_meta="meta/ucfmt/mgen.tsv",
         sample_meta="meta/ucfmt/sample.tsv",
         subject_meta="meta/ucfmt/subject.tsv",
@@ -310,7 +327,7 @@ rule select_dominant_ucfmt_donor_strain_genes:
     params:
         detection_thresh=0.2,
     shell:
-        "{input.script} {input.comm} {params.detection_thresh} {input.mgen_meta} {input.sample_meta} {input.subject_meta} {input.gene} {output}"
+        "{input.script} {input.comm} {input.spgc_filt} {params.detection_thresh} {input.mgen_meta} {input.sample_meta} {input.subject_meta} {input.gene} {output}"
 
 # FIXME: This notebook is too intense and slowing down my development. Split out components
 # into individual scripts for

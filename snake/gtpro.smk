@@ -317,6 +317,7 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         )
 
 
+# NOTE: Hub-rule
 rule merge_both_reads_species_count_data:
     output:
         "{stemA}/r.{stemB}.gtpro.tsv.bz2",
