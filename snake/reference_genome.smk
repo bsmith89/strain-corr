@@ -142,14 +142,14 @@ rule genome_fasta_to_fastq:
 
 rule combine_strain_genome_gtpro_data_loadable:
     output:
-        "data/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
+        "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:
         strain=lambda w: [
             f"data/species/sp-{w.species}/genome/{strain}.tiles-l500-o31.gtpro_parse.tsv.bz2"
-            for strain in species_genomes(w.species)
+            for strain in species_group_genomes(w.species, w.group)
         ],
     params:
-        strain_list=lambda w: species_genomes(w.species),
+        strain_list=lambda w: species_group_genomes(w.species, w.group),
         pattern="data/species/sp-{species}/genome/$strain.tiles-l500-o31.gtpro_parse.tsv.bz2",
     shell:
         """
@@ -295,15 +295,6 @@ use rule diamond_search_fa as reciprocal_blastp_genome with:
         db="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.tran.dmnd",
 
 
-rule debug_species_genomes:
-    output:
-        "debug_{species}_genomes.flag",
-    params:
-        test=lambda w: species_genomes(w.species),
-    shell:
-        "echo {params.test}; false"
-
-
 rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes_new:
     output:
         "data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_new-{blastn_or_p}.bitscore_ratio-c{centroid}.tsv",
@@ -364,25 +355,24 @@ use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_p
     input:
         script="scripts/merge_pangenomes_depth.py",
         samples=lambda w: [
-            "data/hash/{_hash}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 genome=genome,
                 species=species,
                 _hash=config["species_group_to_hash"][w.group],
             )
-            for genome, species in config["genome"].species_id.items()
+            for genome in species_group_genomes(w.species, w.group)
         ],
         gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
         gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
     params:
         args=lambda w: [
-            "{genome}=data/hash/{_hash}/species/sp-{species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "{genome}=data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 genome=genome,
-                species=species,
                 _hash=config["species_group_to_hash"][w.group],
             )
-            for genome, species in config["genome"].species_id.items()
+            for genome in species_group_genomes(w.species, w.group)
         ],
         centroidB_col=lambda w: f"centroid_{w.centroidB}",
 

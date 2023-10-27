@@ -5,8 +5,8 @@ config["mgen"] = pd.read_table("meta/mgen_to_reads.tsv", index_col="mgen_id")
 _mgen_group = pd.read_table("meta/mgen_group.tsv")
 
 config["mgen_group"] = {}
-for mgen_group, d in _mgen_group.groupby("mgen_group"):
-    config["mgen_group"][mgen_group] = d.mgen_id.tolist()
+for mgen_group_id, d in _mgen_group.groupby("mgen_group_id"):
+    config["mgen_group"][mgen_group_id] = d.mgen_id.tolist()
 
 config["species_group"] = (
     pd.read_table("meta/species_group.tsv")
@@ -46,16 +46,34 @@ config["species_group_to_spgc_stem"] = (
 
 config["genome"] = pd.read_table(
     "meta/genome.tsv", dtype=str, index_col=["genome_id"]
-).dropna(subset=["genome_path"])
+)
 
+config["genome_group"] = (
+    pd.read_table("meta/genome_group.tsv")
+    .groupby("genome_group_id")
+    .genome_id.apply(lambda x: sorted(list(set(x))))
+)
 
 # NOTE: This function is used, e.g. in snake/reference_genome.smk and
 # snake/benchmark_strain_reconstruction.smk to gather a list of reference
 # genomes for each species.
-def species_genomes(species):
-    strain_list = idxwhere(config["genome"].species_id == species)
-    # assert len(strain_list) > 0
+def species_group_genomes(species, group):
+    genome_group_list = config["genome_group"][group]
+    d = config["genome"].loc[genome_group_list]
+    strain_list = idxwhere(d.species_id == species)
+    # print(strain_list)
     return strain_list
+
+
+rule debug_species_group_genomes:
+    output:
+        "data/group/{group}/species/sp-{species}/genomes.list",
+    params:
+        test=lambda w: species_group_genomes(w.species, w.group),
+    shell:
+        "echo {params.test}; false"
+
+
 
 
 config["species_to_panphlan"] = pd.read_table(

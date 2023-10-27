@@ -240,8 +240,8 @@ rule xjin_spgc_strain_match_grid:
     input:
         sfacts_match=lambda w: [
             f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.{genome}.geno_matching_stats.tsv"
-            for genome, species in config["genome"].species_id.items()
-            if species != "TODO"
+            for species in config["species_group"]["xjin_ucfmt_hmp2"]
+            for genome in species_group_genomes(species, "XJIN_BENCHMARK")
         ],
     shell:
         "cat {input} > {output}"

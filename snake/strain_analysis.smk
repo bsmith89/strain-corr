@@ -414,4 +414,4 @@ localrules:
 # strain_gene.prevalence_class_fraction-hmp2.tsv.
 # 
 # I can just add that rule to the end of the list.
-ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > count_pangenome_fractions_across_hmp2_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > select_dominant_ucfmt_donor_strain_genes
+ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > count_pangenome_fractions_across_hmp2_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > select_dominant_ucfmt_donor_strain_genes > aggregate_uhgg_strain_gene_by_annotation
