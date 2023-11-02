@@ -226,12 +226,13 @@ rule fit_sfacts:
 
 rule cleanup_sfacts_fit:
     output:
-        "{stem}.clean-m{m}-e{e}.world.nc",
+        "{stem}.clean-m{m}-e{e}-c{c}.world.nc",
     input:
         "{stem}.world.nc",
     params:
         metagenotype_error_thresh=lambda w: int(w.m) / 100,
         entropy_error_thresh=lambda w: int(w.e) / 100,
+        community_entropy_thresh=lambda w: int(w.c) / 10,
         monte_carlo_draws=10,
         random_seed=0,
     conda:
@@ -241,6 +242,7 @@ rule cleanup_sfacts_fit:
         sfacts cleanup_fit2 \
                 --metagenotype-error {params.metagenotype_error_thresh} \
                 --entropy-error {params.entropy_error_thresh} \
+                --community-entropy {params.community_entropy_thresh} \
                 --monte-carlo-draws {params.monte_carlo_draws} \
                 --random-seed {params.random_seed} \
                 {input} {output}
