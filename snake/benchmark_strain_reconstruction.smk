@@ -214,29 +214,17 @@ rule xjin_accuracy_grid:
                 species_group_genomes(species, "XJIN_BENCHMARK"),
                 [
                     "spgc-fit",
-                "spgc-depth250",
-                "spanda-s2",
-                "spanda-s3",
+                "spgc-depth200",
                 "spanda-s4",
                 "panphlan",
-                "nnmatched-m0",
-                "nnmatched-m1",
-                "nnmatched-m10",
-                "nnmatched-m50",
             ],
             [
                 "uhggtop",
-                "uhggtiles",
                 "eggnog",
             ],
         )
         if species != "TODO"
         ],
-        # sfacts_match=lambda w: [
-        #     f"data/group/XJIN_BENCHMARK/species/sp-{species}/{w.stem}.spgc-fit.{genome}.geno_matching_stats.tsv"
-        #     for genome, species in config["genome"].species_id.items()
-        #     if species != "TODO"
-        # ],
     shell:
         "cat {input} > {output}"
 
