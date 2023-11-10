@@ -208,6 +208,7 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         mv {output}.temp {output}
         """
 
+
 # NOTE: Hub-rule
 # NOTE: Paired with it's child rule in reference_genome.smk.
 rule load_one_species_pangenome2_depth_into_netcdf_new:

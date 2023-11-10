@@ -44,9 +44,7 @@ config["species_group_to_spgc_stem"] = (
 )
 
 
-config["genome"] = pd.read_table(
-    "meta/genome.tsv", dtype=str, index_col=["genome_id"]
-)
+config["genome"] = pd.read_table("meta/genome.tsv", dtype=str, index_col=["genome_id"])
 
 config["genome_group"] = (
     pd.read_table("meta/genome_group.tsv")
@@ -72,8 +70,6 @@ rule debug_species_group_genomes:
         test=lambda w: species_group_genomes(w.species, w.group),
     shell:
         "echo {params.test}; false"
-
-
 
 
 config["species_to_panphlan"] = pd.read_table(
@@ -103,9 +99,10 @@ rule process_hmp2_metadata:
 
 
 rule download_uhgg_metadata:
-    output: "ref/uhgg_genomes_all_v2.tsv"
+    output:
+        "ref/uhgg_genomes_all_v2.tsv",
     params:
-        url="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/genomes-all_metadata.tsv"
+        url="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/genomes-all_metadata.tsv",
     shell:
         curl_recipe
 

@@ -1,14 +1,17 @@
 rule download_cog_definitions:
-    output: "ref/cog-20.meta.tsv"
+    output:
+        "ref/cog-20.meta.tsv",
     params:
-        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/cog-20.def.tab"
+        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/cog-20.def.tab",
     shell:
         curl_recipe
 
+
 rule download_cog_categories:
-    output: "ref/cog-20.categories.tsv"
+    output:
+        "ref/cog-20.categories.tsv",
     params:
-        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/fun-20.tab"
+        url="https://ftp.ncbi.nih.gov/pub/COG/COG2020/data/fun-20.tab",
     shell:
         curl_recipe
 
@@ -24,7 +27,7 @@ rule compile_spgc_strain_metadata:
         strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
         strain_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.uhgg-strain_gene.tsv",
     params:
-        ambig_thresh=0.1
+        ambig_thresh=0.1,
     conda:
         "conda/sfacts.yaml"
     shell:
@@ -198,7 +201,6 @@ use rule count_pangenome_fractions_across_genomes as count_pangenome_fractions_a
         gene="{stemA}.spgc{stemB}.{unit}-strain_gene.tsv",
 
 
-
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 # SPGC and Ref genome pdist based on filtered gene content dissimilarity (jaccard).
 # TODO: Drop unecessary parts of the filenames. Only stems that are important are species and centroidB
@@ -210,7 +212,7 @@ rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
         ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_new.{unit}-strain_gene.tsv",
         ref_filt="data/species/sp-{species}/midasdb.gene75_new.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv"
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_new-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
     params:
         # NOTE: 0 is a special "ratio" where no filtering will be performed.
         maximum_prevalence_ratio=lambda w: int(w.ratio),
@@ -313,6 +315,7 @@ rule collect_filtering_metadata_for_ucfmt_spgc_strains:
     shell:
         "{input.script} {input.meta} {input.sample_to_strain} <(cut -f1 {input.mgen}) {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.min_geno_positions} {output}"
 
+
 rule select_dominant_ucfmt_donor_strain_genes:
     output:
         "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{stemB}.{spgc}.uhgg-strain_gene-ucfmt.tsv",
@@ -328,6 +331,7 @@ rule select_dominant_ucfmt_donor_strain_genes:
         detection_thresh=0.2,
     shell:
         "{input.script} {input.comm} {input.spgc_filt} {params.detection_thresh} {input.mgen_meta} {input.sample_meta} {input.subject_meta} {input.gene} {output}"
+
 
 # FIXME: This notebook is too intense and slowing down my development. Split out components
 # into individual scripts for
@@ -397,6 +401,7 @@ rule compile_spgc_to_ref_strain_report_new:
         jupyter nbconvert --to html --embed-images {log.nb} --stdout > {output.html}
         """
 
+
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
 rule alias_spgc_analysis_outputs:
     output:
@@ -429,6 +434,6 @@ localrules:
 # alias_spgc_analysis_outputs are ambiguous for the file
 # data/group/xjin_ucfmt_hmp2/species/sp-100022/r.proc.gtpro.sfacts-fit.gene99_new-v22-agg75.spgc-fit.uhgg-
 # strain_gene.prevalence_class_fraction-hmp2.tsv.
-# 
+#
 # I can just add that rule to the end of the list.
 ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > count_pangenome_fractions_across_hmp2_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > select_dominant_ucfmt_donor_strain_genes > aggregate_uhgg_strain_gene_by_annotation

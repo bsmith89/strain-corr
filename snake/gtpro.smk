@@ -411,6 +411,7 @@ rule construct_group_files_for_all_select_species:
             for species in config["species_group"][w.group]
         ],
 
+
 rule construct_groupfree_files_for_all_select_species:
     output:
         touch("data/group/{group}/{stem}.SELECT_SPECIES.flag"),

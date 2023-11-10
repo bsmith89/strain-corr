@@ -2,7 +2,8 @@
 
 
 rule install_jupyter_kernel:
-    output: "install_jupyter_kernel.{conda}"
+    output:
+        "install_jupyter_kernel.{conda}",
     params:
         name="{conda}",
     conda:
