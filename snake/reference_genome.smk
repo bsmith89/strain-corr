@@ -166,21 +166,6 @@ rule combine_strain_genome_gtpro_data_loadable:
         """
 
 
-rule alias_midas_uhgg_pangenome_cds:
-    output:
-        "data/species/sp-{species}/pangenome.centroids.fn",
-    input:
-        midas_download_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
-    params:
-        fasta="ref/midasdb_uhgg/pangenomes/{species}/centroids.ffn",
-    shell:
-        """
-        ln -rs {params.fasta} {output}
-        """
-
-
-localrules:
-    alias_midas_uhgg_pangenome_cds,
 
 
 rule alias_midas_uhgg_pangenome_cds_new:
@@ -196,17 +181,6 @@ localrules:
     alias_midas_uhgg_pangenome_cds_new,
 
 
-rule blastn_genome_against_midasdb_uhgg:
-    output:
-        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.tsv",
-    input:
-        query="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn",
-        subject="data/species/sp-{species}/pangenome.centroids.fn",
-    threads: 1
-    shell:
-        """
-        blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
-        """
 
 
 rule blastn_genome_against_midasdb_uhgg_new:

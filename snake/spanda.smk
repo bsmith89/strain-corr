@@ -1,11 +1,6 @@
 # StrainPanDA: https://github.com/xbiome/StrainPanDA
 
 
-rule start_shell_spanda:
-    singularity:
-        config["container"]["spanda"]
-    shell:
-        "bash"
 
 
 rule download_spanda_reference:

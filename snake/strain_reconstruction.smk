@@ -1,15 +1,3 @@
-rule combine_midasdb_all_gene_annotations:
-    output:
-        "ref/midasdb_uhgg_gene_annotations/sp-{species}.gene_annotations.tsv",
-    input:
-        "ref/midasdb_uhgg_gene_annotations/{species}",
-    shell:
-        """
-        find {input} -name '*.tsv.lz4' \
-                | xargs lz4cat \
-                | awk '$1 != "locus_tag" && $2 != "gene"' \
-            > {output}
-        """
 
 
 rule combine_midasdb_all_gene_annotations_new:
@@ -35,29 +23,6 @@ rule combine_midasdb_all_gene_annotations_new:
         """
 
 
-# TODO: The aggregated gene_annotations.tsv files could/should go into each
-# individual species directory.
-rule filter_midasdb_all_gene_annotations_by_centroid:
-    output:
-        "ref/midasdb_uhgg_gene_annotations/sp-{species}.gene{centroid}_annotations.tsv",
-    input:
-        annot="ref/midasdb_uhgg_gene_annotations/sp-{species}.gene_annotations.tsv",
-        centroids_list="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
-    params:
-        col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
-    shell:
-        """
-        grep -Ff \
-            <( \
-                lz4cat {input.centroids_list} \
-                | cut -f{params.col} \
-                | sed '1,1d' \
-                | sort \
-                | uniq \
-                ) \
-            {input.annot} \
-            > {output}
-        """
 
 
 rule filter_midasdb_all_gene_annotations_by_centroid_new:
@@ -154,17 +119,6 @@ rule select_species_core_genes_de_novo_with_dereplication:
         """
 
 
-# TODO: Use this in place of midasuhgg* everywhere.
-rule alias_species_genes_from_reference_to_match_de_novo_paths:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
-    input:
-        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
-    wildcard_constraints:
-        centroidA="99|95|90|85|80|75",
-        centroidB="99|95|90|85|80|75",
-    shell:
-        alias_recipe
 
 
 # TODO: Use this in place of midasuhgg* everywhere.
@@ -194,7 +148,6 @@ rule alias_species_genes_from_filtered_reference_to_match_de_novo_paths_new:
 
 
 localrules:
-    alias_species_genes_from_reference_to_match_de_novo_paths,
     alias_species_genes_from_reference_to_match_de_novo_paths_new,
 
 
@@ -470,14 +423,6 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         "{input.script} {input.uhgg} {input.agg} {wildcards.agg} {output}"
 
 
-rule convert_midasdb_species_gene_list_to_reference_genome_table:
-    output:
-        "ref/midasdb_uhgg_pangenomes/{species}/gene{centroid}.reference_copy_number.nc",
-    input:
-        script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg_pangenomes/{species}/gene_info.txt.lz4",
-    shell:
-        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table_new:
