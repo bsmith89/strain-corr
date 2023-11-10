@@ -151,6 +151,7 @@ localrules:
     alias_species_genes_from_reference_to_match_de_novo_paths_new,
 
 
+# NOTE: Hub-rule
 rule calculate_species_depth_from_core_genes:
     output:
         species_depth="{stemA}/species/sp-{species}/{stemB}.gene{centroidA}-{bowtie_params}-agg{centroidB}.spgc_specgene{specgene_params}.species_depth.tsv",
