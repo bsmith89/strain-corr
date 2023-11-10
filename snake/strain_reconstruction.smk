@@ -166,6 +166,30 @@ rule calculate_species_depth_from_core_genes:
         """
 
 
+rule combine_species_depth_from_select_species:
+    output:
+        "data/group/{group}/r.{proc}.gene{pangenome_params}.spgc_specgene{specgene_params}.species_depth.tsv"
+    input:
+        species_depth=lambda w: [
+            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gene{w.pangenome_params}.spgc_specgene{w.specgene_params}.species_depth.tsv"
+            for species in config["species_group"][w.group]
+        ],
+    params:
+        species_list=lambda w: config["species_group"][w.group],
+        species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gene{pangenome_params}.spgc_specgene{specgene_params}.species_depth.tsv",
+    shell:
+        """
+        for species in {params.species_list}
+        do
+            echo -n . >&2
+            file={params.species_pattern}
+            awk -v OFS='\t' -v species=$species '{{print $1,species,$2}}' $file
+        done > {output}
+        echo "" >&2
+        """
+
+
+
 # NOTE: Hub-rule; comment out to reduce DAG building time.
 # NOTE: Because I use a species-specific species_depth.tsv,
 # in many of these files, samples with 0-depth (or maybe samples with
