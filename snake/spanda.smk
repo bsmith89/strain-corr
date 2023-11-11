@@ -36,21 +36,21 @@ rule extract_spanda_reference:
 # xjin_hmp2 pangenome profiling.
 rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
     output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spanda_counts.csv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{pang_params}.spanda_counts.csv",
     input:
         script="scripts/merge_pangenomes_tallies_for_spanda.py",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{dbv}-{pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
             )
             for mgen in config["mgen_group"]["xjin"]
         ],
-        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         sample_args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.gene_mapping_tally.tsv.lz4".format(
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{dbv}-{pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
@@ -67,13 +67,13 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
 
 rule run_spanda_decompose_new:
     output:
-        gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",
-        sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
+        gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",
+        sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
     input:
-        data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}.spanda_counts.csv",
-        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_new.tsv",
+        data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}.spanda_counts.csv",
+        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_{dbv}.tsv",
     params:
-        outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_new-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
+        outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
         max_strains=lambda w: int(w.nstrain),
         expect_strains=lambda w: int(w.nstrain),
         libstrainpandar="include/StrainPanDA/src/strainpandar",

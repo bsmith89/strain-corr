@@ -68,7 +68,7 @@ rule predict_sfacts_strain_gene_content_by_nearest_neighbor_matching:
         script="scripts/predict_gene_content_by_nearest_neighbor.py",
         spgc_geno="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         ref_geno="data/species/sp-{species}/midasdb.mgtp.nc",
-        ref_gene="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+        ref_gene="data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
         ref_meta="ref/uhgg_genomes_all_4644.tsv",
     params:
         min_geno_diss=lambda w: int(w.min_diss) / 1000,
@@ -194,13 +194,11 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
 
 use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accuracy_uhgg_best_hit with:
     output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.{stemB}.{strain}.uhggtop-reconstruction_accuracy.tsv",
+        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.{stemB}.{strain}.uhggtop-reconstruction_accuracy.tsv",
     input:
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
-        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.{stemB}.uhgg-strain_gene.tsv",
-        truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_new-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
-
-
+        infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.{stemB}.uhgg-strain_gene.tsv",
+        truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
 rule xjin_accuracy_grid:

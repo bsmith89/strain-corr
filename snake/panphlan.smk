@@ -1,11 +1,11 @@
 # NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
     output:
-        "data/species/sp-{species}/midasdb_uhgg_pangenome{centroid}_new.tsv",
+        "data/species/sp-{species}/midasdb_uhgg_pangenome{centroid}_{dbv}.tsv",
     input:
-        script="scripts/construct_panphlan_pangenome_from_midas_new.py",
-        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
-        cluster_info="ref/midasdb_uhgg_new/pangenomes/{species}/cluster_info.txt",
+        script="scripts/construct_panphlan_pangenome_from_midas_{dbv}.py",
+        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+        cluster_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/cluster_info.txt",
     params:
         centroid=lambda w: int(w.centroid),
     shell:
@@ -21,13 +21,13 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
 # FIXME: I need a new way to build the species-specific mapping tallies for each species.
 rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
     output:
-        hit="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
-        depth="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
-        thresh="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_new-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
+        hit="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
+        depth="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
+        thresh="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
     input:
-        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_new.tsv",
+        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_{dbv}.tsv",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
@@ -35,7 +35,7 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
             for mgen in config["mgen_group"]["xjin"]
         ],
     params:
-        sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+        sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
             w=w, _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"]
         ),
         sample_list=lambda w: list(config["mgen_group"]["xjin"]),

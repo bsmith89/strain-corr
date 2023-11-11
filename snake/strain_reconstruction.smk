@@ -2,15 +2,15 @@
 
 rule combine_midasdb_all_gene_annotations_new:
     output:
-        "data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
+        "data/species/sp-{species}/midasdb_uhgg_{dbv}.gene_annotations.tsv",
     input:
         genome=lambda w: [
-            f"ref/midasdb_uhgg_new/gene_annotations/{w.species}/{genome}/{genome}.tsv.lz4"
-            for genome in config["midasdb_uhgg_new_species_genome"][w.species]
+            f"ref/midasdb_uhgg_{dbv}/gene_annotations/{w.species}/{genome}/{genome}.tsv.lz4"
+            for genome in config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species]
         ],
     params:
-        genome_pattern="ref/midasdb_uhgg_new/gene_annotations/{species}/$genome/$genome.tsv.lz4",
-        genome_list=lambda w: config["midasdb_uhgg_new_species_genome"][w.species],
+        genome_pattern="ref/midasdb_uhgg_{dbv}/gene_annotations/{species}/$genome/$genome.tsv.lz4",
+        genome_list=lambda w: config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species],
     shell:
         """
         for genome in {params.genome_list}
@@ -27,10 +27,10 @@ rule combine_midasdb_all_gene_annotations_new:
 
 rule filter_midasdb_all_gene_annotations_by_centroid_new:
     output:
-        "data/species/sp-{species}/midasdb_uhgg_new.gene{centroid}_annotations.tsv",
+        "data/species/sp-{species}/midasdb_uhgg_{dbv}.gene{centroid}_annotations.tsv",
     input:
-        annot="data/species/sp-{species}/midasdb_uhgg_new.gene_annotations.tsv",
-        centroids_list="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        annot="data/species/sp-{species}/midasdb_uhgg_{dbv}.gene_annotations.tsv",
+        centroids_list="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     shell:
@@ -50,10 +50,10 @@ rule filter_midasdb_all_gene_annotations_by_centroid_new:
 
 rule select_species_core_genes_from_reference_new:
     output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_{dbv}.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes.py",
-        copy_number="data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+        copy_number="data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
     params:
         trim_quantile=lambda w: float(w.trim_quantile) / 100,
         prevalence=lambda w: float(w.prevalence) / 100,
@@ -66,10 +66,10 @@ rule select_species_core_genes_from_reference_new:
 # down to single copy genes or anything like that. Just looks for high-prevalence genes.
 rule select_species_core_genes_from_filtered_reference_new:
     output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_new.spgc_specgene-ref2-p{prevalence}.species_gene.list",
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_{dbv}.spgc_specgene-ref2-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes2.py",
-        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_new.strain_gene.prevalence-pseudo0.tsv",
+        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.strain_gene.prevalence-pseudo0.tsv",
     params:
         thresh=lambda w: float(w.prevalence) / 100,
     shell:
@@ -124,9 +124,9 @@ rule select_species_core_genes_de_novo_with_dereplication:
 # TODO: Use this in place of midasuhgg* everywhere.
 rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     input:
-        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_new.spgc_specgene-ref-{specgene_params}.species_gene.list",
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_{dbv}.spgc_specgene-ref-{specgene_params}.species_gene.list",
     wildcard_constraints:
         centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
@@ -137,9 +137,9 @@ rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
 # TODO: Use this in place of midasuhgg* everywhere.
 rule alias_species_genes_from_filtered_reference_to_match_de_novo_paths_new:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.spgc_specgene-ref2-{specgene_params}.species_gene.list",
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spgc_specgene-ref2-{specgene_params}.species_gene.list",
     input:
-        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_new.spgc_specgene-ref2-{specgene_params}.species_gene.list",
+        "data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_{dbv}.spgc_specgene-ref2-{specgene_params}.species_gene.list",
     wildcard_constraints:
         centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
@@ -451,9 +451,9 @@ rule aggregate_uhgg_strain_gene_by_annotation:
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table_new:
     output:
-        "data/species/sp-{species}/gene{centroid}_new.reference_copy_number.nc",
+        "data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        genes="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"

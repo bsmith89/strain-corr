@@ -1,9 +1,9 @@
 rule collect_species_pangenome_centroids_new:
     output:
-        fn="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.fn",
+        fn="data/species/sp-{species}/pangenome{centroid}_{dbv}.bt2.d/centroids.fn",
     input:
-        fn="ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn",
-        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
+        fn="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/centroids.ffn",
+        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     conda:
@@ -19,19 +19,19 @@ rule collect_species_pangenome_centroids_new:
 
 rule collect_multispecies_pangenome_centroids_to_hash:
     output:
-        fn="data/hash/{_hash}/pangenomes{centroid}_new.bt2.d/centroids.fn",
+        fn="data/hash/{_hash}/pangenomes{centroid}_{dbv}.bt2.d/centroids.fn",
     input:
         fasta=lambda w: [
-            f"ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn"
+            f"ref/midasdb_uhgg_{w.dbv}/pangenomes/{species}/centroids.ffn"
             for species in config["hash_to_species_set"][w._hash]
         ],
         gene_info=lambda w: [
-            f"ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt"
+            f"ref/midasdb_uhgg_{w.dbv}/pangenomes/{species}/gene_info.txt"
             for species in config["hash_to_species_set"][w._hash]
         ],
     params:
-        fasta_pattern="ref/midasdb_uhgg_new/pangenomes/$species/centroids.ffn",
-        gene_info_pattern="ref/midasdb_uhgg_new/pangenomes/$species/gene_info.txt",
+        fasta_pattern="ref/midasdb_uhgg_{dbv}/pangenomes/$species/centroids.ffn",
+        gene_info_pattern="ref/midasdb_uhgg_{dbv}/pangenomes/$species/gene_info.txt",
         species_list=lambda w: config["hash_to_species_set"][w._hash],
         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
     resources:
@@ -134,9 +134,9 @@ rule run_bowtie_multispecies_pangenome_v0:
 
 use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangenome_v22_new with:
     output:
-        "data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes{centroid}_new-v22.{bam_or_cram}",
+        "data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes{centroid}_{dbv}-v22.{bam_or_cram}",
     input:
-        db="data/hash/{hash}/pangenomes{centroid}_new.bt2.d/centroids.bt2db",
+        db="data/hash/{hash}/pangenomes{centroid}_{dbv}.bt2.d/centroids.bt2db",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     params:
@@ -213,23 +213,23 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
 # NOTE: Paired with it's child rule in reference_genome.smk.
 rule load_one_species_pangenome2_depth_into_netcdf_new:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_new-{bowtie_params}-agg{centroidB}.depth2.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
         script="scripts/merge_pangenomes_depth.py",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
             )
             for mgen in config["mgen_group"][w.group]
         ],
-        gene_info="ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt",
-        gene_length="ref/midasdb_uhgg_new/pangenomes/{species}/genes.len",
+        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+        gene_length="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
     wildcard_constraints:
         centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
     params:
         args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_new-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
             )
             for mgen in config["mgen_group"][w.group]

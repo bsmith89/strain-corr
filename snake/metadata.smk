@@ -114,9 +114,29 @@ config["een_mgen_local_src"] = pd.read_table(
     "meta/een-mgen/gtpro_local.tsv", index_col="library_id"
 )
 
+# Dummy for legacy "new" version of the DB.
 config["midasdb_uhgg_new_species_genome"] = (
     pd.read_table(
         "ref/midasdb_uhgg_new/genomes.tsv",
+        dtype=str,
+    )
+    .groupby("species")
+    .genome.apply(list)
+)
+
+config["midasdb_uhgg_v10_species_genome"] = (
+    pd.read_table(
+        "ref/midasdb_uhgg_v10/genomes.tsv",
+        dtype=str,
+    )
+    .groupby("species")
+    .genome.apply(list)
+)
+
+
+config["midasdb_uhgg_v15_species_genome"] = (
+    pd.read_table(
+        "ref/midasdb_uhgg_v15/genomes.tsv",
         dtype=str,
     )
     .groupby("species")
