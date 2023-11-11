@@ -16,10 +16,11 @@ if __name__ == "__main__":
     column = sys.argv[2]
     out_path = sys.argv[3]
 
+    # TODO: Drop the lz4 decompression, yeah?
     with subprocess.Popen(["lz4cat", gene_path], stdout=subprocess.PIPE) as f:
         reference_gene = pd.read_table(f.stdout, usecols=["gene_id", column])
     reference_gene = (
-        reference_gene.assign(genome_id=lambda x: x.gene_id.str.split("_").str[0])[
+        reference_gene.assign(genome_id=lambda x: x.gene_id.str.rsplit("_", n=1).str[0])[
             ["genome_id", column]
         ]
         .value_counts()

@@ -16,6 +16,7 @@ localrules:
     download_gtpro_reference_core_snps,
 
 
+# NOTE: Hub-rule
 rule run_gtpro:
     output:
         temp("{stem}.gtpro_raw.gz"),

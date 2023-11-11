@@ -136,6 +136,21 @@ rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance:
         "{input.script} {input.spgc_agg_mgtp} {input.ref_geno} {params.ambiguity_threshold} {params.pseudo} {output}"
 
 
+rule compute_pairwise_genotype_masked_hamming_distance:
+    output:
+        "{stem}.geno_pdist-mask{thresh}-pseudo{pseudo}.pkl",
+    input:
+        script="scripts/calculate_pairwise_genotype_masked_hamming_distance.py",
+        mgtp="{stem}.mgtp.nc",
+    params:
+        ambiguity_threshold=lambda w: int(w.thresh) / 100,
+        pseudo=lambda w: int(w.pseudo) / 10,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        "{input.script} {input.mgtp} {params.ambiguity_threshold} {params.pseudo} {output}"
+
+
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 # SPGC and Ref genome dereplication clustering (based on genotype dissimilarity)
 rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
@@ -274,6 +289,8 @@ rule cluster_genes_based_on_cooccurence_in_ref_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
+# NOTE: (2023-11-11) Depracated.
+# TODO: Drop this rule, now that I can run it independently for SPGC and Ref genomes.
 rule calculate_morans_i_for_both_ref_and_spgc_strains:
     output:
         "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
@@ -286,6 +303,30 @@ rule calculate_morans_i_for_both_ref_and_spgc_strains:
         pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
     shell:
         "{input.script} {input.spgc_gene} {input.spgc_filt} {input.ref_gene} {input.ref_filt} {input.pdist} {output}"
+
+
+rule calculate_morans_i_for_ref_strains:
+    output:
+        "data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.morans_i.tsv",
+    input:
+        script="scripts/calculate_morans_i.py",
+        gene="data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.tsv",
+        filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+        pdist="data/species/sp-{species}/midasdb_{dbv}.gtpro.geno_pdist-mask10-pseudo10.pkl",
+    shell:
+        "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
+
+
+rule calculate_morans_i_for_spgc_strains:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
+    input:
+        script="scripts/calculate_morans_i.py",
+        gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
+        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
+        pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
+    shell:
+        "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
 
 
 rule compile_gene_metadata:

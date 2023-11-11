@@ -14,10 +14,39 @@ if __name__ == "__main__":
     outpath = sys.argv[8]
 
     npositions = pd.read_table(pos_inpath, index_col="genome_id")
-    genes = pd.read_table(genes_inpath, index_col="gene_id").rename_axis(columns="genome_id")
+    genes = pd.read_table(genes_inpath, index_col="gene_id").rename_axis(
+        columns="genome_id"
+    )
     assert genes.isin([0, 1]).values.all()
     genome_meta = (
-        pd.read_table(meta_inpath, index_col=["Genome_accession"])
+        pd.read_table(
+            meta_inpath,
+            names=[
+                "Genome",
+                "Genome_type",
+                "Length",
+                "N_contigs",
+                "N50",
+                "GC_content",
+                "Completeness",
+                "Contamination",
+                "rRNA_5S",
+                "rRNA_16S",
+                "rRNA_23S",
+                "tRNAs",
+                "Genome_accession",
+                "Species_rep",
+                "Lineage",
+                "Sample_accession",
+                "Study_accession",
+                "Country",
+                "Continent",
+                "FTP_download",
+                "_20",
+                "_21",
+            ],
+            index_col=["Genome_accession"],
+        )
         .assign(
             species_id=lambda x: "1" + x.Species_rep.str[len("MGYG0000") :],
         )[lambda x: x.species_id == species]

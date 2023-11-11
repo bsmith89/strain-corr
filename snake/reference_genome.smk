@@ -114,6 +114,15 @@ rule dbCAN_annotate_translated_orfs:
         """
 
 
+rule normalize_genome_sequence:
+    output:
+        "{stem}.norm.fn",
+    input:
+        "{stem}.fn",
+    shell:
+        "sed '/^>/!s/[^ACGT]/N/g' {input} > {output}"
+
+
 rule tile_reference_genome:
     output:
         "{stem}.tiles-l{length}-o{overlap}.fn",
@@ -154,12 +163,12 @@ rule combine_strain_genome_gtpro_data_loadable:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:
         strain=lambda w: [
-            f"data/species/sp-{w.species}/genome/{strain}.tiles-l500-o31.gtpro_parse.tsv.bz2"
+            f"data/species/sp-{w.species}/genome/{strain}.norm.tiles-l500-o31.gtpro_parse.tsv.bz2"
             for strain in species_group_genomes(w.species, w.group)
         ],
     params:
         strain_list=lambda w: species_group_genomes(w.species, w.group),
-        pattern="data/species/sp-{species}/genome/$strain.tiles-l500-o31.gtpro_parse.tsv.bz2",
+        pattern="data/species/sp-{species}/genome/$strain.norm.tiles-l500-o31.gtpro_parse.tsv.bz2",
     shell:
         """
         for strain in {params.strain_list}
@@ -175,6 +184,30 @@ rule combine_strain_genome_gtpro_data_loadable:
         """
 
 
+rule combine_midasdb_reference_genome_gtpro_data_loadable:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",
+    input:
+        genome=lambda w: [
+            f"data/species/sp-{w.species}/genome/midasdb_{w.dbv}/{genome}.norm.tiles-l500-o31.gtpro_parse.tsv.bz2"
+            for genome in config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species]
+        ],
+    params:
+        genome_list=lambda w: config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species],
+        pattern="data/species/sp-{species}/genome/midasdb_{dbv}/$genome.norm.tiles-l500-o31.gtpro_parse.tsv.bz2",
+    shell:
+        """
+        for genome in {params.genome_list}
+        do
+            path={params.pattern}
+            ( \
+                bzip2 -dc $path \
+                | awk -v OFS='\t' -v strain=$genome -v species={wildcards.species} '$1==species {{print strain,$0}}' \
+                | bzip2 -zc \
+            )
+        done > {output}
+
+        """
 
 
 rule alias_midas_uhgg_pangenome_cds_new:

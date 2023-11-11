@@ -17,12 +17,12 @@ if __name__ == "__main__":
     genes = pd.read_table(genes_inpath, index_col="gene_id").rename_axis(columns="genome_id")
     assert genes.isin([0, 1]).values.all()
     genome_meta = (
-        pd.read_table(meta_inpath, index_col=["Genome_accession"])
+        pd.read_table(meta_inpath, index_col=["Genome"])
         .assign(
-            species_id=lambda x: "1" + x.Species_rep.str[len("MGYG0000") :],
+            species_id=lambda x: "1" + x.MGnify_accession.str[len("MGYG-HGUT-") :],
         )[lambda x: x.species_id == species]
         .rename_axis(index="genome_id")
-        # .rename(index=lambda x: "UHGG" + x[len("GUT_GENOME") :])
+        .rename(index=lambda x: "UHGG" + x[len("GUT_GENOME") :])
         .rename(
             columns={
                 "Genome_type": "genome_type",

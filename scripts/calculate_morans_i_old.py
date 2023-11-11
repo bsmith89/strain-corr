@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
+# "{input.script} {input.spgc_gene} {input.spgc_filt} {input.ref_gene} {input.ref_filt} {input.pdist} {output}"
 
 import pandas as pd
 from lib.dissimilarity import load_dmat_as_pickle
@@ -57,35 +57,38 @@ def morans_i(x, w, return_zscore=False, centered=False):
         return observed_out
 
 
-def geno_pdist_to_weights(pdist, rate=2, normalize=False):
+def geno_pdist_to_weights(pdist, rate=2):
     pdist = np.array(pdist)
     w = np.exp(-rate * pdist)
     w[np.diag_indices_from(w)] = 0
-
-    if normalize:
-        breakpoint()
-        w = w / w.sum(0, keepdims=True)
-
     return w
 
 
 if __name__ == "__main__":
-    gene_inpath = sys.argv[1]
-    filt_inpath = sys.argv[2]
-    pdist_inpath = sys.argv[3]
-    outpath = sys.argv[4]
+    spgc_gene_inpath = sys.argv[1]
+    spgc_filt_inpath = sys.argv[2]
+    ref_gene_inpath = sys.argv[3]
+    ref_filt_inpath = sys.argv[4]
+    pdist_inpath = sys.argv[5]
+    outpath = sys.argv[6]
 
     dmat = load_dmat_as_pickle(pdist_inpath)
 
-    meta = pd.read_table(filt_inpath, index_col="genome_id").rename(str)
-    gene = pd.read_table(gene_inpath, index_col="gene_id").rename_axis(
+    spgc_meta = pd.read_table(spgc_filt_inpath, index_col="genome_id").rename(str)
+    spgc_gene = pd.read_table(spgc_gene_inpath, index_col="gene_id").rename_axis(
         columns="genome_id"
     )
-    _genome_list = idxwhere(meta.passes_filter)
-    _meta = meta.loc[_genome_list]
-    _gene = gene.loc[:, _genome_list]
+    ref_meta = pd.read_table(ref_filt_inpath, index_col="genome_id").rename(str)
+    ref_gene = pd.read_table(ref_gene_inpath, index_col="gene_id").rename_axis(
+        columns="genome_id"
+    )
+
+    # SPGC
+    _genome_list = idxwhere(spgc_meta.passes_filter)
+    _meta = spgc_meta.loc[_genome_list]
+    _gene = spgc_gene.loc[:, _genome_list]
     _dmat = dmat.loc[_genome_list, _genome_list]
-    _weights = geno_pdist_to_weights(_dmat, rate=1, normalize=False)
+    _weights = geno_pdist_to_weights(_dmat, rate=1)
     results = {}
     for gene_id in _gene.index:
         results[gene_id] = morans_i(
@@ -94,5 +97,23 @@ if __name__ == "__main__":
             return_zscore=False,
             centered=True,
         )
-    results = pd.Series(results).rename_axis(index="gene_id")
-    results.to_csv(outpath, sep="\t", header=False)
+    spgc_results = pd.Series(results)
+
+    # Ref
+    _genome_list = idxwhere(ref_meta.passes_filter)
+    _meta = ref_meta.loc[_genome_list]
+    _gene = ref_gene.loc[:, _genome_list]
+    _dmat = dmat.loc[_genome_list, _genome_list]
+    _weights = geno_pdist_to_weights(_dmat, rate=1)
+    results = {}
+    for gene_id in _gene.index:
+        results[gene_id] = morans_i(
+            _gene.loc[gene_id].values,
+            _weights,
+            return_zscore=False,
+            centered=True,
+        )
+    ref_results = pd.Series(results)
+
+    results = pd.DataFrame(dict(spgc=spgc_results, ref=ref_results)).rename_axis(index="gene_id")
+    results.to_csv(outpath, sep="\t")
