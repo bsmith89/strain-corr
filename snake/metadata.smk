@@ -110,10 +110,6 @@ rule download_uhgg_metadata:
 config["figures"]["submission"] = []
 
 
-config["een_mgen_local_src"] = pd.read_table(
-    "meta/een-mgen/gtpro_local.tsv", index_col="library_id"
-)
-
 # Dummy for legacy "new" version of the DB.
 if os.path.exists("ref/midasdb_uhgg_new/genomes.tsv"):
     config["midasdb_uhgg_new_species_genome"] = (
