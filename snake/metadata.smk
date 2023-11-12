@@ -115,30 +115,33 @@ config["een_mgen_local_src"] = pd.read_table(
 )
 
 # Dummy for legacy "new" version of the DB.
-config["midasdb_uhgg_new_species_genome"] = (
-    pd.read_table(
-        "ref/midasdb_uhgg_new/genomes.tsv",
-        dtype=str,
+if os.path.exists("ref/midasdb_uhgg_new/genomes.tsv"):
+    config["midasdb_uhgg_new_species_genome"] = (
+        pd.read_table(
+            "ref/midasdb_uhgg_new/genomes.tsv",
+            dtype=str,
+        )
+        .groupby("species")
+        .genome.apply(list)
     )
-    .groupby("species")
-    .genome.apply(list)
-)
 
-config["midasdb_uhgg_v10_species_genome"] = (
-    pd.read_table(
-        "ref/midasdb_uhgg_v10/genomes.tsv",
-        dtype=str,
+if os.path.exists("ref/midasdb_uhgg_v10/genomes.tsv"):
+    config["midasdb_uhgg_v10_species_genome"] = (
+        pd.read_table(
+            "ref/midasdb_uhgg_v10/genomes.tsv",
+            dtype=str,
+        )
+        .groupby("species")
+        .genome.apply(list)
     )
-    .groupby("species")
-    .genome.apply(list)
-)
 
 
-config["midasdb_uhgg_v15_species_genome"] = (
-    pd.read_table(
-        "ref/midasdb_uhgg_v15/genomes.tsv",
-        dtype=str,
+if os.path.exists("ref/midasdb_uhgg_v15/genomes.tsv"):
+    config["midasdb_uhgg_v15_species_genome"] = (
+        pd.read_table(
+            "ref/midasdb_uhgg_v15/genomes.tsv",
+            dtype=str,
+        )
+        .groupby("species")
+        .genome.apply(list)
     )
-    .groupby("species")
-    .genome.apply(list)
-)
