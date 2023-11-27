@@ -40,7 +40,7 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
     input:
         script="scripts/merge_pangenomes_tallies_for_spanda.py",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{dbv}-{pang_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
@@ -50,7 +50,7 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
         gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         sample_args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{dbv}-{pang_params}.gene_mapping_tally.tsv.lz4".format(
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
@@ -71,7 +71,7 @@ rule run_spanda_decompose_new:
         sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
     input:
         data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}.spanda_counts.csv",
-        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_{dbv}.tsv",
+        pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.panphlan_pangenome.tsv",
     params:
         outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
         max_strains=lambda w: int(w.nstrain),

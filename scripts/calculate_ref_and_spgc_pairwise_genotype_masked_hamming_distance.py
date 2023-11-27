@@ -44,7 +44,7 @@ if __name__ == "__main__":
         sf.Metagenotype.load(ref_geno_inpath)
         .to_estimated_genotype()
         .discretized(max_ambiguity=ambiguity_threshold)
-        .rename_coords(strain=lambda x: "UHGG" + x[len("GUT_GENOME") :])
+        # .rename_coords(strain=lambda x: "UHGG" + x[len("GUT_GENOME") :])
     )
     # ref_geno.data["strain"] = (
     #     ref_geno.data["strain"]

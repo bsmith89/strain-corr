@@ -180,8 +180,9 @@ rule combine_all_ref_and_spgc_metadata_and_clustering:
         ref="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
         geno_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
         # TODO: Consider other prevalence thresholds besides 5x? 0x means no filtering.
-        gene_raw_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio0_jaccard_pdist.pkl",
-        gene_filt_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio10_jaccard_pdist.pkl",
+        gene_raw_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio0_cosine_pdist.pkl",
+        # FIXME: Consider jaccard vs. cosine gene content dissimilarity
+        gene_filt_pdist="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.genefilt-ratio10_cosine_pdist.pkl",
         clust="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.coclust-10.tsv",
     shell:
         "{input.script} {input.spgc} {input.ref} {input.geno_pdist} {input.gene_raw_pdist} {input.gene_filt_pdist} {input.clust} {output}"

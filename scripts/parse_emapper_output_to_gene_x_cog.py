@@ -4,9 +4,36 @@ import pandas as pd
 import sys
 import numpy as np
 
-EGGNOG_COLUMNS = "query seed_ortholog evalue score eggNOG_OGs max_annot_lvl COG_category Description Preferred_name GOs EC KEGG_ko KEGG_Pathway KEGG_Module KEGG_Reaction KEGG_rclass BRITE KEGG_TC CAZy BiGG_Reaction PFAMs".split(
-    " "
-)
+EGGNOG_COLUMNS = [
+    "query",
+    "seed_ortholog",
+    "evalue",
+    "score",
+    "eggNOG_OGs",
+    "max_annot_lvl",
+    "COG_category",
+    "Description",
+    "Preferred_name",
+    "GOs",
+    "EC",
+    "KEGG_ko",
+    "KEGG_Pathway",
+    "KEGG_Module",
+    "KEGG_Reaction",
+    "KEGG_rclass",
+    "BRITE",
+    "KEGG_TC",
+    "CAZy",
+    "BiGG_Reaction",
+    "PFAMs",
+    "contig_id",
+    "start",
+    "end",
+    "strand",
+    "gene_type",
+    "contig_length",
+]
+
 
 if __name__ == "__main__":
     eggnog = (

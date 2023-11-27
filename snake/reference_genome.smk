@@ -64,12 +64,12 @@ rule eggnog_mapper_translated_orfs:
         """
 
 
-rule parse_emapper_output_to_gene_x_unit:
+rule parse_midasdb_emapper_annotations_to_gene_x_unit:
     output:
-        "{stem}.emapper.gene_x_{unit}.tsv",
+        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene_x_{unit}.tsv",
     input:
         script="scripts/parse_emapper_output_to_gene_x_{unit}.py",
-        emapper="{stem}.emapper.d/proteins.emapper.annotations",
+        emapper="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/eggnog.tsv",
     shell:
         "{input.script} {input.emapper} {output}"
 
@@ -78,16 +78,10 @@ rule aggregate_strain_emapper_output_by_unit:
     output:
         "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv",
     input:
-        "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv",
-    run:
-        strain_gene_x_agg = pd.read_table(input[0])
-        result = (
-            (strain_gene_x_agg.groupby(wildcards.agg).apply(len) > 0)
-            .astype(int)
-            .to_frame(name=wildcards.strain)
-        ).rename_axis(index="gene_id")
-        result.to_csv(output[0], sep="\t")
-
+        script="scripts/aggregate_emapper_output_by_unit.py",
+        data="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv",
+    shell:
+        "{input.script} {input.data} {wildcards.agg} {wildcards.strain} {output}"
 
 rule dbCAN_annotate_translated_orfs:
     output:
@@ -212,7 +206,7 @@ rule combine_midasdb_reference_genome_gtpro_data_loadable:
 
 rule alias_midas_uhgg_pangenome_cds_new:
     output:
-        "data/species/sp-{species}/pangenome_{dbv}.centroids.fn",
+        "data/species/sp-{species}/midasdb.gene99_{dbv}.centroids.fn",
     input:
         fasta="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/centroids.ffn",
     shell:

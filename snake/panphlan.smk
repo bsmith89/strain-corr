@@ -1,15 +1,16 @@
 # NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
     output:
-        "data/species/sp-{species}/midasdb_uhgg_pangenome{centroid}_{dbv}.tsv",
+        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.panphlan_pangenome.tsv",
     input:
-        script="scripts/construct_panphlan_pangenome_from_midas_{dbv}.py",
+        script="scripts/construct_panphlan_pangenome_from_midas.py",
         gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
         cluster_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/cluster_info.txt",
     params:
         centroid=lambda w: int(w.centroid),
+        fillna_gene_length=1000,
     shell:
-        "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {output}"
+        "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {params.fillna_gene_length} {output}"
 
 
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
@@ -25,7 +26,7 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
         depth="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
         thresh="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
     input:
-        pangenome="data/species/sp-{species}/midasdb_uhgg_pangenome{centroidB}_{dbv}.tsv",
+        pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.panphlan_pangenome.tsv",
         samples=lambda w: [
             "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
