@@ -1,4 +1,4 @@
-rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
+rerun-triggers: ['mtime', 'params', 'input']
 notemp: true
 local-cores: 6
 latency-wait: 180
