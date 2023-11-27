@@ -25,6 +25,7 @@ if __name__ == "__main__":
     for j, seq in enumerate(raw_seqs):
         seq_len = len(seq)
         n_tiles = ceil((seq_len - tile_len) / tile_offset)
+        stop = 0
         for i in range(n_tiles):
             start = i * tile_offset
             stop = i * tile_offset + tile_len
