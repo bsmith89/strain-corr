@@ -34,7 +34,10 @@ def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=
     for i, s in enumerate(labels):
         if s in colormap:
             continue
-        coord = i / (len(labels) - 1)
+        if len(labels) == 1:
+            coord = 0
+        else:
+            coord = i / (len(labels) - 1)
         colormap[s] = cm(coord * (vmax - vmin) + vmin)
     return colormap
 
