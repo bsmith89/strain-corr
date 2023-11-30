@@ -13,3 +13,6 @@
 [submodule "include/panphlan"]
 	path = include/panphlan
 	url = https://github.com/SegataLab/panphlan
+[submodule "include/StrainPGC"]
+	path = include/StrainPGC
+	url = git@github.com:bsmith89/StrainPGC.git
