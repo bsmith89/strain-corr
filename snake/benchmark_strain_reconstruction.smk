@@ -114,12 +114,37 @@ localrules:
     alias_xjin_tiles_as_xjin_benchmark,
 
 
+# # NOTE: Where to alias in order to collect strain matching for everything?
+# # alias_spgc_strain_match_for_benchmarking or here?
+# rule alias_species_specific_sfacts_comm:
+#     output:
+#         "data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.sfacts-fit.comm.tsv"
+#     input:
+#     input:
+#         source=lambda w: (
+#             "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.{spgc_stem}.{strain}.geno_matching_stats.tsv".format(
+#                 species=w.species,
+#                 stem=w.stem,
+#                 pangenome_params=w.pangenome_params,
+#                 strain=w.strain,
+#                 spgc_stem=config["species_group_to_spgc_stem"][
+#                     (w.species, "xjin_ucfmt_hmp2")
+#                 ],
+#                 sfacts_stem=config["species_group_to_sfacts_stem"][
+#                     (w.species, "xjin_ucfmt_hmp2")
+#                 ],
+#             ),
+#         ),
+#     shell:
+#         alias_recipe
+
+
 rule match_strains_to_genomes_based_on_genotype:
     output:
         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{pangen_params}.spgc{spgc_params}.{strain}.geno_matching_stats.tsv",
     input:
         script="scripts/match_strains_to_genomes_in_sample_subset.py",
-        strain_geno="data/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",
+        strain_geno="data/group/XJIN_BENCHMARK/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
         # TODO: Consider whether it's okay that I'm getting the spgc genotype from the full sample set, not just ss-xjin-all
         spgc_geno="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         strain_sample="data/group/xjin_ucfmt_hmp2/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-xjin-all.strain_samples.tsv",
