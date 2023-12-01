@@ -1,8 +1,6 @@
 # StrainPanDA: https://github.com/xbiome/StrainPanDA
 
 
-
-
 rule download_spanda_reference:
     output:
         "raw/ref/strainpanda/{species}.tar.gz",
@@ -56,8 +54,6 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
         """
         {input.script} {input.gene_info} {output} {params.sample_args}
         """
-
-
 
 
 rule run_spanda_decompose_new:

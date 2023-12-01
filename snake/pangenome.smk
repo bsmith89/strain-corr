@@ -147,8 +147,6 @@ use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangeno
         seed=0,
 
 
-
-
 rule alias_to_pangenome_sorted:
     output:
         "{stem}.pangenomes.sort.bam",
@@ -249,5 +247,3 @@ rule load_one_species_pangenome2_depth_into_netcdf_new:
         """
         {input.script} {input.gene_length} {input.gene_info} {params.centroidB_col} {output} {params.args}
         """
-
-

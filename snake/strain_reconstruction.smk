@@ -23,8 +23,6 @@ rule combine_midasdb_all_gene_annotations_new:
         """
 
 
-
-
 rule filter_midasdb_all_gene_annotations_by_centroid_new:
     output:
         "data/species/sp-{species}/midasdb_uhgg_{dbv}.gene{centroid}_annotations.tsv",
@@ -119,8 +117,6 @@ rule select_species_core_genes_de_novo_with_dereplication:
         """
 
 
-
-
 # TODO: Use this in place of midasuhgg* everywhere.
 rule alias_species_genes_from_reference_to_match_de_novo_paths_new:
     output:
@@ -154,12 +150,14 @@ localrules:
 # NOTE: (2023-12-01) This rule is the first step in implementing the
 # new packaged SPGC pipeline.
 rule export_gene_depth_table_from_netcdf:
-    output: "{stem}.depth2.tsv.gz"
+    output:
+        "{stem}.depth2.tsv.gz",
     input:
         script="scripts/export_gene_depth_table_from_netcdf.py",
         depth="{stem}.depth2.nc",
     shell:
         "{input.script} {input.depth} {output}"
+
 
 # NOTE: (2023-12-01) Temporary rule while I'm refactoring to use the StrainPGC
 # package instead of ad-hoc scripts.
@@ -167,7 +165,7 @@ rule export_gene_depth_table_from_netcdf:
 # format in the first place.
 rule modify_strain_samples_file_format:
     output:
-        "{stem}.strain_map.tsv"
+        "{stem}.strain_map.tsv",
     input:
         "{stem}.strain_samples.tsv",
     shell:
@@ -176,7 +174,8 @@ rule modify_strain_samples_file_format:
 
 # TODO: Drop the ss-all part here and in the partitioning rule.
 rule run_spgc:
-    output: "data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc2_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.nc"
+    output:
+        "data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc2_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.nc",
     input:
         depth="data/group/{group}/species/sp-{species}/{proc_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.depth2.tsv.gz",
         partition="data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.spgc_ss-all.strain_map.tsv",
@@ -185,7 +184,8 @@ rule run_spgc:
         species_free_thresh=1e-4,
         depth_ratio_thresh=lambda w: int(w.dthresh) / 1000,
         corr_thresh=lambda w: int(w.cthresh) / 1000,
-    conda: 'conda/toolz4.yaml'
+    conda:
+        "conda/toolz4.yaml"
     shell:
         """
         spgc --full-output \
@@ -197,8 +197,6 @@ rule run_spgc:
              {input.partition} \
              {output}
         """
-
-
 
 
 # NOTE: Hub-rule
@@ -496,8 +494,6 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
-
-
 
 
 rule convert_midasdb_species_gene_list_to_reference_genome_table_new:

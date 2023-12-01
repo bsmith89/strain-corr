@@ -292,8 +292,6 @@ rule cluster_genes_based_on_cooccurence_in_ref_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-
-
 rule calculate_morans_i_for_ref_strains:
     output:
         "data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.morans_i.tsv",
