@@ -24,6 +24,8 @@ __pycache__
 nb/profile_default
 .panoptes.db
 .java
+.pytensor
+.config
 
 # Data Directories
 log
