@@ -15,29 +15,24 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
 
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
 # "run_spanda_decompose" combined.
-# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that this table does not require
-# re-running the bowtie2 building and mapping steps.
-# This means that I process all xjin samples but take their counts from xjin_hmp2
-# pangenome profiling.
-# FIXME: I need a new way to build the species-specific mapping tallies for each species.
 rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
     output:
-        hit="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
-        depth="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
-        thresh="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
+        hit="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
+        depth="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
+        thresh="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
     input:
         pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.panphlan_pangenome.tsv",
         samples=lambda w: [
             "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
-                _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
+                _hash=config["species_group_to_hash"]["xjin"],
             )
             for mgen in config["mgen_group"]["xjin"]
         ],
     params:
         sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
-            w=w, _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"]
+            w=w, _hash=config["species_group_to_hash"]["xjin"]
         ),
         sample_list=lambda w: list(config["mgen_group"]["xjin"]),
         min_depth=0,
