@@ -16,6 +16,7 @@ localrules:
     download_gtpro_reference_core_snps,
 
 
+# NOTE: Hub-rule
 rule run_gtpro:
     output:
         temp("{stem}.gtpro_raw.gz"),
@@ -26,20 +27,18 @@ rule run_gtpro:
         db_l=32,
         db_m=36,
         db_name="ref/gtpro/20190723_881species",
-    threads: 4
+    threads: 8
     resources:
-        mem_mb=60000,
-        pmem=60000 // 4,
-        walltime_hr=4,
+        mem_mb=10000,
+        pmem=10000 // 8,
+        walltime_hr=8,
     container:
         config["container"]["gtpro"]
     shell:
-        dd(
-            """
-        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -f -o {output} {input.r}
-        mv {output}.tsv.gz {output}
         """
-        )
+        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -o {output}.temp {input.r}
+        mv {output}.temp.tsv.gz {output}
+        """
 
 
 rule load_gtpro_snp_dict:
@@ -70,7 +69,8 @@ rule load_gtpro_snp_dict:
         )
 
 
-# NOTE: Comment-out this rule after files have been completed to
+# NOTE: Hub-rule
+# Comment-out this rule after files have been completed to
 # save DAG processing time.
 rule gtpro_finish_processing_reads:
     output:
@@ -299,6 +299,7 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         )
 
 
+# NOTE: Hub-rule
 rule merge_both_reads_species_count_data:
     output:
         "{stemA}/r.{stemB}.gtpro.tsv.bz2",
@@ -345,27 +346,17 @@ rule estimate_species_depth_from_metagenotype:
 
 # NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
 # once it has been run for the focal group.
-rule estimate_all_species_depths:
+rule estimate_all_species_depths_in_group:
     output:
         "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
     input:
         species=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     params:
         header="sample	species_id	depth",
-        species_list=lambda w: checkpoint_select_species(
-            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-            cvrg_thresh=0.2,
-            num_samples=2,
-            require_in_species_group=True,
-        ),
+        species_list=lambda w: config["species_group"][w.group],
         species_pattern="data/group/{group}/species/sp-$species/r.{proc}.gtpro.species_depth.tsv",
     shell:
         """
@@ -393,16 +384,22 @@ rule gather_mgen_group_for_all_species:
         "touch {output}"
 
 
-rule construct_files_for_all_select_species:
+# TODO: Move this rule to a more obvious location.
+rule construct_group_files_for_all_select_species:
     output:
-        touch("data/group/{group}/r.{proc}.gtpro.{suffix}.SELECT_SPECIES.flag"),
+        touch("data/group/{group}/{stem}.SELECT_SPECIES.flag"),
     input:
         lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.suffix}"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            f"data/group/{w.group}/species/sp-{species}/{w.stem}"
+            for species in config["species_group"][w.group]
+        ],
+
+
+rule construct_groupfree_files_for_all_select_species:
+    output:
+        touch("data/group/{group}/{stem}.SELECT_SPECIES.flag"),
+    input:
+        lambda w: [
+            f"data/species/sp-{species}/{w.stem}"
+            for species in config["species_group"][w.group]
         ],

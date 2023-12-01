@@ -25,16 +25,23 @@ DEFAULT_COLOR_LIST = [
 DEFAULT_LINESTYLE_LIST = ["-", "--", "-.", ":"]
 
 
-def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None):
+def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=0, vmax=1, desaturate_levels=None):
+    if desaturate_levels is None:
+        desaturate_levels = [1.0]
     labels = pd.Series(x).unique()
     cm = mpl.cm.get_cmap(cm)
     colormap = defaultdict(lambda: other)
     if extend:
         colormap.update(extend)
-    for i, s in enumerate(labels):
+    for i, (s, desat) in enumerate(zip(labels, cycle(desaturate_levels))):
+        print(i, s, desat)
         if s in colormap:
             continue
-        colormap[s] = cm(i / len(labels))
+        if len(labels) == 1:
+            coord = 0
+        else:
+            coord = i / (len(labels) - 1)
+        colormap[s] = sns.desaturate(sns.saturate(cm(coord * (vmax - vmin) + vmin)), desat)
     return colormap
 
 
@@ -653,3 +660,34 @@ def hide_axes_and_spines(ax=None):
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
     ax.spines['left'].set_visible(False)
+
+
+def plot_stacked_barplot(data, x_var, order, palette=None, ax=None, **kwargs):
+    if ax is None:
+        ax = plt.subplot()
+    if palette is None:
+        palette = construct_ordered_palette(order)
+
+    # Bar styles
+    bar_kwargs = dict(
+        width=1.0,
+        alpha=1.0,
+        edgecolor="k",
+        lw=1,
+    )
+    bar_kwargs.update(kwargs)
+
+    # Plot each bar segment
+    _last_top = 0
+    for y_var in order:
+        ax.bar(
+            x=data[x_var],
+            height=data[y_var],
+            bottom=_last_top,
+            label=y_var,
+            color=palette[y_var],
+            **bar_kwargs,
+        )
+        _last_top += data[y_var]
+    ax.set_xticks(data[x_var].values)
+    return ax

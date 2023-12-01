@@ -5,6 +5,7 @@
 #
 # ## Pre-job summary, if running as a job
 # [[ -n "$JOB_ID" ]] && qstat -j "$JOB_ID" >&2
+echo $HOSTNAME $JOB_ID $JOB_NAME
 #
 # # # This *should* prevent CUDA from
 # # # using GPUs that were not assigned.

@@ -1,7 +1,8 @@
-rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
+rerun-triggers: ['mtime', 'params', 'input']
 notemp: true
 printshellcmds: true
 keep-going: true
+scheduler: 'greedy'
 resources: ['network_connections=3', 'mem_mb=500000']
 use-conda: true
 conda-prefix: "/pollard/home/bsmith/.snakemake/conda"

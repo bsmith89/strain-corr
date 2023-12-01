@@ -1,23 +1,6 @@
 # Same as sfacts, but with an environment defined by conda/sfacts.yaml
 # rather than hard-coded into the container.
 # This causes problems with GPU sfacts.
-use rule start_ipython as start_ipython_sfacts with:
-    conda:
-        "conda/sfacts.yaml"
-
-
-use rule start_shell as start_shell_sfacts with:
-    conda:
-        "conda/sfacts.yaml"
-
-
-use rule install_jupyter_kernel_default as install_jupyter_kernel_sfacts with:
-    params:
-        name="sfacts",
-    conda:
-        "conda/sfacts.yaml"
-
-
 rule compile_species_variation_from_vcf:
     output:
         "data/species/sp-{species}/gtpro_ref.mgtp.nc",
@@ -81,6 +64,10 @@ rule subset_metagenotype:
         "{stem}.ss-g{num_positions}-block{block_number}-seed{seed}.mgtp.nc",
     input:
         "{stem}.mgtp.nc",
+    wildcard_constraints:
+        num_positions=integer_wc,
+        block_number=integer_wc,
+        seed=integer_wc,
     params:
         seed=lambda w: int(w.seed),
         num_positions=lambda w: int(w.num_positions),
@@ -237,6 +224,31 @@ rule fit_sfacts:
         """
 
 
+rule cleanup_sfacts_fit:
+    output:
+        "{stem}.clean-m{m}-e{e}-c{c}.world.nc",
+    input:
+        "{stem}.world.nc",
+    params:
+        metagenotype_error_thresh=lambda w: int(w.m) / 100,
+        entropy_error_thresh=lambda w: int(w.e) / 100,
+        community_entropy_thresh=lambda w: int(w.c) / 10,
+        monte_carlo_draws=10,
+        random_seed=0,
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts cleanup_fit2 \
+                --metagenotype-error {params.metagenotype_error_thresh} \
+                --entropy-error {params.entropy_error_thresh} \
+                --community-entropy {params.community_entropy_thresh} \
+                --monte-carlo-draws {params.monte_carlo_draws} \
+                --random-seed {params.random_seed} \
+                {input} {output}
+        """
+
+
 rule refit_genotypes_sfacts:
     output:
         fit="data/{stemA}.fit-{stemB}.refit-sfacts{strategy}-seed{seed}.world.nc",
@@ -317,7 +329,7 @@ rule cleanup_fit:
         """
 
 
-rule alias_final_fit:
+rule alias_canonical_fit:
     output:
         "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.sfacts-fit.world.nc",
     input:
@@ -336,7 +348,7 @@ rule alias_final_fit:
 
 
 localrules:
-    alias_final_fit,
+    alias_canonical_fit,
 
 
 rule export_sfacts_comm:
@@ -375,22 +387,12 @@ rule calculate_all_strain_depths:
         species="data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
         strains=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=2,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     params:
         args=lambda w: [
             f"{species}=data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in checkpoint_select_species(
-                f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-                cvrg_thresh=0.2,
-                num_samples=1,
-                require_in_species_group=True,
-            )
+            for species in config["species_group"][w.group]
         ],
     shell:
         """

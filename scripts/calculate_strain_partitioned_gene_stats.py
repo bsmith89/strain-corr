@@ -62,7 +62,7 @@ if __name__ == "__main__":
                 - cdist(
                     species_depth.sel(sample=focal_samples).pipe(lambda x: x ** trnsfm_exponent).expand_dims(dict(_=1)),
                     gene_depth.sel(sample=focal_samples).pipe(lambda x: x ** trnsfm_exponent).transpose("gene_id", "sample"),
-                    metric="cosine",
+                    metric="correlation",
                 )[0],
                 index=gene_depth.gene_id,
             ).fillna(0)

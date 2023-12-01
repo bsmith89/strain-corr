@@ -18,6 +18,9 @@ if __name__ == "__main__":
             del cell["output_type"]
         if "id" in cell:
             del cell["id"]
-        cell["metadata"] = {}
+        if ("metadata" in cell) and ("tags" in cell["metadata"]):
+            cell["metadata"] = {"tags": cell["metadata"]["tags"]}
+        else:
+            cell["metadata"] = {}
 
     json.dump(nb, sys.stdout, sort_keys=True, indent=1)

@@ -1,10 +1,11 @@
-rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
+rerun-triggers: ['mtime', 'params', 'input']
 notemp: true
 local-cores: 6
 latency-wait: 180
 max-jobs-per-second: 100
 keep-going: true
 printshellcmds: true
+scheduler: 'greedy'
 resources: 'network_connections=3'
 default-resources:
   - 'pmem=8192'

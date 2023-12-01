@@ -1,11 +1,11 @@
 # Install Jupyter Kernels
 
 
-rule install_jupter_conda_kernel:
+rule install_jupyter_kernel:
     output:
         "install_jupyter_kernel.{conda}",
     params:
-        name="default",
+        name="{conda}",
     conda:
         lambda w: f"conda/{w.conda}.yaml"
     shell:
@@ -51,11 +51,9 @@ rule start_shell_any_conda:
         "bash; echo 'Rule always fails due to MissingOutputException.'"
 
 
-use rule start_shell_any_conda as start_shell with:
-    output:
-        "start_shell",
-    conda:
-        "conda/toolz.yaml"
+rule start_shell:
+    shell:
+        "bash"
 
 
 rule visualize_rulegraph:

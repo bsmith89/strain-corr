@@ -2,16 +2,8 @@ import pandas as pd
 from scipy.spatial.distance import squareform, pdist
 from lib.pandas_util import idxwhere
 import numpy as np
-import rpy2
-from rpy2 import robjects
-from rpy2.robjects import packages, pandas2ri
 import warnings
-
-
-rpy2.robjects.packages.importr("vegan")
-rpy2.robjects.packages.importr("dplyr")
-r_mantel_partial = rpy2.robjects.r["mantel.partial"]
-r_mantel = rpy2.robjects.r["mantel"]
+import pickle
 
 
 def dmatrix(x, **kwargs):
@@ -70,6 +62,13 @@ def diss_table(columns_name_suffix="", index_name_suffix="", **kwargs):
 def partial_mantel_test(
     dx, dy, dz, strata=None, method="pearson", na_rm=True, permutations=999
 ):
+    import rpy2
+    from rpy2 import robjects
+    from rpy2.robjects import packages, pandas2ri
+    rpy2.robjects.packages.importr("vegan")
+    rpy2.robjects.packages.importr("dplyr")
+    r_mantel_partial = rpy2.robjects.r["mantel.partial"]
+    r_mantel = rpy2.robjects.r["mantel"]
     with rpy2.robjects.conversion.localconverter(
         rpy2.robjects.default_converter + rpy2.robjects.pandas2ri.converter
     ):
@@ -86,6 +85,13 @@ def partial_mantel_test(
 
 
 def mantel_test(dx, dy, strata=None, method="pearson", na_rm=True, permutations=999):
+    import rpy2
+    from rpy2 import robjects
+    from rpy2.robjects import packages, pandas2ri
+    rpy2.robjects.packages.importr("vegan")
+    rpy2.robjects.packages.importr("dplyr")
+    r_mantel_partial = rpy2.robjects.r["mantel.partial"]
+    r_mantel = rpy2.robjects.r["mantel"]
     with rpy2.robjects.conversion.localconverter(
         rpy2.robjects.default_converter + rpy2.robjects.pandas2ri.converter
     ):
@@ -93,3 +99,20 @@ def mantel_test(dx, dy, strata=None, method="pearson", na_rm=True, permutations=
             dx, dy, strata=strata, method=method, na_rm=na_rm, permutations=permutations
         )
     return x[2][0], x[3][0]
+
+
+def dump_dmat_as_pickle(dmat, path):
+    assert (dmat.index == dmat.columns).all()
+    cdmat = squareform(dmat)
+    labels = list(dmat.index)
+    with open(path, "wb") as f:
+        pickle.dump(dict(cdmat=cdmat, labels=labels), file=f)
+
+
+def load_dmat_as_pickle(path):
+    with open(path, "rb") as f:
+        d = pickle.load(f)
+    cdmat = d['cdmat']
+    labels = d['labels']
+    dmat = pd.DataFrame(squareform(cdmat), index=labels, columns=labels)
+    return dmat

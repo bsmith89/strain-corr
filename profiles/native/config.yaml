@@ -1,4 +1,4 @@
-rerun-triggers: ['mtime', 'params', 'input', 'software-env', 'code']
+rerun-triggers: ['mtime', 'params', 'input']
 notemp: true
 printshellcmds: false
 keep-going: true
