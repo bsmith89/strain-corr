@@ -244,6 +244,7 @@ rule xjin_accuracy_grid:
             [
                 "uhggtop",
                 "eggnog",
+                "cog"
             ],
         )
         if species != "TODO"
