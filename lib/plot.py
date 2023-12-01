@@ -25,20 +25,23 @@ DEFAULT_COLOR_LIST = [
 DEFAULT_LINESTYLE_LIST = ["-", "--", "-.", ":"]
 
 
-def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=0, vmax=1):
+def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=0, vmax=1, desaturate_levels=None):
+    if desaturate_levels is None:
+        desaturate_levels = [1.0]
     labels = pd.Series(x).unique()
     cm = mpl.cm.get_cmap(cm)
     colormap = defaultdict(lambda: other)
     if extend:
         colormap.update(extend)
-    for i, s in enumerate(labels):
+    for i, (s, desat) in enumerate(zip(labels, cycle(desaturate_levels))):
+        print(i, s, desat)
         if s in colormap:
             continue
         if len(labels) == 1:
             coord = 0
         else:
             coord = i / (len(labels) - 1)
-        colormap[s] = cm(coord * (vmax - vmin) + vmin)
+        colormap[s] = sns.desaturate(sns.saturate(cm(coord * (vmax - vmin) + vmin)), desat)
     return colormap
 
 
