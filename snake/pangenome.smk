@@ -112,7 +112,7 @@ rule run_bowtie_multispecies_pangenome_v0:
         extra_flags="--local --very-sensitive-local ",
         seed=0,
     conda:
-        "conda/midas.yaml"
+        "conda/bowtie2.yaml"  # FIXME
     threads: 12
     resources:
         walltime_hr=48,
@@ -193,7 +193,7 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
     input:
         "{stem}.pangenome{mapping_params}.bam",
     conda:
-        "conda/midas.yaml"
+        "conda/bowtie2.yaml"
     threads: 1
     resources:
         walltime_hr=2,
