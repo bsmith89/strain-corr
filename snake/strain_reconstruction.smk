@@ -151,6 +151,56 @@ localrules:
     alias_species_genes_from_reference_to_match_de_novo_paths_new,
 
 
+# NOTE: (2023-12-01) This rule is the first step in implementing the
+# new packaged SPGC pipeline.
+rule export_gene_depth_table_from_netcdf:
+    output: "{stem}.depth2.tsv.gz"
+    input:
+        script="scripts/export_gene_depth_table_from_netcdf.py",
+        depth="{stem}.depth2.nc",
+    shell:
+        "{input.script} {input.depth} {output}"
+
+# NOTE: (2023-12-01) Temporary rule while I'm refactoring to use the StrainPGC
+# package instead of ad-hoc scripts.
+# TODO: Update the rule that export strain_samples.tsv to write it in this
+# format in the first place.
+rule modify_strain_samples_file_format:
+    output:
+        "{stem}.strain_map.tsv"
+    input:
+        "{stem}.strain_samples.tsv",
+    shell:
+        "awk -v OFS='\t' 'NR>1 {{print $2,$1}}' < {input} > {output}"
+
+
+# TODO: Drop the ss-all part here and in the partitioning rule.
+rule run_spgc:
+    output: "data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc2_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.nc"
+    input:
+        depth="data/group/{group}/species/sp-{species}/{proc_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.depth2.tsv.gz",
+        partition="data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.spgc_ss-all.strain_map.tsv",
+        species_genes="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_{dbv}.spgc_specgene-{specgene}.species_gene.list",
+    params:
+        species_free_thresh=1e-4,
+        depth_ratio_thresh=lambda w: int(w.dthresh) / 1000,
+        corr_thresh=lambda w: int(w.cthresh) / 1000,
+    conda: 'conda/toolz4.yaml'
+    shell:
+        """
+        spgc --full-output \
+             --species-free-thresh {params.species_free_thresh} \
+             --depth-ratio-thresh {params.depth_ratio_thresh} \
+             --correlation-thresh {params.corr_thresh} \
+             {input.depth} \
+             {input.species_genes} \
+             {input.partition} \
+             {output}
+        """
+
+
+
+
 # NOTE: Hub-rule
 rule calculate_species_depth_from_core_genes:
     output:
