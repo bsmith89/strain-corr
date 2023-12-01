@@ -140,6 +140,8 @@ use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangeno
         db="data/hash/{hash}/pangenomes{centroid}_{dbv}.bt2.d/centroids.bt2db",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+    benchmark:
+        "data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes{centroid}_{dbv}-v22.{bam_or_cram}.benchmark"
     params:
         extra_flags="--ignore-quals --end-to-end --very-sensitive",
         seed=0,

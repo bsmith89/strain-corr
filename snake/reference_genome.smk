@@ -356,6 +356,8 @@ use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pa
         db="data/hash/{hash}/pangenomes{centroid}_{dbv}.bt2.d/centroids.bt2db",
         r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
         r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+    benchmark:
+        "data/hash/{hash}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_{dbv}-v22.{bam_or_cram}.benchmark"
     threads: 1
 
 
