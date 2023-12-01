@@ -36,29 +36,9 @@ rule run_gtpro:
         config["container"]["gtpro"]
     shell:
         """
-        (gzip -dc {input.r} || true) | GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} > {output}.temp
-        gzip -c {output}.temp > {output}
-        rm {output}.temp
+        GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -o {output}.temp {input.r}
+        mv {output}.temp.tsv.gz {output}
         """
-    # # FIXME: Replace old resources
-    # threads: 4
-    # resources:
-    #     mem_mb=60000,
-    #     pmem=60000 // 4,
-    #     walltime_hr=4,
-    # # NOTE (2023-09-24): "gtpro" container fails while toolz succeeds, now.
-    # container:
-    #     config["container"]["gtpro"]
-    # shell:
-    #     dd(
-    #         """
-    #     tmpdir=$(mktemp -d)
-    #     echo $tmpdir
-    #     ln -s $(realpath {input.r}) $tmpdir/r.fastq.gz
-    #     GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} -C $tmpdir r.fastq.gz
-    #     mv $tmpdir/r__gtpro__20190723_881species.tsv.gz {output}
-    #     """
-    #     )
 
 
 rule load_gtpro_snp_dict:
