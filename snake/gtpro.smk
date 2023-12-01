@@ -69,7 +69,8 @@ rule load_gtpro_snp_dict:
         )
 
 
-# NOTE: Comment-out this rule after files have been completed to
+# NOTE: Hub-rule
+# Comment-out this rule after files have been completed to
 # save DAG processing time.
 rule gtpro_finish_processing_reads:
     output:
@@ -316,6 +317,7 @@ rule merge_both_reads_species_count_data:
         """
 
 
+# NOTE: Hub-rule
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgtp.nc",

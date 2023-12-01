@@ -120,6 +120,8 @@ rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
         "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
+# TODO: Replace this rule with a genotype concatenation rule to achieve the
+# same effect (harnessing the generic rule below.)
 rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance:
     output:
         spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask{thresh}-pseudo{pseudo}.pkl",
@@ -290,20 +292,6 @@ rule cluster_genes_based_on_cooccurence_in_ref_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-# NOTE: (2023-11-11) Depracated.
-# TODO: Drop this rule, now that I can run it independently for SPGC and Ref genomes.
-rule calculate_morans_i_for_both_ref_and_spgc_strains:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
-    input:
-        script="scripts/calculate_morans_i_old.py",
-        ref_gene="data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.tsv",
-        ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
-        pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
-    shell:
-        "{input.script} {input.spgc_gene} {input.spgc_filt} {input.ref_gene} {input.ref_filt} {input.pdist} {output}"
 
 
 rule calculate_morans_i_for_ref_strains:

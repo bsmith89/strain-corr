@@ -55,6 +55,7 @@ rule collect_multispecies_pangenome_centroids_to_hash:
         """
 
 
+# NOTE: Hub-rule?
 # TODO: Move this to "general.smk".
 rule build_large_bowtie_index:
     output:
