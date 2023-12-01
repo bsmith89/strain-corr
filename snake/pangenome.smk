@@ -55,6 +55,59 @@ rule collect_multispecies_pangenome_centroids_to_hash:
         """
 
 
+# rule collect_multispecies_pangenome_centroids_new:
+#     output:
+#         fn="data/group/{group}/r.{proc}.pangenomes{centroid}_new.bt2.d/centroids.fn",
+#     input:
+#         fasta=lambda w: [
+#             f"ref/midasdb_uhgg_new/pangenomes/{species}/centroids.ffn"
+#             for species in checkpoint_select_species(
+#                 f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+#                 cvrg_thresh=0.2,
+#                 num_samples=2,
+#                 require_in_species_group=True,
+#             )
+#         ],
+#         gene_info=lambda w: [
+#             f"ref/midasdb_uhgg_new/pangenomes/{species}/gene_info.txt"
+#             for species in checkpoint_select_species(
+#                 f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
+#                 cvrg_thresh=0.2,
+#                 num_samples=2,
+#                 require_in_species_group=True,
+#             )
+#         ],
+#     params:
+#         fasta_pattern="ref/midasdb_uhgg_new/pangenomes/$species/centroids.ffn",
+#         gene_info_pattern="ref/midasdb_uhgg_new/pangenomes/$species/gene_info.txt",
+#         species_list=lambda w: checkpoint_select_species(
+#             f"data/group/{w.group}/r.proc.gtpro.horizontal_coverage.tsv",
+#             cvrg_thresh=0.2,
+#             num_samples=2,
+#             require_in_species_group=True,
+#         ),
+#         col=lambda w: {"99": 2, "95": 3, "90": 4, "85": 5, "80": 6, "75": 7}[w.centroid],
+#     resources:
+#         walltime_hr=12,
+#     conda:
+#         "conda/seqtk.yaml"
+#     shell:
+#         """
+#         echo "Collecting representative sequences."
+#         for species in {params.species_list}
+#         do
+#             fasta_path={params.fasta_pattern}
+#             gene_info_path={params.gene_info_pattern}
+#             seqtk subseq \
+#                     $fasta_path \
+#                     <(cat $gene_info_path | cut -f{params.col} | sort | uniq)
+#             echo -n "$species " >&2
+#         done \
+#             > {output.fn}
+#         echo "" >&2
+#         """
+
+
 # NOTE: Hub-rule?
 # TODO: Move this to "general.smk".
 rule build_large_bowtie_index:
@@ -94,6 +147,18 @@ rule build_large_bowtie_index:
         echo "Collecting md5 checksums." >&2
         md5sum {output.db}* > {output.md5}
         """
+
+
+# rule alias_bowtie_index_file_from_hash:
+#     output:
+#         "data/group/{group}/pangenomes{centroid}_new.bt2.d/{stem}",
+#     input:
+#         lambda w: "data/hash/{hash}/pangenomes{w.centroid}_new.bt2.d/{w.stem}".format(
+#             hash=config["species_group_to_hash"][w.group],
+#             w=w,
+#         ),
+#     shell:
+#         alias_recipe
 
 
 # NOTE: I no longer use this original set of parameters
@@ -147,6 +212,17 @@ use rule run_bowtie_multispecies_pangenome_v0 as run_bowtie_multispecies_pangeno
         seed=0,
 
 
+# use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_species_pangenome_v22_new with:
+#     output:
+#         "data/reads/{mgen}/r.{proc}.pangenome{centroid}_new-{species}-v0.{bam_or_cram}",
+#     input:
+#         db="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.bt2db",
+#         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
+#         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
+#     resources:
+#         walltime_hr=10,
+#         mem_mb=30_000,
+#         pmem=30_000 // 8,
 
 
 rule alias_to_pangenome_sorted:
@@ -251,3 +327,27 @@ rule load_one_species_pangenome2_depth_into_netcdf_new:
         """
 
 
+# rule concatenate_pangenome_depth_from_samples:
+#     output:
+#         "data/group/{group}/species/sp-{species}/r.{proc}.pangenome{centroid}-{mapping_params}.gene_depth.tsv.lz4",
+#     input:
+#         samples=lambda w: [
+#             f"data/reads/{mgen}/r.{w.proc}.pangenome{w.centroid}-{w.species}-{w.mapping_params}.gene_depth.tsv.lz4"
+#             for mgen in config["mgen_group"][w.group]
+#         ],
+#     params:
+#         header="sample\tgene_id\tdepth",
+#         sample_pattern="data/reads/$sample/r.{proc}.pangenome{centroid}-{species}-{mapping_params}.gene_depth.tsv.lz4",
+#         sample_list=lambda w: list(config["mgen_group"][w.group]),
+#     shell:
+#         """
+#         (
+#             echo "{params.header}"
+#             for sample in {params.sample_list}
+#             do
+#                 path="{params.sample_pattern}"
+#                 echo {wildcards.species} $sample >&2
+#                 lz4 -dc $path | awk -v OFS='\t' -v sample=$sample 'NR>1 {{print sample,$1,$2}}'
+#             done
+#         ) | lz4 -9zc > {output}
+#         """

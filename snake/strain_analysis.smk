@@ -120,6 +120,54 @@ rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
         "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
+# # NOTE: Two rules above cover all the DB versions. This version-parameterized
+# # rule is not useful, because the DBs have different formats for the metadata
+# # table.
+# # TODO (2023-09-15): This rule should probably be moved to
+# # strain_reconstruction, since it's an input to reference-based species-gene
+# # calling.
+# rule collect_filtering_metadata_for_uhgg_ref_strains:
+#     output:
+#         "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+#     input:
+#         script="scripts/filter_ref_strains.py",
+#         meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
+#         pos="data/species/sp-{species}/midasdb_{dbv}.gtpro.geno.npositions.tsv",
+#         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
+#     params:
+#         min_completeness=90 / 100,
+#         max_contamination=5 / 100,
+#         min_positions=100,
+#     shell:
+#         "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
+
+
+# NOTE: This rule isn't actually necessary, because reference filtering already requires it.
+# # NOTE: This rule is a convenience to collect all of the relevant species for HMP2 analysis.
+# rule run_filter_ref_strains_for_select_species:
+#     output:
+#         touch("data/group/xjin_ucfmt_hmp2/midasdb.strain_meta-complete90-contam5-pos0.tsv.SELECT_SPECIES.flag")
+#     input:
+#         lambda w: [
+#             f"data/species/sp-{species}/midasdb.strain_meta-complete90-contam5-pos0.tsv"
+#             for species in config["species_group"]["xjin_ucfmt_hmp2"]
+#         ],
+
+
+# # NOTE (2023-09-11): Replacing this with more traditional masked hamming distance.
+# rule compute_reference_and_spgc_pairwise_genotype_dissimilarities:
+#     output:
+#         spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_pdist.pkl",
+#     input:
+#         script="scripts/calculate_ref_and_spgc_pairwise_genotype_dissimilarity.py",
+#         spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.mgtp.nc",
+#         ref_geno="data/species/sp-{species}/midasdb.mgtp.nc",
+#     conda:
+#         "conda/sfacts.yaml"
+#     shell:
+#         "{input.script} {input.spgc_agg_mgtp} {input.ref_geno} {output}"
+
+
 # TODO: Replace this rule with a genotype concatenation rule to achieve the
 # same effect (harnessing the generic rule below.)
 rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance:
@@ -292,6 +340,20 @@ rule cluster_genes_based_on_cooccurence_in_ref_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
+# # NOTE: (2023-11-11) Depracated.
+# # TODO: Drop this rule, now that I can run it independently for SPGC and Ref genomes.
+# rule calculate_morans_i_for_both_ref_and_spgc_strains:
+#     output:
+#         "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
+#     input:
+#         script="scripts/calculate_morans_i_old.py",
+#         ref_gene="data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.tsv",
+#         ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+#         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
+#         spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
+#         pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
+#     shell:
+#         "{input.script} {input.spgc_gene} {input.spgc_filt} {input.ref_gene} {input.ref_filt} {input.pdist} {output}"
 
 
 rule calculate_morans_i_for_ref_strains:
@@ -349,6 +411,26 @@ rule perform_ibd_association_test_with_hmp2_strains:
         num_thresh=lambda w: int(w.num_thresh),
     shell:
         "{input.script} {input.comm} {input.gene} {input.filt} {input.mgen} {input.preparation} {input.stool} {input.subject} {params.frac_thresh} {params.num_thresh} {output}"
+
+
+# #
+# # # NOTE (2023-09-11): Since this depends on some important choices about genome
+# # # filtering---for both SPGC and refs---I'm going to keep it inside a master analysis
+# # # notebook like it was.
+# # # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
+# # # Gene clustering (based on co-occurence correlation)
+# # rule cluster_genes_based_on_occurence_correlation:
+# #     output:
+# #         "{stem}.gene_corr_pdist.coclust-10.tsv",
+# #     input:
+# #         script="scripts/cluster_from_cdmat_pkl.py",
+# #         pickle="{stem}.gene_corr_pdist.pkl",
+# #     params:
+# #         thresh=10 / 1000,
+# #     conda:
+# #         "conda/toolz2.yaml"
+# #     shell:
+# #         "{input.script} {input.pickle} {params.thresh} {output}"
 
 
 rule collect_filtering_metadata_for_ucfmt_spgc_strains:

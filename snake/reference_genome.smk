@@ -204,6 +204,22 @@ rule combine_midasdb_reference_genome_gtpro_data_loadable:
         """
 
 
+# # TODO: To-be-removed as I upgrade to the new MIDAS2DB
+# rule alias_midas_uhgg_pangenome_cds:
+#     output:
+#         "data/species/sp-{species}/pangenome.centroids.fn",
+#     input:
+#         midas_download_flag="data/species/sp-{species}/download_species_midasdb_uhgg.flag",
+#     params:
+#         fasta="ref/midasdb_uhgg/pangenomes/{species}/centroids.ffn",
+#     shell:
+#         """
+#         ln -rs {params.fasta} {output}
+#         """
+# localrules:
+#     alias_midas_uhgg_pangenome_cds,
+
+
 rule alias_midas_uhgg_pangenome_cds_new:
     output:
         "data/species/sp-{species}/midasdb.gene99_{dbv}.centroids.fn",
@@ -217,6 +233,18 @@ localrules:
     alias_midas_uhgg_pangenome_cds_new,
 
 
+# # TODO: To-be-removed as I upgrade to the new MIDAS2DB
+# rule blastn_genome_against_midasdb_uhgg:
+#     output:
+#         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome-blastn.tsv",
+#     input:
+#         query="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn",
+#         subject="data/species/sp-{species}/pangenome.centroids.fn",
+#     threads: 1
+#     shell:
+#         """
+#         blastn -query {input.query} -subject {input.subject} -max_target_seqs 100000 -num_threads {threads} -outfmt 6 > {output}
+#         """
 
 
 rule blastn_genome_against_midasdb_uhgg_new:
@@ -359,6 +387,16 @@ use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pa
     benchmark:
         "data/hash/{hash}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenomes{centroid}_{dbv}-v22.{bam_or_cram}.benchmark"
     threads: 1
+
+
+# TODO: Shouldn't the output be data/species/*?
+# use rule run_bowtie_species_pangenome_v22_new as run_bowtie_species_pangenome_on_reference_genome_tiles_v22_new with:
+#     output:
+#         "data/group/{group}/species/sp-{species}/genome/{genome}.tiles-{tile_params}.pangenome{centroid}_new-v22.{bam_or_cram}",
+#     input:
+#         db="data/species/sp-{species}/pangenome{centroid}_new.bt2.d/centroids.bt2db",
+#         r1="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
+#         r2="data/species/sp-{species}/genome/{genome}.tiles-{tile_params}.fq.gz",
 
 
 # NOTE: Hub-rule paired with it's parent.

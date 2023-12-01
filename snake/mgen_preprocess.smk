@@ -296,6 +296,16 @@ rule gather_all_mgen_from_mgen_group:
     shell:
         "touch {output}"
 
+# rule gather_to_hash_all_mgen_from_mgen_group:
+#     output:
+#         touch("data/hash/{_hash}/group/{group}/r.{stem}.ALL_MGEN.flag"),
+#     input:
+#         lambda w: [
+#             f"data/hash/{_hash}/reads/{mgen}/r.{{stem}}" for mgen in config["mgen_group"][w.group]
+#         ],
+#     shell:
+#         "touch {output}"
+
 
 localrules:
     gather_all_mgen_from_mgen_group,

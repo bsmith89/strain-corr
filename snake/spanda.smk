@@ -1,6 +1,11 @@
 # StrainPanDA: https://github.com/xbiome/StrainPanDA
 
 
+# rule start_shell_spanda:
+#     singularity:
+#         config["container"]["spanda"]
+#     shell:
+#         "bash"
 
 
 rule download_spanda_reference:
@@ -63,6 +68,42 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
         """
 
 
+# # TODO: To-be-removed as I upgrade to the new MIDAS2DB
+# rule run_spanda_decompose:
+#     output:
+#         gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",
+#         sample="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv",
+#     input:
+#         data="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}.spanda_counts.csv",
+#         pangenome="ref/panphlan/{species}.midasdb_uhgg_pangenome{centroidB}.tsv",
+#     wildcard_constraints:
+#         centroidA="99|95|90|85|80|75",
+#     params:
+#         outstem="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}",
+#         max_strains=lambda w: int(w.nstrain),
+#         expect_strains=lambda w: int(w.nstrain),
+#         libstrainpandar="include/StrainPanDA/src/strainpandar",
+#     singularity:
+#         config["container"]["spanda"]
+#     threads: 1
+#     resources:
+#         walltime_hr=12,
+#     shell:
+#         """
+#         tmpdir=$(mktemp -d)
+#         ln -rs {input.pangenome} $tmpdir/{wildcards.species}_pangenome.csv
+#         echo $tmpdir/{wildcards.species}_pangenome.csv
+#         Rscript include/StrainPanDA/bin/run_strainpandar.r \
+#                 --counts {input.data} \
+#                 --reference $tmpdir \
+#                 --output {params.outstem} \
+#                 --threads {threads} \
+#                 --max_rank {params.max_strains} \
+#                 --rank {params.expect_strains} \
+#                 --libstrainpandar {params.libstrainpandar} \
+#                 --noextras \
+#                 --minsamples 1
+#         """
 
 
 rule run_spanda_decompose_new:

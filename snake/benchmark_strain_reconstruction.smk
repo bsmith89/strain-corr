@@ -15,6 +15,37 @@ rule select_xjin_samples:
         """
 
 
+# # This will shuffle the order of lines in the samples map (reproducibly based on seed)
+# # and then take the top n_samples for each strain and write out a strain_samples
+# # file, but with fewer lines.
+# rule subsample_xjin_samples_for_benchmarking:
+#     output:
+#         "{stem}.spgc_ss-xjin-seed{seed}-n{n_samples}.strain_samples.tsv",
+#     input:
+#         script="scripts/subsample_strain_samples_for_benchmarking.py",
+#         samples="{stem}.spgc_ss-xjin-all.strain_samples.tsv",
+#     params:
+#         seed=lambda w: int(w.seed),
+#         n_samples=lambda w: int(w.n_samples),
+#     shell:
+#         """
+#         {input.script} {params.seed} {params.n_samples} {input.samples} {output}
+#         """
+#
+#
+# rule select_highest_depth_xjin_samples_for_benchmarking:
+#     output:
+#         "{stemA}.gtpro.{stemB}.spgc_ss-xjin-deepest-n{n_samples}.strain_samples.tsv",
+#     input:
+#         script="scripts/select_highest_depth_strain_samples_for_benchmarking.py",
+#         depth="{stemA}.gtpro.species_depth.tsv",
+#         samples="{stemA}.gtpro.{stemB}.spgc_ss-xjin-all.strain_samples.tsv",
+#     params:
+#         n_samples=lambda w: int(w.n_samples),
+#     shell:
+#         """
+#         {input.script} {params.n_samples} {input.depth} {input.samples} {output}
+#         """
 
 
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
@@ -182,6 +213,27 @@ rule alias_spgc_strain_match_for_benchmarking:
 ruleorder: alias_spgc_strain_match_for_benchmarking > match_strains_to_genomes_based_on_genotype
 
 
+# # NOTE: (2023-06-13) This rule order should mean that
+# # alias_spgc_gene_hits_as_uhgg_strain_gene doesn't look for an XJIN_BENCHMARK
+# # inference first.
+# ruleorder: select_dominant_xjin_sfacts_strains_for_benchmark > alias_spgc_gene_hits_as_uhgg_strain_gene > select_strain_gene_hits
+
+
+# # NOTE: (2023-06-13) This renaming brings spgc inferences into alignment with spanda and panphlan so
+# # that the accuracy assessment rules below can be generic between all three.
+# rule alias_spgc_xjin_inferences_to_match_other_tools:
+#     output:
+#         "data/group/XJIN_BENCHMARK/species/sp-{species}/r.proc.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
+#     input:
+#         "data/group/xjin_ucfmt_hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene{pangenome_params}.spgc-fit.strain_gene.tsv",
+#     shell:
+#         alias_recipe
+#
+#
+# localrules:
+#     alias_spgc_xjin_inferences_to_match_other_tools,
+
+
 # NOTE: (2023-06-20) UHGG accuracy gets its own rule, separate from the
 # other units, because it's assigned based on tiling depth with a particular
 # centroidA, centroidB, mapping strategy, etc.
@@ -224,6 +276,44 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         script="scripts/assess_gene_content_reconstruction_accuracy.py",
         infer="data/group/XJIN_BENCHMARK/species/sp-{species}/{stemA}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.{stemB}.uhgg-strain_gene.tsv",
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
+
+
+# # NOTE: This rule is required because multiple reference genomes may be present for a given species.
+# rule compile_reference_genome_accuracy_info:
+#     output:
+#         "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.{unit}-xjin_strain_summary.tsv",
+#     input:
+#         script="scripts/compile_reference_genome_accuracy_info2.py",
+#         reference_genome_accuracy=lambda w: [
+#             f"data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stem}.{genome}.{w.unit}-reconstruction_accuracy.tsv"
+#             for genome in species_genomes(w.species)
+#         ],
+#     params:
+#         args=lambda w: [
+#             f"{genome}=data/group/XJIN_BENCHMARK/species/sp-{w.species}/{w.stem}.{genome}.{w.unit}-reconstruction_accuracy.tsv"
+#             for genome in species_genomes(w.species)
+#         ],
+#     group:
+#         "assess_gene_inference_benchmark"
+#     shell:
+#         "{input.script} {params.args} > {output}"
+
+
+# rule xjin_compare_tool_accuracy_single_species_single_unit:
+#     output:
+#         touch(
+#             "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.{unit}-accuracy.ALL_TOOLS.flag"
+#         ),
+#     input:
+#         spgc="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spgc-fit.{unit}-xjin_strain_summary.tsv",
+#         spanda="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.spanda-s2.{unit}-xjin_strain_summary.tsv",
+#         panphlan="data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.panphlan.{unit}-xjin_strain_summary.tsv",
+#     shell:
+#         "echo {input} > {output}"
+#
+#
+# localrules:
+#     xjin_compare_tool_accuracy_single_species_single_unit,
 
 
 rule xjin_accuracy_grid:
