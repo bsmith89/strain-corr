@@ -181,6 +181,7 @@ rule run_spgc:
         partition="data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.spgc_ss-all.strain_map.tsv",
         species_genes="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_{dbv}.spgc_specgene-{specgene}.species_gene.list",
     params:
+        trim_frac_species_genes=0.15,
         species_free_thresh=1e-4,
         depth_ratio_thresh=lambda w: int(w.dthresh) / 1000,
         corr_thresh=lambda w: int(w.cthresh) / 1000,
@@ -189,6 +190,7 @@ rule run_spgc:
     shell:
         """
         spgc --full-output \
+                --trim-frac-species-genes {params.trim_frac_species_genes} \
              --species-free-thresh {params.species_free_thresh} \
              --depth-ratio-thresh {params.depth_ratio_thresh} \
              --correlation-thresh {params.corr_thresh} \
@@ -197,6 +199,16 @@ rule run_spgc:
              {input.partition} \
              {output}
         """
+
+
+rule extract_strain_gene_hits_from_spgc_netcdf:
+    output:
+        "data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc2_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.uhgg-strain_gene.tsv",
+    input:
+        script="scripts/extract_strain_gene_hits_from_spgc_netcdf.py",
+        ncdf="data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc2_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.nc",
+    shell:
+        "{input.script} {input.ncdf} {output}"
 
 
 # NOTE: Hub-rule
