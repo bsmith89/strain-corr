@@ -189,7 +189,7 @@ rule run_spgc:
         "conda/toolz4.yaml"
     shell:
         """
-        spgc --full-output \
+        spgc run --full-output \
                 --trim-frac-species-genes {params.trim_frac_species_genes} \
              --species-free-thresh {params.species_free_thresh} \
              --depth-ratio-thresh {params.depth_ratio_thresh} \
