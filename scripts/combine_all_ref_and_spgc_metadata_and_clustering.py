@@ -12,8 +12,8 @@ if __name__ == "__main__":
     spgc_meta_inpath = sys.argv[1]
     ref_meta_inpath = sys.argv[2]
     geno_pdmat_inpath = sys.argv[3]
-    gene_raw_pdmat_inpath = sys.argv[4]
-    gene_filt_pdmat_inpath = sys.argv[5]
+    uhgg_pdmat_inpath = sys.argv[4]
+    eggnog_pdmat_inpath = sys.argv[5]
     clust_inpath = sys.argv[6]
     outpath = sys.argv[7]
 
@@ -23,8 +23,8 @@ if __name__ == "__main__":
         columns={"passes_num_positions": "passes_geno_positions"}
     )  # NOTE (2023-09-19): This is a stopgap and should be fixed upstream.
     geno_pdmat = load_dmat_as_pickle(geno_pdmat_inpath)
-    gene_raw_pdmat = load_dmat_as_pickle(gene_raw_pdmat_inpath)
-    gene_filt_pdmat = load_dmat_as_pickle(gene_filt_pdmat_inpath)
+    uhgg_pdmat = load_dmat_as_pickle(uhgg_pdmat_inpath)
+    eggnog_pdmat = load_dmat_as_pickle(eggnog_pdmat_inpath)
     clust = pd.read_table(
         clust_inpath, names=["genome_id", "clust"], index_col="genome_id"
     ).clust
@@ -45,46 +45,46 @@ if __name__ == "__main__":
         )
 
         # Raw gene content
-        ref_nn_gene_raw_diss = (
-            gene_raw_pdmat.stack()
+        ref_nn_uhgg_diss = (
+            uhgg_pdmat.stack()
             .loc[ref_nearest_neighbor.reset_index().apply(tuple, axis=1)]
             .reset_index()
             .set_index("level_0")[0]
         )
         # Not the nearest neighbor, but just the closest gene distance.
-        gene_raw_pdmat_mask_self = gene_raw_pdmat + np.eye(*gene_raw_pdmat.shape)
-        minimum_ref_gene_raw_diss = gene_raw_pdmat_mask_self.loc[ref_list].min()
+        uhgg_pdmat_mask_self = uhgg_pdmat + np.eye(*uhgg_pdmat.shape)
+        minimum_ref_uhgg_diss = uhgg_pdmat_mask_self.loc[ref_list].min()
 
         # Filtered gene content
-        ref_nn_gene_filt_diss = (
-            gene_filt_pdmat.stack()
+        ref_nn_eggnog_diss = (
+            eggnog_pdmat.stack()
             .loc[ref_nearest_neighbor.reset_index().apply(tuple, axis=1)]
             .reset_index()
             .set_index("level_0")[0]
         )
         # Not the nearest neighbor, but just the closest gene distance.
-        gene_filt_pdmat_mask_self = gene_filt_pdmat + np.eye(*gene_filt_pdmat.shape)
-        minimum_ref_gene_filt_diss = gene_filt_pdmat_mask_self.loc[ref_list].min()
+        eggnog_pdmat_mask_self = eggnog_pdmat + np.eye(*eggnog_pdmat.shape)
+        minimum_ref_eggnog_diss = eggnog_pdmat_mask_self.loc[ref_list].min()
     else:
         ref_nearest_neighbor = np.nan
         ref_nn_geno_diss = np.nan
 
-        ref_nn_gene_raw_diss = np.nan
-        minimum_ref_gene_raw_diss = np.nan
+        ref_nn_uhgg_diss = np.nan
+        minimum_ref_uhgg_diss = np.nan
 
-        ref_nn_gene_filt_diss = np.nan
-        minimum_ref_gene_filt_diss = np.nan
+        ref_nn_eggnog_diss = np.nan
+        minimum_ref_eggnog_diss = np.nan
 
     # Compile metadata
     data = pd.concat([spgc_meta, ref_meta]).assign(
         ref_nn_genome_id=ref_nearest_neighbor,
         min_ref_geno_diss=ref_nn_geno_diss,
 
-        ref_nn_gene_raw_diss=ref_nn_gene_raw_diss,
-        min_ref_gene_raw_diss=minimum_ref_gene_raw_diss,
+        ref_nn_uhgg_diss=ref_nn_uhgg_diss,
+        min_ref_uhgg_diss=minimum_ref_uhgg_diss,
 
-        ref_nn_gene_filt_diss=ref_nn_gene_filt_diss,
-        min_ref_gene_filt_diss=minimum_ref_gene_filt_diss,
+        ref_nn_eggnog_diss=ref_nn_eggnog_diss,
+        min_ref_eggnog_diss=minimum_ref_eggnog_diss,
 
         clust=clust,
     )

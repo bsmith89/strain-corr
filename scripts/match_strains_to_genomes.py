@@ -19,7 +19,7 @@ if __name__ == "__main__":
     spgc_geno = spgc_agg_mgtp.to_estimated_genotype()
 
     sample_to_strain = (
-        pd.read_table(strain_sample_inpath, index_col=["sample"])
+        pd.read_table(strain_sample_inpath, names=['sample', 'strain'], index_col=["sample"])
         .squeeze()
     )
     species_depth = (

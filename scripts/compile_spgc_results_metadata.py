@@ -21,7 +21,7 @@ if __name__ == "__main__":
     species_depth = pd.read_table(
         species_depth_path, names=["sample", "depth"], index_col="sample"
     ).depth
-    sample_to_strain = pd.read_table(sample_to_strain_path, index_col="sample").strain
+    sample_to_strain = pd.read_table(sample_to_strain_path, names=['sample', 'strain'], index_col="sample").strain
     strain_gene = pd.read_table(strain_gene_path, index_col="gene_id").rename_axis(
         columns="strain"
     )
