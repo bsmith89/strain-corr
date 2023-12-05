@@ -1,3 +1,16 @@
+# rule select_xjin_samples:
+#     output:
+#         "{stem}.spgc_ss-xjin-all.strain_samples.tsv",
+#     input:
+#         "{stem}.spgc_ss-all.strain_samples.tsv",
+#     params:
+#         pattern="^xjin_",
+#     shell:
+#         """
+#         awk 'NR==1 || $2~/{params.pattern}/ {{print $0}}' {input} > {output}
+#         """
+
+
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
 rule alias_spgc_gene_hits_for_benchmarking:
     output:
@@ -125,6 +138,9 @@ rule alias_nnmatched_predictions_for_benchmarking:
         ),
     shell:
         alias_recipe
+
+
+# ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
 
 
 rule alias_xjin_tiles_as_xjin_benchmark:
