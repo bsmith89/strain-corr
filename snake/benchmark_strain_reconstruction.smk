@@ -1,7 +1,3 @@
-
-
-
-
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for benchmarking
 rule alias_spgc_gene_hits_for_benchmarking:
     output:
@@ -24,6 +20,29 @@ rule alias_spgc_gene_hits_for_benchmarking:
 
 localrules:
     alias_spgc_gene_hits_for_benchmarking,
+
+
+rule alias_spgc2_gene_hits_for_benchmarking:
+    output:
+        "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc2-fit.uhgg-strain_gene.tsv",
+    input:
+        source=lambda w: (
+            "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc2_{spgc_stem}.uhgg-strain_gene.tsv".format(
+                species=w.species,
+                stem=w.stem,
+                pangenome_params=w.pangenome_params,
+                spgc_stem=config["species_group_to_spgc_stem"][(w.species, "xjin")],
+                sfacts_stem=config["species_group_to_sfacts_stem"][
+                    (w.species, "xjin")
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_spgc2_gene_hits_for_benchmarking,
 
 
 rule alias_spgc_depth_only_gene_hits_for_benchmarking:
@@ -74,9 +93,6 @@ rule alias_nnmatched_predictions_for_benchmarking:
         ),
     shell:
         alias_recipe
-
-
-# ruleorder: alias_spgc_gene_hits_as_uhgg_strain_gene > aggregate_uhgg_strain_gene_by_annotation
 
 
 rule alias_xjin_tiles_as_xjin_benchmark:
@@ -191,6 +207,7 @@ rule collect_xjin_benchmark_accuracy_grid:
                 species_group_genomes(species, "xjin"),
                 [
                     "spgc-fit",
+                    "spgc2-fit",
                             "spgc-depth200",
                             "spanda-s4",
                             "panphlan",

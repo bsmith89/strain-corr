@@ -13,24 +13,30 @@ EGGNOG_COLUMN_NAMES = (
 
 if __name__ == "__main__":
     emapper_inpath = sys.argv[1]
-    cog_category_inpath = sys.argv[2]
-    gene_nlength_inpath = sys.argv[3]
+    gene_cluster_inpath = sys.argv[2]
+    cog_category_inpath = sys.argv[3]
+    gene_nlength_inpath = sys.argv[4]
 
-    gene_meta_outpath = sys.argv[4]
-    gene_x_cog_outpath = sys.argv[5]
+    gene_meta_outpath = sys.argv[5]
+    gene_x_cog_outpath = sys.argv[6]
 
+    gene_cluster = pd.read_table(
+        gene_cluster_inpath, index_col="gene_id", encoding="latin1"
+    )
     gene_nlength = (
-        pd.read_table(gene_nlength_inpath)
-        .groupby("centroid_75")
-        .centroid_99_length.mean()
+        pd.read_table(
+            gene_nlength_inpath,
+            names=["gene_id", "genome_id", "nlength"],
+            index_col="gene_id",
+        )
+        .nlength.groupby(gene_cluster.centroid_75)
+        .mean()
     ).rename_axis("gene_id")
 
     gene_annotation = (
         pd.read_table(
             emapper_inpath,
-            comment="#",
-            names=EGGNOG_COLUMN_NAMES,
-            index_col="query",
+            index_col="#query",
         )
         .rename_axis(index="gene_id")
         .replace({"-": np.nan})
@@ -50,7 +56,7 @@ if __name__ == "__main__":
         cog_category_inpath,
         names=["cog", "cog_category", "description", "short_name", "_4", "_5", "_6"],
         index_col="cog",
-        encoding='latin1',
+        encoding="latin1",
     ).cog_category
 
     gene_x_cog = (
@@ -76,7 +82,9 @@ if __name__ == "__main__":
     )
 
     gene_x_cog_category.columns = ["gene_id", "cog_category"]
-    gene_x_cog_category = gene_x_cog_category.set_index("gene_id").cog_category[lambda x: ~x.isin(['S'])]
+    gene_x_cog_category = gene_x_cog_category.set_index("gene_id").cog_category[
+        lambda x: ~x.isin(["S"])
+    ]
     no_cog_category_gene_list = list(
         set(gene_annotation.index) - set(gene_x_cog_category.index)
     )
@@ -85,7 +93,7 @@ if __name__ == "__main__":
             gene_x_cog_category,
             pd.Series("no_category", index=no_cog_category_gene_list),
         ]
-    ).rename_axis('gene_id')
+    ).rename_axis("gene_id")
 
     gene_annotation = gene_annotation.assign(
         COG_category=gene_x_cog_category.groupby("gene_id").apply(lambda x: x.sum())
