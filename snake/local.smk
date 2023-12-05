@@ -146,3 +146,15 @@ rule link_arbitrary_new_midas_db_file:
 
 localrules:
     link_arbitrary_new_midas_db_file,
+
+
+rule link_arbitrary_v15_midas_db_file:
+    output:
+        "ref/midasdb_uhgg_v15/{stem}",
+    input:
+        "/pollard/data/midas2-db/midas2db-uhgg-v1.5/{stem}",
+    shell:
+        alias_recipe_norelative
+
+localrules:
+    link_arbitrary_v15_midas_db_file,
