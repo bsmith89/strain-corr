@@ -9,7 +9,7 @@ import scipy.stats
 if __name__ == "__main__":
     meta_inpath = sys.argv[1]
     sample_to_strain_inpath = sys.argv[2]
-    sample_list_inpath = sys.argv[3]
+    # sample_list_inpath = sys.argv[3]
     min_species_genes_frac = float(sys.argv[4])
     min_total_depth = float(sys.argv[5])
     gene_count_outlier_alpha = float(sys.argv[6])
@@ -17,10 +17,11 @@ if __name__ == "__main__":
     outpath = sys.argv[8]
 
     sample_to_strain = pd.read_table(
-        sample_to_strain_inpath, index_col="sample"
+        sample_to_strain_inpath, names=['sample', 'strain'], index_col="sample"
     ).strain.astype(str)
-    with open(sample_list_inpath) as f:
-        sample_list = [s.strip() for s in f]
+    # with open(sample_list_inpath) as f:
+    #     sample_list = [s.strip() for s in f]
+    sample_list = list(sample_to_strain.index)  # FIXME: (2023-12-04) This is superfluous and an artifact of previously explicitly splitting out portions of a larger group.
     strain_x_sample_list_count = (
         sample_to_strain.to_frame("genome_id")
         .assign(in_sample_list=lambda x: x.index.isin(sample_list))

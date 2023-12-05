@@ -8,10 +8,12 @@ rule link_reference_genome:
     shell:
         alias_recipe
 
+
 rule link_midasdb_reference_genome:
     output:
         "data/species/sp-{species}/genome/midasdb_{dbv}/{genome}.fn",
-    input: "ref/midasdb_uhgg_{dbv}/mags/{species}/{genome}.fa"
+    input:
+        "ref/midasdb_uhgg_{dbv}/mags/{species}/{genome}.fa",
     wildcard_constraints:
         genome=noperiod_wc,
     shell:
@@ -82,6 +84,22 @@ rule aggregate_strain_emapper_output_by_unit:
         data="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv",
     shell:
         "{input.script} {input.data} {wildcards.agg} {wildcards.strain} {output}"
+
+
+rule aggregate_midasdb_reference_gene_by_annotation:
+    output:
+        "data/species/sp-{species}/{stemB}.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
+    wildcard_constraints:
+        unit="eggnog|top_eggnog|cog|ko",
+    input:
+        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
+        uhgg="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
+        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene_x_{unit}.tsv",
+    group:
+        "assess_gene_inference_benchmark"
+    shell:
+        "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
+
 
 rule dbCAN_annotate_translated_orfs:
     output:

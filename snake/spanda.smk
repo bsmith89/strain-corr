@@ -34,21 +34,16 @@ rule extract_spanda_reference:
         """
 
 
-# NOTE: (before 2023-06-13) I've hard-coded xjin_hmp2 -> XJIN_BENCHMARK so that
-# this table does not require re-running the bowtie2 building and mapping
-# steps.
-# This means that I process all xjin samples but take their counts from
-# xjin_hmp2 pangenome profiling.
 rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
     output:
-        "data/group/XJIN_BENCHMARK/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{pang_params}.spanda_counts.csv",
+        "data/group/xjin/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{pang_params}.spanda_counts.csv",
     input:
         script="scripts/merge_pangenomes_tallies_for_spanda.py",
         samples=lambda w: [
             "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
-                _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
+                _hash=config["species_group_to_hash"]["xjin"],
             )
             for mgen in config["mgen_group"]["xjin"]
         ],
@@ -58,7 +53,7 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
             "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
-                _hash=config["species_group_to_hash"]["xjin_ucfmt_hmp2"],
+                _hash=config["species_group_to_hash"]["xjin"],
             )
             for mgen in config["mgen_group"]["xjin"]
         ],

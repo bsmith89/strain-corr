@@ -52,6 +52,7 @@ config["genome_group"] = (
     .genome_id.apply(lambda x: sorted(list(set(x))))
 )
 
+
 # NOTE: This function is used, e.g. in snake/reference_genome.smk and
 # snake/benchmark_strain_reconstruction.smk to gather a list of reference
 # genomes for each species.
