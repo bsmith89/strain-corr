@@ -112,6 +112,7 @@ rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
     input:
         script="scripts/filter_ref_strains_v15.py",
         meta="ref/midasdb_uhgg_v15/metadata/2023-11-11-genomes-all_metadata.tsv",
+        genome_to_species="ref/midasdb_uhgg_v15/genomes.tsv",
         pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_v15.uhgg-strain_gene.tsv",
     params:
@@ -119,7 +120,7 @@ rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
         max_contamination=5 / 100,
         min_positions=100,
     shell:
-        "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
+        "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
 # TODO: Replace this rule with a genotype concatenation rule to achieve the
