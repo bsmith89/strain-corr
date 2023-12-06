@@ -160,7 +160,7 @@ rule compute_pairwise_genotype_masked_hamming_distance:
 # SPGC and Ref genome dereplication clustering (based on genotype dissimilarity)
 rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.coclust-10.tsv",
+        "data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.coclust-{thresh}.tsv",
     input:
         script="scripts/cluster_from_cdmat_pkl.py",
         pickle="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.pkl",
@@ -169,7 +169,7 @@ rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
         # spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
         # ref_filt="data/species/sp-{species}/midasdb.strain_meta-complete90-contam5-pos0.tsv",
     params:
-        thresh=10 / 1000,
+        thresh=lambda w: int(w.thresh) / 1000,
     conda:
         "conda/toolz2.yaml"
     shell:
