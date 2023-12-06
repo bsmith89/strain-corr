@@ -173,7 +173,7 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         # uhgg="{stemA}/species/sp-{species}/{stemB}.uhgg-strain_gene.tsv",
         uhgg="data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv",
         # uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
-        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene_x_{unit}.tsv",
+        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroidB}_x_{unit}.tsv",
     group:
         "assess_gene_inference_benchmark"
     shell:
