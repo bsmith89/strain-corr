@@ -20,6 +20,7 @@ rule link_midasdb_reference_genome:
         alias_recipe
 
 
+# NOTE: Hub-rule
 # NOTE: Emapper can take a long time to run.
 # Testing can be done on 100035 because it has very few genes in its pangenome.
 rule eggnog_mapper_translated_orfs:
@@ -196,6 +197,7 @@ rule genome_fasta_to_fastq:
         "seqtk seq -F '#' {input} | gzip -c > {output}"
 
 
+# Hub-rule
 rule combine_strain_genome_gtpro_data_loadable:
     output:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
@@ -222,6 +224,7 @@ rule combine_strain_genome_gtpro_data_loadable:
         """
 
 
+# Hub-rule
 rule combine_midasdb_reference_genome_gtpro_data_loadable:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",

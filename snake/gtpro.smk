@@ -16,7 +16,6 @@ localrules:
     download_gtpro_reference_core_snps,
 
 
-# NOTE: Hub-rule
 rule run_gtpro:
     output:
         temp("{stem}.gtpro_raw.gz"),
@@ -69,9 +68,6 @@ rule load_gtpro_snp_dict:
         )
 
 
-# NOTE: Hub-rule
-# Comment-out this rule after files have been completed to
-# save DAG processing time.
 rule gtpro_finish_processing_reads:
     output:
         "{stem}.gtpro_parse.tsv.bz2",
@@ -317,7 +313,6 @@ rule merge_both_reads_species_count_data:
         """
 
 
-# NOTE: Hub-rule
 rule load_metagenotype_from_merged_gtpro:
     output:
         "{stem}.gtpro.mgtp.nc",

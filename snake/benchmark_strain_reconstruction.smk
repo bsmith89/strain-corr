@@ -196,7 +196,7 @@ rule collect_xjin_benchmark_accuracy_grid:
                     if species != "TODO"
         ],
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:
@@ -213,7 +213,7 @@ rule collect_xjin_benchmark_spgc_strain_match:
             for genome in species_group_genomes(species, "xjin")
         ],
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:
@@ -235,7 +235,7 @@ rule collect_xjin_benchmark_species_depth:
         ],
         # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:

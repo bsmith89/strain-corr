@@ -67,6 +67,8 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {input.sample_to_strain} DROP_THIS_ARG_TODO {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.min_geno_positions} {output}"
 
 
+# TODO: Move this into a new snakefile with all of the reference database
+# work.
 rule ref_gene_copy_number_to_presence_table:
     output:
         "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
