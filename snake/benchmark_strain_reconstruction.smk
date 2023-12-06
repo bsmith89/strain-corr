@@ -50,7 +50,8 @@ rule alias_spgc_depth_only_gene_hits_for_benchmarking:
         "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/xjin/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
+                # WARNING: This hard-coding of the spgc params might be problematic, even though most of them don't matter...
+            "data/group/xjin/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-10_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
                 w=w,
                 sfacts_stem=config["species_group_to_sfacts_stem"][
                     (w.species, "xjin")
@@ -207,7 +208,6 @@ rule collect_xjin_benchmark_accuracy_grid:
                 species_group_genomes(species, "xjin"),
                 [
                     "spgc-fit",
-                    "spgc2-fit",
                             "spgc-depth200",
                             "spanda-s4",
                             "panphlan",
