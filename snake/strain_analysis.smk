@@ -395,26 +395,6 @@ localrules:
     alias_spgc_analysis_outputs,
 
 
-# NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.
-rule alias_spgc2_analysis_outputs:
-    output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_{dbv}-v22-agg75.spgc2-fit.{stemB}",
-    input:
-        source=lambda w: (
-            "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_{w.dbv}-v22-agg75.spgc2_{spgc_params}.{w.stemB}".format(
-                w=w,
-                spgc_params=config["species_group_to_spgc_stem"][(w.species, w.group)],
-                sfacts_params=config["species_group_to_sfacts_stem"][
-                    (w.species, w.group)
-                ],
-            )
-        ),
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_spgc2_analysis_outputs,
 
 
 # NOTE: This ruleorder section is a place to clear up ambiguity about whether the pipeline should be run on the full sfacts and spgc spec (yes)

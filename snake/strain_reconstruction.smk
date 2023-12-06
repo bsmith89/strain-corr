@@ -1,3 +1,8 @@
+# NOTE: I think (2023-12-06) that this rule (and
+# filter_midasdb_all_gene_annotations_by_centroid_new as well) may not actually
+# be used for anything any more.  I think I can test this by adding a new input
+# file that doesn't exist. Now, if the pipeline requires this file in any way,
+# it'll fail.
 rule combine_midasdb_all_gene_annotations_new:
     output:
         "data/species/sp-{species}/midasdb_uhgg_{dbv}.gene_annotations.tsv",
@@ -6,6 +11,9 @@ rule combine_midasdb_all_gene_annotations_new:
             f"ref/midasdb_uhgg_{dbv}/gene_annotations/{w.species}/{genome}/{genome}.tsv.lz4"
             for genome in config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species]
         ],
+        # If this rule is a pre-requisite for anything, the whole
+        # pipeline will fail:
+        fail='__FAIL__',
     params:
         genome_pattern="ref/midasdb_uhgg_{dbv}/gene_annotations/{species}/$genome/$genome.tsv.lz4",
         genome_list=lambda w: config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species],
@@ -21,6 +29,8 @@ rule combine_midasdb_all_gene_annotations_new:
         """
 
 
+# FIXME: (2023-12-06) Does it really make sense to filter just to the centroid name?
+# Don't we need to aggregate in a more intelligent way?
 rule filter_midasdb_all_gene_annotations_by_centroid_new:
     output:
         "data/species/sp-{species}/midasdb_uhgg_{dbv}.gene{centroid}_annotations.tsv",
