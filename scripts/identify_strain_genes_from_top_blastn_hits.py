@@ -10,7 +10,7 @@ if __name__ == "__main__":
     hits_path = sys.argv[3]
     outpath = sys.argv[4]
 
-    agg_col = pd.read_table(gene_info_path, index_col="centroid_99")[agg_by]
+    agg_col = pd.read_table(gene_info_path, index_col="gene_id")[agg_by]
     hits = pd.read_table(hits_path, names=["orf_id", "gene_id"])
     hits = hits.assign(agg=lambda x: x.gene_id.map(agg_col))
     hits = hits.drop(columns=["gene_id"]).drop_duplicates()

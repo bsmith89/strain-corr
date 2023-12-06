@@ -330,16 +330,26 @@ rule calculate_morans_i_for_spgc_strains:
 
 rule compile_gene_metadata:
     output:
-        meta="data/species/sp-{species}/midasdb_{dbv}.gene_meta.tsv",
-        cog_matrix="data/species/sp-{species}/midasdb_{dbv}.gene_x_cog_category.tsv",
+        meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}_meta.tsv",
+        cog_matrix="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}_x_cog_category.tsv",
     input:
         script="scripts/compile_midasdb_gene_metadata.py",
+        # FIXME: Add agg parameter to the script to take votes on cog_category.
         emapper="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/eggnog.tsv",
         clustering="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
         nlength="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
         cog_category="ref/cog-20.meta.tsv",
+    params:
+        agg=lambda w: {
+            99: "centroid_99",
+            95: "centroid_95",
+            90: "centroid_90",
+            85: "centroid_85",
+            80: "centroid_80",
+            75: "centroid_75",
+        }[int(w.centroid)],
     shell:
-        "{input.script} {input.emapper} {input.clustering} {input.cog_category} {input.nlength} {output.meta} {output.cog_matrix}"
+        "{input.script} {input.emapper} {input.clustering} {params.agg} {input.cog_category} {input.nlength} {output.meta} {output.cog_matrix}"
 
 
 rule perform_ibd_association_test_with_hmp2_strains:
