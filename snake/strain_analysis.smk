@@ -187,8 +187,10 @@ rule combine_all_ref_and_spgc_metadata_and_clustering:
         # NOTE: genefilt-ratio0 means there is no filtering on gene prevalence ratio
         # higher values of R would filter genes with R-times greater or less prevalence in SPGC genomes compared to reference genomes.
         # As a result, these distances are not "batch corrected" with *-ratio0*.
-        uhgg_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.genefilt-ratio0_jaccard_pdist.pkl",
-        eggnog_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.genefilt-ratio0_jaccard_pdist.pkl",
+        # uhgg_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.genefilt-ratio0_cosine_pdist.pkl",
+        uhgg_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        eggnog_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        # eggnog_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.genefilt-ratio0_cosine_pdist.pkl",
         clust="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.coclust-10.tsv",
     shell:
         "{input.script} {input.spgc} {input.ref} {input.geno_pdist} {input.uhgg_pdist} {input.eggnog_pdist} {input.clust} {output}"
@@ -255,6 +257,21 @@ rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
         "conda/sfacts.yaml"
     shell:
         "{input.script} {input.spgc_gene} {input.ref_gene} {input.spgc_filt} {input.ref_filt} {params.maximum_prevalence_ratio} {wildcards.metric} {output}"
+
+# TODO: Add this dissimilarity to the analysis metadata table.
+rule compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+    input:
+        script="scripts/compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities.py",
+        spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
+        ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",
+        ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+    conda:
+        "conda/toolz4.yaml"
+    shell:
+        "{input.script} {input.spgc_gene} {input.ref_gene} {input.spgc_filt} {input.ref_filt} cosine {output}"
 
 
 rule cluster_genes_based_on_cooccurence_in_spgc_strains:
