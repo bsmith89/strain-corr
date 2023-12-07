@@ -139,6 +139,8 @@ rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance:
         pseudo=lambda w: int(w.pseudo) / 10,
     conda:
         "conda/sfacts.yaml"
+    resources:
+        walltime_hr=12,
     shell:
         "{input.script} {input.spgc_agg_mgtp} {input.ref_geno} {params.ambiguity_threshold} {params.pseudo} {output}"
 
@@ -272,6 +274,8 @@ rule compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilar
         spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
     conda:
         "conda/toolz4.yaml"
+    resources:
+        walltime_hr=12,
     shell:
         "{input.script} {input.spgc_gene} {input.ref_gene} {input.spgc_filt} {input.ref_filt} cosine {output}"
 

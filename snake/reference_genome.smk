@@ -99,6 +99,8 @@ rule aggregate_gene_annotations_to_higher_centroid:
             80: "centroid_80",
             75: "centroid_75",
         }[int(w.centroid)],
+    resources:
+        walltime_hr=10,
     shell:
         "{input.script} {input.annot} {input.clust} {params.agg} {output}"
 
