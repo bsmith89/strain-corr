@@ -170,31 +170,3 @@ rule aggregate_strain_metagenotype:
         mem_mb=10_000,
     shell:
         "{input.script} {input.mapping} {input.mgtp} {output}"
-
-
-rule aggregate_uhgg_strain_gene_by_annotation:
-    output:
-        "data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.{unit}-strain_gene.tsv",
-        # "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
-    wildcard_constraints:
-        unit="eggnog|top_eggnog|cog|ko",
-    input:
-        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
-        # uhgg="{stemA}/species/sp-{species}/{stemB}.uhgg-strain_gene.tsv",
-        uhgg="data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv",
-        # uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
-        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroidB}_x_{unit}.tsv",
-    group:
-        "assess_gene_inference_benchmark"
-    shell:
-        "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
-
-
-rule convert_midasdb_species_gene_info_to_reference_genome_table_new:
-    output:
-        "data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
-    input:
-        script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
-    shell:
-        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
