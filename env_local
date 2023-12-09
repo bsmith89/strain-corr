@@ -1,3 +1,1 @@
-conda activate TODO
-export SNAKEMAKE_CONDA_PREFIX='TODO'
-export SNAKEMAKE_SINGULARITY_PREFIX='TODO'
+conda activate snakemake3
