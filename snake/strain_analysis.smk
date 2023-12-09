@@ -484,6 +484,6 @@ rule collect_analysis_files:
         gene_clust="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
         morans_i="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
         cog_cat_matrix="data/species/sp-{species}/midasdb_v15.gene75_x_cog_category.tsv",
-        # geno_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask{thresh}-pseudo{pseudo}.pkl",
+        geno_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
     shell:
         "echo {input} > {output}"
