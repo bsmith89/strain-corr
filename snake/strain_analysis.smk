@@ -160,18 +160,14 @@ rule compute_pairwise_genotype_masked_hamming_distance:
         "{input.script} {input.mgtp} {params.ambiguity_threshold} {params.pseudo} {output}"
 
 
-# NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 # SPGC and Ref genome dereplication clustering (based on genotype dissimilarity)
+# NOTE: Strains are not filtered before co-clustering.
 rule cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity:
     output:
         "data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.coclust-{thresh}.tsv",
     input:
         script="scripts/cluster_from_cdmat_pkl.py",
         pickle="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.pkl",
-        # NOTE: I decided I don't want to filter strains before co-clustering.
-        # # NOTE: The filtering recipe is only currently implemented for xjin_ucfmt_hmp2.
-        # spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-hmp2-s90-d100-a1-pos100.tsv",
-        # ref_filt="data/species/sp-{species}/midasdb.strain_meta-complete90-contam5-pos0.tsv",
     params:
         thresh=lambda w: int(w.thresh) / 1000,
     conda:
@@ -191,6 +187,7 @@ rule combine_all_ref_and_spgc_metadata_and_clustering:
     shell:
         "{input.script} {input.spgc} {input.ref} {input.clust} {output}"
 
+
 rule compare_spgc_and_ref_dissimilarities:
     output:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_diss_spgc_and_ref.tsv",
@@ -200,11 +197,6 @@ rule compare_spgc_and_ref_dissimilarities:
         geno_pdist="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
         uhgg_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
         eggnog_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
-        # # NOTE: genefilt-ratio0 means there is no filtering on gene prevalence ratio
-        # # higher values of R would filter genes with R-times greater or less prevalence in SPGC genomes compared to reference genomes.
-        # # As a result, these distances are not "batch corrected" with *-ratio0*.
-        # uhgg_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.genefilt-ratio0_cosine_pdist.pkl",
-        # eggnog_pdist="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.genefilt-ratio0_cosine_pdist.pkl",
     shell:
         "{input.script} {input.meta} {input.geno_pdist} {input.uhgg_pdist} {input.eggnog_pdist} {output}"
 
@@ -270,6 +262,7 @@ rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
         "conda/sfacts.yaml"
     shell:
         "{input.script} {input.spgc_gene} {input.ref_gene} {input.spgc_filt} {input.ref_filt} {params.maximum_prevalence_ratio} {wildcards.metric} {output}"
+
 
 # TODO: Add this dissimilarity to the analysis metadata table.
 rule compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities:
@@ -375,15 +368,15 @@ rule compile_gene_metadata:
         clustering="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
         nlength="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
         cog_category="ref/cog-20.meta.tsv",
-    params:
-        # agg=lambda w: {
-        #     99: "centroid_99",
-        #     95: "centroid_95",
-        #     90: "centroid_90",
-        #     85: "centroid_85",
-        #     80: "centroid_80",
-        #     75: "centroid_75",
-        # }[int(w.centroid)],
+    # params:
+    # agg=lambda w: {
+    #     99: "centroid_99",
+    #     95: "centroid_95",
+    #     90: "centroid_90",
+    #     85: "centroid_85",
+    #     80: "centroid_80",
+    #     75: "centroid_75",
+    # }[int(w.centroid)],
     shell:
         "{input.script} {input.emapper} {input.clustering} {input.cog_category} {input.nlength} {output.meta} {output.cog_matrix}"
 
@@ -476,7 +469,8 @@ ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genom
 
 
 rule collect_analysis_files:
-    output: "data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.all_analysis_files.flag"
+    output:
+        "data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.all_analysis_files.flag",
     input:
         gene="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.tsv",
         meta="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv",

@@ -13,7 +13,7 @@ rule combine_midasdb_all_gene_annotations_new:
         ],
         # If this rule is a pre-requisite for anything, the whole
         # pipeline will fail:
-        fail='__FAIL__',
+        fail="__FAIL__",
     params:
         genome_pattern="ref/midasdb_uhgg_{dbv}/gene_annotations/{species}/$genome/$genome.tsv.lz4",
         genome_list=lambda w: config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species],
@@ -127,6 +127,7 @@ rule extract_species_depth_from_spgc_netcdf:
     shell:
         "{input.script} {input.ncdf} {output}"
 
+
 # NOTE: This is really just a stop-gap to make a downstream rule easier to
 # parse. Pattern matching gets hard with all these pipeline parameters.
 # See rule "compile_spgc_strain_metadata".
@@ -138,6 +139,7 @@ rule extract_species_gene_list_from_spgc_netcdf:
         ncdf="{stemA}.spgc_{spgc_params}.nc",
     shell:
         "{input.script} {input.ncdf} {output}"
+
 
 # FIXME: Skip the "mofiy_strain_samples_file_format rule by exporting this correctly in the first place.
 # NOTE: In this new formulation, I include ALL strain-pure samples, including those

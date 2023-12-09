@@ -22,14 +22,12 @@ localrules:
     alias_spgc_gene_hits_for_benchmarking,
 
 
-
-
 rule alias_spgc_depth_only_gene_hits_for_benchmarking:
     output:
         "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv",
     input:
+        # WARNING: This hard-coding of the spgc params might be problematic, even though most of them don't matter...
         source=lambda w: (
-                # WARNING: This hard-coding of the spgc params might be problematic, even though most of them don't matter...
             "data/group/xjin/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-10_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
                 w=w,
                 sfacts_stem=config["species_group_to_sfacts_stem"][
@@ -220,6 +218,7 @@ localrules:
     collect_xjin_benchmark_spgc_strain_match,
 
 
+# FIXME: The input is pretty messy. Might need a convenience function to collect this list of species.
 rule collect_xjin_benchmark_strain_meta:
     output:
         touch(
@@ -233,7 +232,6 @@ rule collect_xjin_benchmark_strain_meta:
                 for genome in config["genome_group"]["xjin"]
             if config["genome"].loc[genome].species_id != "TODO"
         ],
-        # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
     shell:
         "echo {input} > {output}"
 
@@ -242,6 +240,7 @@ localrules:
     collect_xjin_benchmark_strain_meta,
 
 
+# FIXME: The input is pretty messy. Might need a convenience function to collect this list of species.
 rule collect_xjin_benchmark_species_depth:
     output:
         touch(
@@ -255,7 +254,6 @@ rule collect_xjin_benchmark_species_depth:
                 for genome in config["genome_group"]["xjin"]
             if config["genome"].loc[genome].species_id != "TODO"
         ],
-        # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
     shell:
         "echo {input} > {output}"
 

@@ -329,8 +329,6 @@ rule cleanup_fit:
         """
 
 
-
-
 rule export_sfacts_comm:
     output:
         "{stem}.comm.tsv",
