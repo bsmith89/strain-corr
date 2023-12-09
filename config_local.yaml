@@ -1,0 +1,8 @@
+local_data_dirs:
+  - raw
+  - data
+  - ref
+local_data_root: 'TODO'
+secure_local_data_dirs:
+  - sdata
+secure_local_data_root: 'TODO'
