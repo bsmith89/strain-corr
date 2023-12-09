@@ -407,6 +407,37 @@ rule perform_ibd_association_test_with_hmp2_strains:
         "{input.script} {input.comm} {input.gene} {input.filt} {input.mgen} {input.preparation} {input.stool} {input.subject} {params.frac_thresh} {params.num_thresh} {output}"
 
 
+# NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.
+rule alias_sfacts_outputs:
+    output:
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.{stemB}",
+    input:
+        source=lambda w: (
+            "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.{w.stemB}".format(
+                w=w,
+                sfacts_params=config["species_group_to_sfacts_stem"][
+                    (w.species, w.group)
+                ],
+            )
+        ),
+    shell:
+        alias_recipe
+
+
+localrules:
+    alias_sfacts_outputs,
+
+
+# NOTE: This ruleorder section is a place to clear up ambiguity about whether the pipeline should be run on the full sfacts spec (yes)
+# or on previously aliased files (no).
+# When I get errors like this:
+#
+# AmbiguousRuleException:
+# Rules export_sfacts_comm and alias_sfacts_outputs are ambiguous for the file data/group/hmp2/species/sp-102506/r.proc.gtpro.sfacts-fit.comm.tsv.
+# Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
+#
+# I can just add that rule to the end of the list.
+ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples > aggregate_strain_metagenotype > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance
 
 
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.

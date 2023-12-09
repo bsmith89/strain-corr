@@ -329,26 +329,6 @@ rule cleanup_fit:
         """
 
 
-rule alias_canonical_fit:
-    output:
-        "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.sfacts-fit.world.nc",
-    input:
-        source=lambda w: (
-            "data/group/{group}/species/sp-{species}/r.{proc}.gtpro.{sfacts_stem}.world.nc".format(
-                group=w.group,
-                species=w.species,
-                proc=w.proc,
-                sfacts_stem=config["species_group_to_sfacts_stem"][
-                    (w.species, w.group)
-                ],
-            )
-        ),
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_canonical_fit,
 
 
 rule export_sfacts_comm:
