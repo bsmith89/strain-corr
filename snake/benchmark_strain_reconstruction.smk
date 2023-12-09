@@ -22,6 +22,27 @@ localrules:
     alias_spgc_gene_hits_for_benchmarking,
 
 
+# rule alias_spgc2_gene_hits_for_benchmarking:
+#     output:
+#         "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc2-fit.uhgg-strain_gene.tsv",
+#     input:
+#         source=lambda w: (
+#             "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc2_{spgc_stem}.uhgg-strain_gene.tsv".format(
+#                 species=w.species,
+#                 stem=w.stem,
+#                 pangenome_params=w.pangenome_params,
+#                 spgc_stem=config["species_group_to_spgc_stem"][(w.species, "xjin")],
+#                 sfacts_stem=config["species_group_to_sfacts_stem"][
+#                     (w.species, "xjin")
+#                 ],
+#             )
+#         ),
+#     shell:
+#         alias_recipe
+#
+#
+# localrules:
+#     alias_spgc2_gene_hits_for_benchmarking,
 
 
 rule alias_spgc_depth_only_gene_hits_for_benchmarking:

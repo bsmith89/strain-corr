@@ -80,28 +80,28 @@ rule ref_gene_copy_number_to_presence_table:
         "{input.script} {input.copies} {output}"
 
 
-# TODO: Make this rule work for MIDAS2DB v1.0
-# NOTE: Legacy of "_new" identifier for MIDAS2DB v1.0
-# TODO (2023-09-15): This rule should probably be moved to
-# strain_reconstruction, since it's an input to reference-based species-gene
-# calling.
-rule collect_filtering_metadata_for_uhgg_ref_strains_v1_as_new:
-    output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_new.strain_meta-complete90-contam5-pos100.tsv",
-    input:
-        script="scripts/filter_ref_strains_v10.py",  # TODO
-        meta="ref/uhgg_genomes_all_4644.tsv",
-        pos="data/species/sp-{species}/midasdb_new.gtpro.geno.npositions.tsv",
-        # FIXME: Change 
-        genes="data/species/sp-{species}/midasdb.gene{centroid}_new.uhgg-strain_gene.tsv",
-    params:
-        min_completeness=90 / 100,
-        # NOTE (2023-09-19): Some species (e.g.) 102386 have refs with only >2% contam (duplication?);
-        # TODO: Increase this threshold to 5%.
-        max_contamination=5 / 100,
-        min_positions=100,
-    shell:
-        "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
+# # TODO: Make this rule work for MIDAS2DB v1.0
+# # NOTE: Legacy of "_new" identifier for MIDAS2DB v1.0
+# # TODO (2023-09-15): This rule should probably be moved to
+# # strain_reconstruction, since it's an input to reference-based species-gene
+# # calling.
+# rule collect_filtering_metadata_for_uhgg_ref_strains_v1_as_new:
+#     output:
+#         "data/species/sp-{species}/midasdb.gene{centroid}_new.strain_meta-complete90-contam5-pos100.tsv",
+#     input:
+#         script="scripts/filter_ref_strains_v10.py",  # TODO
+#         meta="ref/uhgg_genomes_all_4644.tsv",
+#         pos="data/species/sp-{species}/midasdb_new.gtpro.geno.npositions.tsv",
+#         # FIXME: Change 
+#         genes="data/species/sp-{species}/midasdb.gene{centroid}_new.uhgg-strain_gene.tsv",
+#     params:
+#         min_completeness=90 / 100,
+#         # NOTE (2023-09-19): Some species (e.g.) 102386 have refs with only >2% contam (duplication?);
+#         # TODO: Increase this threshold to 5%.
+#         max_contamination=5 / 100,
+#         min_positions=100,
+#     shell:
+#         "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
 # NOTE: This rule is a stop-gap as I migrate to MIDAS2DB v2
@@ -431,6 +431,26 @@ localrules:
     alias_spgc_analysis_outputs,
 
 
+# # NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.
+# rule alias_spgc2_analysis_outputs:
+#     output:
+#         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_{dbv}-v22-agg75.spgc2-fit.{stemB}",
+#     input:
+#         source=lambda w: (
+#             "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_{w.dbv}-v22-agg75.spgc2_{spgc_params}.{w.stemB}".format(
+#                 w=w,
+#                 spgc_params=config["species_group_to_spgc_stem"][(w.species, w.group)],
+#                 sfacts_params=config["species_group_to_sfacts_stem"][
+#                     (w.species, w.group)
+#                 ],
+#             )
+#         ),
+#     shell:
+#         alias_recipe
+#
+#
+# localrules:
+#     alias_spgc2_analysis_outputs,
 
 
 # NOTE: This ruleorder section is a place to clear up ambiguity about whether the pipeline should be run on the full sfacts and spgc spec (yes)
