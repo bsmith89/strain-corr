@@ -20,6 +20,7 @@ rule link_midasdb_reference_genome:
         alias_recipe
 
 
+# NOTE: Hub-rule
 # NOTE: Emapper can take a long time to run.
 # Testing can be done on 100035 because it has very few genes in its pangenome.
 rule eggnog_mapper_translated_orfs:
@@ -66,9 +67,13 @@ rule eggnog_mapper_translated_orfs:
         """
 
 
+# NOTE: This rule takes the entire eggnog output and assigns raw annotations
+# to the features. In a later step, I'll aggregate these annotations
+# to the higher-level-centroid by voting or something.
+# NOTE: The */eggnog.tsv file is annotatins on c99s, not unique features.
 rule parse_midasdb_emapper_annotations_to_gene_x_unit:
     output:
-        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene_x_{unit}.tsv",
+        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
     input:
         script="scripts/parse_emapper_output_to_gene_x_{unit}.py",
         emapper="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/eggnog.tsv",
@@ -76,14 +81,53 @@ rule parse_midasdb_emapper_annotations_to_gene_x_unit:
         "{input.script} {input.emapper} {output}"
 
 
+# Specialized script for gene_x_cog_category.
+rule parse_midasdb_emapper_annotations_to_gene_x_cog_category:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_cog_category.tsv",
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_cog_category.py",
+        emapper="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/eggnog.tsv",
+        cog_category="ref/cog-20.meta.tsv",
+    shell:
+        "{input.script} {input.emapper} {input.cog_category} {output}"
+
+
+ruleorder: parse_midasdb_emapper_annotations_to_gene_x_cog_category > parse_midasdb_emapper_annotations_to_gene_x_unit
+
+
+# Take annotations at the feature level and combine them into centroidNN
+# annotations.
+rule aggregate_gene99_annotations_to_higher_centroid:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroid}_x_{unit}.tsv",
+    input:
+        script="scripts/aggregate_gene_annotations_to_higher_centroid.py",
+        annot="data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
+        clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+    params:
+        agg=lambda w: {
+            99: "centroid_99",
+            95: "centroid_95",
+            90: "centroid_90",
+            85: "centroid_85",
+            80: "centroid_80",
+            75: "centroid_75",
+        }[int(w.centroid)],
+    resources:
+        walltime_hr=10,
+    shell:
+        "{input.script} {input.annot} {input.clust} {params.agg} {output}"
+
+
 rule aggregate_strain_emapper_output_by_unit:
     output:
-        "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{agg}-strain_gene.tsv",
+        "data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv",
     input:
         script="scripts/aggregate_emapper_output_by_unit.py",
-        data="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{agg}.tsv",
+        data="data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{unit}.tsv",
     shell:
-        "{input.script} {input.data} {wildcards.agg} {wildcards.strain} {output}"
+        "{input.script} {input.data} {wildcards.unit} {wildcards.strain} {output}"
 
 
 rule aggregate_midasdb_reference_gene_by_annotation:
@@ -94,7 +138,7 @@ rule aggregate_midasdb_reference_gene_by_annotation:
     input:
         script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
         uhgg="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
-        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene_x_{unit}.tsv",
+        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroid}_x_{unit}.tsv",
     group:
         "assess_gene_inference_benchmark"
     shell:
@@ -170,6 +214,7 @@ rule genome_fasta_to_fastq:
         "seqtk seq -F '#' {input} | gzip -c > {output}"
 
 
+# Hub-rule
 rule combine_strain_genome_gtpro_data_loadable:
     output:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
@@ -196,6 +241,7 @@ rule combine_strain_genome_gtpro_data_loadable:
         """
 
 
+# Hub-rule
 rule combine_midasdb_reference_genome_gtpro_data_loadable:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",
@@ -265,7 +311,7 @@ rule aggreggate_top_blastn_hits_by_midasdb_centroid:
     input:
         script="scripts/identify_strain_genes_from_top_blastn_hits.py",
         hit="{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best.tsv",
-        gene_clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/cluster_info.txt",
+        gene_clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -329,7 +375,7 @@ rule calculate_bitscore_ratio_of_orfs_and_pangenome_genes_new:
         # NOTE: orf_x_orf is used to get the maximum possible bitscore for each ORF.
         orf_x_orf="data/species/sp-{species}/genome/{stemB}.{stemB}-{blastn_or_p}.tsv",
         orf_x_midas="data/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-{blastn_or_p}.tsv",
-        gene_clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/cluster_info.txt",
+        gene_clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     wildcard_constraints:
         blastn_or_p="blastn|blastp",
     params:
