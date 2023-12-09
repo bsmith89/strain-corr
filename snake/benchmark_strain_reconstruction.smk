@@ -67,27 +67,27 @@ localrules:
     alias_spgc_gene_hits_for_benchmarking,
 
 
-rule alias_spgc2_gene_hits_for_benchmarking:
-    output:
-        "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc2-fit.uhgg-strain_gene.tsv",
-    input:
-        source=lambda w: (
-            "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc2_{spgc_stem}.uhgg-strain_gene.tsv".format(
-                species=w.species,
-                stem=w.stem,
-                pangenome_params=w.pangenome_params,
-                spgc_stem=config["species_group_to_spgc_stem"][(w.species, "xjin")],
-                sfacts_stem=config["species_group_to_sfacts_stem"][
-                    (w.species, "xjin")
-                ],
-            )
-        ),
-    shell:
-        alias_recipe
-
-
-localrules:
-    alias_spgc2_gene_hits_for_benchmarking,
+# rule alias_spgc2_gene_hits_for_benchmarking:
+#     output:
+#         "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc2-fit.uhgg-strain_gene.tsv",
+#     input:
+#         source=lambda w: (
+#             "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc2_{spgc_stem}.uhgg-strain_gene.tsv".format(
+#                 species=w.species,
+#                 stem=w.stem,
+#                 pangenome_params=w.pangenome_params,
+#                 spgc_stem=config["species_group_to_spgc_stem"][(w.species, "xjin")],
+#                 sfacts_stem=config["species_group_to_sfacts_stem"][
+#                     (w.species, "xjin")
+#                 ],
+#             )
+#         ),
+#     shell:
+#         alias_recipe
+#
+#
+# localrules:
+#     alias_spgc2_gene_hits_for_benchmarking,
 
 
 rule alias_spgc_depth_only_gene_hits_for_benchmarking:
@@ -95,7 +95,8 @@ rule alias_spgc_depth_only_gene_hits_for_benchmarking:
         "data/group/xjin/species/sp-{species}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv",
     input:
         source=lambda w: (
-            "data/group/xjin/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-30_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
+                # WARNING: This hard-coding of the spgc params might be problematic, even though most of them don't matter...
+            "data/group/xjin/species/sp-{w.species}/{w.stem}.gtpro.{sfacts_stem}.gene{w.pangenome_params}.spgc_specgene-ref-t25-p95_ss-all_t-10_thresh-corr0-depth{w.thresh}.uhgg-strain_gene.tsv".format(
                 w=w,
                 sfacts_stem=config["species_group_to_sfacts_stem"][
                     (w.species, "xjin")
@@ -314,7 +315,6 @@ rule collect_xjin_benchmark_accuracy_grid:
                 species_group_genomes(species, "xjin"),
                 [
                     "spgc-fit",
-                    "spgc2-fit",
                             "spgc-depth200",
                             "spanda-s4",
                             "panphlan",
@@ -324,7 +324,7 @@ rule collect_xjin_benchmark_accuracy_grid:
                     if species != "TODO"
         ],
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:
@@ -341,11 +341,33 @@ rule collect_xjin_benchmark_spgc_strain_match:
             for genome in species_group_genomes(species, "xjin")
         ],
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:
     collect_xjin_benchmark_spgc_strain_match,
+
+
+rule collect_xjin_benchmark_strain_meta:
+    output:
+        touch(
+            "data/group/xjin/r.proc.{pang_stem}.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag"
+        ),
+    input:
+        sfacts_match=lambda w: [
+            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv".format(
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "TODO"
+        ],
+        # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
+    shell:
+        "echo {input} > {output}"
+
+
+localrules:
+    collect_xjin_benchmark_strain_meta,
 
 
 rule collect_xjin_benchmark_species_depth:
@@ -363,8 +385,18 @@ rule collect_xjin_benchmark_species_depth:
         ],
         # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
     shell:
-        "cat {input} > {output}"
+        "echo {input} > {output}"
 
 
 localrules:
     collect_xjin_benchmark_species_depth,
+
+
+# # TODO: Make this rule work
+# rule collect_xjin_benchmark_grid_files:
+#     input: [
+#         'data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.STRAIN_MATCH_BENCHMARK_GRID.flag',
+#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.SPECIES_DEPTH_BENCHMARK_GRID.flag',
+#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.ACCURACY_BENCHMARK_GRID.flag',
+#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag',
+#     ]

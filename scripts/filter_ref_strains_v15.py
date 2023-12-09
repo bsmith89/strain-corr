@@ -5,19 +5,23 @@ import sys
 
 if __name__ == "__main__":
     meta_inpath = sys.argv[1]
-    pos_inpath = sys.argv[2]
-    genes_inpath = sys.argv[3]
-    species = sys.argv[4]
-    min_completeness = float(sys.argv[5])
-    max_contamination = float(sys.argv[6])
-    min_positions = int(sys.argv[7])
-    outpath = sys.argv[8]
+    genome_to_species_inpath = sys.argv[2]
+    pos_inpath = sys.argv[3]
+    genes_inpath = sys.argv[4]
+    species = sys.argv[5]
+    min_completeness = float(sys.argv[6])
+    max_contamination = float(sys.argv[7])
+    min_positions = int(sys.argv[8])
+    outpath = sys.argv[9]
 
     npositions = pd.read_table(pos_inpath, index_col="genome_id")
     genes = pd.read_table(genes_inpath, index_col="gene_id").rename_axis(
         columns="genome_id"
     )
     assert genes.isin([0, 1]).values.all()
+    genome_to_species = pd.read_table(
+        genome_to_species_inpath, index_col="genome", dtype=str,
+    ).species
     genome_meta = (
         pd.read_table(
             meta_inpath,
@@ -48,7 +52,7 @@ if __name__ == "__main__":
             index_col=["Genome_accession"],
         )
         .assign(
-            species_id=lambda x: "1" + x.Species_rep.str[len("MGYG0000") :],
+            species_id=genome_to_species,
         )[lambda x: x.species_id == species]
         .rename_axis(index="genome_id")
         # .rename(index=lambda x: "UHGG" + x[len("GUT_GENOME") :])

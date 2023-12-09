@@ -28,8 +28,7 @@ if __name__ == "__main__":
 
     gene_cluster = (
         pd.read_table(gene_clust_path)
-        .set_index("centroid_99", drop=False)
-        .rename_axis(index="gene_id")
+        .set_index("gene_id", drop=False)
     )
 
     orf_x_orf = pd.read_table(orf_x_orf_path, names=BLAST_HEADER_NAMES)
