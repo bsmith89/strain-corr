@@ -81,9 +81,24 @@ rule parse_midasdb_emapper_annotations_to_gene_x_unit:
         "{input.script} {input.emapper} {output}"
 
 
+# Specialized script for gene_x_cog_category.
+rule parse_midasdb_emapper_annotations_to_gene_x_cog_category:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_cog_category.tsv",
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_cog_category.py",
+        emapper="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/eggnog.tsv",
+        cog_category="ref/cog-20.meta.tsv",
+    shell:
+        "{input.script} {input.emapper} {input.cog_category} {output}"
+
+
+ruleorder: parse_midasdb_emapper_annotations_to_gene_x_cog_category > parse_midasdb_emapper_annotations_to_gene_x_unit
+
+
 # Take annotations at the feature level and combine them into centroidNN
 # annotations.
-rule aggregate_gene_annotations_to_higher_centroid:
+rule aggregate_gene99_annotations_to_higher_centroid:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroid}_x_{unit}.tsv",
     input:
