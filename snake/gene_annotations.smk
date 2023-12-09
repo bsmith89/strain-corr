@@ -71,7 +71,28 @@ rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category:
         "{input.script} {input.emapper} {input.cog_category} {output}"
 
 
-ruleorder: parse_midasdb_emapper_annotations_to_gene_x_cog_category > parse_midasdb_emapper_annotations_to_gene_x_unit
+ruleorder: parse_midasdb_emapper_annotations_to_gene99_x_cog_category > parse_midasdb_emapper_annotations_to_gene99_x_unit
+
+
+# NOTE: Genomad annotations are done at the unique gene level.
+rule parse_genomad_annotations_to_gene_x_accession:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.gene_x_genomad_{annot}.tsv",
+    input:
+        script="scripts/parse_genomad_annotations_to_gene_x_accession.py",
+        annot="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genomad_{annot}.tsv",
+    shell:
+        "{input.script} {input.annot} {output}"
+
+# NOTE: resfinder annotations are done at the unique gene level.
+rule parse_resfinder_annotations_to_gene_x_accession:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.gene_x_amr.tsv",
+    input:
+        script="scripts/parse_resfinder_annotations_to_gene_x_accession.py",
+        annot="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/resfinder.tsv",
+    shell:
+        "{input.script} {input.annot} {output}"
 
 
 # Take annotations at the c99 level and combine them into centroidNN
@@ -82,6 +103,29 @@ rule aggregate_gene99_annotations_to_higher_centroid:
     input:
         script="scripts/aggregate_gene99_annotations_to_higher_centroid.py",
         annot="data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
+        clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+    params:
+        agg=lambda w: {
+            99: "centroid_99",
+            95: "centroid_95",
+            90: "centroid_90",
+            85: "centroid_85",
+            80: "centroid_80",
+            75: "centroid_75",
+        }[int(w.centroid)],
+    resources:
+        walltime_hr=10,
+    shell:
+        "{input.script} {input.annot} {input.clust} {params.agg} {output}"
+
+# Take annotations at the gene level and combine them into centroidNN
+# annotations using voting at the unique feature (gene_id) level.
+rule aggregate_gene_annotations_to_higher_centroid:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.gene{centroid}_x_{unit}.tsv",
+    input:
+        script="scripts/aggregate_gene_annotations_to_higher_centroid.py",
+        annot="data/species/sp-{species}/midasdb_{dbv}.gene_x_{unit}.tsv",
         clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
         agg=lambda w: {
