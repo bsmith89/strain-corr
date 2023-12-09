@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"{input.script} {input.emapper} {input.clustering} {params.agg} {input.cog_category} {input.nlength} {output.meta} {output.cog_matrix}"
 
 import pandas as pd
 import sys
@@ -66,9 +67,7 @@ if __name__ == "__main__":
         .str.split("@")
         .str[0]
     )
-    gene_x_cog.value_counts().head()
     gene_x_cog_category2 = gene_x_cog.map(cog_x_category).dropna().apply(list).explode()
-    gene_x_cog_category2
 
     gene_x_cog_category = (
         pd.concat(
