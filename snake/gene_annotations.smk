@@ -48,7 +48,8 @@ rule eggnog_mapper_translated_orfs:
 # to the features. In a later step, I'll aggregate these annotations
 # to the higher-level-centroid by voting or something.
 # NOTE: The */eggnog.tsv file is annotatins on c99s, not unique features.
-rule parse_midasdb_emapper_annotations_to_gene_x_unit:
+# TODO: Rename all these scripts to "..._emapper_output_to_gene99_x...".
+rule parse_midasdb_emapper_annotations_to_gene99_x_unit:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
     input:
@@ -59,7 +60,7 @@ rule parse_midasdb_emapper_annotations_to_gene_x_unit:
 
 
 # Specialized script for gene_x_cog_category.
-rule parse_midasdb_emapper_annotations_to_gene_x_cog_category:
+rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_cog_category.tsv",
     input:
@@ -73,13 +74,13 @@ rule parse_midasdb_emapper_annotations_to_gene_x_cog_category:
 ruleorder: parse_midasdb_emapper_annotations_to_gene_x_cog_category > parse_midasdb_emapper_annotations_to_gene_x_unit
 
 
-# Take annotations at the feature level and combine them into centroidNN
-# annotations.
+# Take annotations at the c99 level and combine them into centroidNN
+# annotations using voting at the unique feature (gene_id) level.
 rule aggregate_gene99_annotations_to_higher_centroid:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroid}_x_{unit}.tsv",
     input:
-        script="scripts/aggregate_gene_annotations_to_higher_centroid.py",
+        script="scripts/aggregate_gene99_annotations_to_higher_centroid.py",
         annot="data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
         clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     params:
