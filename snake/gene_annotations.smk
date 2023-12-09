@@ -1,4 +1,3 @@
-# NOTE: Hub-rule
 # NOTE: Emapper can take a long time to run.
 # Testing can be done on 100035 because it has very few genes in its pangenome.
 rule eggnog_mapper_translated_orfs:

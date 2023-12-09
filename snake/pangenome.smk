@@ -17,7 +17,7 @@ rule collect_species_pangenome_centroids_new:
         """
 
 
-rule collect_multispecies_pangenome_centroids_to_hash:
+rule collect_multispecies_pangenome_centroids_to_hash:  # Hub-rule
     output:
         fn="data/hash/{_hash}/pangenomes{centroid}_{dbv}.bt2.d/centroids.fn",
     input:
@@ -55,7 +55,6 @@ rule collect_multispecies_pangenome_centroids_to_hash:
         """
 
 
-# NOTE: Hub-rule?
 # TODO: Move this to "general.smk".
 rule build_large_bowtie_index:
     output:
@@ -210,9 +209,7 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         """
 
 
-# NOTE: Hub-rule
-# NOTE: Paired with it's child rule in reference_genome.smk.
-rule load_one_species_pangenome2_depth_into_netcdf_new:
+rule load_one_species_pangenome2_depth_into_netcdf_new:  # Hub-rule (also note child rule in reference_genome.smk)
     output:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
@@ -247,3 +244,5 @@ rule load_one_species_pangenome2_depth_into_netcdf_new:
         """
         {input.script} {input.gene_length} {input.gene_info} {params.centroidB_col} {output} {params.args}
         """
+
+# This comment is only needed to get the last rule off the bottom of the file.

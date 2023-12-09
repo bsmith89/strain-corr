@@ -246,8 +246,6 @@ rule filter_out_host:
         )
 
 
-# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
-# once all libraries have been processed
 rule alias_cleaned_reads:
     output:
         "data/reads/{mgen}/{r}.proc.fq.gz",

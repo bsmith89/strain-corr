@@ -344,22 +344,7 @@ rule export_sfacts_comm:
         """
 
 
-rule sfacts_metagenotypet_to_tsv:
-    output:
-        "{stem}.mgtp.tsv",
-    input:
-        "{stem}.mgtp.nc",
-    conda:
-        "conda/sfacts.yaml"
-    shell:
-        """
-        sfacts dump --metagenotype {output} {input}
-        """
-
-
-# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
-# once it has been run for the focal group.
-rule calculate_all_strain_depths:
+rule calculate_all_strain_depths:  # Hub-rule
     output:
         "data/group/{group}/r.{proc}.gtpro.{stem}.strain_depth.tsv",
     input:
@@ -377,4 +362,17 @@ rule calculate_all_strain_depths:
     shell:
         """
         {input.script} {input.species} {output} {params.args}
+        """
+
+
+rule sfacts_metagenotypet_to_tsv:
+    output:
+        "{stem}.mgtp.tsv",
+    input:
+        "{stem}.mgtp.nc",
+    conda:
+        "conda/sfacts.yaml"
+    shell:
+        """
+        sfacts dump --metagenotype {output} {input}
         """

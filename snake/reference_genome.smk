@@ -64,8 +64,7 @@ rule genome_fasta_to_fastq:
         "seqtk seq -F '#' {input} | gzip -c > {output}"
 
 
-# Hub-rule
-rule combine_strain_genome_gtpro_data_loadable:
+rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
     output:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:
@@ -87,12 +86,10 @@ rule combine_strain_genome_gtpro_data_loadable:
                 | bzip2 -zc \
             )
         done > {output}
-
         """
 
 
-# Hub-rule
-rule combine_midasdb_reference_genome_gtpro_data_loadable:
+rule combine_midasdb_reference_genome_gtpro_data_loadable:  # Hub-rule?
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",
     input:
@@ -114,7 +111,6 @@ rule combine_midasdb_reference_genome_gtpro_data_loadable:
                 | bzip2 -zc \
             )
         done > {output}
-
         """
 
 
@@ -273,8 +269,7 @@ use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pa
     threads: 1
 
 
-# NOTE: Hub-rule paired with it's parent.
-use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:
+use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:  # Hub-rule (along with its parent)
     output:
         "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
