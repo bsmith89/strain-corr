@@ -220,6 +220,28 @@ localrules:
     collect_xjin_benchmark_spgc_strain_match,
 
 
+rule collect_xjin_benchmark_strain_meta:
+    output:
+        touch(
+            "data/group/xjin/r.proc.{pang_stem}.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag"
+        ),
+    input:
+        sfacts_match=lambda w: [
+            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv".format(
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "TODO"
+        ],
+        # FIXME: The above is pretty messy. Might need a convenience function to collect this list of species.
+    shell:
+        "echo {input} > {output}"
+
+
+localrules:
+    collect_xjin_benchmark_strain_meta,
+
+
 rule collect_xjin_benchmark_species_depth:
     output:
         touch(
