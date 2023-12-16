@@ -472,12 +472,30 @@ rule collect_analysis_files:
     output:
         "data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.all_analysis_files.flag",
     input:
+        # Gene content
         gene="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.tsv",
+        comm="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.comm.tsv",
+        spgc="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.nc",
+        # Strain metadata
         meta="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv",
-        genome_diss="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv",
+        diss_stats="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv",  # Distance to nearest ref
+        geno_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
+        uhgg_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        eggnog_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        # Gene metadata
+        eggnog="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_eggnog.tsv",
+        cog="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog.tsv",
+        ko="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_ko.tsv",
+        amr="data/species/sp-{species}/midasdb_v15.gene75_x_amr.tsv",
+        plasmid="data/species/sp-{species}/midasdb_v15.gene75_x_genomad_plasmid.tsv",
+        phage="data/species/sp-{species}/midasdb_v15.gene75_x_genomad_virus.tsv",
+        emapper='ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv',
         gene_clust="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
         morans_i="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
         cog_cat_matrix="data/species/sp-{species}/midasdb_v15.gene75_x_cog_category.tsv",
-        geno_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
+        prevalence="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
+        species_depth="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.species_depth.tsv"
     shell:
         "echo {input} > {output}"
+
+localrules: collect_analysis_files
