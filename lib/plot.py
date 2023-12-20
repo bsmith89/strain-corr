@@ -34,7 +34,6 @@ def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=
     if extend:
         colormap.update(extend)
     for i, (s, desat) in enumerate(zip(labels, cycle(desaturate_levels))):
-        print(i, s, desat)
         if s in colormap:
             continue
         if len(labels) == 1:
