@@ -383,12 +383,12 @@ rule compile_gene_metadata:
 
 rule perform_ibd_association_test_with_hmp2_strains:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.hmp2_mwas-f{frac_thresh}-n{num_thresh}.tsv",
+        "data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.hmp2_mwas-f{frac_thresh}-n{num_thresh}.tsv",
     input:
         script="scripts/hmp2_mwas.py",
-        comm="data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.comm.tsv",
-        gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.tsv",
-        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv",
+        comm="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.comm.tsv",
+        gene="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.tsv",
+        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv",
         mgen="meta/hmp2/mgen.tsv",
         preparation="meta/hmp2/preparation.tsv",
         stool="meta/hmp2/stool.tsv",
