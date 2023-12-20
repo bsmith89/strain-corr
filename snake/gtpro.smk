@@ -140,7 +140,7 @@ rule gtpro_finish_processing_reads:
         )
 
 
-rule count_species_lines_from_both_reads_helper:
+rule count_species_lines_from_both_reads_helper:  # Hub-rule
     output:
         "data/group/{group}/r.{proc}.gtpro_species_tally.tsv.args",
     input:
@@ -272,7 +272,7 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
                 )
 
 
-rule concatenate_mgen_group_one_read_count_data_from_one_species:
+rule concatenate_mgen_group_one_read_count_data_from_one_species:  # Hub-rule?
     output:
         "{stemA}/species/sp-{species}/{r12}.{stemB}.gtpro.tsv.bz2",
     input:
@@ -295,7 +295,6 @@ rule concatenate_mgen_group_one_read_count_data_from_one_species:
         )
 
 
-# NOTE: Hub-rule
 rule merge_both_reads_species_count_data:
     output:
         "{stemA}/r.{stemB}.gtpro.tsv.bz2",
@@ -313,7 +312,7 @@ rule merge_both_reads_species_count_data:
         """
 
 
-rule load_metagenotype_from_merged_gtpro:
+rule load_metagenotype_from_merged_gtpro:  # Hub-rule
     output:
         "{stem}.gtpro.mgtp.nc",
     input:
@@ -339,9 +338,7 @@ rule estimate_species_depth_from_metagenotype:
         "{input.script} {params.trim} {input.mgen} {output}"
 
 
-# NOTE: Hub-rule: Comment out this rule to reduce DAG-building time
-# once it has been run for the focal group.
-rule estimate_all_species_depths_in_group:
+rule estimate_all_species_depths_in_group:  # Hub-rule
     output:
         "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
     input:

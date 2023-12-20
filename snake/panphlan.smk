@@ -1,4 +1,3 @@
-# NOTE: Hub-rule
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
     output:
         "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.panphlan_pangenome.tsv",
@@ -15,7 +14,7 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
 
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
 # "run_spanda_decompose" combined.
-rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:
+rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:  # Hub-rule
     output:
         hit="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
         depth="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",

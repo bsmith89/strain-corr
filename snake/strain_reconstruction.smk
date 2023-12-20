@@ -13,7 +13,7 @@ rule combine_midasdb_all_gene_annotations_new:
         ],
         # If this rule is a pre-requisite for anything, the whole
         # pipeline will fail:
-        fail='__FAIL__',
+        fail="__FAIL__",
     params:
         genome_pattern="ref/midasdb_uhgg_{dbv}/gene_annotations/{species}/$genome/$genome.tsv.lz4",
         genome_list=lambda w: config[f"midasdb_uhgg_{w.dbv}_species_genome"][w.species],
@@ -127,6 +127,7 @@ rule extract_species_depth_from_spgc_netcdf:
     shell:
         "{input.script} {input.ncdf} {output}"
 
+
 # NOTE: This is really just a stop-gap to make a downstream rule easier to
 # parse. Pattern matching gets hard with all these pipeline parameters.
 # See rule "compile_spgc_strain_metadata".
@@ -138,6 +139,7 @@ rule extract_species_gene_list_from_spgc_netcdf:
         ncdf="{stemA}.spgc_{spgc_params}.nc",
     shell:
         "{input.script} {input.ncdf} {output}"
+
 
 # FIXME: Skip the "mofiy_strain_samples_file_format rule by exporting this correctly in the first place.
 # NOTE: In this new formulation, I include ALL strain-pure samples, including those
@@ -170,31 +172,3 @@ rule aggregate_strain_metagenotype:
         mem_mb=10_000,
     shell:
         "{input.script} {input.mapping} {input.mgtp} {output}"
-
-
-rule aggregate_uhgg_strain_gene_by_annotation:
-    output:
-        "data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.{unit}-strain_gene.tsv",
-        # "data/group/{group}/species/sp-{species}/{stem}.{agg}-strain_gene.tsv",
-    wildcard_constraints:
-        unit="eggnog|top_eggnog|cog|ko",
-    input:
-        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
-        # uhgg="{stemA}/species/sp-{species}/{stemB}.uhgg-strain_gene.tsv",
-        uhgg="data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv",
-        # uhgg="data/group/{group}/species/sp-{species}/{stem}.uhgg-strain_gene.tsv",
-        mapping="data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroidB}_x_{unit}.tsv",
-    group:
-        "assess_gene_inference_benchmark"
-    shell:
-        "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
-
-
-rule convert_midasdb_species_gene_info_to_reference_genome_table_new:
-    output:
-        "data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
-    input:
-        script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
-    shell:
-        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"

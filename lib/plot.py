@@ -34,7 +34,6 @@ def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=
     if extend:
         colormap.update(extend)
     for i, (s, desat) in enumerate(zip(labels, cycle(desaturate_levels))):
-        print(i, s, desat)
         if s in colormap:
             continue
         if len(labels) == 1:
@@ -654,12 +653,24 @@ def orderplot(
 def hide_axes_and_spines(ax=None):
     if ax is None:
         ax = plt.gca()
+
+    ax.set_axis_off()
+
     ax.xaxis.set_visible(False)
-    ax.yaxis.set_visible(False)
     ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
+
+    ax.yaxis.set_visible(False)
+    ax.spines['right'].set_visible(False)
     ax.spines['left'].set_visible(False)
+
+def hide_axes_and_spines_except_yaxis(ax=None):
+    if ax is None:
+        ax = plt.gca()
+
+    ax.xaxis.set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
 
 
 def plot_stacked_barplot(data, x_var, order, palette=None, ax=None, **kwargs):

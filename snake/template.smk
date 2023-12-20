@@ -42,8 +42,6 @@ rule initialize_git_from_template:
 rule initialize_project_config:
     output:
         touch("build/initialize_project_config.flag"),
-    input:
-        local_config_files=[ancient(p) for p in ["env_local", "snake/local.smk"]],
     shell:
         dd(
             """
@@ -64,13 +62,3 @@ rule initialize_project_config:
         echo 'Remember to symlink data directories to the correct fs. (e.g. raw/, ref/, data/, etc.)'
         """
         )
-
-
-rule build_empty_local_snakefile:
-    output:
-        touch("snake/local.smk"),
-
-
-rule build_empty_local_env:
-    output:
-        touch("env_local"),

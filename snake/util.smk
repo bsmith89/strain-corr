@@ -21,7 +21,7 @@ rule start_jupyter:
     conda:
         "conda/jupyter.yaml"
     shell:
-        "jupyter lab --port={params.port} --notebook-dir nb/"
+        "jupyter lab --port={params.port}"
 
 
 rule start_jupyter_nb:
