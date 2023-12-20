@@ -58,7 +58,7 @@ include: "snake/template.smk"
 include: "snake/util.smk"
 include: "snake/general.smk"
 include: "snake/docs.smk"
-include: "snake/include.smk"
+include: "snake/include.smk"  # Project-specific includes go here.
 
 
 if path.exists("snake/local.smk"):
