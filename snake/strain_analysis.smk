@@ -492,7 +492,7 @@ rule collect_analysis_files:
         emapper='ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv',
         gene_clust="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
         morans_i="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
-        cog_cat_matrix="data/species/sp-{species}/midasdb_v15.gene75_x_cog_category.tsv",
+        cog_cat_matrix="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog_category.tsv",  # Whats the difference between with and without *.emapper.gene75.*?
         prevalence="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
         species_depth="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.species_depth.tsv"
     shell:
