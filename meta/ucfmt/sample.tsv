@@ -302,34 +302,34 @@ SS01207	S0060	47	48	followup	followup_1					DFS.1207	PRE-FU
 SS01208	S0061	31	31	maintenance	pre_maintenance_5					DFS.1208	PRE-E5	
 SS01210	S0062	20	21	maintenance	pre_maintenance_3					DFS.1210	PRE-E3; approximate date collected assumed based on date received	
 SS01211	S0062	27	28	maintenance	pre_maintenance_4					DFS.1211	PRE-E4; approximate date collected assumed based on date received	
-SS01212	S0062			maintenance	pre_maintenance_5			8.D1		DFS.1212		
-SS01213	S0062			followup	followup_2			8.E4		DFS.1213	Noted ""stored at room temp until 9/16/19""	
-SS01214	S0061			followup	followup_1			8.C5		DFS.1214		
-SS01216	S0062			maintenance	pre_maintenance_6			8.D2		DFS.1216		
-SS01217	S0062			followup	followup_1			8.D3		DFS.1217		
-SS01218	S0060			followup	followup_2			8.D5		DFS.1218		
-SS01219	S0061			followup	followup_2			8.D4		DFS.1219		
-SS01220	S0063			baseline	baseline			8.E1		DFS.1220		
-SS01221	S0063			post_antibiotic	post_antibiotic			8.E3		DFS.1221		
-SS01222	S0063			maintenance	pre_maintenance_1			8.E5		DFS.1222		
-SS01223	S0064			baseline	baseline			8.E2		DFS.1223		
-SS01224	S0063			maintenance	pre_maintenance_2			9.A1		DFS.1224		
-SS01225	S0063			maintenance	pre_maintenance_3			9.A2		DFS.1225	"Sample type labeled as ""PRE-CAPS 3?"" in source spreadsheet"	
-SS01226	S0064			maintenance	pre_maintenance_1			9.B2		DFS.1226		
-SS01227	S0064			post_antibiotic	post_antibiotic			9.B1		DFS.1227		
-SS01228	S0063			followup	followup_1			9.C2		DFS.1228	"Sample type labeled as ""?"" in source spreadsheet"	
-SS01229	S0064			maintenance	pre_maintenance_2			9.B3		DFS.1229		
-SS01230	S0063			maintenance	pre_maintenance_4			9.A3		DFS.1230	"Sample type labeled as ""PRE-CAPS 4?"" in source spreadsheet"	
-SS01231	S0063			maintenance	pre_maintenance_5			9.A4		DFS.1231	"Sample type labeled as ""PRE-CAPS 5?"" in source spreadsheet"	
-SS01232	S0064			maintenance	pre_maintenance_3			9.B4		DFS.1232		
-SS01234	S0064			maintenance	pre_maintenance_4			9.B5		DFS.1234		
-SS01236	S0063			maintenance	pre_maintenance_6			9.A5		DFS.1236	"Sample type labeled as ""PRE-CAPS 6?"" in source spreadsheet"	
-SS01239	S0064			maintenance	pre_maintenance_6			9.C3		DFS.1239		
-SS01240	S0062			followup	followup_3			9.D5		DFS.1240		
-SS01241	S0061			followup	followup_3			9.C4		DFS.1241		
-SS01242	S0064			followup	followup_1			9.D1		DFS.1242		
-SS01247	S0063			followup	followup_2			9.D3		DFS.1247		
-SS01248	S0064			followup	followup_2			9.D4		DFS.1248		
-SS01252	S0063			followup	followup_3			9.E4		DFS.1252		
-SS01255	S0064			maintenance	pre_maintenance_5			9.C1		DFS.1255		
-SS01260	S0064			followup	followup_3			10.B1		DFS.1260		
+SS01212	S0062	28		maintenance	pre_maintenance_5			8.D1		DFS.1212	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01213	S0062	31		followup	followup_2			8.E4		DFS.1213	Noted ""stored at room temp until 9/16/19""; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01214	S0061	39		followup	followup_1			8.C5		DFS.1214	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01216	S0062	29		maintenance	pre_maintenance_6			8.D2		DFS.1216	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01217	S0062	30		followup	followup_1			8.D3		DFS.1217	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01218	S0060	48		followup	followup_2			8.D5		DFS.1218	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01219	S0061	40		followup	followup_2			8.D4		DFS.1219	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01220	S0063	-2		baseline	baseline			8.E1		DFS.1220	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01221	S0063	-1		post_antibiotic	post_antibiotic			8.E3		DFS.1221	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01222	S0063	1		maintenance	pre_maintenance_1			8.E5		DFS.1222	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01223	S0064	-2		baseline	baseline			8.E2		DFS.1223	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01224	S0063	2		maintenance	pre_maintenance_2			9.A1		DFS.1224	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01225	S0063	3		maintenance	pre_maintenance_3			9.A2		DFS.1225	"Sample type labeled as ""PRE-CAPS 3?"" in source spreadsheet"; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01226	S0064	1		maintenance	pre_maintenance_1			9.B2		DFS.1226	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01227	S0064	-1		post_antibiotic	post_antibiotic			9.B1		DFS.1227	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01228	S0063	7		followup	followup_1			9.C2		DFS.1228	"Sample type labeled as ""?"" in source spreadsheet"; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01229	S0064	2		maintenance	pre_maintenance_2			9.B3		DFS.1229	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01230	S0063	4		maintenance	pre_maintenance_4			9.A3		DFS.1230	"Sample type labeled as ""PRE-CAPS 4?"" in source spreadsheet"; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01231	S0063	5		maintenance	pre_maintenance_5			9.A4		DFS.1231	"Sample type labeled as ""PRE-CAPS 5?"" in source spreadsheet"; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01232	S0064	3		maintenance	pre_maintenance_3			9.B4		DFS.1232	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01234	S0064	4		maintenance	pre_maintenance_4			9.B5		DFS.1234	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01236	S0063	6		maintenance	pre_maintenance_6			9.A5		DFS.1236	"Sample type labeled as ""PRE-CAPS 6?"" in source spreadsheet"; FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01239	S0064	6		maintenance	pre_maintenance_6			9.C3		DFS.1239	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01240	S0062	32		followup	followup_3			9.D5		DFS.1240	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01241	S0061	41		followup	followup_3			9.C4		DFS.1241	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01242	S0064	7		followup	followup_1			9.D1		DFS.1242	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01247	S0063	8		followup	followup_2			9.D3		DFS.1247	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01248	S0064	8		followup	followup_2			9.D4		DFS.1248	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01252	S0063	9		followup	followup_3			9.E4		DFS.1252	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01255	S0064	5		maintenance	pre_maintenance_5			9.C1		DFS.1255	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
+SS01260	S0064	9		followup	followup_3			10.B1		DFS.1260	FIXME: collection_days_post_fmt is unknown, current value is dummy;	
