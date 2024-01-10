@@ -132,7 +132,7 @@ rule blastn_genome_against_midasdb_uhgg_new:
         "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.tsv",
     input:
         query="{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn",
-        subject="data/species/sp-{species}/pangenome_{dbv}.centroids.fn",
+        subject="data/species/sp-{species}/midasdb.gene99_{dbv}.centroids.fn",
     threads: 1
     shell:
         """
