@@ -2,10 +2,11 @@ name: jupyter
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
+  - python
   - jupyterlab
   - notebook
   - black
   - isort
   - jedi-language-server
   - jupyterlab_code_formatter
+  - jupyterlab_execute_time
