@@ -472,32 +472,48 @@ ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genom
 
 rule collect_analysis_files:
     output:
-        "data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.all_analysis_files.flag",
+        "data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
     input:
         # Gene content
-        gene="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.tsv",
-        comm="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.comm.tsv",
-        spgc="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.nc",
-        # Strain metadata
-        meta="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv",
-        diss_stats="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv",  # Distance to nearest ref
-        geno_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
-        uhgg_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
-        eggnog_diss_pdmat="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        gene="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.tsv",
+        comm="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.comm.tsv",
+        spgc="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.nc",
+        # Strain analysis
+        meta="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv",
+        diss_stats="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv",  # Distance to nearest ref
+        geno_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
+        uhgg_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        eggnog_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        # Gene analysis
+        gene_clust="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
+        # morans_i="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
+        cog_cat_matrix="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog_category.tsv",  # Whats the difference between with and without *.emapper.gene75.*?
+        cog_meta="ref/cog-20.meta.tsv",
+        prevalence="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
+        species_depth="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.species_depth.tsv",
         # Gene metadata
         eggnog="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_eggnog.tsv",
         cog="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog.tsv",
         ko="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_ko.tsv",
+        go="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_go.tsv",
         amr="data/species/sp-{species}/midasdb_v15.gene75_x_amr.tsv",
         plasmid="data/species/sp-{species}/midasdb_v15.gene75_x_genomad_plasmid.tsv",
         phage="data/species/sp-{species}/midasdb_v15.gene75_x_genomad_virus.tsv",
-        emapper='ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv',
-        gene_clust="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
-        morans_i="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
-        cog_cat_matrix="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog_category.tsv",  # Whats the difference between with and without *.emapper.gene75.*?
-        prevalence="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
-        species_depth="data/group/hmp2/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.species_depth.tsv"
+        emapper="ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv",
     shell:
         "echo {input} > {output}"
 
-localrules: collect_analysis_files
+
+localrules:
+    collect_analysis_files,
+
+
+rule collect_spgc_manuscript_analysis_files:
+    input:
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.BENCHMARK_GRID.flag",
+        "data/group/hmp2/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag.SELECT_SPECIES.flag",
+        "data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
+
+
+localrules:
+    collect_spgc_manuscript_analysis_files,

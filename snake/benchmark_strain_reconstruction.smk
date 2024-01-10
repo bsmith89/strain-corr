@@ -262,11 +262,18 @@ localrules:
     collect_xjin_benchmark_species_depth,
 
 
-# # TODO: Make this rule work
-# rule collect_xjin_benchmark_grid_files:
-#     input: [
-#         'data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.STRAIN_MATCH_BENCHMARK_GRID.flag',
-#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.SPECIES_DEPTH_BENCHMARK_GRID.flag',
-#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.ACCURACY_BENCHMARK_GRID.flag',
-#         'data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag',
-#     ]
+# TODO: Make this rule work
+rule collect_xjin_benchmark_grid_files:
+    output:
+        touch(
+            "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.BENCHMARK_GRID.flag"
+        ),
+    input:
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.STRAIN_MATCH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.SPECIES_DEPTH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_v15-v22-agg75.ACCURACY_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
+
+
+localrules:
+    collect_xjin_benchmark_grid_files,
