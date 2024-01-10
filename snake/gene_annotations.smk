@@ -87,6 +87,7 @@ rule parse_genomad_annotations_to_gene_x_accession:
     shell:
         "{input.script} {input.annot} {output}"
 
+
 # NOTE: resfinder annotations are done at the unique gene level.
 rule parse_resfinder_annotations_to_gene_x_accession:
     output:
@@ -121,6 +122,7 @@ rule aggregate_gene99_annotations_to_higher_centroid:
         walltime_hr=10,
     shell:
         "{input.script} {input.annot} {input.clust} {params.agg} {output}"
+
 
 # Take annotations at the gene level and combine them into centroidNN
 # annotations using voting at the unique feature (gene_id) level.
