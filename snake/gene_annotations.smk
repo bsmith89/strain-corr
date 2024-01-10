@@ -147,6 +147,15 @@ rule aggregate_gene_annotations_to_higher_centroid:
     shell:
         "{input.script} {input.annot} {input.clust} {params.agg} {output}"
 
+rule parse_strain_emapper_annotations_to_gene_x_unit:
+    output:
+        "data/species/sp-{species}/genome/{genome}.prodigal-single.cds.emapper.gene_x_{unit}.tsv",
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_{unit}.py",
+        emapper="data/species/sp-{species}/genome/{genome}.prodigal-single.cds.emapper.d/proteins.emapper.annotations",
+    shell:
+        "{input.script} {input.emapper} {output}"
+
 
 rule aggregate_strain_emapper_output_by_unit:
     output:
