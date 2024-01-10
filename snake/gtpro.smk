@@ -395,3 +395,6 @@ rule construct_groupfree_files_for_all_select_species:
             f"data/species/sp-{species}/{w.stem}"
             for species in config["species_group"][w.group]
         ],
+
+
+ruleorder: construct_group_files_for_all_select_species > construct_groupfree_files_for_all_select_species
