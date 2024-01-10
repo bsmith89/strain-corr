@@ -69,41 +69,6 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {input.spgc} {input.sample_to_strain} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-# TODO: Move this into a new snakefile with all of the reference database
-# work.
-rule ref_gene_copy_number_to_presence_table:
-    output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
-    input:
-        script="scripts/gene_copy_number_nc_to_strain_gene_tsv.py",
-        # TODO: Change "copies" input file naming to `midasdb.gene{centroid}_{dbv}.reference_copy_number.nc`.
-        copies="data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
-    shell:
-        "{input.script} {input.copies} {output}"
-
-
-# TODO: Make this rule work for MIDAS2DB v1.0
-# NOTE: Legacy of "_new" identifier for MIDAS2DB v1.0
-# TODO (2023-09-15): This rule should probably be moved to
-# strain_reconstruction, since it's an input to reference-based species-gene
-# calling.
-rule collect_filtering_metadata_for_uhgg_ref_strains_v1_as_new:
-    output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_new.strain_meta-complete90-contam5-pos100.tsv",
-    input:
-        script="scripts/filter_ref_strains_v10.py",  # TODO
-        meta="ref/uhgg_genomes_all_4644.tsv",
-        pos="data/species/sp-{species}/midasdb_new.gtpro.geno.npositions.tsv",
-        # FIXME: Change 
-        genes="data/species/sp-{species}/midasdb.gene{centroid}_new.uhgg-strain_gene.tsv",
-    params:
-        min_completeness=90 / 100,
-        # NOTE (2023-09-19): Some species (e.g.) 102386 have refs with only >2% contam (duplication?);
-        # TODO: Increase this threshold to 5%.
-        max_contamination=5 / 100,
-        min_positions=100,
-    shell:
-        "{input.script} {input.meta} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
 # NOTE: This rule is a stop-gap as I migrate to MIDAS2DB v2

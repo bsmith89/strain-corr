@@ -60,6 +60,9 @@ rule parse_midasdb_emapper_annotations_to_gene99_x_unit:
 
 
 # Specialized script for gene_x_cog_category.
+# Required because the COG categories assigned by emapper are not the same as those found
+# in ref/cog-20.meta.tsv
+# We therefore combine the two, and give every gene all categories in either file.
 rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_cog_category.tsv",

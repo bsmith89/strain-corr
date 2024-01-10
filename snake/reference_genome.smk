@@ -322,3 +322,15 @@ rule convert_midasdb_species_gene_info_to_reference_genome_table_new:
         genes="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
+
+
+# TODO: Move this into a new snakefile with all of the reference database
+# work.
+rule ref_gene_copy_number_to_presence_table:
+    output:
+        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
+    input:
+        script="scripts/gene_copy_number_nc_to_strain_gene_tsv.py",
+        copies="data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
+    shell:
+        "{input.script} {input.copies} {output}"
