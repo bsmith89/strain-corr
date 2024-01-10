@@ -42,6 +42,20 @@ rule initialize_git_from_template:
 rule initialize_project_config:
     output:
         touch("build/initialize_project_config.flag"),
+    input:
+        "build/initialize_project_git_config.flag",
+    shell:
+        dd(
+            """
+        echo 'Add local configuration to {config.local_config_files}'
+        echo 'Or by creating/relinking profile/default/'
+        echo 'Remember to symlink data directories to the correct fs. (e.g. raw/, ref/, data/, etc.)'
+        """
+        )
+
+rule initialize_project_git_config:
+    output:
+        touch("build/initialize_project_git_config.flag"),
     shell:
         dd(
             """
@@ -57,8 +71,5 @@ rule initialize_project_config:
         git config --local alias.grep-other "!git ls-other | git grep -f -"
         git config --local alias.grep-hist '!f() {{ patt=$1; shift; git grep $patt $(git rev-list --all) $@; }}; f'
         git config --local pull.ff only
-        echo 'Add local configuration to {input.local_config_files}'
-        echo 'Or by creating/relinking profile/default/'
-        echo 'Remember to symlink data directories to the correct fs. (e.g. raw/, ref/, data/, etc.)'
         """
         )
