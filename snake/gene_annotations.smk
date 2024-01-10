@@ -104,9 +104,11 @@ rule aggregate_gene99_annotations_to_higher_centroid:
         script="scripts/aggregate_gene99_annotations_to_higher_centroid.py",
         annot="data/species/sp-{species}/midasdb_{dbv}.emapper.gene99_x_{unit}.tsv",
         clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+    wildcard_constraints:
+        centroid="95|90|85|80|75",
     params:
         agg=lambda w: {
-            99: "centroid_99",
+            # 99: "centroid_99",
             95: "centroid_95",
             90: "centroid_90",
             85: "centroid_85",
