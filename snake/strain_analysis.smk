@@ -57,14 +57,16 @@ rule collect_filtering_metadata:
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
+        spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
         sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
     params:
         min_species_genes_frac=90 / 100,
         min_total_depth=100 / 100,
         gene_count_outlier_alpha=1 / 1000,
         min_geno_positions=100,
+        max_log_gene_depth_ratio_std=0.75,
     shell:
-        "{input.script} {input.meta} {input.sample_to_strain} DROP_THIS_ARG_TODO {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.min_geno_positions} {output}"
+        "{input.script} {input.meta} {input.spgc} {input.sample_to_strain} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
 # TODO: Move this into a new snakefile with all of the reference database
