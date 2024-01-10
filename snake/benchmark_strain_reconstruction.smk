@@ -97,7 +97,7 @@ rule match_strains_to_genomes_based_on_genotype:
         strain_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
         spgc_geno="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         strain_sample="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_samples.tsv",
-        species_depth="data/group/xjin/species/sp-{species}/{stemA}.gene{pangen_params}.spgc{spgc_params}.species_depth.tsv",
+        species_depth="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{pangen_params}.spgc{spgc_params}.species_depth.tsv",
     conda:
         "conda/sfacts.yaml"
     shell:
@@ -244,11 +244,11 @@ localrules:
 rule collect_xjin_benchmark_species_depth:
     output:
         touch(
-            "data/group/xjin/r.proc.{pang_stem}.spgc_specgene-{specgene_params}.SPECIES_DEPTH_BENCHMARK_GRID.flag"
+            "data/group/xjin/r.proc.gtpro.sfacts-fit.{pang_stem}.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag"
         ),
     input:
         sfacts_match=lambda w: [
-            "data/group/xjin/species/sp-{species}/r.proc.{w.pang_stem}.spgc_specgene-{w.specgene_params}.species_depth.tsv".format(
+            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.species_depth.tsv".format(
                     species=config["genome"].loc[genome].species_id, w=w
                 )
                 for genome in config["genome_group"]["xjin"]
@@ -269,8 +269,8 @@ rule collect_xjin_benchmark_grid_files:
             "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.BENCHMARK_GRID.flag"
         ),
     input:
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.STRAIN_MATCH_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc_specgene-ref-t25-p95.SPECIES_DEPTH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag",
         "data/group/xjin/r.proc.gene99_v15-v22-agg75.ACCURACY_BENCHMARK_GRID.flag",
         "data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
 
