@@ -226,7 +226,7 @@ rule collect_xjin_benchmark_strain_meta:
         ),
     input:
         sfacts_match=lambda w: [
-            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv".format(
+            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s90-d100-a0-pos100-std75.tsv".format(
                     species=config["genome"].loc[genome].species_id, w=w
                 )
                 for genome in config["genome_group"]["xjin"]

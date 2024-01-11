@@ -53,7 +53,7 @@ rule count_ref_geno_positions:
 
 rule collect_filtering_metadata:
     output:
-        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
@@ -62,9 +62,9 @@ rule collect_filtering_metadata:
     params:
         min_species_genes_frac=90 / 100,
         min_total_depth=100 / 100,
-        gene_count_outlier_alpha=1 / 1000,
+        gene_count_outlier_alpha=0 / 1000,
         min_geno_positions=100,
-        max_log_gene_depth_ratio_std=0.75,
+        max_log_gene_depth_ratio_std=75 / 100,
     shell:
         "{input.script} {input.meta} {input.spgc} {input.sample_to_strain} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
@@ -148,7 +148,7 @@ rule combine_all_ref_and_spgc_metadata_and_clustering:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta_spgc_and_ref.tsv",
     input:
         script="scripts/combine_all_ref_and_spgc_metadata_and_clustering.py",
-        spgc="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+        spgc="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
         ref="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
         clust="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.coclust-10.tsv",
     shell:
@@ -189,7 +189,7 @@ rule calculate_gene_prevalence_in_spgc_genomes:
     input:
         script="scripts/strain_gene_to_prevalence.py",
         gene="{stemA}.spgc{stemB}.{unit}-strain_gene.tsv",
-        filt="{stemA}.spgc{stemB}.strain_meta-s90-d100-a1-pos100.tsv",
+        filt="{stemA}.spgc{stemB}.strain_meta-s90-d100-a0-pos100-std75.tsv",
     params:
         pseudo=0,
     shell:
@@ -221,7 +221,7 @@ rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
         ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",
         ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
     params:
         # NOTE: 0 is a special "ratio" where no filtering will be performed.
         maximum_prevalence_ratio=lambda w: int(w.ratio),
@@ -240,7 +240,7 @@ rule compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilar
         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
         ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",
         ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
     conda:
         "conda/toolz4.yaml"
     resources:
@@ -255,7 +255,7 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
     input:
         script="scripts/cluster_genes_based_on_cooccurence.py",
         gene="data/group/{stem}.uhgg-strain_gene.tsv",
-        filt="data/group/{stem}.strain_meta-s90-d100-a1-pos100.tsv",
+        filt="data/group/{stem}.strain_meta-s90-d100-a0-pos100-std75.tsv",
     params:
         thresh=10 / 100,
     conda:
@@ -297,7 +297,7 @@ rule calculate_morans_i_for_spgc_strains:
     input:
         script="scripts/calculate_morans_i.py",
         gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
-        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a1-pos100.tsv",
+        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
         pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
     shell:
         "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
@@ -355,7 +355,7 @@ rule perform_ibd_association_test_with_hmp2_strains:
         script="scripts/hmp2_mwas.py",
         comm="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.comm.tsv",
         gene="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.tsv",
-        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s90-d100-a1-pos100.tsv",
+        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s90-d100-a0-pos100-std75.tsv",
         mgen="meta/hmp2/mgen.tsv",
         preparation="meta/hmp2/preparation.tsv",
         stool="meta/hmp2/stool.tsv",

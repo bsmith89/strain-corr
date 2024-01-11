@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 "passes_gene_count",
                 "passes_geno_positions",
                 "passes_in_sample_list",
-                # "passes_log_gene_depth_ratio_std",  # FIXME: Uncomment this when I want to start using it as a QC filter.
+                "passes_log_gene_depth_ratio_std",
             ]
         ].all(1),
     )
