@@ -174,11 +174,11 @@ rule compare_spgc_and_ref_dissimilarities:
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 rule calculate_gene_prevalence_in_ref_genomes:
     output:
-        "{stem}/midasdb.gene75_{dbv}.{unit}-strain_gene.prevalence.tsv",
+        "{stem}/midasdb_{dbv}.gene{centroid}.{unit}-strain_gene.prevalence.tsv",
     input:
         script="scripts/strain_gene_to_prevalence.py",
-        gene="{stem}/midasdb.gene75_{dbv}.{unit}-strain_gene.tsv",
-        filt="{stem}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+        gene="{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
+        filt="{stem}/midasdb_v15.gene{centroid}.strain_meta-complete90-contam5-pos100.tsv",
     params:
         pseudo=0,
     shell:

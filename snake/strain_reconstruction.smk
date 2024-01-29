@@ -67,6 +67,19 @@ rule select_species_core_genes_from_reference_new:
         "{input.script} {input.copy_number} {params.trim_quantile} {params.prevalence} {output}"
 
 
+# FIXME: Rename a bunch of files to match the */midasdb_v15.gene75.* format.
+rule select_species_core_genes_from_reference_by_filtered_set_prevalence:
+    output:
+        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list",
+    input:
+        script="scripts/select_high_prevalence_species_genes2.py",
+        prevalence="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.uhgg-strain_gene.prevalence.tsv",
+    params:
+        threshold=lambda w: float(w.prevalence) / 100,
+    shell:
+        "{input.script} {input.prevalence} {params.threshold} {output}"
+
+
 # NOTE: (2023-12-01) This rule is the first step in implementing the
 # new packaged SPGC pipeline.
 rule export_gene_depth_table_from_netcdf:
