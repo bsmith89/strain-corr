@@ -22,19 +22,15 @@ rule compile_spgc_strain_metadata:
         "data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv",
     input:
         script="scripts/compile_spgc_results_metadata.py",
-        spgc_agg_mgtp="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.mgtp.nc",
-        strain_samples="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.strain_samples.tsv",
-        # NOTE: species_gene.list and species_depth.tsv are both extracted from the OUTPUTs of SPGC so that I don't need to pattern-match all the filename parameters.
-        # See "extract_*" rules in the strain_reconstruction file.
-        species_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.species_gene.list",
-        species_depth="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.species_depth.tsv",
-        strain_gene="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.uhgg-strain_gene.tsv",
+        # TODO: Take genotype QC and metadata from a purpose-built script.
+        agg_mgtp="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.mgtp.nc",
+        spgc="data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.nc",
     params:
         ambig_thresh=0.1,
     conda:
-        "conda/sfacts.yaml"
+        "conda/toolz5.yaml"
     shell:
-        "{input.script} {input.species_gene} {input.species_depth} {input.spgc_agg_mgtp} {input.strain_samples} {input.strain_gene} {params.ambig_thresh} {output}"
+        "{input.script} {input.spgc} {input.agg_mgtp} {params.ambig_thresh} {output}"
 
 
 rule count_ref_geno_positions:
@@ -53,43 +49,50 @@ rule count_ref_geno_positions:
 
 rule collect_filtering_metadata:
     output:
-        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
-        spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
-        sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
+        # spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
+        # sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
     params:
-        min_species_genes_frac=90 / 100,
+        min_species_genes_frac=95 / 100,
         min_total_depth=100 / 100,
         gene_count_outlier_alpha=0 / 1000,
         min_geno_positions=100,
-        max_log_gene_depth_ratio_std=75 / 100,
+        max_log_gene_depth_ratio_std=25 / 100,
     shell:
-        "{input.script} {input.meta} {input.spgc} {input.sample_to_strain} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
+        "{input.script} {input.meta} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-
-
-# NOTE: This rule is a stop-gap as I migrate to MIDAS2DB v2
-# TODO (2023-09-15): This rule should probably be moved to
-# strain_reconstruction, since it's an input to reference-based species-gene
-# calling.
-rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
+rule collect_metadata_for_uhgg_ref_strains_v15:
     output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_v15.strain_meta-complete90-contam5-pos100.tsv",
+        meta="data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta.tsv",
     input:
-        script="scripts/filter_ref_strains_v15.py",
+        script="scripts/extract_metadata_midasdb_v15.py",
         meta="ref/midasdb_uhgg_v15/metadata/2023-11-11-genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_v15/genomes.tsv",
         pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_v15.uhgg-strain_gene.tsv",
+        # FIXME: Rename the above.
+    shell:
+        "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {output}"
+
+
+rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
+    output:
+        "data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta-complete90-contam5-pos100.tsv",
+        # FIXME: Replace data/species/sp-{species}/midasdb.gene{centroid}_v15.strain_meta-complete90-contam5-pos100.tsv
+        # everywhere with this.
+    input:
+        script="scripts/filter_ref_strains_v15.py",
+        meta="data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta.tsv",
     params:
         min_completeness=90 / 100,
         max_contamination=5 / 100,
         min_positions=100,
     shell:
-        "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
+        "{input.script} {input.meta} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
 
 # TODO: Replace this rule with a genotype concatenation rule to achieve the
@@ -148,8 +151,8 @@ rule combine_all_ref_and_spgc_metadata_and_clustering:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta_spgc_and_ref.tsv",
     input:
         script="scripts/combine_all_ref_and_spgc_metadata_and_clustering.py",
-        spgc="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
-        ref="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
+        spgc="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
+        ref="data/species/sp-{species}/midasdb_v15.gene{centroidB}.strain_meta-complete90-contam5-pos100.tsv",
         clust="data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.coclust-10.tsv",
     shell:
         "{input.script} {input.spgc} {input.ref} {input.clust} {output}"
@@ -189,7 +192,7 @@ rule calculate_gene_prevalence_in_spgc_genomes:
     input:
         script="scripts/strain_gene_to_prevalence.py",
         gene="{stemA}.spgc{stemB}.{unit}-strain_gene.tsv",
-        filt="{stemA}.spgc{stemB}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        filt="{stemA}.spgc{stemB}.strain_meta-s95-d100-a0-pos100-std25.tsv",
     params:
         pseudo=0,
     shell:
@@ -220,8 +223,8 @@ rule compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities:
         script="scripts/compute_reference_and_spgc_pairwise_filtered_gene_content_dissimilarities.py",
         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
         ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",
-        ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        ref_filt="data/species/sp-{species}/midasdb_{dbv}.gene75.strain_meta-complete90-contam5-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
     params:
         # NOTE: 0 is a special "ratio" where no filtering will be performed.
         maximum_prevalence_ratio=lambda w: int(w.ratio),
@@ -238,9 +241,9 @@ rule compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilar
     input:
         script="scripts/compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities.py",
         spgc_gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv",
-        ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",
-        ref_filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos100.tsv",
-        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        ref_gene="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv",  # FIXME: Rename this file.
+        ref_filt="data/species/sp-{species}/midasdb_v15.gene75.strain_meta-complete90-contam5-pos100.tsv",
+        spgc_filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
     conda:
         "conda/toolz4.yaml"
     resources:
@@ -255,7 +258,7 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
     input:
         script="scripts/cluster_genes_based_on_cooccurence.py",
         gene="data/group/{stem}.uhgg-strain_gene.tsv",
-        filt="data/group/{stem}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        filt="data/group/{stem}.strain_meta-s95-d100-a0-pos100-std25.tsv",
     params:
         thresh=10 / 100,
     conda:
@@ -297,7 +300,7 @@ rule calculate_morans_i_for_spgc_strains:
     input:
         script="scripts/calculate_morans_i.py",
         gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
-        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
         pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
     shell:
         "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
@@ -335,6 +338,9 @@ rule compile_gene_metadata:
         clustering="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
         nlength="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
         cog_category="ref/cog-20.meta.tsv",
+    wildcard_constraints:
+        centroid='99|95|90|85|80|75',
+
     # params:
     # agg=lambda w: {
     #     99: "centroid_99",
@@ -355,7 +361,7 @@ rule perform_ibd_association_test_with_hmp2_strains:
         script="scripts/hmp2_mwas.py",
         comm="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.comm.tsv",
         gene="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.tsv",
-        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s90-d100-a0-pos100-std75.tsv",
+        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s95-d100-a0-pos100-std25.tsv",
         mgen="meta/hmp2/mgen.tsv",
         preparation="meta/hmp2/preparation.tsv",
         stool="meta/hmp2/stool.tsv",
@@ -452,12 +458,14 @@ rule collect_analysis_files:
         geno_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
         uhgg_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
         eggnog_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
+        strain_samples="data/group/{group}/species/sp-{group}/r.proc.gtpro.sfacts-fit.spgc_ss-all.strain_samples.tsv",
         # Gene analysis
         gene_clust="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
         # morans_i="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
         cog_cat_matrix="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_cog_category.tsv",  # Whats the difference between with and without *.emapper.gene75.*?
         cog_meta="ref/cog-20.meta.tsv",
         prevalence="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
+        prev_class_frac="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.prevalence_class_fraction.tsv",
         species_depth="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.species_depth.tsv",
         # Gene metadata
         eggnog="data/species/sp-{species}/midasdb_v15.emapper.gene75_x_eggnog.tsv",
