@@ -4,7 +4,6 @@ import pandas as pd
 import sys
 from lib.pandas_util import idxwhere, align_indexes
 from lib.dissimilarity import dump_dmat_as_pickle, dmatrix
-from sklearn.decomposition import PCA
 
 
 if __name__ == "__main__":
