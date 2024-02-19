@@ -186,7 +186,10 @@ rule collect_xjin_benchmark_accuracy_grid:
                 [
                     "spgc-fit",
                             "spgc-depth200",
+                            "spanda-s3",
                             "spanda-s4",
+                            "spanda-s5",
+                            "spanda-s6",
                             "panphlan",
                         ],
                         ["uhggtop", "eggnog", "cog"],
