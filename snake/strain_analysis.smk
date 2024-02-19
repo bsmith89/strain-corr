@@ -267,19 +267,6 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-rule cluster_genes_based_on_cooccurence_in_ref_strains:
-    output:
-        "data/species/{stem}.uhgg-strain_gene.gene_clust-t10.tsv",
-    input:
-        script="scripts/cluster_genes_based_on_cooccurence.py",
-        gene="data/species/{stem}.uhgg-strain_gene.tsv",
-        filt="data/species/{stem}.strain_meta-complete90-contam5-pos100.tsv",
-    params:
-        thresh=10 / 100,
-    conda:
-        "conda/toolz2.yaml"
-    shell:
-        "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
 rule calculate_morans_i_for_ref_strains:
