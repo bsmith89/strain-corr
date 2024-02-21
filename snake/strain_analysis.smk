@@ -445,7 +445,7 @@ rule collect_analysis_files:
         geno_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v15_pdist-mask10-pseudo10.pkl",
         uhgg_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
         eggnog_diss_pdmat="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl",
-        strain_samples="data/group/{group}/species/sp-{group}/r.proc.gtpro.sfacts-fit.spgc_ss-all.strain_samples.tsv",
+        strain_samples="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.strain_samples.tsv",
         # Gene analysis
         gene_clust="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv",
         # morans_i="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.morans_i.tsv",
