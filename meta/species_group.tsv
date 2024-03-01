@@ -1,4 +1,6 @@
 species_id	species_group_id	sfacts_stem	spgc_stem	comment
+102993	ucfmt_test	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
+101294	ucfmt_test	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 100070	test	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
 100099	test	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
 100002	fmt_studies	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-t25-p95_ss-all_t-30_thresh-corr200-depth250	
