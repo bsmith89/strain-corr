@@ -1,6 +1,6 @@
 rule run_midas_species:
     output:
-        directory("data/reads/{mgen}/r.{proc}.species-v3.midas.d"),
+        directory("data/reads/{mgen}/r.{proc}.species-v20.midas.d"),
     input:
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
@@ -41,16 +41,17 @@ rule write_species_list:
 
 rule build_midas3_pangenomes_bowtie_index:
     output:
-        directory("data/hash/{hash}/pangenomes99_v3.bt2.d"),
+        directory("data/hash/{hash}/pangenomes99_v20.bt2.d"),
     input:
         species_list="data/hash/{hash}/species.list",
         midasdb_dir="ref/midasdb_uhgg_v20_all",
     conda:
         "conda/midas3.yaml"
-    threads: 64
+    threads: 96
     resources:
         walltime_hr=72,
-        mem_mb=640_000,
+        mem_mb=480_000,
+        pmem=lambda w, threads: 480_000 // threads,
     shell:
         """
         midas2 build_bowtie2db \
@@ -68,11 +69,11 @@ rule build_midas3_pangenomes_bowtie_index:
 
 rule run_midas_genes:
     output:
-        directory("data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99-v3.midas.d"),
+        directory("data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99-v20.midas.d"),
     input:
         species_list="data/hash/{hash}/species.list",
         midasdb_dir="ref/midasdb_uhgg_v20_all",
-        bowtie_indexes="data/hash/{hash}/pangenomes99_v3.bt2.d",
+        bowtie_indexes="data/hash/{hash}/pangenomes99_v20.bt2.d",
         r1="data/reads/{mgen}/r1.{proc}.fq.gz",
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     conda:
@@ -102,18 +103,18 @@ rule run_midas_genes:
 
 rule load_one_species_pangenome3_depth_into_netcdf:
     output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene99_v30-v23-agg75.depth2.nc",
+        "data/group/{group}/species/sp-{species}/{stem}.gene99_v20-v23-agg75.depth2.nc",
     input:
         script="scripts/merge_midas_pangenomes_depth.py",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99-v3.midas.d".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99-v20.midas.d".format(
                 w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
             )
             for mgen in config["mgen_group"][w.group]
         ],
     params:
         args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99-v3.midas.d/{mgen}/genes/{w.species}.genes.tsv.lz4".format(
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99-v20.midas.d/{mgen}/genes/{w.species}.genes.tsv.lz4".format(
                 w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
             )
             for mgen in config["mgen_group"][w.group]
