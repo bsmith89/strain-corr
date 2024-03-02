@@ -8,10 +8,8 @@ rule alias_spgc_gene_hits_for_benchmarking:
                 species=w.species,
                 stem=w.stem,
                 pangenome_params=w.pangenome_params,
-                spgc_stem=config["species_group_to_spgc_stem"][(w.species, "xjin")],
-                sfacts_stem=config["species_group_to_sfacts_stem"][
-                    (w.species, "xjin")
-                ],
+                spgc_stem=get_spgc_stem(config, w.species, "xjin"),
+                sfacts_stem=get_sfacts_stem(config, w.species, "xjin"),
             )
         ),
     shell:
@@ -115,9 +113,7 @@ rule alias_spgc_strain_match_for_benchmarking:
                 stem=w.stem,
                 pangenome_params=w.pangenome_params,
                 strain=w.strain,
-                sfacts_stem=config["species_group_to_sfacts_stem"][
-                    (w.species, "xjin")
-                ],
+                sfacts_stem=get_sfacts_stem(config, w.species, "xjin"),
                 spgc_stem=w.spgc_stem,
             ),
         ),

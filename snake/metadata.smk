@@ -36,12 +36,22 @@ config["species_group_to_sfacts_stem"] = (
     .set_index(["species_id", "species_group_id"])
     .sfacts_stem
 )
+
+
+def get_sfacts_stem(config, species, group):
+    return config["species_group_to_sfacts_stem"][(species, group)]
+
+
 config["species_group_to_spgc_stem"] = (
     pd.read_table("meta/species_group.tsv")
     .astype(str)
     .set_index(["species_id", "species_group_id"])
     .spgc_stem
 )
+
+
+def get_spgc_stem(config, species, group):
+    return config["species_group_to_spgc_stem"][(species, group)]
 
 
 config["genome"] = pd.read_table("meta/genome.tsv", dtype=str, index_col=["genome_id"])

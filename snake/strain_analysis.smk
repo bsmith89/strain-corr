@@ -368,9 +368,7 @@ rule alias_sfacts_outputs:
         source=lambda w: (
             "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.{w.stemB}".format(
                 w=w,
-                sfacts_params=config["species_group_to_sfacts_stem"][
-                    (w.species, w.group)
-                ],
+                sfacts_params=get_sfacts_stem(config, w.species, w.group),
             )
         ),
     shell:
@@ -404,10 +402,8 @@ rule alias_spgc_analysis_outputs:
         source=lambda w: (
             "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_{w.dbv}-v22-agg75.spgc_{spgc_params}.{w.stemB}".format(
                 w=w,
-                spgc_params=config["species_group_to_spgc_stem"][(w.species, w.group)],
-                sfacts_params=config["species_group_to_sfacts_stem"][
-                    (w.species, w.group)
-                ],
+                spgc_params=get_spgc_stem(config, w.species, w.group),
+                sfacts_params=get_sfacts_stem(config, w.species, w.group),
             )
         ),
     shell:
