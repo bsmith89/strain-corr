@@ -435,6 +435,8 @@ rule collect_analysis_files:
         gene="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.uhgg-strain_gene.tsv",
         comm="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.comm.tsv",
         spgc="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.nc",
+        # Genotype
+        geno="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.mgtp.nc",
         # Strain analysis
         meta="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv",
         diss_stats="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv",  # Distance to nearest ref
@@ -476,3 +478,15 @@ rule collect_spgc_manuscript_analysis_files:
 
 localrules:
     collect_spgc_manuscript_analysis_files,
+
+
+rule collect_ucfmt_analysis_files:
+    input:
+        "data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
+        "data/group/ucfmt/species/sp-101337/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
+        "data/group/ucfmt/species/sp-102478/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
+        "data/group/ucfmt/species/sp-101433/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.all_analysis_files.flag",
+
+
+localrules:
+    collect_ucfmt_analysis_files,
