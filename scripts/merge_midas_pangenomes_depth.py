@@ -17,12 +17,12 @@ if __name__ == "__main__":
         results.append(
             read_table_lz4(path)[["mean_depth", "cluster_75_id"]]
             .assign(sample=sample)
-            .set_index(["sample", "cluster_75_id"])
+            .rename(columns={'cluster_75_id': 'gene_id'})
+            .set_index(["sample", "gene_id"])
             .mean_depth
         )
     results = pd.concat(results)
 
     info("Writing output.")
     results = results.to_xarray()
-    breakpoint()
     results.to_netcdf(outpath)
