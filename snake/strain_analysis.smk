@@ -267,8 +267,6 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-
-
 rule calculate_morans_i_for_ref_strains:
     output:
         "data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.morans_i.tsv",
@@ -326,8 +324,7 @@ rule compile_gene_metadata:
         nlength="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
         cog_category="ref/cog-20.meta.tsv",
     wildcard_constraints:
-        centroid='99|95|90|85|80|75',
-
+        centroid="99|95|90|85|80|75",
     # params:
     # agg=lambda w: {
     #     99: "centroid_99",

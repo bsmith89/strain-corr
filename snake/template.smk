@@ -53,6 +53,7 @@ rule initialize_project_config:
         """
         )
 
+
 rule initialize_project_git_config:
     output:
         touch("build/initialize_project_git_config.flag"),
