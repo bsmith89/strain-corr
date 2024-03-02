@@ -32,7 +32,7 @@ Bacteroides-fragilis-3-1-12_MAF-2	100236	raw/genomes/xjin/Bacteroides-fragilis-3
 Odoribacter-splanchnicus-DSM-20712_MAF-2	100254	raw/genomes/xjin/Odoribacter-splanchnicus-DSM-20712_MAF-2.fa	xjin_100254_a	
 Anaerobutyricum-hallii-DSM-3353_MAF-2	100262	raw/genomes/xjin/Anaerobutyricum-hallii-DSM-3353_MAF-2.fa	Anaerobutyricum_hallii_DSM_3353_MAF_2	no xjin samples in metagenotype dataset after filtering;
 Roseburia-inulinivorans-DSM-16841_MAF-2	100271	raw/genomes/xjin/Roseburia-inulinivorans-DSM-16841_MAF-2.fa	Roseburia_inulinivorans_DSM_16841_MAF_2	no xjin samples in metagenotype dataset after filtering;
-Bacteroides-coprophilus-DSM-18228_MAF-2	TODO	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset; changed 100273 to TODO because that species wasn't found in the xjin_ucfmt_hmp2 dataset;
+Bacteroides-coprophilus-DSM-18228_MAF-2	UNKNOWN	raw/genomes/xjin/Bacteroides-coprophilus-DSM-18228_MAF-2.fa	Bacteroides_coprophilus_DSM_18228_MAF_2	was not a selected species based on gt-pro prevalence in xjin_hmp2 dataset; changed 100273 to UNKNOWN because that species wasn't found in the xjin_ucfmt_hmp2 dataset;
 Prevotella-buccae-D17_MAF-2	100289	raw/genomes/xjin/Prevotella-buccae-D17_MAF-2.fa	xjin_100289_a	
 Peptostreptococcus-anaerobius-ATCC-27337_MAF-2	100296	raw/genomes/xjin/Peptostreptococcus-anaerobius-ATCC-27337_MAF-2.fa	xjin_100296_a	two (very similar) strains identified in sfacts37-s85-seed0; loss of samples due to strain mixture and 'wrong' strain is dominant; TODO: Try sfacts37-s85-seed1;
 Prevotella-buccalis-ATCC-35310_MAF-2	100760	raw/genomes/xjin/Prevotella-buccalis-ATCC-35310_MAF-2.fa	xjin_100760_a	UHGG species number matched based on genus and process of elimination with two other Prevotella
@@ -103,25 +103,25 @@ Bifidobacterium-pseudocatenulatum-JCM-1200_MAF-2	103683	raw/genomes/xjin/Bifidob
 Clostridiales-bacterium-VE202-27_MinIONHybrid	103684	raw/genomes/xjin/Clostridiales-bacterium-VE202-27_MinIONHybrid.fa	xjin_103684_a	alternatively g__Eisenbergiella;s__GCF_000466465.2? GT-Pro kmers found in several other strains;
 Dialister-invisus-DSM-15470_MAF-2	104158	raw/genomes/xjin/Dialister-invisus-DSM-15470_MAF-2.fa	xjin_104158_a	
 Streptococcus-thermophilus-LMD-9_MAF-2	104345	raw/genomes/xjin/Streptococcus-thermophilus-LMD-9_MAF-2.fa	xjin_104345_a	
-Anaerotruncus-colihominis-DSM-17241_MAF-2	TODO	raw/genomes/xjin/Anaerotruncus-colihominis-DSM-17241_MAF-2.fa	Anaerotruncus_colihominis_DSM_17241_MAF_2	hits GT-Pro kmers in a large number of species; no clear GT-Pro match;
-Bacteroides-plebeius-DSM-17135_MAF-2	TODO	raw/genomes/xjin/Bacteroides-plebeius-DSM-17135_MAF-2.fa	Bacteroides_plebeius_DSM_17135_MAF_2	Hits absolutely no GT-Pro kmers;
-Blautia-wexlerae-DSM-19850_MAF-2	TODO	raw/genomes/xjin/Blautia-wexlerae-DSM-19850_MAF-2.fa	Blautia_wexlerae_DSM_19850_MAF_2	
-Clostridium-hylemonae-DSM-15053_MAF-2	TODO	raw/genomes/xjin/Clostridium-hylemonae-DSM-15053_MAF-2.fa	Clostridium_hylemonae_DSM_15053_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 101303 with 266 SNPs;
-Clostridium-sp-ATCC-29733_MAF-2	TODO	raw/genomes/xjin/Clostridium-sp-ATCC-29733_MAF-2.fa	Clostridium_sp_ATCC_29733_MAF_2	
-Clostridium-sp-D5_MAF-2	TODO	raw/genomes/xjin/Clostridium-sp-D5_MAF-2.fa	Clostridium_sp_D5_MAF_2	
-Clostridium-sp-L2-50_MinIONHybrid	TODO	raw/genomes/xjin/Clostridium-sp-L2-50_MinIONHybrid.fa	Clostridium_sp_L2_50_MinIONHybrid	
-Clostridium-spiroforme-DSM-1552_MAF-2	TODO	raw/genomes/xjin/Clostridium-spiroforme-DSM-1552_MAF-2.fa	Clostridium_spiroforme_DSM_1552_MAF_2	
-Collinsella-stercoris-DSM-13279_MAF-2	TODO	raw/genomes/xjin/Collinsella-stercoris-DSM-13279_MAF-2.fa	Collinsella_stercoris_DSM_13279_MAF_2	
-Granulicatella-adiacens-ATCC-49175_MAF-2	TODO	raw/genomes/xjin/Granulicatella-adiacens-ATCC-49175_MAF-2.fa	Granulicatella_adiacens_ATCC_49175_MAF_2	hits GT-Pro kmers in a large number of other species; no dominant hit;
-Lacrimispora-saccharolytica-WM1_MAF-2	TODO	raw/genomes/xjin/Lacrimispora-saccharolytica-WM1_MAF-2.fa	Lacrimispora_saccharolytica_WM1_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 100032;
-Marvinbryantia-formatexigens-DSM-14469_MAF-2	TODO	raw/genomes/xjin/Marvinbryantia-formatexigens-DSM-14469_MAF-2.fa	Marvinbryantia_formatexigens_DSM_14469_MAF_2	
-Olsenella-uli-DSM-7084_MAF-2	TODO	raw/genomes/xjin/Olsenella-uli-DSM-7084_MAF-2.fa	Olsenella_uli_DSM_7084_MAF_2	hits GT-Pro kmers in a large number of other species; most hits to 100256 and 102450;
-Peptostreptococcus-sp-CC14N-HM-1051_MAF-2	TODO	raw/genomes/xjin/Peptostreptococcus-sp-CC14N-HM-1051_MAF-2.fa	Peptostreptococcus_sp_CC14N_HM_1051_MAF_2	
-Ruminococcus-albus-8_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-albus-8_MAF-2.fa	Ruminococcus_albus_8_MAF_2	Hits kmers in a variety of species; but dominated by 102321; only one other strain has any hits to this species;
-Ruminococcus-bromii-ATCC-27255_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-bromii-ATCC-27255_MAF-2.fa	Ruminococcus_bromii_ATCC_27255_MAF_2	
-Ruminococcus-gauvreauii-DSM-19829_MAF-2	TODO	raw/genomes/xjin/Ruminococcus-gauvreauii-DSM-19829_MAF-2.fa	Ruminococcus_gauvreauii_DSM_19829_MAF_2	
-Slackia-exigua-ATCC-700122_MAF-2	TODO	raw/genomes/xjin/Slackia-exigua-ATCC-700122_MAF-2.fa	Slackia_exigua_ATCC_700122_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 104041, 102509, and 101387;
-Slackia-heliotrinireducens-DSM-20476_MAF-2	TODO	raw/genomes/xjin/Slackia-heliotrinireducens-DSM-20476_MAF-2.fa	Slackia_heliotrinireducens_DSM_20476_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 102509, 101387, 102480, and 104041;
-Solobacterium-moorei-DSM-22971_MAF-2	TODO	raw/genomes/xjin/Solobacterium-moorei-DSM-22971_MAF-2.fa	Solobacterium_moorei_DSM_22971_MAF_2	Hits kmers in a variety of species; dominated by 100773; 100773 only hits two kmers in one other strain;
-Subdoligranulum-variabile-DSM-15176_MAF-2	TODO	raw/genomes/xjin/Subdoligranulum-variabile-DSM-15176_MAF-2.fa	Subdoligranulum_variabile_DSM_15176_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 103921, 101157, and 101627;
+Anaerotruncus-colihominis-DSM-17241_MAF-2	UNKNOWN	raw/genomes/xjin/Anaerotruncus-colihominis-DSM-17241_MAF-2.fa	Anaerotruncus_colihominis_DSM_17241_MAF_2	hits GT-Pro kmers in a large number of species; no clear GT-Pro match;
+Bacteroides-plebeius-DSM-17135_MAF-2	UNKNOWN	raw/genomes/xjin/Bacteroides-plebeius-DSM-17135_MAF-2.fa	Bacteroides_plebeius_DSM_17135_MAF_2	Hits absolutely no GT-Pro kmers;
+Blautia-wexlerae-DSM-19850_MAF-2	UNKNOWN	raw/genomes/xjin/Blautia-wexlerae-DSM-19850_MAF-2.fa	Blautia_wexlerae_DSM_19850_MAF_2	
+Clostridium-hylemonae-DSM-15053_MAF-2	UNKNOWN	raw/genomes/xjin/Clostridium-hylemonae-DSM-15053_MAF-2.fa	Clostridium_hylemonae_DSM_15053_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 101303 with 266 SNPs;
+Clostridium-sp-ATCC-29733_MAF-2	UNKNOWN	raw/genomes/xjin/Clostridium-sp-ATCC-29733_MAF-2.fa	Clostridium_sp_ATCC_29733_MAF_2	
+Clostridium-sp-D5_MAF-2	UNKNOWN	raw/genomes/xjin/Clostridium-sp-D5_MAF-2.fa	Clostridium_sp_D5_MAF_2	
+Clostridium-sp-L2-50_MinIONHybrid	UNKNOWN	raw/genomes/xjin/Clostridium-sp-L2-50_MinIONHybrid.fa	Clostridium_sp_L2_50_MinIONHybrid	
+Clostridium-spiroforme-DSM-1552_MAF-2	UNKNOWN	raw/genomes/xjin/Clostridium-spiroforme-DSM-1552_MAF-2.fa	Clostridium_spiroforme_DSM_1552_MAF_2	
+Collinsella-stercoris-DSM-13279_MAF-2	UNKNOWN	raw/genomes/xjin/Collinsella-stercoris-DSM-13279_MAF-2.fa	Collinsella_stercoris_DSM_13279_MAF_2	
+Granulicatella-adiacens-ATCC-49175_MAF-2	UNKNOWN	raw/genomes/xjin/Granulicatella-adiacens-ATCC-49175_MAF-2.fa	Granulicatella_adiacens_ATCC_49175_MAF_2	hits GT-Pro kmers in a large number of other species; no dominant hit;
+Lacrimispora-saccharolytica-WM1_MAF-2	UNKNOWN	raw/genomes/xjin/Lacrimispora-saccharolytica-WM1_MAF-2.fa	Lacrimispora_saccharolytica_WM1_MAF_2	hits GT-Pro kmers in a large number of other species; dominant hit is 100032;
+Marvinbryantia-formatexigens-DSM-14469_MAF-2	UNKNOWN	raw/genomes/xjin/Marvinbryantia-formatexigens-DSM-14469_MAF-2.fa	Marvinbryantia_formatexigens_DSM_14469_MAF_2	
+Olsenella-uli-DSM-7084_MAF-2	UNKNOWN	raw/genomes/xjin/Olsenella-uli-DSM-7084_MAF-2.fa	Olsenella_uli_DSM_7084_MAF_2	hits GT-Pro kmers in a large number of other species; most hits to 100256 and 102450;
+Peptostreptococcus-sp-CC14N-HM-1051_MAF-2	UNKNOWN	raw/genomes/xjin/Peptostreptococcus-sp-CC14N-HM-1051_MAF-2.fa	Peptostreptococcus_sp_CC14N_HM_1051_MAF_2	
+Ruminococcus-albus-8_MAF-2	UNKNOWN	raw/genomes/xjin/Ruminococcus-albus-8_MAF-2.fa	Ruminococcus_albus_8_MAF_2	Hits kmers in a variety of species; but dominated by 102321; only one other strain has any hits to this species;
+Ruminococcus-bromii-ATCC-27255_MAF-2	UNKNOWN	raw/genomes/xjin/Ruminococcus-bromii-ATCC-27255_MAF-2.fa	Ruminococcus_bromii_ATCC_27255_MAF_2	
+Ruminococcus-gauvreauii-DSM-19829_MAF-2	UNKNOWN	raw/genomes/xjin/Ruminococcus-gauvreauii-DSM-19829_MAF-2.fa	Ruminococcus_gauvreauii_DSM_19829_MAF_2	
+Slackia-exigua-ATCC-700122_MAF-2	UNKNOWN	raw/genomes/xjin/Slackia-exigua-ATCC-700122_MAF-2.fa	Slackia_exigua_ATCC_700122_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 104041, 102509, and 101387;
+Slackia-heliotrinireducens-DSM-20476_MAF-2	UNKNOWN	raw/genomes/xjin/Slackia-heliotrinireducens-DSM-20476_MAF-2.fa	Slackia_heliotrinireducens_DSM_20476_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 102509, 101387, 102480, and 104041;
+Solobacterium-moorei-DSM-22971_MAF-2	UNKNOWN	raw/genomes/xjin/Solobacterium-moorei-DSM-22971_MAF-2.fa	Solobacterium_moorei_DSM_22971_MAF_2	Hits kmers in a variety of species; dominated by 100773; 100773 only hits two kmers in one other strain;
+Subdoligranulum-variabile-DSM-15176_MAF-2	UNKNOWN	raw/genomes/xjin/Subdoligranulum-variabile-DSM-15176_MAF-2.fa	Subdoligranulum_variabile_DSM_15176_MAF_2	Hits kmers in a variety of species; no clear dominant species, but many hits in 103921, 101157, and 101627;
 Bacteroides-fragilis-VPI-2553	101337	raw/genomes/jmoltzau/Bfragilis_VPI_2553.fna		Shared by Jacqueline Moltzau for comparison to UCFMT strains
