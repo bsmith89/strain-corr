@@ -1706,7 +1706,7 @@ species_id	species_group_id	sfacts_stem	spgc_stem	comment
 102463	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102469	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102470	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
-102478	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
+102478	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts48-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102480	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102483	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102485	hmp2	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
@@ -2333,7 +2333,7 @@ species_id	species_group_id	sfacts_stem	spgc_stem	comment
 102463	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102469	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102470	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
-102478	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
+102478	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts48-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102480	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102483	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102485	ucfmt	filt-poly05-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
@@ -2960,7 +2960,7 @@ species_id	species_group_id	sfacts_stem	spgc_stem	comment
 102463	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102469	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102470	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
-102478	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
+102478	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts48-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102480	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102483	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
 102485	xjin	filt-poly00-cvrg05.ss-g10000-block0-seed0.fit-sfacts37-s85-seed0	specgene-ref-filt-p95_ss-all_t-10_thresh-corr400-depth200	
