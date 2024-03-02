@@ -185,16 +185,16 @@ rule collect_xjin_benchmark_accuracy_grid:
                 species_group_genomes(species, "xjin"),
                 [
                     "spgc-fit",
-                            "spgc-depth200",
-                            "spanda-s3",
-                            "spanda-s4",
-                            "spanda-s5",
-                            "spanda-s6",
-                            "panphlan",
-                        ],
-                        ["uhggtop", "eggnog", "cog"],
-                    )
-                    if species != "TODO"
+                "spgc-depth200",
+                "spanda-s3",
+                "spanda-s4",
+                "spanda-s5",
+                "spanda-s6",
+                "panphlan",
+            ],
+            ["uhggtop", "eggnog", "cog"],
+        )
+        if species != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -230,10 +230,10 @@ rule collect_xjin_benchmark_strain_meta:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s95-d100-a0-pos100-std25.tsv".format(
-                    species=config["genome"].loc[genome].species_id, w=w
-                )
-                for genome in config["genome_group"]["xjin"]
-            if config["genome"].loc[genome].species_id != "TODO"
+            species=config["genome"].loc[genome].species_id, w=w
+        )
+        for genome in config["genome_group"]["xjin"]
+        if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -252,10 +252,10 @@ rule collect_xjin_benchmark_species_depth:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.species_depth.tsv".format(
-                    species=config["genome"].loc[genome].species_id, w=w
-                )
-                for genome in config["genome_group"]["xjin"]
-            if config["genome"].loc[genome].species_id != "TODO"
+            species=config["genome"].loc[genome].species_id, w=w
+        )
+        for genome in config["genome_group"]["xjin"]
+        if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
