@@ -24,5 +24,5 @@ if __name__ == "__main__":
     results = pd.concat(results)
 
     info("Writing output.")
-    results = results.to_xarray()
+    results = results.to_xarray().fillna(0)
     results.to_netcdf(outpath)
