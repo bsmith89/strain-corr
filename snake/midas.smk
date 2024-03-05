@@ -67,9 +67,9 @@ rule build_midas3_pangenomes_bowtie_index:
         """
 
 
-rule run_midas_genes:
+rule run_midas_genes:  # Hub-rule
     output:
-        directory("data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99-v20.midas.d"),
+        directory("data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d"),
     input:
         species_list="data/hash/{hash}/species.list",
         midasdb_dir="ref/midasdb_uhgg_v20_all",
@@ -78,11 +78,11 @@ rule run_midas_genes:
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     conda:
         "conda/midas3.yaml"
-    threads: 8
+    threads: 64
     resources:
         walltime_hr=48,
-        mem_mb=160_000,
-        pmem=160_000 // 8,
+        mem_mb=800_000,
+        pmem=lambda w, threads: 800_000 // threads,
     shell:
         """
         midas2 run_genes --num_cores {threads} \
