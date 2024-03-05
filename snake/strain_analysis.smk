@@ -65,32 +65,32 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-rule collect_metadata_for_uhgg_ref_strains_v15:
+# FIXME: This is generic to either v15 or v20, but points at v15 only for
+# npositions data because it should be the same as v20 and I don't want to re-run it.
+rule collect_metadata_for_uhgg_ref_strains_new:
     output:
-        meta="data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta.tsv",
+        meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
     input:
         script="scripts/extract_metadata_midasdb_v15.py",
-        meta="ref/midasdb_uhgg_v15/metadata/2023-11-11-genomes-all_metadata.tsv",
-        genome_to_species="ref/midasdb_uhgg_v15/genomes.tsv",
+        meta="ref/midasdb_uhgg_{dbv}/metadata/2023-11-11-genomes-all_metadata.tsv",
+        genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
         pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
-        genes="data/species/sp-{species}/midasdb.gene{centroid}_v15.uhgg-strain_gene.tsv",
+        genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
         # FIXME: Rename the above.
     shell:
         "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {output}"
 
 
-rule collect_filtering_metadata_for_uhgg_ref_strains_v15:
+rule collect_filtering_metadata_for_uhgg_ref_strains_new:
     output:
-        "data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta-complete90-contam5-pos100.tsv",
-        # FIXME: Replace data/species/sp-{species}/midasdb.gene{centroid}_v15.strain_meta-complete90-contam5-pos100.tsv
-        # everywhere with this.
+        "data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos{pos}.tsv",
     input:
         script="scripts/filter_ref_strains_v15.py",
-        meta="data/species/sp-{species}/midasdb_v15.gene{centroid}.strain_meta.tsv",
+        meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
     params:
         min_completeness=90 / 100,
         max_contamination=5 / 100,
-        min_positions=100,
+        min_positions=lambda w: int(w.pos),
     shell:
         "{input.script} {input.meta} {params.min_completeness} {params.max_contamination} {params.min_positions} {output}"
 
@@ -174,11 +174,11 @@ rule compare_spgc_and_ref_dissimilarities:
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 rule calculate_gene_prevalence_in_ref_genomes:
     output:
-        "{stem}/midasdb_{dbv}.gene{centroid}.{unit}-strain_gene.prevalence.tsv",
+        "{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.prevalence.tsv",
     input:
         script="scripts/strain_gene_to_prevalence.py",
         gene="{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
-        filt="{stem}/midasdb_v15.gene{centroid}.strain_meta-complete90-contam5-pos100.tsv",
+        filt="{stem}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos0.tsv",
     params:
         pseudo=0,
     shell:
@@ -394,10 +394,10 @@ ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples >
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.
 rule alias_spgc_analysis_outputs:
     output:
-        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_{dbv}-v22-agg75.spgc-fit.{stemB}",
+        "data/group/{group}/species/sp-{species}/{stemA}.gtpro.sfacts-fit.gene99_{dbv}-{btv}-agg75.spgc-fit.{stemB}",
     input:
         source=lambda w: (
-            "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_{w.dbv}-v22-agg75.spgc_{spgc_params}.{w.stemB}".format(
+            "data/group/{w.group}/species/sp-{w.species}/{w.stemA}.gtpro.{sfacts_params}.gene99_{w.dbv}-{w.btv}-agg75.spgc_{spgc_params}.{w.stemB}".format(
                 w=w,
                 spgc_params=get_spgc_stem(config, w.species, w.group),
                 sfacts_params=get_sfacts_stem(config, w.species, w.group),

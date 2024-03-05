@@ -151,13 +151,35 @@ rule assign_matching_genes_based_on_best_blastn_hit:
         """
 
 
-rule aggreggate_top_blastn_hits_by_midasdb_centroid:
+rule aggreggate_top_blastn_hits_by_midasdb_centroid_v15:
     output:
-        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroid}.uhggtop-strain_gene.tsv",
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_v15-blastn.gene_matching-best-c{centroid}.uhggtop-strain_gene.tsv",
     input:
         script="scripts/identify_strain_genes_from_top_blastn_hits.py",
-        hit="{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best.tsv",
-        gene_clust="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+        hit="{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_v15-blastn.gene_matching-best.tsv",
+        gene_clust="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
+    params:
+        aggregate_genes_by=lambda w: {
+            "99": "centroid_99",
+            "95": "centroid_95",
+            "90": "centroid_90",
+            "85": "centroid_85",
+            "80": "centroid_80",
+            "75": "centroid_75",
+        }[w.centroid],
+    shell:
+        """
+        {input.script} {input.gene_clust} {params.aggregate_genes_by} {input.hit} {output}
+        """
+
+
+rule aggreggate_top_blastn_hits_by_midasdb_centroid_v20:
+    output:
+        "{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_v20-blastn.gene_matching-best-c{centroid}.uhggtop-strain_gene.tsv",
+    input:
+        script="scripts/identify_strain_genes_from_top_blastn_hits.py",
+        hit="{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_v20-blastn.gene_matching-best.tsv",
+        gene_clust="ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv",
     params:
         aggregate_genes_by=lambda w: {
             "99": "centroid_99",
@@ -314,12 +336,22 @@ rule assign_matching_genes_based_on_tile_depth:
         """
 
 
-rule convert_midasdb_species_gene_info_to_reference_genome_table_new:
+rule convert_midasdb_species_gene_info_to_reference_genome_table_v15:
     output:
-        "data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
+        "data/species/sp-{species}/gene{centroid}_v15.reference_copy_number.nc",
     input:
         script="scripts/convert_gene_info_to_genome_table.py",
-        genes="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+        genes="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
+    shell:
+        "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
+
+
+rule convert_midasdb_species_gene_info_to_reference_genome_table_v20:
+    output:
+        "data/species/sp-{species}/gene{centroid}_v20.reference_copy_number.nc",
+    input:
+        script="scripts/convert_gene_info_to_genome_table.py",
+        genes="ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv",
     shell:
         "{input.script} {input.genes} centroid_{wildcards.centroid} {output}"
 
