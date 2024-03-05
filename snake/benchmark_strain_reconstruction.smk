@@ -281,13 +281,13 @@ localrules:
 rule collect_xjin_benchmark_grid_files:
     output:
         touch(
-            "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.BENCHMARK_GRID.flag"
+            "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.BENCHMARK_GRID.flag"
         ),
     input:
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v15-v22-agg75.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gene99_v15-v22-agg75.ACCURACY_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gene99_v15-v22-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_{dbv}-{bowtie_params}-agg75.ACCURACY_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
 
 
 localrules:

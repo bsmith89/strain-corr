@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 if __name__ == "__main__":
     outpath = sys.argv[1]
+    # FIXME: Assumes centroid==75
     sample_paths = dict((arg.split("=", maxsplit=1) for arg in sys.argv[2:]))
 
     results = []

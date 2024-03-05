@@ -131,6 +131,7 @@ rule extract_strain_gene_hits_from_spgc_netcdf:
         "{input.script} {input.ncdf} {output}"
 
 
+# Deprecated? Use calculate_species_depth_directly
 rule extract_species_depth_from_spgc_netcdf:
     output:
         "{stemA}.spgc_{spgc_params}.species_depth.tsv",
