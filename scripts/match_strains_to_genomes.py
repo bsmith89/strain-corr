@@ -10,9 +10,8 @@ if __name__ == "__main__":
     strain_geno_inpath = sys.argv[1]
     genome_id = sys.argv[2]
     spgc_geno_inpath = sys.argv[3]
-    species_depth_inpath = sys.argv[4]
-    strain_sample_inpath = sys.argv[5]
-    outpath = sys.argv[6]
+    strain_sample_inpath = sys.argv[4]
+    outpath = sys.argv[5]
 
     strain_geno = sf.Metagenotype.load(strain_geno_inpath).to_estimated_genotype()
     spgc_agg_mgtp = sf.Metagenotype.load(spgc_geno_inpath)
@@ -64,8 +63,6 @@ if __name__ == "__main__":
         .sort_values("genotype_dissimilarity")
         .assign(
             num_geno_positions_compared=strain_to_spgc_geno_num_positions.stack(),
-            species_depth_sum=species_depth.sum(),
-            species_depth_max=species_depth.max(),
         )
     )
 

@@ -89,26 +89,26 @@ localrules:
 
 rule match_strains_to_genomes_based_on_genotype:
     output:
-        "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{pangen_params}.spgc{spgc_params}.{strain}.geno_matching_stats.tsv",
+        "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.{strain}.geno_matching_stats.tsv",
     input:
         script="scripts/match_strains_to_genomes.py",
         strain_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
         spgc_geno="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         strain_sample="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_samples.tsv",
-        species_depth="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.gene{pangen_params}.spgc{spgc_params}.species_depth.tsv",
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.species_depth} {input.strain_sample} {output}"
+        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.strain_sample} {output}"
 
 
 # NOTE: Which is better place to alias-in strain matching requirements? alias_species_specific_sfacts_comm or here?
+# FIXME: Can this be replaced by the generic sfacts infix aliasing rule?
 rule alias_spgc_strain_match_for_benchmarking:
     output:
-        "data/group/xjin/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{pangenome_params}.spgc_{spgc_stem}.{strain}.geno_matching_stats.tsv",
+        "data/group/xjin/species/sp-{species}/{stem}.gtpro.sfacts-fit.{strain}.geno_matching_stats.tsv",
     input:
         source=lambda w: (
-            "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.gene{pangenome_params}.spgc_{spgc_stem}.{strain}.geno_matching_stats.tsv".format(
+            "data/group/xjin/species/sp-{species}/{stem}.gtpro.{sfacts_stem}.{strain}.geno_matching_stats.tsv".format(
                 species=w.species,
                 stem=w.stem,
                 pangenome_params=w.pangenome_params,
