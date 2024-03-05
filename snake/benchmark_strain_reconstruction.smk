@@ -257,14 +257,13 @@ localrules:
 
 
 # FIXME: The input is pretty messy. Might need a convenience function to collect this list of species.
+# DEPRECATED: Use .SELECT_SPECIES.flag
 rule collect_xjin_benchmark_species_depth:
     output:
-        touch(
-            "data/group/xjin/r.proc.gtpro.sfacts-fit.{pang_stem}.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag"
-        ),
+        touch("data/group/xjin/r.proc.{pang_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag"),
     input:
         sfacts_match=lambda w: [
-            "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.species_depth.tsv".format(
+            "data/group/xjin/species/sp-{species}/r.proc.{w.pang_stem}.spgc_specgene-ref-filt-p95.species_depth.tsv".format(
             species=config["genome"].loc[genome].species_id, w=w
         )
         for genome in config["genome_group"]["xjin"]

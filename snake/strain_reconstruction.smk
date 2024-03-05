@@ -56,7 +56,7 @@ rule filter_midasdb_all_gene_annotations_by_centroid_new:
 
 rule select_species_core_genes_from_reference_new:
     output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_{dbv}.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
+        species_gene="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.spgc_specgene-ref-t{trim_quantile}-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes.py",
         copy_number="data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc",
@@ -70,10 +70,10 @@ rule select_species_core_genes_from_reference_new:
 # FIXME: Rename a bunch of files to match the */midasdb_v15.gene75.* format.
 rule select_species_core_genes_from_reference_by_filtered_set_prevalence:
     output:
-        species_gene="data/species/sp-{species}/midasuhgg.pangenome.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list",
+        species_gene="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes2.py",
-        prevalence="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.uhgg-strain_gene.prevalence.tsv",
+        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.prevalence.tsv",
     params:
         threshold=lambda w: float(w.prevalence) / 100,
     shell:
@@ -99,7 +99,7 @@ rule run_spgc:
     input:
         depth="data/group/{group}/species/sp-{species}/{proc_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.depth2.tsv.gz",
         partition="data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.spgc_ss-all.strain_samples.tsv",
-        species_genes="data/species/sp-{species}/midasuhgg.pangenome.gene{centroidB}_{dbv}.spgc_specgene-{specgene}.species_gene.list",
+        species_genes="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.spgc_specgene-{specgene}.species_gene.list",
     params:
         trim_frac_species_genes=0.15,
         species_free_thresh=1e-4,
@@ -139,6 +139,22 @@ rule extract_species_depth_from_spgc_netcdf:
         ncdf="{stemA}.spgc_{spgc_params}.nc",
     shell:
         "{input.script} {input.ncdf} {output}"
+
+
+rule calculate_species_depth_directly:
+    output:
+        "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
+    input:
+        depth="data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.depth2.tsv.gz",
+        species_genes="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.spgc_specgene-{specgene_params}.species_gene.list",
+    params:
+        trim_frac_species_genes=0.15,
+    conda:
+        "conda/toolz4.yaml"
+    shell:
+        """
+        spgc estimate_species_depth --trim-frac-species-genes {params.trim_frac_species_genes} {input.depth} {input.species_genes} {output}
+        """
 
 
 # NOTE: This is really just a stop-gap to make a downstream rule easier to
