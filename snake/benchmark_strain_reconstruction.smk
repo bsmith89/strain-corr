@@ -170,34 +170,51 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
-rule collect_xjin_benchmark_accuracy_grid:
+rule collect_xjin_benchmark_accuracy_grid_for_one_species:
     output:
-        touch("data/group/xjin/{stem}.ACCURACY_BENCHMARK_GRID.flag"),
+        touch(
+            "data/group/xjin/species/sp-{species}/{stem}.ACCURACY_BENCHMARK_GRID_ONE_SPECIES.flag"
+        ),
     input:
         bench=lambda w: [
-            f"data/group/xjin/species/sp-{species}/{w.stem}.{tool}.{genome}.{unit}-reconstruction_accuracy.tsv"
-            for species in config["species_group"]["xjin"]
+            f"data/group/xjin/species/sp-{w.species}/{w.stem}.{tool}.{genome}.{unit}-reconstruction_accuracy.tsv"
             for genome, tool, unit in product(
-                species_group_genomes(species, "xjin"),
+                species_group_genomes(w.species, "xjin"),
                 [
                     "spgc-fit",
-                "spgc-depth200",
-                "spanda-s3",
-                "spanda-s4",
-                "spanda-s5",
-                "spanda-s6",
-                "panphlan",
-            ],
-            ["uhggtop", "eggnog", "cog"],
-        )
-        if species != "UNKNOWN"
+                    "spgc-depth200",
+                    "spanda-s6",
+                    "panphlan",
+                ],
+                [
+                    "uhggtop",
+                    "eggnog",
+                    "cog",
+                ],
+            )
         ],
     shell:
         "echo {input} > {output}"
 
 
 localrules:
-    collect_xjin_benchmark_accuracy_grid,
+    collect_xjin_benchmark_accuracy_grid_for_one_species,
+
+
+rule collect_xjin_benchmark_accuracy_grid_for_all_species:
+    output:
+        touch("data/group/xjin/{stem}.ACCURACY_BENCHMARK_GRID.flag"),
+    input:
+        bench=lambda w: [
+            f"data/group/xjin/species/sp-{species}/{w.stem}.ACCURACY_BENCHMARK_GRID_ONE_SPECIES.flag"
+            for species in config["species_group"]["xjin"]
+        ],
+    shell:
+        "echo {input} > {output}"
+
+
+localrules:
+    collect_xjin_benchmark_accuracy_grid_for_all_species,
 
 
 rule collect_xjin_benchmark_spgc_strain_match:
