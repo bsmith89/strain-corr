@@ -27,23 +27,23 @@ rule extract_spanda_reference:
         """
 
 
-rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
+rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_v15:
     output:
-        "data/group/xjin/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{pang_params}.spanda_counts.csv",
+        "data/group/xjin/species/sp-{species}/{stem}.pangenomes{centroidA}_v15-{pang_params}.spanda_counts.csv",
     input:
         script="scripts/merge_pangenomes_tallies_for_spanda.py",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_v15-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin"],
             )
             for mgen in config["mgen_group"]["xjin"]
         ],
-        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
+        gene_info="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
     params:
         sample_args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_v15-{w.pang_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin"],
@@ -53,6 +53,34 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_new:
     shell:
         """
         {input.script} {input.gene_info} {output} {params.sample_args}
+        """
+
+
+rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_v20:
+    output:
+        "data/group/xjin/species/sp-{species}/{stem}.pangenomes{centroidA}_v20-{pang_params}.spanda_counts.csv",
+    input:
+        script="scripts/merge_pangenomes_tallies_for_spanda_v20.py",
+        samples=lambda w: [
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_v20.midas.d".format(
+                w=w,
+                mgen=mgen,
+                _hash=config["species_group_to_hash"]["xjin"],
+            )
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+    params:
+        sample_args=lambda w: [
+            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_v20.midas.d/{mgen}/genes/{w.species}.genes.tsv.lz4".format(
+                w=w,
+                mgen=mgen,
+                _hash=config["species_group_to_hash"]["xjin"],
+            )
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+    shell:
+        """
+        {input.script} {output} {params.sample_args}
         """
 
 

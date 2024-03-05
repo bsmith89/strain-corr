@@ -1,10 +1,10 @@
-rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
+rule construct_panphlan_pangenome_metadata_from_midas_uhgg_v15:
     output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.panphlan_pangenome.tsv",
+        "data/species/sp-{species}/midasdb.gene{centroid}_v15.panphlan_pangenome.tsv",
     input:
         script="scripts/construct_panphlan_pangenome_from_midas.py",
-        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
-        cluster_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/cluster_info.txt",
+        gene_info="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
+        cluster_info="ref/midasdb_uhgg_v15/pangenomes/{species}/cluster_info.txt",
     params:
         centroid=lambda w: int(w.centroid),
         fillna_gene_length=1000,
@@ -12,17 +12,29 @@ rule construct_panphlan_pangenome_metadata_from_midas_uhgg_new:
         "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {params.fillna_gene_length} {output}"
 
 
+rule construct_panphlan_pangenome_metadata_from_midas_uhgg_v20:
+    output:
+        "data/species/sp-{species}/midasdb.gene{centroid}_v20.panphlan_pangenome.tsv",
+    input:
+        script="scripts/construct_panphlan_pangenome_from_midas_v20.py",
+        gene_info="ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv",
+    params:
+        centroid=lambda w: int(w.centroid),
+    shell:
+        "{input.script} {input.gene_info} {params.centroid} {output}"
+
+
 # NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
 # "run_spanda_decompose" combined.
-rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:  # Hub-rule
+rule run_panphlan_on_spgc_mapping_xjin_benchmark_v15:  # Hub-rule
     output:
-        hit="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
-        depth="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
-        thresh="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
+        hit="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v15-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
+        depth="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v15-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
+        thresh="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v15-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
     input:
-        pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.panphlan_pangenome.tsv",
+        pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_v15.panphlan_pangenome.tsv",
         samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_v15-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 mgen=mgen,
                 _hash=config["species_group_to_hash"]["xjin"],
@@ -30,7 +42,7 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:  # Hub-rule
             for mgen in config["mgen_group"]["xjin"]
         ],
     params:
-        sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+        sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_v15-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
             w=w, _hash=config["species_group_to_hash"]["xjin"]
         ),
         sample_list=lambda w: list(config["mgen_group"]["xjin"]),
@@ -50,6 +62,56 @@ rule run_panphlan_on_spgc_mapping_xjin_benchmark_new:  # Hub-rule
         do
             # echo $sample >&2
             lz4 -dc {params.sample_pattern} | sed '1,1d' | {{ grep -Ff <(cut -f2 {input.pangenome}) || [[ $? == 1 ]]; }} > $tmpdir/$sample
+        done
+        panphlan_profiling.py -i $tmpdir \
+                -p {input.pangenome} \
+                --left_max {params.left_max} --right_min {params.right_min} \
+                --min_coverage {params.min_depth} \
+                --o_matrix {output.hit} \
+                --o_covmat {output.depth} \
+                --o_idx {output.thresh}
+        rm -r $tmpdir
+        """
+
+
+# NOTE: This rule is equivilant to BOTH "construct_spanda_count_matrix" and
+# "run_spanda_decompose" combined.
+rule run_panphlan_on_spgc_mapping_xjin_benchmark_v20:  # Hub-rule
+    output:
+        hit="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv",
+        depth="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv",
+        thresh="data/group/xjin/species/sp-{species}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv",
+    input:
+        pangenome="data/species/sp-{species}/midasdb.gene{centroidB}_v20.panphlan_pangenome.tsv",
+        samples=lambda w: [
+            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenome{w.centroidA}_v20.midas.d".format(
+                w=w,
+                mgen=mgen,
+                _hash=config["species_group_to_hash"]["xjin"],
+            )
+            for mgen in config["mgen_group"]["xjin"]
+        ],
+    params:
+        sample_pattern=lambda w: "data/hash/{_hash}/reads/$sample/{w.stem}.pangenome{w.centroidA}_v20.midas.d/$sample/genes/{w.species}.genes.tsv.lz4".format(
+            w=w, _hash=config["species_group_to_hash"]["xjin"]
+        ),
+        sample_list=lambda w: list(config["mgen_group"]["xjin"]),
+        min_depth=0,
+        left_max=1_000_000,
+        right_min=0,
+    conda:
+        "conda/panphlan_dev.yaml"
+    threads: 2
+    resources:
+        walltime_hr=12,
+    shell:
+        """
+        tmpdir=$(mktemp -d)
+        echo Reading sample depths from database into $tmpdir >&2
+        for sample in {params.sample_list}
+        do
+            # echo $sample >&2
+            lz4 -dc {params.sample_pattern} | sed '1,1d' | awk -v OFS='\t' '{{print $1, $5}}' > $tmpdir/$sample
         done
         panphlan_profiling.py -i $tmpdir \
                 -p {input.pangenome} \
