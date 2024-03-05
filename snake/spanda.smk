@@ -1,30 +1,6 @@
 # StrainPanDA: https://github.com/xbiome/StrainPanDA
 
 
-rule download_spanda_reference:
-    output:
-        "raw/ref/strainpanda/{species}.tar.gz",
-    params:
-        url=lambda w: "https://zenodo.org/record/6592017/files/"
-        + config["species_to_spanda"][w.species]
-        + ".tar.gz",
-    shell:
-        curl_recipe
-
-
-rule extract_spanda_reference:
-    output:
-        directory("ref/strainpanda/{species}"),
-    input:
-        "raw/ref/strainpanda/{species}.tar.gz",
-    params:
-        dir="raw/ref/strainpanda",
-        spanda_species=lambda w: config["species_to_spanda"][w.species],
-    shell:
-        """
-        tar -xzf {input} --directory {params.dir}
-        mv {params.dir}/{params.spanda_species} {output}
-        """
 
 
 rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_v15:
