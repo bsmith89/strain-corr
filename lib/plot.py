@@ -25,7 +25,9 @@ DEFAULT_COLOR_LIST = [
 DEFAULT_LINESTYLE_LIST = ["-", "--", "-.", ":"]
 
 
-def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=0, vmax=1, desaturate_levels=None):
+def construct_ordered_palette(
+    x, cm="Spectral", other="grey", extend=None, vmin=0, vmax=1, desaturate_levels=None
+):
     if desaturate_levels is None:
         desaturate_levels = [1.0]
     labels = pd.Series(x).unique()
@@ -40,7 +42,9 @@ def construct_ordered_palette(x, cm="Spectral", other="grey", extend=None, vmin=
             coord = 0
         else:
             coord = i / (len(labels) - 1)
-        colormap[s] = sns.desaturate(sns.saturate(cm(coord * (vmax - vmin) + vmin)), desat)
+        colormap[s] = sns.desaturate(
+            sns.saturate(cm(coord * (vmax - vmin) + vmin)), desat
+        )
     return colormap
 
 
@@ -313,7 +317,6 @@ def scatterplot(
     scatter_kws={},
     fill_legend=True,
 ):
-
     data = data.copy()
 
     # Set up plotting defaults
@@ -650,6 +653,7 @@ def orderplot(
     rotate_xticklabels(ax=ax)
     return ax
 
+
 def hide_axes_and_spines(ax=None):
     if ax is None:
         ax = plt.gca()
@@ -657,20 +661,21 @@ def hide_axes_and_spines(ax=None):
     ax.set_axis_off()
 
     ax.xaxis.set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
 
     ax.yaxis.set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['left'].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+
 
 def hide_axes_and_spines_except_yaxis(ax=None):
     if ax is None:
         ax = plt.gca()
 
     ax.xaxis.set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
 
 
 def plot_stacked_barplot(data, x_var, order, palette=None, ax=None, **kwargs):

@@ -30,7 +30,7 @@ if __name__ == "__main__":
     ].value_counts()
 
     result = (
-        (votes_for / out_of)[lambda x: x >= 0.5]
+        (votes_for / out_of)[lambda x: x > 0.5]
         .rename_axis(index=(agg_column, annot_name))
         .to_frame("fraction")
     )

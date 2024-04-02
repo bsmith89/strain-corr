@@ -15,13 +15,14 @@ if __name__ == "__main__":
 
     results = []
     for i, (sample, path) in tqdm(enumerate(sample_paths.items())):
-        results.append(
+        d = (
             read_table_lz4(path)[["mean_depth", "cluster_75_id"]]
             .assign(sample=sample)
             .rename(columns={'cluster_75_id': 'gene_id'})
             .set_index(["sample", "gene_id"])
             .mean_depth
         )
+        results.append(d)
     results = pd.concat(results)
 
     info("Writing output.")

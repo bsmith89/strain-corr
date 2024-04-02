@@ -39,7 +39,7 @@ rule write_species_list:
         )
 
 
-rule build_midas3_pangenomes_bowtie_index:
+rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
     output:
         directory("data/hash/{hash}/pangenomes99_v20.bt2.d"),
     input:
@@ -66,10 +66,9 @@ rule build_midas3_pangenomes_bowtie_index:
                 --remove_singleton
         """
 
-
 rule run_midas_genes_align_only:  # Hub-rule
     output:
-        "data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d/{mgen}/genes/{mgen}.bam",
+        bam="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20-v23.bam",
     input:
         species_list="data/hash/{hash}/species.list",
         midasdb_dir="ref/midasdb_uhgg_v20_all",
@@ -78,11 +77,12 @@ rule run_midas_genes_align_only:  # Hub-rule
         r2="data/reads/{mgen}/r2.{proc}.fq.gz",
     params:
         outdir="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d",
+        outbam="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d/{mgen}/genes/{mgen}.bam",
     conda:
         "conda/midas3.yaml"
     threads: 4
     resources:
-        walltime_hr=48,
+        walltime_hr=72,
         mem_mb=80_000,
         pmem=lambda w, threads: 80_000 // threads,
     shell:
@@ -101,81 +101,7 @@ rule run_midas_genes_align_only:  # Hub-rule
                 --cluster_level 75 \
                 --alignment_only \
                 {params.outdir}
+        ln {params.outbam} {output.bam}
         """
-
-
-rule run_midas_genes_post_align_only:  # Hub-rule
-    output:
-        "data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d/{mgen}/genes/{species}.genes.tsv.lz4",
-    input:
-        species_list="data/hash/{hash}/species.list",
-        midasdb_dir="ref/midasdb_uhgg_v20_all",
-        bowtie_indexes="data/hash/{hash}/pangenomes99_v20.bt2.d",
-        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
-        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
-        bam="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d/{mgen}/genes/{mgen}.bam",
-    params:
-        outdir="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20.midas.d",
-    conda:
-        "conda/midas3.yaml"
-    threads: 1
-    resources:
-        walltime_hr=48,
-        mem_mb=2_000,
-        pmem=2_000 // 1,
-    shell:
-        """
-        midas2 run_genes --num_cores {threads} \
-                -1 {input.r1} -2 {input.r2} \
-                --sample_name {wildcards.mgen} \
-                --midasdb_name newdb \
-                --midasdb_dir {input.midasdb_dir} \
-                --prebuilt_bowtie2_indexes {input.bowtie_indexes}/pangenomes \
-                --prebuilt_bowtie2_species {input.species_list} \
-                --species_list {wildcards.species} \
-                --skip_species_summary \
-                --select_threshold=-1 \
-                --aln_speed sensitive \
-                --aln_extra_flags '--mm --ignore-quals' \
-                --total_depth 0 \
-                --cluster_level 75 \
-                --debug \
-                {params.outdir}
-        """
-
-
-rule load_one_species_pangenome3_depth_into_netcdf:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.gene99_v20-v23-agg75.depth2.nc",
-    input:
-        script="scripts/merge_midas_pangenomes_depth.py",
-        samples=lambda w: [
-            "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99_v20.midas.d/{mgen}/genes/{w.species}.genes.tsv.lz4".format(
-                w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
-            )
-            for mgen in config["mgen_group"][w.group]
-        ],
-    params:
-        args=lambda w: [
-            "{mgen}=data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes99_v20.midas.d/{mgen}/genes/{w.species}.genes.tsv.lz4".format(
-                w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
-            )
-            for mgen in config["mgen_group"][w.group]
-        ],
-    conda:
-        "conda/toolz.yaml"
-    threads: 1
-    resources:
-        walltime_hr=24,
-        mem_mb=20_000,
-        pmem=20_000 // 1,
-    shell:
-        """
-        {input.script} {output} {params.args}
-        """
-
-
-ruleorder: load_one_species_pangenome3_depth_into_netcdf > load_one_species_pangenome2_depth_into_netcdf_new
-
 
 # This comment is only needed to get the last rule off the bottom of the file.

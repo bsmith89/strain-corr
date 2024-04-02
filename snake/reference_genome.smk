@@ -1,6 +1,17 @@
-rule link_reference_genome:
+rule link_project_reference_genome:
     output:
         "data/species/sp-{species}/genome/{genome}.fn",
+    input:
+        lambda w: config["genome"].loc[w.genome].genome_path,
+    wildcard_constraints:
+        genome=noperiod_wc,
+    shell:
+        alias_recipe
+
+
+rule link_project_reference_genome_no_species:
+    output:
+        "data/genome/{genome}.fn",
     input:
         lambda w: config["genome"].loc[w.genome].genome_path,
     wildcard_constraints:
@@ -62,6 +73,39 @@ rule genome_fasta_to_fastq:
         "conda/seqtk.yaml"
     shell:
         "seqtk seq -F '#' {input} | gzip -c > {output}"
+
+
+rule gtpro_species_lines_counts:
+    output:
+        "{stemA}/genome/{genome}.{stemB}.gtpro_species_tally.tsv",
+    input:
+        "{stemA}/genome/{genome}.{stemB}.gtpro_parse.tsv.bz2",
+    wildcard_constraints:
+        genome=noperiod_wc,
+    shell:
+        """
+        bzcat {input} \
+                | sed '1,1d' \
+                | cut -f1 \
+                | sort \
+                | uniq -c \
+                | awk -v OFS='\t' -v genome={wildcards.genome} '{{print genome,$2,$1}}' \
+            > {output}
+        """
+
+
+rule combine_project_genome_gtpro_species_lines_counts_no_species:
+    output:
+        "data/group/{group}/strain_genomes.{stem}.gtpro_species_tally.tsv"
+    input:
+        strain=lambda w: [
+            f"data/genome/{genome}.{w.stem}.gtpro_species_tally.tsv"
+            for genome, species in group_genomes(w.group)
+        ],
+    shell:
+        """
+        cat {input.strain} > {output}
+        """
 
 
 rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
@@ -291,24 +335,24 @@ use rule run_bowtie_multispecies_pangenome_v22_new as run_bowtie_multispecies_pa
     threads: 1
 
 
-use rule load_one_species_pangenome2_depth_into_netcdf_new as load_one_species_pangenome2_tile_depth_into_netcdf_new with:  # Hub-rule (along with its parent)
+use rule load_one_species_pangenome2_depth_into_netcdf_v20 as load_one_species_pangenome2_tile_depth_into_netcdf_v20 with:  # Hub-rule (along with its parent)
     output:
-        "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
+        "data/group/{group}/species/sp-{species}/ALL_STRAINS.{stem}.gene{centroidA}_v20-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
         script="scripts/merge_pangenomes_depth.py",
         samples=lambda w: [
-            "data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_v20-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 genome=genome,
                 _hash=config["species_group_to_hash"][w.group],
             )
             for genome in species_group_genomes(w.species, w.group)
         ],
-        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
-        gene_length="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
+        gene_info="ref/midasdb_uhgg_v20/pangenomes/{species}/gene_info.txt",
+        gene_length="ref/midasdb_uhgg_v20/pangenomes/{species}/genes.len",
     params:
         args=lambda w: [
-            "{genome}=data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
+            "{genome}=data/hash/{_hash}/species/sp-{w.species}/genome/{genome}.{w.stem}.pangenomes{w.centroidA}_v20-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w,
                 genome=genome,
                 _hash=config["species_group_to_hash"][w.group],

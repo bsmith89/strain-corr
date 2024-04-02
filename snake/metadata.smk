@@ -63,6 +63,13 @@ config["genome_group"] = (
 )
 
 
+# NOTE: This function is used, e.g. in snake/reference_genome.smk
+# to gather a list of species and genomes for a group.
+def group_genomes(group):
+    genome_group_list = config["genome_group"][group]
+    d = config["genome"].loc[genome_group_list]
+    return dict(d.species_id).items()
+
 # NOTE: This function is used, e.g. in snake/reference_genome.smk and
 # snake/benchmark_strain_reconstruction.smk to gather a list of reference
 # genomes for each species.
@@ -147,6 +154,16 @@ if os.path.exists("ref/midasdb_uhgg_v15/genomes.tsv"):
     config["midasdb_uhgg_v15_species_genome"] = (
         pd.read_table(
             "ref/midasdb_uhgg_v15/genomes.tsv",
+            dtype=str,
+        )
+        .groupby("species")
+        .genome.apply(list)
+    )
+
+if os.path.exists("ref/midasdb_uhgg_v20/genomes.tsv"):
+    config["midasdb_uhgg_v20_species_genome"] = (
+        pd.read_table(
+            "ref/midasdb_uhgg_v20/genomes.tsv",
             dtype=str,
         )
         .groupby("species")

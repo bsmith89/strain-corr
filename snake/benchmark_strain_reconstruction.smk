@@ -87,18 +87,25 @@ localrules:
     alias_xjin_tiles_as_xjin_benchmark,
 
 
+use rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance as compute_benchmark_and_spgc_pairwise_genotype_masked_hamming_distance with:
+    output:
+        "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.genome_pdist-mask{thresh}-pseudo{pseudo}.pkl",
+    input:
+        script="scripts/calculate_ref_and_spgc_pairwise_genotype_masked_hamming_distance.py",
+        spgc_agg_mgtp="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
+        ref_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
+
 rule match_strains_to_genomes_based_on_genotype:
     output:
-        "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.{strain}.geno_matching_stats.tsv",
+        "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.geno_matching_stats.tsv",
     input:
         script="scripts/match_strains_to_genomes.py",
-        strain_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
-        spgc_geno="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
-        strain_sample="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.strain_samples.tsv",
+        cdist="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.genome_pdist-mask10-pseudo10.pkl",
+        spgc_agg_mgtp="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
     conda:
         "conda/sfacts.yaml"
     shell:
-        "{input.script} {input.strain_geno} {wildcards.strain} {input.spgc_geno} {input.strain_sample} {output}"
+        "{input.script} {input.cdist} {input.spgc_agg_mgtp} {output}"
 
 
 # NOTE: Which is better place to alias-in strain matching requirements? alias_species_specific_sfacts_comm or here?
@@ -222,9 +229,11 @@ rule collect_xjin_benchmark_spgc_strain_match:
         touch("data/group/xjin/{stem}.STRAIN_MATCH_BENCHMARK_GRID.flag"),
     input:
         sfacts_match=lambda w: [
-            f"data/group/xjin/species/sp-{species}/{w.stem}.{genome}.geno_matching_stats.tsv"
-            for species in config["species_group"]["xjin"]
-            for genome in species_group_genomes(species, "xjin")
+            "data/group/xjin/species/sp-{species}/{w.stem}.geno_matching_stats.tsv".format(
+            species=config["genome"].loc[genome].species_id, w=w
+        )
+        for genome in config["genome_group"]["xjin"]
+        if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -281,13 +290,13 @@ localrules:
 rule collect_xjin_benchmark_grid_files:
     output:
         touch(
-            "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.BENCHMARK_GRID.flag"
+            "data/group/xjin/r.proc.gtpro.sfacts-fit.{gene_stem}.spgc-fit.BENCHMARK_GRID.flag"
         ),
     input:
         "data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.SPECIES_DEPTH_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gene99_{dbv}-{bowtie_params}-agg75.ACCURACY_BENCHMARK_GRID.flag",
-        "data/group/xjin/r.proc.gene99_{dbv}-{bowtie_params}-agg75.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.{gene_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.{gene_stem}.ACCURACY_BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.{gene_stem}.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag",
 
 
 localrules:

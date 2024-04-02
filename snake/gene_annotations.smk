@@ -91,25 +91,63 @@ rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v15:
 
 ruleorder: parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v15 > parse_midasdb_emapper_annotations_to_gene99_x_unit_v15
 
+# Specialized script for gene_x_cog_category.
+# Required because the COG categories assigned by emapper are not the same as those found
+# in ref/cog-20.meta.tsv
+# We therefore combine the two, and give every gene all categories in either file.
+rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v20:
+    output:
+        "data/species/sp-{species}/midasdb_v20.emapper.gene99_x_cog_category.tsv",
+    input:
+        script="scripts/parse_emapper_output_to_gene_x_cog_category_v20.py",
+        emapper="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv",
+        cog_category="ref/cog-20.meta.tsv",
+    shell:
+        "{input.script} {input.emapper} {input.cog_category} {output}"
+
+
+ruleorder: parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v20 > parse_midasdb_emapper_annotations_to_gene99_x_unit_v20
+
 
 # NOTE: Genomad annotations are done at the unique gene level.
-rule parse_genomad_annotations_to_gene_x_accession:
+rule parse_genomad_annotations_to_gene_x_accession_v15:
     output:
-        "data/species/sp-{species}/midasdb_{dbv}.gene_x_genomad_{annot}.tsv",
+        "data/species/sp-{species}/midasdb_v15.gene_x_genomad_{annot}.tsv",
     input:
         script="scripts/parse_genomad_annotations_to_gene_x_accession.py",
-        annot="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genomad_{annot}.tsv",
+        annot="ref/midasdb_uhgg_v15/pangenomes/{species}/genomad_{annot}.tsv",
+    shell:
+        "{input.script} {input.annot} {output}"
+
+# NOTE: Genomad annotations are done at the unique gene level.
+rule parse_genomad_annotations_to_gene_x_accession_v20:
+    output:
+        "data/species/sp-{species}/midasdb_v20.gene_x_genomad_{annot}.tsv",
+    input:
+        script="scripts/parse_genomad_annotations_to_gene_x_accession_v20.py",
+        annot="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/genomad_{annot}.tsv",
     shell:
         "{input.script} {input.annot} {output}"
 
 
 # NOTE: resfinder annotations are done at the unique gene level.
-rule parse_resfinder_annotations_to_gene_x_accession:
+rule parse_resfinder_annotations_to_gene_x_accession_v15:
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gene_x_amr.tsv",
     input:
         script="scripts/parse_resfinder_annotations_to_gene_x_accession.py",
-        annot="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/resfinder.tsv",
+        annot="ref/midasdb_uhgg_v15/pangenomes/{species}/resfinder.tsv",
+    shell:
+        "{input.script} {input.annot} {output}"
+
+
+# NOTE: resfinder annotations are done at the unique gene level.
+rule parse_resfinder_annotations_to_gene_x_accession_v20:
+    output:
+        "data/species/sp-{species}/midasdb_{dbv}.gene_x_amr.tsv",
+    input:
+        script="scripts/parse_resfinder_annotations_to_gene_x_accession.py",
+        annot="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/resfinder.tsv",
     shell:
         "{input.script} {input.annot} {output}"
 
@@ -196,7 +234,7 @@ rule aggregate_gene_annotations_to_higher_centroid_v20:
     input:
         script="scripts/aggregate_gene_annotations_to_higher_centroid.py",
         annot="data/species/sp-{species}/midasdb_v20.gene_x_{unit}.tsv",
-        clust="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/gene_info.txt",
+        clust="ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv",
     params:
         agg=lambda w: {
             99: "centroid_99",

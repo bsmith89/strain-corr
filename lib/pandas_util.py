@@ -1,6 +1,8 @@
 import pandas as pd
+from pandas.errors import EmptyDataError
 import subprocess
 from io import StringIO
+import sys
 
 
 def idxwhere(condition, x=None):
@@ -54,7 +56,11 @@ def invert_mapping(x):
 
 def read_table_lz4(path, *args, **kwargs):
     with subprocess.Popen(["lz4", "-dc", path], stdout=subprocess.PIPE) as proc:
-        out = pd.read_table(proc.stdout, *args, **kwargs)
+        try:
+            out = pd.read_table(proc.stdout, *args, **kwargs)
+        except EmptyDataError as err:
+            print(f"Error reading {path}:", file=sys.stderr)
+            raise (err)
     return out
 
 

@@ -65,6 +65,7 @@ def partial_mantel_test(
     import rpy2
     from rpy2 import robjects
     from rpy2.robjects import packages, pandas2ri
+
     rpy2.robjects.packages.importr("vegan")
     rpy2.robjects.packages.importr("dplyr")
     r_mantel_partial = rpy2.robjects.r["mantel.partial"]
@@ -88,6 +89,7 @@ def mantel_test(dx, dy, strata=None, method="pearson", na_rm=True, permutations=
     import rpy2
     from rpy2 import robjects
     from rpy2.robjects import packages, pandas2ri
+
     rpy2.robjects.packages.importr("vegan")
     rpy2.robjects.packages.importr("dplyr")
     r_mantel_partial = rpy2.robjects.r["mantel.partial"]
@@ -112,7 +114,7 @@ def dump_dmat_as_pickle(dmat, path):
 def load_dmat_as_pickle(path):
     with open(path, "rb") as f:
         d = pickle.load(f)
-    cdmat = d['cdmat']
-    labels = d['labels']
+    cdmat = d["cdmat"]
+    labels = d["labels"]
     dmat = pd.DataFrame(squareform(cdmat), index=labels, columns=labels)
     return dmat

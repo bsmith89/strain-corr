@@ -209,19 +209,19 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:
         """
 
 
-rule load_one_species_pangenome2_depth_into_netcdf_new:  # Hub-rule (also note child rule in reference_genome.smk)
+
+rule load_one_species_pangenome2_depth_into_netcdf_v20:  # Hub-rule (also note child rule in reference_genome.smk)
     output:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
     input:
-        script="scripts/merge_pangenomes_depth.py",
+        script="scripts/merge_pangenomes_depth_v20.py",
         samples=lambda w: [
             "data/hash/{_hash}/reads/{mgen}/{w.stem}.pangenomes{w.centroidA}_{w.dbv}-{w.bowtie_params}.gene_mapping_tally.tsv.lz4".format(
                 w=w, mgen=mgen, _hash=config["species_group_to_hash"][w.group]
             )
             for mgen in config["mgen_group"][w.group]
         ],
-        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/gene_info.txt",
-        gene_length="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes.len",
+        gene_info="ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes_info.tsv",
     wildcard_constraints:
         centroidA="99|95|90|85|80|75",
         centroidB="99|95|90|85|80|75",
@@ -242,7 +242,7 @@ rule load_one_species_pangenome2_depth_into_netcdf_new:  # Hub-rule (also note c
         pmem=20_000 // 1,
     shell:
         """
-        {input.script} {input.gene_length} {input.gene_info} {params.centroidB_col} {output} {params.args}
+        {input.script} {input.gene_info} {params.centroidB_col} {output} {params.args}
         """
 
 
