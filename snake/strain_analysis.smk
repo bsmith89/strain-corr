@@ -486,7 +486,7 @@ rule collect_analysis_files:
         prevalence="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv",
         eggnog_prevalence="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-strain_gene.prevalence.tsv",
         prev_class_frac="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.prevalence_class_fraction.tsv",
-        species_depth="data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.species_depth.tsv",
+        species_depth="data/group/{group}/species/sp-{species}/r.proc.gene99_v20-v23-agg75.spgc_specgene-ref-filt-p95.species_depth.tsv",  # Does not require SPGC.
         # Gene metadata
         ref_eggnog_prevalence="data/species/sp-{species}/midasdb.gene75_v20.eggnog-strain_gene.prevalence.tsv",
         eggnog="data/species/sp-{species}/midasdb_v20.emapper.gene75_x_eggnog.tsv",
