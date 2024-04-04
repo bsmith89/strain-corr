@@ -72,7 +72,7 @@ rule collect_metadata_for_uhgg_ref_strains_new:
         meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
     input:
         script="scripts/extract_metadata_midasdb_v15.py",
-        meta="ref/midasdb_uhgg_{dbv}/metadata/2023-11-11-genomes-all_metadata.tsv",
+        meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
         pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
