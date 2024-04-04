@@ -159,3 +159,29 @@ rule link_arbitrary_v15_midas_db_file:
 
 localrules:
     link_arbitrary_v15_midas_db_file,
+
+
+rule link_full_midasdb_v20_dir:
+    output:
+        directory("ref/midasdb_uhgg_v20_all"),
+    input:
+        ancient("/pollard/data/midas2-db/midas2db-uhgg-v2/"),  # NOTE: UGGGHHHH
+    shell:
+        alias_recipe_norelative
+
+
+localrules:
+    link_full_midasdb_v20_dir,
+
+
+rule link_arbitrary_v20_midas_db_file:
+    output:
+        "ref/midasdb_uhgg_v20/{stem}",
+    input:
+        "/pollard/data/midas2-db/midas2db-uhgg-v2/{stem}",
+    shell:
+        alias_recipe_norelative
+
+
+localrules:
+    link_arbitrary_v20_midas_db_file,
