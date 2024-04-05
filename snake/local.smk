@@ -55,20 +55,38 @@ rule link_gtpro_snps_dict:
         alias_recipe_norelative
 
 
-rule link_xjin_mgen_data:
+rule link_xjin_mgen:
     output:
-        directory("raw/mgen/xjin"),
+        "raw/mgen/xjin/{stem}",
     input:
-        "/pollard/data/internal/unpublished/CZBMI-Biofilm_BeadExperiment/biofilmBeadExpV2",
+        "/pollard/data/internal/unpublished/CZBMI-Biofilm_BeadExperiment/biofilmBeadExpV2/{stem}",
     shell:
         alias_recipe_norelative
 
 
 rule link_xjin_genomes_data:
     output:
-        directory("raw/genomes/xjin"),
+        "raw/genomes/xjin/{stem}",
     input:
-        "/pollard/data/microbial_genomes/fischbachBiohubStrains/Hybrid_Closed_Genomes/",
+        "/pollard/data/microbial_genomes/fischbachBiohubStrains/Hybrid_Closed_Genomes/{stem}",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_hmp2_raw_data:
+    output:
+        "raw/mgen/hmp2/{stem}",
+    input:
+        "/pollard/data/HMP2/ftp.broadinstitute.org/raw/HMP2/MGX/2018-05-04/{stem}",
+    shell:
+        alias_recipe_norelative
+
+
+rule link_ucfmt_raw_data:
+    output:
+        "sraw/mgen/ucfmt/{stem}",
+    input:
+        "/pollard/ucfmt/raw_data_archive/{stem}",
     shell:
         alias_recipe_norelative
 
