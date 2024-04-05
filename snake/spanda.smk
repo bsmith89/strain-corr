@@ -30,8 +30,6 @@ rule construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_v20:
         """
 
 
-
-
 rule run_spanda_decompose_new:
     output:
         gene="data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv",

@@ -1,17 +1,3 @@
-rule construct_panphlan_pangenome_metadata_from_midas_uhgg_v15:
-    output:
-        "data/species/sp-{species}/midasdb.gene{centroid}_v15.panphlan_pangenome.tsv",
-    input:
-        script="scripts/construct_panphlan_pangenome_from_midas.py",
-        gene_info="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
-        cluster_info="ref/midasdb_uhgg_v15/pangenomes/{species}/cluster_info.txt",
-    params:
-        centroid=lambda w: int(w.centroid),
-        fillna_gene_length=1000,
-    shell:
-        "{input.script} {input.gene_info} {input.cluster_info} {params.centroid} {params.fillna_gene_length} {output}"
-
-
 rule construct_panphlan_pangenome_metadata_from_midas_uhgg_v20:
     output:
         "data/species/sp-{species}/midasdb.gene{centroid}_v20.panphlan_pangenome.tsv",

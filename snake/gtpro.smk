@@ -234,22 +234,6 @@ def checkpoint_select_species(
     return out
 
 
-rule list_checkpoint_select_species:
-    output:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.select_species.list",
-    input:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
-    params:
-        obj=lambda w: checkpoint_select_species(
-            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-            cvrg_thresh=0.2,
-            num_samples=2,
-            require_in_species_group=True,
-        ),
-    shell:
-        "for species in {params.obj}; do echo $species; done > {output}"
-
-
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
         "data/group/{group}/{stem}.gtpro.tsv.bz2.args",
