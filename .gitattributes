@@ -1,3 +1,2 @@
-*.ipynb	filter=dropoutput_ipynb
 *.[tc]sv diff=daff-csv
 *.[tc]sv merge=daff-csv
