@@ -1,6 +1,9 @@
 # EEN Metagenomes
 
 
+# TODO: rule concatenate_species_depths:
+
+
 rule process_raw_zotus_table:
     output:
         "data/group/een/a.proc.zotu_counts.tsv",
