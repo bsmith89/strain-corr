@@ -45,6 +45,7 @@ use rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance as
         spgc_agg_mgtp="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         ref_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
 
+
 rule match_strains_to_genomes_based_on_genotype:
     output:
         "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.geno_matching_stats.tsv",
@@ -158,10 +159,10 @@ rule collect_xjin_benchmark_spgc_strain_match:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/{w.stem}.geno_matching_stats.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -180,10 +181,10 @@ rule collect_xjin_benchmark_strain_meta:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s95-d100-a0-pos100-std25.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -201,10 +202,10 @@ rule collect_xjin_benchmark_species_depth:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.{w.pang_stem}.spgc_specgene-ref-filt-p95.species_depth.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"

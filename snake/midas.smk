@@ -66,6 +66,7 @@ rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
                 --remove_singleton
         """
 
+
 rule run_midas_genes_align_only:  # Hub-rule
     output:
         bam="data/hash/{hash}/reads/{mgen}/r.{proc}.pangenomes99_v20-v23.bam",
@@ -103,5 +104,6 @@ rule run_midas_genes_align_only:  # Hub-rule
                 {params.outdir}
         ln {params.outbam} {output.bam}
         """
+
 
 # This comment is only needed to get the last rule off the bottom of the file.

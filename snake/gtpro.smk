@@ -106,7 +106,7 @@ rule load_gtpro_snp_dict:
         )
 
 
-rule gtpro_finish_processing_reads:
+rule gtpro_finish_processing_reads:  # Pre-Hub-rule
     output:
         "{stem}.gtpro_parse.tsv.bz2",
     input:

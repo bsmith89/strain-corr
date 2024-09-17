@@ -47,6 +47,7 @@ rule subset_metagenotype:
                 {output}
         """
 
+
 rule fit_sfacts:
     output:
         fit="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.world.nc",
@@ -80,6 +81,7 @@ rule fit_sfacts:
                 --history-outpath {output.hist} \
                 -- {input.mgen} {output.fit}
         """
+
 
 rule export_sfacts_comm:
     output:

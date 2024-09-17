@@ -53,8 +53,6 @@ rule collect_filtering_metadata:
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
-        # spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
-        # sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
     params:
         min_species_genes_frac=95 / 100,
         min_total_depth=100 / 100,
@@ -78,7 +76,6 @@ rule collect_metadata_for_uhgg_ref_strains_new:
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
         pos="data/species/sp-{species}/midasdb_v20.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
-        # FIXME: Rename the above.
     shell:
         "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {output}"
 

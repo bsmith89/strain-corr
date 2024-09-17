@@ -4,9 +4,11 @@ rule sort_bib_from_raw:
     input:
         script="scripts/sort_bib.py",
         bib=["doc/bibliography_raw.bib"],
-    conda: "conda/pandoc.yaml"
+    conda:
+        "conda/pandoc.yaml"
     shell:
         "python {input.script} {input.bib} > {output}"
+
 
 rule render_pdf_to_png_imagemagick:
     output:
@@ -15,7 +17,8 @@ rule render_pdf_to_png_imagemagick:
         "fig/{stem}.pdf",
     params:
         dpi=lambda w: int(w.dpi),
-    conda: "conda/pandoc.yaml"
+    conda:
+        "conda/pandoc.yaml"
     shell:
         """
         convert -units PixelsPerInch -density {params.dpi} {input} {output}
@@ -23,8 +26,11 @@ rule render_pdf_to_png_imagemagick:
 
 
 rule _temp_test_biblib:
-    conda: "conda/pandoc.yaml"
-    shell: 'python3 -c "import biblib"'
+    conda:
+        "conda/pandoc.yaml"
+    shell:
+        'python3 -c "import biblib"'
+
 
 # rule render_figure_to_png:
 #     output:
@@ -44,12 +50,12 @@ rule render_figure_to_pdf:
         "fig/{stem}_figure.pdf",
     input:
         "doc/static/{stem}_figure.svg",
-    conda: "conda/pandoc.yaml"
+    conda:
+        "conda/pandoc.yaml"
     shell:
         """
         inkscape {input} --export-filename {output}
         """
-
 
 
 #
@@ -107,7 +113,8 @@ rule build_manuscript_docx:
             "fig/accuracy_by_depth_figure.dpi200.png",
             "fig/genome_fraction_refs_figure.dpi200.png",
         ],
-    conda: "conda/pandoc.yaml"
+    conda:
+        "conda/pandoc.yaml"
     shell:
         """
         pandoc --from markdown --to docx \
@@ -143,7 +150,8 @@ localrules:
 
 
 rule compile_manuscript_submission:
-    output: directory("build/submission")
+    output:
+        directory("build/submission"),
     input:
         docx="build/manuscript.docx",
         coverletter="doc/manuscript/coverletter-genome-research.docx",

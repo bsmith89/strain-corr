@@ -24,7 +24,6 @@ rule profile_pangenome_mapping_tally_aggregated_by_gene:  # Pre-Hub-rule
         """
 
 
-
 rule load_one_species_pangenome2_depth_into_netcdf_v20:  # Hub-rule (also note child rule in reference_genome.smk)
     output:
         "data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.depth2.nc",
