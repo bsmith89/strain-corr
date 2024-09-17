@@ -92,6 +92,33 @@ rule calculate_species_depth_directly:
         """
 
 
+# See matching rule in snake/gtpro.smk
+rule estimate_all_species_depths_in_group_spgc:
+    output:
+        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.all_species_depth.tsv",
+    input:
+        species=lambda w: [
+            f"data/group/{w.group}/species/sp-{species}/{w.stem}.gene{w.centroidA}_{w.dbv}-{w.btp}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}.species_depth.tsv"
+            for species in config["species_group"][w.group]
+        ],
+    params:
+        header="sample	species_id	depth",
+        species_list=lambda w: config["species_group"][w.group],
+        species_pattern="data/group/{group}/species/sp-$species/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
+    shell:
+        """
+        (
+            echo "{params.header}"
+            for species in {params.species_list}
+            do
+                file={params.species_pattern}
+                echo $file >&2
+                awk -v species=$species -v OFS='\t' '{{print $1,species,$2}}' $file
+            done
+        ) > {output}
+        """
+
+
 # FIXME: Skip the "mofiy_strain_samples_file_format rule by exporting this correctly in the first place.
 # NOTE: In this new formulation, I include ALL strain-pure samples, including those
 # below the previously considered minimum depth threshold.

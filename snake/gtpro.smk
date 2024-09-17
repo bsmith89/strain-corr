@@ -322,9 +322,9 @@ rule estimate_species_depth_from_metagenotype:
         "{input.script} {params.trim} {input.mgen} {output}"
 
 
-rule estimate_all_species_depths_in_group:  # Hub-rule
+rule estimate_all_species_depths_in_group_gtpro:  # Hub-rule
     output:
-        "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
+        "data/group/{group}/r.{proc}.gtpro.all_species_depth.tsv",
     input:
         species=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"
