@@ -30,9 +30,13 @@ rule plot_een_strain_composition:
 rule collect_een_analysis_files:
     input:
         [
-            "data/group/een/r.proc.gene99_v20-v23-agg75.specgene-ref-filt-p95.all_species_depth.tsv",
-            "data/group/een/midasdb_v20.emapper.gene75_x_cog.tsv.SELECT_SPECIES.flag",
+            "data/group/een/a.proc.zotu_counts.tsv",
             "data/group/een/r.proc.gtpro.all_species_depth.tsv",
+            "data/group/een/r.proc.gene99_v20-v23-agg75.spgc_specgene-ref-filt-p95.all_species_depth.tsv"
+            "data/group/een/r.proc.gtpro.sfacts-fit.world.nc.SELECT_SPECIES.flag",
+            "data/group/een/r.proc.gtpro.sfacts-fit.comm.tsv.SELECT_SPECIES.flag",
+            "data/group/een/r.proc.gene99_v20-v23-agg75.depth2.nc.SELECT_SPECIES.flag",
+            "data/group/een/midasdb_v20.emapper.gene75_x_cog.tsv.SELECT_SPECIES.flag",
         ],
 
 
