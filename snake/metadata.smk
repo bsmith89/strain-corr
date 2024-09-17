@@ -150,16 +150,7 @@ if os.path.exists("ref/midasdb_uhgg_v10/genomes.tsv"):
     )
 
 
-if os.path.exists("ref/midasdb_uhgg_v15/genomes.tsv"):
-    config["midasdb_uhgg_v15_species_genome"] = (
-        pd.read_table(
-            "ref/midasdb_uhgg_v15/genomes.tsv",
-            dtype=str,
-        )
-        .groupby("species")
-        .genome.apply(list)
-    )
-
+# TODO (2024-06-10): Re-run GT-Pro for all v20 genomes?
 if os.path.exists("ref/midasdb_uhgg_v20/genomes.tsv"):
     config["midasdb_uhgg_v20_species_genome"] = (
         pd.read_table(

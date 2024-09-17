@@ -65,8 +65,10 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-# FIXME: This is generic to either v15 or v20, but points at v15 only for
-# npositions data because it should be the same as v20 and I don't want to re-run it.
+# FIXME: This is generic to either v15 or v20,
+# # NOTE (2024-06-10): This is now no longer true. The script name should also probably be updated.
+# # but points at v15 only for
+# # npositions data because it should be the same as v20 and I don't want to re-run it.
 rule collect_metadata_for_uhgg_ref_strains_new:
     output:
         meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
@@ -74,7 +76,7 @@ rule collect_metadata_for_uhgg_ref_strains_new:
         script="scripts/extract_metadata_midasdb_v15.py",
         meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
-        pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
+        pos="data/species/sp-{species}/midasdb_v20.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
         # FIXME: Rename the above.
     shell:

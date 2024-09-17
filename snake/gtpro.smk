@@ -40,6 +40,44 @@ rule run_gtpro:
         """
 
 
+# # This rule seems to work where the other fails.
+# # Test cases:
+# # data/species/sp-103694/genome/midasdb_v20/GUT_GENOME037857.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100084/genome/midasdb_v20/GUT_GENOME036376.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101359/genome/midasdb_v20/GUT_GENOME251829.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-103899/genome/midasdb_v20/GUT_GENOME254885.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100189/genome/midasdb_v20/GUT_GENOME243557.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101338/genome/midasdb_v20/GUT_GENOME058802.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102492/genome/midasdb_v20/GUT_GENOME066406.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100060/genome/midasdb_v20/GUT_GENOME122534.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101346/genome/midasdb_v20/GUT_GENOME054037.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102512/genome/midasdb_v20/GUT_GENOME193443.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102545/genome/midasdb_v20/GUT_GENOME125056.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102478/genome/midasdb_v20/GUT_GENOME038804.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# rule run_gtpro_stopgap:
+#     output:
+#         temp("{stem}.gtpro_raw.gz"),
+#     input:
+#         r="{stem}.fq.gz",
+#         db="ref/gtpro",
+#     params:
+#         db_l=32,
+#         db_m=36,
+#         db_name="ref/gtpro/20190723_881species",
+#     threads: 8
+#     resources:
+#         mem_mb=10000,
+#         pmem=10000 // 8,
+#         walltime_hr=8,
+#     container:
+#         config["container"]["gtpro"]
+#     shell:
+#         """
+#         gzip -cd {input.r} | GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} | gzip -c > {output}.temp
+#         mv {output}.temp {output}
+#         """
+
+
 rule load_gtpro_snp_dict:
     output:
         "ref/gtpro.snp_dict.db",
