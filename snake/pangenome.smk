@@ -1,5 +1,5 @@
 # NOTE: "gene_mapping_tally" here means counting the number of bases aligned.
-rule profile_pangenome_mapping_tally_aggregated_by_gene:
+rule profile_pangenome_mapping_tally_aggregated_by_gene:  # Pre-Hub-rule
     output:
         "{stem}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4",
     input:
