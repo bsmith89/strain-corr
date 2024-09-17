@@ -27,12 +27,21 @@ rule plot_een_strain_composition:
         "{input.script} {input.sample} {input.species_depths} {input.sfacts} {wildcards.species} {output}"
 
 
-# TODO: Move this rule to a more obvious location.
-rule construct_group_files_for_een_select_species:
-    output:
-        touch("{stemA}/group/een/{stemB}.SELECT_SPECIES.flag"),
+rule collect_een_analysis_files:
     input:
-        lambda w: [
-            f"{w.stemA}/group/een/species/sp-{species}/{w.stemB}"
-            for species in config["species_group"]["een"]
+        [
+            "data/group/een/r.proc.gene99_v20-v23-agg75.specgene-ref-filt-p95.all_species_depth.tsv",
+            "data/group/een/midasdb_v20.emapper.gene75_x_cog.tsv.SELECT_SPECIES.flag",
+            "data/group/een/r.proc.gtpro.all_species_depth.tsv",
         ],
+
+
+# # TODO: Move this rule to a more obvious location.
+# rule construct_group_files_for_een_select_species:
+#     output:
+#         touch("{stemA}/group/een/{stemB}.SELECT_SPECIES.flag"),
+#     input:
+#         lambda w: [
+#             f"{w.stemA}/group/een/species/sp-{species}/{w.stemB}"
+#             for species in config["species_group"]["een"]
+#         ],
