@@ -70,6 +70,7 @@ def group_genomes(group):
     d = config["genome"].loc[genome_group_list]
     return dict(d.species_id).items()
 
+
 # NOTE: This function is used, e.g. in snake/reference_genome.smk and
 # snake/benchmark_strain_reconstruction.smk to gather a list of reference
 # genomes for each species.
@@ -150,16 +151,7 @@ if os.path.exists("ref/midasdb_uhgg_v10/genomes.tsv"):
     )
 
 
-if os.path.exists("ref/midasdb_uhgg_v15/genomes.tsv"):
-    config["midasdb_uhgg_v15_species_genome"] = (
-        pd.read_table(
-            "ref/midasdb_uhgg_v15/genomes.tsv",
-            dtype=str,
-        )
-        .groupby("species")
-        .genome.apply(list)
-    )
-
+# TODO (2024-06-10): Re-run GT-Pro for all v20 genomes?
 if os.path.exists("ref/midasdb_uhgg_v20/genomes.tsv"):
     config["midasdb_uhgg_v20_species_genome"] = (
         pd.read_table(

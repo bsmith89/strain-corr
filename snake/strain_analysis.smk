@@ -53,8 +53,6 @@ rule collect_filtering_metadata:
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
-        # spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
-        # sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
     params:
         min_species_genes_frac=95 / 100,
         min_total_depth=100 / 100,
@@ -65,18 +63,19 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-# FIXME: This is generic to either v15 or v20, but points at v15 only for
-# npositions data because it should be the same as v20 and I don't want to re-run it.
+# FIXME: This is generic to either v15 or v20,
+# # NOTE (2024-06-10): This is now no longer true. The script name should also probably be updated.
+# # but points at v15 only for
+# # npositions data because it should be the same as v20 and I don't want to re-run it.
 rule collect_metadata_for_uhgg_ref_strains_new:
     output:
         meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
     input:
         script="scripts/extract_metadata_midasdb_v15.py",
-        meta="ref/midasdb_uhgg_{dbv}/metadata/2023-11-11-genomes-all_metadata.tsv",
+        meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
-        pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
+        pos="data/species/sp-{species}/midasdb_v20.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
-        # FIXME: Rename the above.
     shell:
         "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {output}"
 
@@ -267,97 +266,6 @@ rule cluster_genes_based_on_cooccurence_in_spgc_strains:
         "{input.script} {input.gene} {input.filt} {params.thresh} {output}"
 
 
-rule calculate_morans_i_for_ref_strains:
-    output:
-        "data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.morans_i.tsv",
-    input:
-        script="scripts/calculate_morans_i.py",
-        gene="data/species/sp-{species}/midasdb.gene75_{dbv}.uhgg-strain_gene.tsv",
-        filt="data/species/sp-{species}/midasdb.gene75_{dbv}.strain_meta-complete90-contam5-pos0.tsv",
-        pdist="data/species/sp-{species}/midasdb_{dbv}.gtpro.geno_pdist-mask10-pseudo10.pkl",
-    shell:
-        "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
-
-
-rule calculate_morans_i_for_spgc_strains:
-    output:
-        "data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.morans_i.tsv",
-    input:
-        script="scripts/calculate_morans_i.py",
-        gene="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.tsv",
-        filt="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv",
-        pdist="data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl",
-    shell:
-        "{input.script} {input.gene} {input.filt} {input.pdist} {output}"
-
-
-rule construct_gene_x_cog_category_matrix_v15:
-    output:
-        cog_matrix="data/species/sp-{species}/midasdb_v15.gene{centroid}_x_cog_category.tsv",
-    input:
-        script="scripts/construct_gene_x_cog_category_matrix.py",
-        emapper="ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv",
-        clustering="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
-        cog_category="ref/cog-20.meta.tsv",
-    params:
-        agg=lambda w: {
-            99: "centroid_99",
-            95: "centroid_95",
-            90: "centroid_90",
-            85: "centroid_85",
-            80: "centroid_80",
-            75: "centroid_75",
-        }[int(w.centroid)],
-    shell:
-        "{input.script} {input.emapper} {input.clustering} {input.cog_category} {params.agg} {output.cog_matrix}"
-
-
-rule construct_gene_x_cog_category_matrix_v20:
-    output:
-        cog_matrix="data/species/sp-{species}/midasdb_v20.gene{centroid}_x_cog_category.tsv",
-    input:
-        script="scripts/construct_gene_x_cog_category_matrix.py",
-        emapper="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv",
-        clustering="ref/midasdb_uhgg_v20/pangenomes/{species}/gene_info.txt",
-        cog_category="ref/cog-20.meta.tsv",
-    params:
-        agg=lambda w: {
-            99: "centroid_99",
-            95: "centroid_95",
-            90: "centroid_90",
-            85: "centroid_85",
-            80: "centroid_80",
-            75: "centroid_75",
-        }[int(w.centroid)],
-    shell:
-        "{input.script} {input.emapper} {input.clustering} {input.cog_category} {params.agg} {output.cog_matrix}"
-
-
-rule compile_gene_metadata_v15:
-    output:
-        meta="data/species/sp-{species}/midasdb_v15.gene{centroid}_meta.tsv",
-        cog_matrix="data/species/sp-{species}/midasdb_v15.gene{centroid}_x_cog_category.tsv",
-    input:
-        script="scripts/compile_midasdb_gene_metadata.py",
-        # FIXME: Add agg parameter to the script to take votes on cog_category.
-        emapper="ref/midasdb_uhgg_v15/pangenomes/{species}/eggnog.tsv",
-        clustering="ref/midasdb_uhgg_v15/pangenomes/{species}/gene_info.txt",
-        nlength="ref/midasdb_uhgg_v15/pangenomes/{species}/genes.len",
-        cog_category="ref/cog-20.meta.tsv",
-    wildcard_constraints:
-        centroid="99|95|90|85|80|75",
-    # params:
-    # agg=lambda w: {
-    #     99: "centroid_99",
-    #     95: "centroid_95",
-    #     90: "centroid_90",
-    #     85: "centroid_85",
-    #     80: "centroid_80",
-    #     75: "centroid_75",
-    # }[int(w.centroid)],
-    shell:
-        "{input.script} {input.emapper} {input.clustering} {input.cog_category} {input.nlength} {output.meta} {output.cog_matrix}"
-
 rule compile_gene_metadata_v20:
     output:
         meta="data/species/sp-{species}/midasdb_v20.gene{centroid}_meta.tsv",
@@ -372,25 +280,6 @@ rule compile_gene_metadata_v20:
         centroid="99|95|90|85|80|75",
     shell:
         "{input.script} {input.emapper} {input.genes_info} {input.cog_category} {output.meta} {output.cog_matrix}"
-
-
-rule perform_ibd_association_test_with_hmp2_strains:
-    output:
-        "data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.hmp2_mwas-f{frac_thresh}-n{num_thresh}.tsv",
-    input:
-        script="scripts/hmp2_mwas.py",
-        comm="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.comm.tsv",
-        gene="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.{unit}-strain_gene.tsv",
-        filt="data/group/hmp2/species/sp-{species}/{stem}.gtpro.sfacts-fit.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc-fit.strain_meta-s95-d100-a0-pos100-std25.tsv",
-        mgen="meta/hmp2/mgen.tsv",
-        preparation="meta/hmp2/preparation.tsv",
-        stool="meta/hmp2/stool.tsv",
-        subject="meta/hmp2/subject.tsv",
-    params:
-        frac_thresh=lambda w: int(w.frac_thresh) / 100,
-        num_thresh=lambda w: int(w.num_thresh),
-    shell:
-        "{input.script} {input.comm} {input.gene} {input.filt} {input.mgen} {input.preparation} {input.stool} {input.subject} {params.frac_thresh} {params.num_thresh} {output}"
 
 
 # NOTE: This rule takes the super long filename and turns it into a much shorter one for, e.g., notebooks.

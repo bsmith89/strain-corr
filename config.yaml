@@ -4,4 +4,4 @@ container:
   spanda: 'docker://bsmith89/spanda_dev:ab92d3675e56ee74e603df90d8fb39bb2290c515'
 MAX_THREADS: 4
 USE_CUDA: 0
-ALL: []
+ALL: ["collect_spgc_manuscript_analysis_files"]

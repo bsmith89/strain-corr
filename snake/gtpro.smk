@@ -40,6 +40,44 @@ rule run_gtpro:
         """
 
 
+# # This rule seems to work where the other fails.
+# # Test cases:
+# # data/species/sp-103694/genome/midasdb_v20/GUT_GENOME037857.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100084/genome/midasdb_v20/GUT_GENOME036376.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101359/genome/midasdb_v20/GUT_GENOME251829.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-103899/genome/midasdb_v20/GUT_GENOME254885.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100189/genome/midasdb_v20/GUT_GENOME243557.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101338/genome/midasdb_v20/GUT_GENOME058802.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102492/genome/midasdb_v20/GUT_GENOME066406.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-100060/genome/midasdb_v20/GUT_GENOME122534.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-101346/genome/midasdb_v20/GUT_GENOME054037.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102512/genome/midasdb_v20/GUT_GENOME193443.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102545/genome/midasdb_v20/GUT_GENOME125056.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# # data/species/sp-102478/genome/midasdb_v20/GUT_GENOME038804.norm.tiles-l500-o31.gtpro_parse.tsv.bz2
+# rule run_gtpro_stopgap:
+#     output:
+#         temp("{stem}.gtpro_raw.gz"),
+#     input:
+#         r="{stem}.fq.gz",
+#         db="ref/gtpro",
+#     params:
+#         db_l=32,
+#         db_m=36,
+#         db_name="ref/gtpro/20190723_881species",
+#     threads: 8
+#     resources:
+#         mem_mb=10000,
+#         pmem=10000 // 8,
+#         walltime_hr=8,
+#     container:
+#         config["container"]["gtpro"]
+#     shell:
+#         """
+#         gzip -cd {input.r} | GT_Pro genotype -t {threads} -l {params.db_l} -m {params.db_m} -d {params.db_name} | gzip -c > {output}.temp
+#         mv {output}.temp {output}
+#         """
+
+
 rule load_gtpro_snp_dict:
     output:
         "ref/gtpro.snp_dict.db",
@@ -68,7 +106,7 @@ rule load_gtpro_snp_dict:
         )
 
 
-rule gtpro_finish_processing_reads:
+rule gtpro_finish_processing_reads:  # Pre-Hub-rule
     output:
         "{stem}.gtpro_parse.tsv.bz2",
     input:
@@ -234,22 +272,6 @@ def checkpoint_select_species(
     return out
 
 
-rule list_checkpoint_select_species:
-    output:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.select_species.list",
-    input:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
-    params:
-        obj=lambda w: checkpoint_select_species(
-            f"data/group/{w.group}/r.{w.proc}.gtpro.horizontal_coverage.tsv",
-            cvrg_thresh=0.2,
-            num_samples=2,
-            require_in_species_group=True,
-        ),
-    shell:
-        "for species in {params.obj}; do echo $species; done > {output}"
-
-
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
         "data/group/{group}/{stem}.gtpro.tsv.bz2.args",
@@ -338,9 +360,9 @@ rule estimate_species_depth_from_metagenotype:
         "{input.script} {params.trim} {input.mgen} {output}"
 
 
-rule estimate_all_species_depths_in_group:  # Hub-rule
+rule estimate_all_species_depths_in_group_gtpro:  # Hub-rule
     output:
-        "data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
+        "data/group/{group}/r.{proc}.gtpro.all_species_depth.tsv",
     input:
         species=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.species_depth.tsv"

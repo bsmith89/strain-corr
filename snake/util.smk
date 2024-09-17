@@ -48,7 +48,7 @@ rule start_shell_any_conda:
     conda:
         lambda w: f"conda/{w.conda}.yaml"
     shell:
-        "bash; echo 'Rule always fails due to MissingOutputException.'"
+        "bash -i; echo 'Rule always fails due to MissingOutputException.'"
 
 
 rule start_shell:
