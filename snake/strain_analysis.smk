@@ -310,7 +310,7 @@ localrules:
 # Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
 #
 # I can just add that rule to the end of the list.
-ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples > aggregate_strain_metagenotype > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples > aggregate_strain_metagenotype > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance
 
 
 # That forces the aliasing to the end of the computation.
@@ -346,7 +346,7 @@ localrules:
 # strain_gene.prevalence_class_fraction-hmp2.tsv.
 #
 # I can just add that rule to the end of the list.
-ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > aggregate_uhgg_strain_gene_by_annotation > count_pangenome_fractions_across_genomes > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > aggregate_uhgg_strain_gene_by_annotation > count_pangenome_fractions_across_genomes
 
 
 rule collect_analysis_files:
