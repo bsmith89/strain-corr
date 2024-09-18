@@ -54,69 +54,6 @@ def get_spgc_stem(config, species, group):
     return config["species_group_to_spgc_stem"][(species, group)]
 
 
-config["genome"] = pd.read_table("meta/genome.tsv", dtype=str, index_col=["genome_id"])
-
-config["genome_group"] = (
-    pd.read_table("meta/genome_group.tsv")
-    .groupby("genome_group_id")
-    .genome_id.apply(lambda x: sorted(list(set(x))))
-)
-
-
-# NOTE: This function is used, e.g. in snake/reference_genome.smk
-# to gather a list of species and genomes for a group.
-def group_genomes(group):
-    genome_group_list = config["genome_group"][group]
-    d = config["genome"].loc[genome_group_list]
-    return dict(d.species_id).items()
-
-
-# NOTE: This function is used, e.g. in snake/reference_genome.smk and
-# snake/benchmark_strain_reconstruction.smk to gather a list of reference
-# genomes for each species.
-def species_group_genomes(species, group):
-    genome_group_list = config["genome_group"][group]
-    d = config["genome"].loc[genome_group_list]
-    strain_list = idxwhere(d.species_id == species)
-    # print(strain_list)
-    return strain_list
-
-
-rule debug_species_group_genomes:
-    output:
-        "data/group/{group}/species/sp-{species}/genomes.list",
-    params:
-        test=lambda w: species_group_genomes(w.species, w.group),
-    shell:
-        "echo {params.test}; false"
-
-
-config["species_to_panphlan"] = pd.read_table(
-    "meta/species_to_panphlan.tsv", dtype=str, index_col=["species_id"]
-).panphlan_species_id.rename(str)
-
-config["species_to_spanda"] = pd.read_table(
-    "meta/species_to_panphlan.tsv", dtype=str, index_col=["species_id"]
-).spanda_species_id.rename(str)
-
-
-rule process_hmp2_metadata:
-    output:
-        subject="meta/subject.tsv",
-        visit="meta/visit.tsv",
-        stool="meta/stool.tsv",
-        preparation="meta/preparation.tsv",
-        mgen="meta/mgen.tsv",
-        mtab="meta/mtab.tsv",
-    input:
-        script="scripts/parse_hmp2_metadata_tables.py",
-        raw="raw/hmp2_metadata_2018-08-20.csv",
-    shell:
-        """
-        cat {input.raw} | {input.script} {output.subject} {output.visit} {output.stool} {output.preparation} {output.mgen} {output.mtab}
-        """
-
-
 rule download_uhgg_metadata:
     output:
         "ref/uhgg_genomes_all_v2.tsv",
@@ -124,31 +61,6 @@ rule download_uhgg_metadata:
         url="http://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-gut/v1.0/genomes-all_metadata.tsv",
     shell:
         curl_recipe
-
-
-config["figures"]["submission"] = []
-
-
-# Dummy for legacy "new" version of the DB.
-if os.path.exists("ref/midasdb_uhgg_new/genomes.tsv"):
-    config["midasdb_uhgg_new_species_genome"] = (
-        pd.read_table(
-            "ref/midasdb_uhgg_new/genomes.tsv",
-            dtype=str,
-        )
-        .groupby("species")
-        .genome.apply(list)
-    )
-
-if os.path.exists("ref/midasdb_uhgg_v10/genomes.tsv"):
-    config["midasdb_uhgg_v10_species_genome"] = (
-        pd.read_table(
-            "ref/midasdb_uhgg_v10/genomes.tsv",
-            dtype=str,
-        )
-        .groupby("species")
-        .genome.apply(list)
-    )
 
 
 # TODO (2024-06-10): Re-run GT-Pro for all v20 genomes?
