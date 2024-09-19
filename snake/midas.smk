@@ -1,29 +1,3 @@
-rule run_midas_species:
-    output:
-        directory("data/reads/{mgen}/r.{proc}.species-v20.midas.d"),
-    input:
-        r1="data/reads/{mgen}/r1.{proc}.fq.gz",
-        r2="data/reads/{mgen}/r2.{proc}.fq.gz",
-        midasdb_dir="ref/midasdb_uhgg_v20_all",
-    conda:
-        "conda/midas3.yaml"
-    threads: 4
-    resources:
-        walltime_hr=3,
-        mem_mb=1_000,
-        pmem=1_000 // 4,
-    shell:
-        """
-        midas2 run_species \
-                --midasdb_dir {input.midasdb_dir} \
-                --midasdb_name newdb \
-                -1 {input.r1} -2 {input.r2} \
-                --num_cores {threads} \
-                --sample_name {wildcards.mgen} \
-                {output}
-        """
-
-
 rule write_species_list:
     output:
         "data/hash/{hash}/species.list",

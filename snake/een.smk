@@ -13,20 +13,6 @@ rule process_raw_zotus_table:
         "sed -e '$ d' -e 's:\s*$::' {input} > {output}"
 
 
-rule plot_een_strain_composition:
-    output:
-        "fig/group/een/species/sp-{species}/r.proc.gtpro.{sfacts}.gene{pang}.spgc_specgene-{specgene}.een_strain_plot.pdf",
-    input:
-        script="scripts/plot_een_strain_composition.py",
-        sample="meta/een-mgen/sample.tsv",
-        species_depths="data/group/een/r.proc.gene{pang}.spgc_specgene-{specgene}.species_depth.tsv",
-        sfacts="data/group/een/species/sp-{species}/r.proc.gtpro.{sfacts}.world.nc",
-    conda:
-        "conda/sfacts.yaml"
-    shell:
-        "{input.script} {input.sample} {input.species_depths} {input.sfacts} {wildcards.species} {output}"
-
-
 rule collect_een_analysis_files:
     input:
         [

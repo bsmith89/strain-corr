@@ -1,49 +1,3 @@
-# NOTE: Emapper can take a long time to run.
-# Testing can be done on 100035 because it has very few genes in its pangenome.
-rule eggnog_mapper_translated_orfs:
-    output:
-        "{stem}.emapper.d/proteins.emapper.annotations",
-        "{stem}.emapper.d/proteins.emapper.hits",
-        "{stem}.emapper.d/proteins.emapper.seed_orthologs",
-    input:
-        fasta="{stem}.tran.fa",
-        db="ref/eggnog_mapper_db",
-    params:
-        outdir="{stem}.emapper.d",
-        tax_scope="auto",
-        sensmode="more-sensitive",
-        mapper="diamond",
-    conda:
-        "conda/eggnog.yaml"
-    threads: 24
-    resources:
-        walltime_hr=240,
-        mem_mb=20_000,
-        pmem=20_000 // 24,
-    shell:
-        """
-        tmpdir=$(mktemp -d)
-        export EGGNOG_DATA_DIR={input.db}
-        rm -rf {params.outdir}.temp {params.outdir}
-        mkdir -p {params.outdir}.temp
-        emapper.py \
-                -m {params.mapper} \
-                -i {input.fasta} \
-                --itype proteins \
-                --sensmode {params.sensmode} \
-                --go_evidence all \
-                --dbmem \
-                --tax_scope {params.tax_scope} \
-                --temp_dir $tmpdir \
-                --override \
-                --cpu {threads} \
-                --output_dir {params.outdir}.temp \
-                --output 'proteins'
-        mv {params.outdir}.temp {params.outdir}
-        # TODO  # Test on 100035 because it has very few genes
-        """
-
-
 # note: this rule takes the entire eggnog output and assigns raw annotations
 # to the features. in a later step, i'll aggregate these annotations
 # to the higher-level-centroid by voting or something.
@@ -75,28 +29,6 @@ rule parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v20:
 
 
 ruleorder: parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v20 > parse_midasdb_emapper_annotations_to_gene99_x_unit_v20
-
-
-# NOTE: Genomad annotations are done at the unique gene level.
-rule parse_genomad_annotations_to_gene_x_accession_v20:
-    output:
-        "data/species/sp-{species}/midasdb_v20.gene_x_genomad_{annot}.tsv",
-    input:
-        script="scripts/parse_genomad_annotations_to_gene_x_accession_v20.py",
-        annot="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/genomad_{annot}.tsv",
-    shell:
-        "{input.script} {input.annot} {output}"
-
-
-# NOTE: resfinder annotations are done at the unique gene level.
-rule parse_resfinder_annotations_to_gene_x_accession_v20:
-    output:
-        "data/species/sp-{species}/midasdb_{dbv}.gene_x_amr.tsv",
-    input:
-        script="scripts/parse_resfinder_annotations_to_gene_x_accession.py",
-        annot="ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/resfinder.tsv",
-    shell:
-        "{input.script} {input.annot} {output}"
 
 
 # Take annotations at the c99 level and combine them into centroidNN
@@ -181,31 +113,6 @@ rule aggregate_midasdb_reference_gene_by_annotation:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
-
-
-rule dbCAN_annotate_translated_orfs:
-    output:
-        dir=directory("{stem}.dbcan.d"),
-    input:
-        fasta="{stem}.tran.fa",
-        db="ref/dbcan",
-    conda:
-        "conda/dbcan.yaml"
-    threads: 4
-    resources:
-        walltime_hr=24,
-        mem_mb=20_000,
-        pmem=20_000 // 4,
-    shell:
-        """
-        run_dbcan \
-                {input.fasta} \
-                protein \
-                --db_dir {input.db} \
-                --tools hmmer diamond \
-                --tf_cpu {threads} --stp_cpu {threads} --dia_cpu {threads} --hmm_cpu {threads} --dbcan_thread {threads} \
-                --out_dir {output.dir}
-        """
 
 
 rule aggregate_uhgg_strain_gene_by_annotation:

@@ -178,100 +178,6 @@ rule gtpro_finish_processing_reads:  # Pre-Hub-rule
         )
 
 
-rule count_species_lines_from_both_reads_helper:  # Hub-rule
-    output:
-        "data/group/{group}/r.{proc}.gtpro_species_tally.tsv.args",
-    input:
-        reads=lambda w: [
-            f"data/reads/{mgen}/{r}.{w.proc}.gtpro_parse.tsv.bz2"
-            for mgen, r in product(
-                config["mgen_group"][w.group],
-                ["r1", "r2"],
-            )
-        ],
-    params:
-        mgen_list=lambda w: config["mgen_group"][w.group],
-        pattern=lambda w: f"data/reads/{{mgen}}/{{r}}.{w.proc}.gtpro_parse.tsv.bz2",
-    run:
-        with open(output[0], "w") as f:
-            for mgen in params.mgen_list:
-                print(
-                    mgen,
-                    params.pattern.format(mgen=mgen, r="r1"),
-                    params.pattern.format(mgen=mgen, r="r2"),
-                    sep="\t",
-                    file=f,
-                )
-
-
-rule count_species_lines_from_both_reads:
-    output:
-        "{stem}.gtpro_species_tally.tsv",
-    input:
-        script="scripts/tally_gtpro_species_lines.sh",
-        helper="{stem}.gtpro_species_tally.tsv.args",
-    threads: 12
-    shell:
-        r"""
-        parallel --colsep='\t' --bar -j {threads} \
-                bash {input.script} :::: {input.helper} \
-            > {output}.tmp
-        mv {output}.tmp {output}
-
-        """
-
-
-checkpoint estimate_all_species_horizontal_coverage_with_gtpro:
-    output:
-        "data/group/{group}/r.{proc}.gtpro.horizontal_coverage.tsv",
-    input:
-        script="scripts/estimate_all_species_horizontal_coverage_from_position_tally.py",
-        snps="ref/gtpro.snp_dict.tsv",
-        r="data/group/{group}/r.{proc}.gtpro_species_tally.tsv",
-    shell:
-        "{input.script} {input.snps} {input.r} {output}"
-
-
-def checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(path):
-    chkpt, w = get_checkpoint_by_path(
-        checkpoints.estimate_all_species_horizontal_coverage_with_gtpro, path
-    )
-    return chkpt, w
-
-
-# FIXME: This is too convoluted of a checkpointing mechanism. I think I should
-# go back to the checkpoint rule being a species list and the checkpoint function
-# taking that path, using get_checkpoint_by_path(path) to get the checkpoint reference
-# and then simply reading the species list out of that file.
-# Parameterization by horizontal coverage and sample count should be included
-# in the file path directly.
-def checkpoint_select_species(
-    path, cvrg_thresh, num_samples, require_in_species_group=False
-):
-    chkpt, w = checkpoint_estimate_all_species_horizontal_coverage_with_gtpro(path)
-    d = (
-        pd.read_table(
-            chkpt.output[0],
-            names=["sample", "species", "max_coverage"],
-            dtype={"sample": str, "species": str, "max_coverage": float},
-            index_col=["sample", "species"],
-        )
-        .squeeze()
-        .unstack("species")
-        .astype(float)
-        .fillna(0)
-    )
-    species_with_sufficient_coverage = idxwhere((d >= cvrg_thresh).sum() >= num_samples)
-    if require_in_species_group:
-        out = sorted(
-            set(species_with_sufficient_coverage)
-            & set(config["species_group"][w["group"]])
-        )
-    else:
-        out = sorted(species_with_sufficient_coverage)
-    return out
-
-
 rule concatenate_mgen_group_one_read_count_data_from_one_species_helper:
     output:
         "data/group/{group}/{stem}.gtpro.tsv.bz2.args",
@@ -384,18 +290,6 @@ rule estimate_all_species_depths_in_group_gtpro:  # Hub-rule
             done
         ) > {output}
         """
-
-
-rule gather_mgen_group_for_all_species:
-    output:
-        touch("{stemA}/ALL_SPECIES/{stemB}.flag"),
-    input:
-        lambda w: [
-            f"{w.stemA}/species/sp-{species}/{w.stemB}"
-            for species in config["species_group"][w.group]
-        ],
-    shell:
-        "touch {output}"
 
 
 # TODO: Move this rule to a more obvious location.

@@ -94,24 +94,3 @@ rule export_sfacts_comm:
         """
         sfacts dump --community {output} {input}
         """
-
-
-rule calculate_all_strain_depths:  # Hub-rule
-    output:
-        "data/group/{group}/r.{proc}.gtpro.{stem}.strain_depth.tsv",
-    input:
-        script="scripts/merge_all_strains_depth.py",
-        species="data/group/{group}/r.{proc}.gtpro.all_species_depth.tsv",
-        strains=lambda w: [
-            f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in config["species_group"][w.group]
-        ],
-    params:
-        args=lambda w: [
-            f"{species}=data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
-            for species in config["species_group"][w.group]
-        ],
-    shell:
-        """
-        {input.script} {input.species} {output} {params.args}
-        """
