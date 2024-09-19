@@ -1,6 +1,0 @@
-name: hsblastn
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - hs-blastn
