@@ -9,7 +9,7 @@
 	url = https://github.com/cssmillie/StrainFinder
 [submodule "include/StrainPanDA"]
 	path = include/StrainPanDA
-	url = https://github.com/xbiome/StrainPanDA.git
+	url = git@github.com:bsmith89/StrainPanDA.git
 [submodule "include/panphlan"]
 	path = include/panphlan
 	url = https://github.com/SegataLab/panphlan
