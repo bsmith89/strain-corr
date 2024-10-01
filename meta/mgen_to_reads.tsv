@@ -1,4 +1,5 @@
 mgen_id	preprocessing	r1_path	r2_path
+Escherichia-coli-GCF_011601075-1	noop	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/r1.fq.gz	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/r2.fq.gz
 ERR6406484	noop	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406484_1.fastq.gz	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406484_2.fastq.gz
 ERR6406485	noop	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406485_1.fastq.gz	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406485_2.fastq.gz
 ERR6406488	noop	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406488_1.fastq.gz	raw/mgen/fmt_studies/kootte2017_PMID28978426/wms_dna/ERR6406488_2.fastq.gz
