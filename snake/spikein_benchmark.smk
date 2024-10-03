@@ -29,42 +29,42 @@ rule subset_ecoli_metadata:
         """
 
 
-rule download_gtdb_genome:
+rule download_gtdb_genome_from_assembly_accession:
     output:
-        "raw/genomes/gtdb/{genome}/assembly.fa",
+        fasta="raw/genomes/gtdb/{genome}/assembly.fa",
+    log:
+        genbank="raw/genomes/gtdb/{genome}/genbank.log"
     params:
-        url=lambda w: config["genome"].loc[w.genome].assembly_download_url,
+        ncbi_assembly_name=lambda w: config["genome"].loc[w.genome].ncbi_assembly_name,
+    conda:
+        "conda/ncbi_datasets.yaml"
     shell:
-        curl_unzip_recipe
+        """
+        genbank_accession=$(esearch -db assembly -query "{params.ncbi_assembly_name}" | esummary | xmllint --xpath "string(//Synonym/RefSeq)" -)
+        echo $genbank_accession | tee {log.genbank}
+        datasets download genome accession ${{genbank_accession}} --include genome --filename raw/genomes/gtdb/{wildcards.genome}/ncbi_dataset.zip
+        unzip -p raw/genomes/gtdb/{wildcards.genome}/ncbi_dataset.zip ncbi_dataset/data/${{genbank_accession}}/${{genbank_accession}}_{params.ncbi_assembly_name}_genomic.fna > {output}
+        rm raw/genomes/gtdb/{wildcards.genome}/ncbi_dataset.zip
+        """
 
 
-rule download_sra_raw_fastq:
+rule download_sra_run_for_biosample_as_raw_fastq:
     output:
-        r1="raw/sra/{srr}_1.fastq",
-        r2="raw/sra/{srr}_2.fastq",
+        r1="raw/genomes/gtdb/{genome}/r1.fq.gz",
+        r2="raw/genomes/gtdb/{genome}/r2.fq.gz",
+    log:
+        sra="raw/genomes/gtdb/{genome}/sra.log"
     conda:
         "conda/sra_tools.yaml"
+    params:
+        biosample=lambda w: config["genome"].loc[w.genome].ncbi_assembly_biosample,
     shell:
         """
-        fasterq-dump --outdir raw/sra {wildcards.srr}
+        outdir=$(dirname {output.r1})
+        srr=$(esearch -db sra -query "{params.biosample}" | esummary | xmllint --xpath 'string(//Runs/Run/@acc)' -)
+        echo $srr > {log.sra}
+        fasterq-dump --outdir ${{outdir}} ${{srr}}
+        gzip -c ${{outdir}}/${{srr}}_1.fastq > {output.r1}
+        gzip -c ${{outdir}}/${{srr}}_2.fastq > {output.r2}
+        rm ${{outdir}}/${{srr}}_1.fastq ${{outdir}}/${{srr}}_2.fastq
         """
-
-
-rule gzip_sra_fastq:
-    output:
-        "raw/sra/{stem}.fq.gz",
-    input:
-        "raw/sra/{stem}.fastq",
-    shell:
-        "gzip -c {input} > {output}"
-
-
-rule link_sra_reads_to_genome_dir:
-    output:
-        "raw/genomes/gtdb/{genome}/r{read}.fq.gz",
-    input:
-        lambda w: "raw/sra/{srr}_{{read}}.fq.gz".format(
-            srr=config["genome"].loc[w.genome].sra_run_accession
-        ),
-    shell:
-        alias_recipe

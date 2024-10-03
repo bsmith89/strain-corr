@@ -1,5 +1,5 @@
-genome_id	species_id	genome_path	_old_genome_id	assembly_download_url	sra_run_accession	comments
-Escherichia-coli-GCF_011601075-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/assembly.fa		https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/601/075/GCF_011601075.1_ASM1160107v1/GCF_011601075.1_ASM1160107v1_genomic.fna.gz	SRR15410236	
+genome_id	species_id	genome_path	_old_genome_id	ncbi_assembly_name	ncbi_assembly_biosample	comments
+Escherichia-coli-GCF_011601075-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/assembly.fa		ASM1160107v1	SAMN14364914	
 Acidaminococcus-fermentans-DSM-20731_MAF-2	100901	raw/genomes/xjin/Acidaminococcus-fermentans-DSM-20731_MAF-2.fa	xjin_100901_a			
 Acidaminococcus-intestini-D21_MAF-2	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	xjin_101440_d21maf			
 Adlercreutzia-equolifaciens-DSM-19450_NCBI	102480	raw/genomes/xjin/Adlercreutzia-equolifaciens-DSM-19450_NCBI.fa	xjin_102480_a			
