@@ -1,5 +1,24 @@
 genome_id	species_id	genome_path	_old_genome_id	ncbi_assembly_name	ncbi_assembly_biosample	comments
-Escherichia-coli-GCF_011601075-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/assembly.fa		ASM1160107v1	SAMN14364914	
+Escherichia-coli-GCF_000164195-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_000164195-1/assembly.fa		ASM16419v1	SAMN00189178	GTDB Accession RS_GCF_000164195.1;
+Escherichia-coli-GCF_000408605-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_000408605-1/assembly.fa		Esch_coli_KTE103_V1	SAMN00854654	GTDB Accession RS_GCF_000408605.1;
+Escherichia-coli-GCF_001463345-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_001463345-1/assembly.fa		ASM146334v1	SAMN04158316	GTDB Accession RS_GCF_001463345.1;
+Escherichia-coli-GCF_002230395-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002230395-1/assembly.fa		ASM223039v1	SAMN05464534	GTDB Accession RS_GCF_002230395.1;
+Escherichia-coli-GCF_002233075-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002233075-1/assembly.fa		ASM223307v1	SAMN04279400	GTDB Accession RS_GCF_002233075.1;
+Escherichia-coli-GCF_002467405-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002467405-1/assembly.fa		ASM246740v1	SAMN04992189	GTDB Accession RS_GCF_002467405.1;
+Escherichia-coli-GCF_002473915-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002473915-1/assembly.fa		ASM247391v1	SAMN04913983	GTDB Accession RS_GCF_002473915.1;
+Escherichia-coli-GCF_002518785-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002518785-1/assembly.fa		ASM251878v1	SAMN04992341	GTDB Accession RS_GCF_002518785.1;
+Escherichia-coli-GCF_002542995-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_002542995-1/assembly.fa		ASM254299v1	SAMN05439458	GTDB Accession RS_GCF_002542995.1;
+Escherichia-coli-GCF_003172225-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_003172225-1/assembly.fa		ASM317222v1	SAMN08932783	GTDB Accession RS_GCF_003172225.1;
+Escherichia-coli-GCF_005396105-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_005396105-1/assembly.fa		ASM539610v1	SAMD00077652	GTDB Accession RS_GCF_005396105.1;
+Escherichia-coli-GCF_008635725-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_008635725-1/assembly.fa		ASM863572v1	SAMD00166683	GTDB Accession RS_GCF_008635725.1;
+Escherichia-coli-GCF_011601075-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_011601075-1/assembly.fa		ASM1160107v1	SAMN14364914	GTDB Accession RS_GCF_011601075.1;
+Escherichia-coli-GCF_013370465-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_013370465-1/assembly.fa		ASM1337046v1	SAMN09381062	GTDB Accession RS_GCF_013370465.1;
+Escherichia-coli-GCF_016019165-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_016019165-1/assembly.fa		ASM1601916v1	SAMN16883214	GTDB Accession RS_GCF_016019165.1;
+Escherichia-coli-GCF_017593995-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_017593995-1/assembly.fa		ASM1759399v1	SAMN16551232	GTDB Accession RS_GCF_017593995.1;
+Escherichia-coli-GCF_018791735-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_018791735-1/assembly.fa		ASM1879173v1	SAMN16976491	GTDB Accession RS_GCF_018791735.1;
+Escherichia-coli-GCF_023838495-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_023838495-1/assembly.fa		ASM2383849v1	SAMN25275821	GTDB Accession RS_GCF_023838495.1;
+Escherichia-coli-GCF_902502005-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_902502005-1/assembly.fa		IBESS722	SAMEA5615494	GTDB Accession RS_GCF_902502005.1;
+Escherichia-coli-GCF_950288675-1	102506	raw/genomes/gtdb/Escherichia-coli-GCF_950288675-1/assembly.fa		FD01874745	SAMEA110466824	GTDB Accession RS_GCF_950288675.1;
 Acidaminococcus-fermentans-DSM-20731_MAF-2	100901	raw/genomes/xjin/Acidaminococcus-fermentans-DSM-20731_MAF-2.fa	xjin_100901_a			
 Acidaminococcus-intestini-D21_MAF-2	101440	raw/genomes/xjin/Acidaminococcus-intestini-D21_MAF-2.fa	xjin_101440_d21maf			
 Adlercreutzia-equolifaciens-DSM-19450_NCBI	102480	raw/genomes/xjin/Adlercreutzia-equolifaciens-DSM-19450_NCBI.fa	xjin_102480_a			
