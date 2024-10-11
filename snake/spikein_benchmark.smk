@@ -48,6 +48,26 @@ rule download_gtdb_genome_from_assembly_accession:
         """
 
 
+rule download_genbank_genome_from_assembly_accession:
+    output:
+        fasta="raw/genomes/ncbi/{genome}/assembly.fa",
+    log:
+        esearch="raw/genomes/ncbi/{genome}/esearch_assembly.log",
+    params:
+        ncbi_assembly_name=lambda w: config["genome"].loc[w.genome].ncbi_assembly_name,
+    resources:
+        network_connections=1,
+    conda:
+        "conda/ncbi_datasets.yaml"
+    shell:
+        """
+        esearch -db assembly -query "{params.ncbi_assembly_name}" | esummary > {log.esearch}
+        ftp=$(xmllint --xpath "string(//FtpPath_GenBank)" {log.esearch})
+        asm=$(xmllint --xpath "string(//AssemblyName)" {log.esearch})
+        genbank=$(xmllint --xpath "string(//Synonym/Genbank)" {log.esearch})
+        curl ${{ftp}}/${{genbank}}_${{asm}}_genomic.fna.gz | zcat > {output}
+        """
+
 rule download_sra_run_for_biosample_as_raw_fastq:
     output:
         r1="raw/genomes/gtdb/{genome}/r1.fq.gz",
