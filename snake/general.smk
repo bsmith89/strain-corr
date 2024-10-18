@@ -315,7 +315,7 @@ rule parse_hmmsearch_tblout:
     shell:
         dd(
             """
-        grep -v '^#' {input} | sed 's:\s\+:\t:g' | cut -f1,3,6 > {output}
+        grep -v '^#' {input} | sed 's:\\s\\+:\t:g' | cut -f1,3,6 > {output}
         """
         )
 
@@ -382,7 +382,7 @@ rule fastg_to_gfa:
     params:
         k=lambda w: int(w.k),
     shell:
-        "fastg2gfa {input} | sed 's:\<NODE_\([0-9]\+\)_[^\\t]*\>:\\1:g' | sed 's:\\<0M\\>:{params.k}M:' > {output}"
+        r"fastg2gfa {input} | sed 's:\<NODE_\([0-9]\+\)_[^\t]*\>:\1:g' | sed 's:\<0M\>:{params.k}M:' > {output}"
 
 
 rule gfa_to_fn:

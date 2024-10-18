@@ -10,7 +10,7 @@ rule process_raw_zotus_table:
     input:
         "raw/een-mgen/2023-09-25_deborah.haecker@tum-create.edu.sg/zOTUs-Table_byron_final2.tab",
     shell:
-        "sed -e '$ d' -e 's:\s*$::' {input} > {output}"
+        "sed -e '$ d' -e 's:\\s*$::' {input} > {output}"
 
 
 rule plot_een_strain_composition:
