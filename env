@@ -7,7 +7,7 @@ then
     source ${PROJECT_ROOT}/env_local
 fi
 
-# Set default profile name to default if not already set.
+# Set default workflow-profile name to default if not already set.
 # (Setting this environmental variable in e.g. ~/.bashrc allows me to
 # differentiate my systems.)
 : ${DEFAULT_SNAKEMAKE_PROFILE:=default}
@@ -16,14 +16,14 @@ fi
 for dir in `ls -d ${PROJECT_ROOT}/profiles/*/`
 do
     profile=$(basename $dir)
-    alias smake-$profile="nice -n 5 snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
+    alias smake-$profile="nice -n 5 snakemake --workflow-profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}
-    alias smake-$profile-xargs="nice -n 5 xargs snakemake --profile ${PROJECT_ROOT}/profiles/${profile}"
+    alias smake-$profile-xargs="nice -n 5 xargs snakemake --workflow-profile ${PROJECT_ROOT}/profiles/${profile}"
     # complete -o bashdefault -C snakemake-bash-completion smake-${profile}-xargs
 done
 
 # Extra-convenient alias for the default profile
-alias smake='nice -n 5 snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake='nice -n 5 snakemake --workflow-profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake
-alias smake-xargs='nice -n 5 xargs snakemake --profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
+alias smake-xargs='nice -n 5 xargs snakemake --workflow-profile ${PROJECT_ROOT}/profiles/${DEFAULT_SNAKEMAKE_PROFILE}'
 # complete -o bashdefault -C snakemake-bash-completion smake-xargs
