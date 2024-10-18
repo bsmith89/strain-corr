@@ -12,8 +12,6 @@ fi
 # differentiate my systems.)
 : ${DEFAULT_SNAKEMAKE_PROFILE:=default}
 
-`snakemake --bash-completion`  # Should be: complete -o bashdefault -C snakemake-bash-completion snakemake
-
 # Aliases for each profile
 for dir in `ls -d ${PROJECT_ROOT}/profiles/*/`
 do
