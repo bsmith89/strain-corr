@@ -200,9 +200,21 @@ rule calculate_gene_prevalence_in_high_quality_ref_genomes:
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
     params:
+        complete_thresh=90 / 100,
+        contam_thresh=5 / 100,
         pseudo=0,
     shell:
-        "{input.script} {input.meta} {input.genome_to_species} {input.genes} {wildcards.species} {params.pseudo} {output}"
+        """
+        {input.script} \
+            {input.meta} \
+            {input.genome_to_species} \
+            {input.genes} \
+            {wildcards.species} \
+            {params.complete_thresh} \
+            {params.contam_thresh} \
+            {params.pseudo} \
+            {output}
+        """
 
 
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:

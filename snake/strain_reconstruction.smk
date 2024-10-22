@@ -18,7 +18,8 @@ rule select_species_core_genes_from_reference_by_filtered_set_prevalence:
         species_gene="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes2.py",
-        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.prevalence.tsv",
+        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv",
+        # NOTE (2024-10-22): Changed from prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.prevalence.tsv",
     params:
         threshold=lambda w: float(w.prevalence) / 100,
     shell:
