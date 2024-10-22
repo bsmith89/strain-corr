@@ -219,7 +219,7 @@ localrules:
 rule collect_xjin_benchmark_grid_files:
     output:
         touch(
-            "data/group/xjin/r.proc.gtpro.sfacts-fit.{gene_stem}.spgc-fit.BENCHMARK_GRID.flag"
+            "data/group/xjin/r.proc.{gene_stem}.BENCHMARK_GRID.flag"
         ),
     input:
         "data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",

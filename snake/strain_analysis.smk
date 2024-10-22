@@ -398,7 +398,7 @@ localrules:
 
 rule collect_spgc_manuscript_analysis_files:
     input:
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_v20-v23-agg75.BENCHMARK_GRID.flag",
         "data/group/hmp2/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag.SELECT_SPECIES.flag",
         "data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag",
 
