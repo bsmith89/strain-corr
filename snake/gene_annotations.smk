@@ -213,6 +213,7 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         "data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.{unit}-strain_gene.tsv",
     wildcard_constraints:
         unit="eggnog|top_eggnog|cog|ko",
+        centroidB="95|90|85|90|75",
     input:
         script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
         uhgg="data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv",

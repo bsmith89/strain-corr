@@ -44,7 +44,7 @@ rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
         directory("data/hash/{hash}/pangenomes99_v20.bt2.d"),
     input:
         species_list="data/hash/{hash}/species.list",
-        midasdb_dir="ref/midasdb_uhgg_v20_all",
+        midasdb_dir=ancient("ref/midasdb_uhgg_v20_all"),
     conda:
         "conda/midas3.yaml"
     threads: 96

@@ -190,12 +190,12 @@ rule trim_adapters:
 
 rule quality_trim_reads:
     output:
-        r1=temp("{stemA}/r1.{stemB}.qtrim.fq.gz"),
-        r2=temp("{stemA}/r2.{stemB}.qtrim.fq.gz"),
-        r3=temp("{stemA}/r3.{stemB}.qtrim.fq.gz"),
+        r1=temp("{stemA}/r1{stemB}qtrim.fq.gz"),
+        r2=temp("{stemA}/r2{stemB}qtrim.fq.gz"),
+        r3=temp("{stemA}/r3{stemB}qtrim.fq.gz"),
     input:
-        r1="{stemA}/r1.{stemB}.fq.gz",
-        r2="{stemA}/r2.{stemB}.fq.gz",
+        r1="{stemA}/r1{stemB}fq.gz",
+        r2="{stemA}/r2{stemB}fq.gz",
     params:
         qual_type="sanger",
         qual_thresh=20,

@@ -132,3 +132,12 @@ rule config_debug:
         echo "{params.meta}"
         false  # Recipe never succeeds.
         """
+
+rule default_resources_debug:
+    output:
+        "debug_default_resources",
+    shell:
+        """
+        echo "{resources}"
+        false  # Recipe never succeeds.
+        """

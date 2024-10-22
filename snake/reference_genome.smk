@@ -133,7 +133,7 @@ rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
         """
 
 
-rule combine_midasdb_reference_genome_gtpro_data_loadable:  # Hub-rule?
+rule combine_midasdb_reference_genome_gtpro_data_loadable:  # Hub-rule
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",
     input:
