@@ -185,6 +185,26 @@ rule calculate_gene_prevalence_in_ref_genomes:
         "{input.script} {input.gene} {input.filt} {params.pseudo} {output}"
 
 
+# TODO: Make this the input for strain marker gene indicator.
+rule calculate_gene_prevalence_in_high_quality_ref_genomes:
+    output:
+        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv",
+    input:
+        # TODO: Combine the functionality of
+        # "scripts/extract_metadata_midasdb_v15.py",
+        # "scripts/filter_ref_strains_v15.py", and
+        # "scripts/strain_gene_to_prevalence.py"
+        # into one script.
+        script="scripts/midas_strain_gene_to_reference_prevalence.py",
+        meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
+        genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
+        genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
+    params:
+        pseudo=0,
+    shell:
+        "{input.script} {input.meta} {input.genome_to_species} {input.genes} {wildcards.species} {params.pseudo} {output}"
+
+
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
 rule calculate_gene_prevalence_in_spgc_genomes:
     output:
