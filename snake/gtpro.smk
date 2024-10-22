@@ -217,7 +217,6 @@ rule count_species_lines_from_both_reads:
                 bash {input.script} :::: {input.helper} \
             > {output}.tmp
         mv {output}.tmp {output}
-
         """
 
 

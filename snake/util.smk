@@ -133,6 +133,7 @@ rule config_debug:
         false  # Recipe never succeeds.
         """
 
+
 rule default_resources_debug:
     output:
         "debug_default_resources",

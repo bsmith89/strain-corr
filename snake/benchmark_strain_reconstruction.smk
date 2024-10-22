@@ -218,9 +218,7 @@ localrules:
 # TODO: Make this rule work
 rule collect_xjin_benchmark_grid_files:
     output:
-        touch(
-            "data/group/xjin/r.proc.{gene_stem}.BENCHMARK_GRID.flag"
-        ),
+        touch("data/group/xjin/r.proc.{gene_stem}.BENCHMARK_GRID.flag"),
     input:
         "data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
         "data/group/xjin/r.proc.{gene_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag",
