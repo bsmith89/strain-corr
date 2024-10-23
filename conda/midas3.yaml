@@ -1,4 +1,4 @@
-name: midas2v1.1.1
+name: midas3
 channels:
   - conda-forge
   - bioconda
@@ -272,4 +272,4 @@ dependencies:
   - zstd=1.5.5
   - pip
   - pip:
-      - -e /include/MIDAS2
+      - -e /include/MIDAS
