@@ -179,9 +179,8 @@ rule spikein_simulated_benchmark_isolate_to_mgen_gtpro:
 rule write_hmp2_spikein_benchmark_known_samples:
     output:
         partition="data/group/hmp2_spikein_benchmark/species/sp-102506/ecoli-spiked.strain_samples.tsv",
-    shell:
-        """
-cat <<EOF > {output}
+    params:
+        table="""
 CSM79HGX_G116737_spikein_Escherichia-coli-GCF_030205875-1_seed0_cov01	Escherichia-coli-GCF_030205875-1
 CSM79HGZ_G116733_spikein_Escherichia-coli-GCF_030205875-1_seed1_cov02	Escherichia-coli-GCF_030205875-1
 CSM79HOV_G110595_spikein_Escherichia-coli-GCF_030205875-1_seed2_cov04	Escherichia-coli-GCF_030205875-1
@@ -207,6 +206,11 @@ CSM79HGZ_G116733_spikein_Escherichia-coli-GCF_030204715-1_seed1_cov02	Escherichi
 CSM79HOV_G110595_spikein_Escherichia-coli-GCF_030204715-1_seed2_cov04	Escherichia-coli-GCF_030204715-1
 CSM79HOX_G110583_spikein_Escherichia-coli-GCF_030204715-1_seed3_cov08	Escherichia-coli-GCF_030204715-1
 CSM79HOZ_G116676_spikein_Escherichia-coli-GCF_030204715-1_seed4_cov16	Escherichia-coli-GCF_030204715-1
+"""
+    shell:
+        """
+cat <<EOF > {output}
+{params.table}
 EOF
         """
 

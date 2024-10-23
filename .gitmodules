@@ -1,9 +1,6 @@
 [submodule "include/StrainFacts"]
 	path = include/StrainFacts
 	url = https://github.com/bsmith89/StrainFacts
-[submodule "include/MIDAS2"]
-	path = include/MIDAS2
-	url = git@github.com:bsmith89/MIDAS2.git
 [submodule "include/StrainFinder"]
 	path = include/StrainFinder
 	url = git@github.com:bsmith89/StrainFinder.git
