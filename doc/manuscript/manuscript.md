@@ -6,6 +6,8 @@ author:
     - Chunyu Zhao
     - Veronika Dubinkina
     - Xiaofan Jin
+    - Liron Zahavi
+    - Saar Shoer
     - Jacqueline Moltzau-Anderson
     - Katherine S. Pollard
 
