@@ -13,3 +13,6 @@
 [submodule "include/StrainPGC"]
 	path = include/StrainPGC
 	url = git@github.com:bsmith89/StrainPGC.git
+[submodule "include/MIDAS"]
+	path = include/MIDAS
+	url = https://github.com/bsmith89/MIDAS
