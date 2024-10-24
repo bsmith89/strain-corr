@@ -85,8 +85,8 @@ ORCID:
 
 # Abstract:
 
-Metagenomics has greatly expanded our understanding of the gut
-microbiome by revealing vast diversity within and across human hosts.
+Metagenomics has greatly expanded our understanding of the human gut
+microbiome by revealing vast diversity within and across individuals.
 Even within a single species, different strains can have highly
 divergent gene content, affecting traits such as antibiotic resistance,
 metabolism, and virulence. Methods that harness metagenomic data to
@@ -97,8 +97,9 @@ within samples, and inconsistent sequencing depth present challenges for
 existing tools that analyze samples one at a time. To address this gap,
 we updated the MIDAS pangenome profiler and developed StrainPGC, an
 approach to strain-specific gene content estimation that combines strain
-tracking and correlations across multiple samples. We validate our tool
-using a synthetic community and find that it outperforms existing
+tracking and correlations across multiple samples. We validate our integrated analysis
+using a complex synthetic community of strains from the human gut and find that
+StrainPGC outperforms existing
 approaches. Analyzing a large, publicly available metagenome collection
 from inflammatory bowel disease patients and healthy controls, we
 catalog the functional repertoires of thousands of strains across
@@ -169,7 +170,8 @@ challenges (Fig. 1A, B):
 
 Significant progress towards (1) has been recently achieved by expanding
 pangenome reference databases to include metagenome assembled genomes
-(MAGs), substantially improving their completeness [@almeidaUnifiedCatalog2042021].
+(MAGs), substantially improving their coverage for human gut species
+[@almeidaUnifiedCatalog2042021].
 However, cross-species contamination and genome assembly errors like
 gene fragmentation, which are common in MAGs, can exacerbate
 cross-mapping (2), reducing the accuracy of pangenome profiling
@@ -292,6 +294,9 @@ genome (Fig. 1D).
 
 StrainPGC is open source and freely available at
 <https://github.com/bsmith89/StrainPGC>.
+We integrated pangenome profiling, strain tracking, and gene content estimation
+into a complete Snakemake [@molderSustainableDataAnalysis2021a] workflow (Fig. 1E)
+intended for studying the human gut microbiome.
 While the work presented here uses MIDAS v3 and the comprehensive UHGG
 genome collection [@almeidaUnifiedCatalog2042021], the core StrainPGC software is
 designed to also work with pangenome profiling and strain tracking from
@@ -357,7 +362,7 @@ used and operates on single samples, and StrainPanDA [@huStrainPanDALinkedRecons
 recently published tool that harnesses information across multiple
 samples and applies non-negative matrix factorization to jointly
 estimate gene content and strain depth (Fig. 2C). For all three methods,
-we used the same reference database and pangenome profiles as input,
+we used the same reference database (UHGG) and pangenome profiles as input,
 thereby comparing the core gene content estimation approaches on an
 <!-- FIXME: "core gene content" has a very different meaning elsewhere in this
 paper. I don't mean it that way here. -->
