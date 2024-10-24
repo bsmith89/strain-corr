@@ -205,8 +205,8 @@ complete workflow (Fig. 1E), our method requires only shotgun
 metagenomes as input and outputs estimates of the gene content of
 individual strains.
 We apply this workflow to explore strains in
-the second Human Microbiome Project (HMP2) [@TODOLloyd-Price] and in a
-trial of fecal microbiota transplantation for ulcerative colitis [@TODOSmith2021].
+the Human Microbiome Project 2 (HMP2) [@TODOLloyd-Price] and in a
+trial of fecal microbiota transplantation for ulcerative colitis (UCFMT) [@TODOSmith2021].
 We find novel diversity not captured in existing reference databases
 as well as widespread variation in gene content, including functions with likely
 clinical relevance.
