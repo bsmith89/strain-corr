@@ -153,7 +153,7 @@ estimated from the depth of species marker genes
 [@blanco-miguezExtendingImprovingMetagenomic2023;@milaneseMicrobialAbundanceActivity2019b].
 Therefore, the depth ratio---the
 ratio of a given gene’s depth to the overall species depth---can be used
-as the key criterion for the selection of genes [@nayfachIntegratedMetagenomicsPipeline2016a].
+as the key criterion for the assignment of genes to a species [@nayfachIntegratedMetagenomicsPipeline2016a].
 
 However, gene content estimation using pangenome profiles faces four key
 challenges (Fig. 1A, B):
@@ -196,10 +196,12 @@ sensitivity and specificity of multiple samples while also accounting
 for intraspecific variation.
 
 Here we introduce StrainPGC ("Strain Pure Gene Content"),
-a computational method that leverages
-modern strain tracking tools to separate samples into strain-pure
-subsets in order to accurately estimate gene content based on
-multi-sample pangenome profiling (Fig. 1C, D). We also describe changes
+a computational method designed to accurately estimate the gene content
+of individual microbial strains.
+StrainPGC leverages modern strain tracking tools to separate samples into
+strain-pure subsets in order to combine data from pangenome profiling
+(Fig. 1C, D) across multiple metagenomes.
+We also describe changes
 in MIDAS v3, including updates to its pangenome database and profiling
 pipeline to reduce cross-mapping, improve quantification, and facilitate
 the interpretation of strain-specific gene content. As part of a
@@ -263,19 +265,20 @@ improve the completeness, curation, and interpretability of gene abundance estim
 We updated the pangenome database construction and gene annotation process
 as well as the profiling algorithm, and describe these in
 the Methods section below.
+In each sample, MIDAS quantifies the depth of the genes in each species' pangenome.
 
-In order to further refine pangenome profiles for individual samples into
+In order to further refine these pangenome profiles for individual samples into
 gene content estimates for specific strains,
-we designed StrainPGC, a novel algorithm
+we designed StrainPGC, a novel method
 that integrates data from
-multiple samples to overcome the limitations of pangenome profiling for characterizing
+multiple metagenomes to overcome the limitations of pangenome profiling for characterizing
 intraspecific variation (Fig. 1A-C). For each species, StrainPGC
 takes in pangenome profiles and two other inputs, a list of species marker
 genes, and a list of
 "strain-pure" samples for each of the desired strains.
 The StrainPGC algorithm can be summarized as follow:
-first, the overall species depth across
-all samples is estimated based on the the mean depth of the provided marker genes.
+first, the overall species depth in
+each sample is estimated based on the the mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
 where the species is below a minimum detection limit (in this work TODOx).
 Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C).
@@ -294,12 +297,14 @@ While StrainPGC is designed to accept strain-pure samples identified using
 a variety of strain tracking approaches [@TODO-StrainTrackingApproaches], in
 this work we apply GT-Pro [@shiFastAccurateMetagenotyping2021],
 an assembly-free algorithm for tallying
-single-nucleotide polymorphisms in shotgun metagenomic reads,
+single-nucleotide polymorphisms (SNPs) in shotgun metagenomic reads,
 followed by StrainFacts [@smithScalableMicrobialStrain2022a],
 which harnesses these SNP profiles
-to precisely identify and quantify the relative abundance of individual
-strains within species. For each species, we consider samples estimated to be
+to precisely identify individual strains within species and quantify their relative abundances.
+For each species, we consider samples estimated to be
 >=95% the majority strain as pure.
+Strains analyzed in this work are therefore defined based on their
+SNP-genotypes, with gene content estimated as a subsequent step.
 
 StrainPGC is open source and freely available at
 <https://github.com/bsmith89/StrainPGC>.
