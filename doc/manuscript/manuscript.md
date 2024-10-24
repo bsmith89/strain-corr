@@ -254,60 +254,65 @@ metagenomic reads as input.
 
 # Results
 
-## A workflow integrating StrainPGC for strain-specific gene content estimation from metagenomes
+## Updated pangenome profiling and strain-specific gene content estimation
 
-To discover and characterize strains in large metagenome collections, we
-developed an integrated pipeline that takes as input shotgun metagenomes
-and outputs a holistic picture of microbial strains and their gene
-content. Our workflow builds on several other tools specifically
-designed for strain-resolved analyses of the human gut microbiome:
-first, GT-Pro [@shiFastAccurateMetagenotyping2021], an assembly-free algorithm for tallying
-single-nucleotide polymorphisms in shotgun metagenomic reads, and
-second, StrainFacts [@smithScalableMicrobialStrain2022a], which harnesses these SNP profiles
-to precisely identify and quantify the relative abundance of individual
-strains within species. We also perform pangenome profiling using MIDAS
-[@zhaoMIDAS2MetagenomicIntraspecies2023;@nayfachIntegratedMetagenomicsPipeline2016a].
-We made major upgrades to MIDAS in order to
-improve the completeness, curation, and interpretability of pangenome
-profiles. We updated the pangenome database build process
-as well as the profiling algorithm (see Methods) and released these as MIDAS v3.
+MIDAS v3 represents a major upgrade to the pangenome profiling pipeline intended
+improve the completeness, curation, and interpretability of gene abundance estimates.
+We updated the pangenome database construction and gene annotation process
+as well as the profiling algorithm, and describe these in
+the Methods section below.
 
-Our overall workflow (Fig. 1E) is divided into three major stages:
-First, we profile pangenomes, SNPs, and strains with MIDAS v3, GT-Pro,
-and StrainFacts, respectively. Next, we assign genes to strains with the core
-StrainPGC algorithm. Finally, we quality control strains, identifying
-and removing those likely to be of low accuracy.
-
-The key novel contribution of our workflow is StrainPGC, an algorithm
-for strain-aware gene content estimation that integrates data from
-multiple samples to overcome the limitations of pangenome profiling and
+In order to further refine pangenome profiles for individual samples into
+gene content estimates for specific strains,
+we designed StrainPGC, a novel algorithm
+that integrates data from
+multiple samples to overcome the limitations of pangenome profiling for characterizing
 intraspecific variation (Fig. 1A-C). For each species, StrainPGC
-requires three inputs: (1) pangenome profiles, (2) a list of marker
-genes, which are used to estimate the species depth, and (3) the list of
-"strain-pure" samples for each strain, which was determined by
-StrainFacts. StrainPGC estimates the overall species depth across
-samples using the provided marker genes; "species-free" samples, those
-where the species is below the detection limit, are identified in this
-way. Then, working separately for each strain of a species, StrainPGC
-calculates two statistics for each gene (Fig. 1C): (1) the depth ratio
-in strain-pure samples—the total gene depth across samples divided by
-the total species depth—and (2) the Pearson correlation coefficient
-relating that gene’s depth to the overall species depth across both the
-strain-pure and species-free samples. Genes with a sufficiently high
-correlation and depth ratio are estimated to be present in that strain’s
-genome (Fig. 1D).
+takes in pangenome profiles and two other inputs, a list of species marker
+genes, and a list of
+"strain-pure" samples for each of the desired strains.
+The StrainPGC algorithm can be summarized as follow:
+first, the overall species depth across
+all samples is estimated based on the the mean depth of the provided marker genes.
+Next, based on this depth, "species-free" samples are identified as those
+where the species is below a minimum detection limit (in this work TODOx).
+Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C).
+First, the depth ratio is the total gene depth divided by the total species
+depth across that strain's pure samples.
+Second, the correlation score is the Pearson
+coefficient between the gene's depth and the overall species depth across both
+this strain's pure samples and the species-free samples.
+For each strain, genes passing a minimum threshold for both of these
+statistics---the depth ratio and the correlation score (Fig. 1D)---are estimated to be
+present in that strain's genome.
+Finally, two quality control statistics (described below) are calculated for
+each strain intended to flag those likely to be of low accuracy.
+
+While StrainPGC is designed to accept strain-pure samples identified using
+a variety of strain tracking approaches [@TODO-StrainTrackingApproaches], in
+this work we apply GT-Pro [@shiFastAccurateMetagenotyping2021],
+an assembly-free algorithm for tallying
+single-nucleotide polymorphisms in shotgun metagenomic reads,
+followed by StrainFacts [@smithScalableMicrobialStrain2022a],
+which harnesses these SNP profiles
+to precisely identify and quantify the relative abundance of individual
+strains within species. For each species, we consider samples estimated to be
+>=95% the majority strain as pure.
 
 StrainPGC is open source and freely available at
 <https://github.com/bsmith89/StrainPGC>.
 We integrated pangenome profiling, strain tracking, and gene content estimation
 into a complete Snakemake [@molderSustainableDataAnalysis2021a] workflow (Fig. 1E)
 intended for studying the human gut microbiome.
-While the work presented here uses MIDAS v3 and the comprehensive UHGG
-genome collection [@almeidaUnifiedCatalog2042021], the core StrainPGC software is
-designed to also work with pangenome profiling and strain tracking from
-alternative tools. Our integrated analysis workflow is implemented with
-Snakemake [@molderSustainableDataAnalysis2021a] and is available at
-<https://github.com/bsmith89/StrainPGC-manuscript>.
+As with other tools, the computational resources required to run the full
+pipeline may be substantial and are dominated by the requirements for read alignment
+with Bowtie2 [@langmeadFastGappedreadAlignment2012].
+By comparison, even for large datasets, the StrainPGC core algorithm runs in
+seconds and requires less than a GB of RAM at peak.
+Our analysis harnesses the comprehensive UHGG reference collection
+[@almeidaUnifiedCatalog2042021] and requires only raw metagenomic reads as
+user-provided input.
+
 
 ## StrainPGC accurately estimates gene content of strains in a complex synthetic community
 
@@ -993,9 +998,11 @@ denominator, as well—is likely to be much smaller.
 
 ### StrainPGC
 
-We estimated gene content for each strain with StrainPGC v0.1.0,
-providing the list of species marker genes from the MIDASDB, the strain
-pure sets derived from StrainFacts, and pangenome profiles from MIDAS as
+For each species we estimated gene content across strains with StrainPGC v0.1.0,
+providing the three required inputs:
+(1) the list of species marker gene IDs from the MIDASDB,
+(2) the strain pure sets derived from StrainFacts,
+and (3) pangenome profiles from MIDAS as
 the three inputs.
 
 StrainPGC estimates the depth of each species in each sample as the
