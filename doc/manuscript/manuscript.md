@@ -790,8 +790,17 @@ pangenome profiling, in particular ambiguous mapping to homologous
 sequences both within and across species, systematic false positive and
 false negative gene assignments may still occur. As a result, we caution
 against over-interpreting analyses that rely on directly comparing the
-gene content of inferred strain with reference strains. Another major
-barrier to interpreting gene content estimates by StrainPGC or other
+gene content of inferred strain with reference strains.
+Our approach leverages strain-pure samples and compares across multiple
+samples with the same strain.
+As a result, StrainPGC will
+likely perform suboptimally in environments and study designs with particularly
+high intra-sample diversity, such as waste-water or soil microbiomes,
+and where fewer strain-pure samples have shared strains.
+This highlights an opportunity for the
+development of complementary tools that can handle extreme microbial diversity
+both within and across samples.
+Another major barrier to interpreting gene content estimates by StrainPGC or other
 methods is the sparsity of robust genetic, biochemical, structural, and
 experimental characterization of gene products [@zhouCAFAChallengeReports2019]. While we
 augmented available annotations by leveraging co-occurrence clusters to
