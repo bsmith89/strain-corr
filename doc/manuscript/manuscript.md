@@ -383,21 +383,25 @@ highest F1 score, giving these two methods an advantage. Nonetheless,
 StrainPGC performed better on average than either alternative: a median
 increase of 0.069 in F1 score compared to PanPhlAn (IQR: 0.038–0.093; p
 < 1e-10 by Wilcoxon, non-parametric, paired, t-test) and 0.042
-relative to StrainPanDA (IQR: 0.022–0.079; p < 1e-10). All three tools
-had high precision, and the superior performance of StrainPGC was driven
-primarily by the recall: 0.12 greater than PanPhlAn and 0.08 greater
-than StranPanDA (p < 1e-10 for both). For all three tools, species
+relative to StrainPanDA (IQR: 0.022–0.079; p < 1e-10).
+All three tools
+had similarly high precision, and the superior performance of StrainPGC was driven
+primarily by a dramatic reduction in the false negative rate (FPR: 1 - recall):
+a median of just 49% of PanPhlAn's and 60% of StrainPanDA's FPR.
+
+For all three tools, species
 with higher estimated depth had better performance on this benchmark
 (Spearman’s correlation between maximum species depth across samples and
 F1 score: Spearman’s ⍴ = 0.30, 0.55, and 0.33 for StrainPGC, PanPhlAn,
-and StrainPanDA, respectively; Supplementary Figure S1). However,
-StrainPGC had a weaker relationship between precision and depth than
-PanPhlAn and StrainPanDA did (⍴ = 0.19, 0.53, and 0.56, respectively).
-Since we controlled for other steps of the gene content estimation
-process, these findings support the idea that StrainPGC’s use of
-correlation across strain-pure samples allows us to maintain high
-precision even while increasing recall. In particular, we find our
-approach maintains this specificity even at low depths more effectively
+and StrainPanDA, respectively; Supplementary Figure S1). Interestingly,
+StrainPGC's precision was less tightly related to depth than either
+PanPhlAn or StrainPanDA (⍴ = 0.19, 0.53, and 0.56, respectively).
+Since we controlled for the upstream pangenome profiling,
+these findings support the idea that use of the Pearson
+correlation across strain-pure samples as a filtering criterion for our gene content
+estimates allows StrainPGC to maintain high
+precision even while greatly increasing recall. In particular, we find our
+approach upholds this specificity even at low depths more effectively
 than existing methods (Supplementary Figure S1).
 
 In real-world applications—where ground-truth gene content is not known
