@@ -1048,13 +1048,19 @@ annotations (e.g., a specific COG or AMR reference accession).
 
 ## Downstream analysis
 
-### Performance benchmarking
+### Benchmarking gene content estimation performance
 
-For benchmarking, strains were excluded where the genome did not match
-GT-Pro SNPs from primarily a single species, or where the species's
-marker genes were never detected in metagenomes.
+We benchmarked the performance of gene content estimates from StrainPGC, PanPhlAn,
+and StrainPanDA, using publicly available, high-quality strain genomes
+and metagenomes from experimental treatments of the hCOM2 synthetic community
+[@jinCulturingComplexGut2023].
+From the 117 inoculated strains, TODO were excluded from evaluation because either:
+(1) when running GT-Pro directly on their genome sequence, less than TODO% of
+identified SNPs were from the same species (TODO strains), or
+(2) the total species depth across metagenomes was less than TODO as estimated
+from mean marker gene depth (TODO strains).
 
-We identified gene sequences in these genomes with Prodigal v2.6.3
+In the remaining TODO strain genomes we identified gene sequences with Prodigal v2.6.3
 [@hyattGeneTranslationInitiation2012] (masking ambiguous bases and using the `meta`
 procedure), translated them with codon table 11, and annotated them with
 EggNOG mapper version 2.1.10. The ground-truth annotations used to
