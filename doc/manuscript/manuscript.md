@@ -825,10 +825,11 @@ method. Together, these updates clean, functionally annotate, and expand
 the phylogenetic coverage of MIDAS pangenome profiling, providing a
 foundation for accurately estimating and interpreting gene content
 across species. MIDAS v3 is available at
-<https://github.com/czbiohub-sf/MIDAS2> and can be installed using
+<https://github.com/czbiohub-sf/MIDAS> and can be installed using
 conda or Docker. Compatible, pre-built MIDAS databases based on UHGG
-[@almeidaUnifiedCatalog2042021] v2.0 and GTDB [@parksGTDBOngoingCensus2022] r202 will be available in
-the near future. We use the UHGG database throughout this work.
+[@almeidaUnifiedCatalog2042021] v2.0 and GTDB [@parksGTDBOngoingCensus2022] r202
+are available.
+We use the UHGG database throughout this work.
 
 ### Pangenome database curation and clustering
 
@@ -932,9 +933,9 @@ collected _in vitro_.
 
 For the work presented here, we ran MIDAS v3 as follows. Using Bowtie2
 v2.5.1 throughout, a single reference index was built for 627 species
-using `midas2 build_bowtie2db --prune_centroids
+using `midas build_bowtie2db --prune_centroids
 --remove_singleton`. Paired-end reads for each sample were aligned to
-this index using ` midas2 run_genes --aln_speed sensitive
+this index using ` midas run_genes --aln_speed sensitive
 --aln_extra_flags '--mm --ignore-quals' --total_depth 0`. Mean
 mapping depth was calculated using `samtools depth` and summed up at
 the 75% ANI OGF level.
