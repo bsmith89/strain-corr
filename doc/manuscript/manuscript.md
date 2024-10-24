@@ -143,7 +143,7 @@ depth throughout this paper.) Several existing tools, including PanPhlAn
 [@zhaoMIDAS2MetagenomicIntraspecies2023;@nayfachIntegratedMetagenomicsPipeline2016a] perform pangenome
 profiling. However, due to several sources of error in quantifying gene
 depth, a second algorithm is needed to infer which genes are actually
-present in a specific strain’s genome, a step that we call gene content
+present in a specific strain's genome, a step that we call gene content
 estimation. Since this strain is never directly observed in
 isolation---indeed, it is only a hypothesis---we refer to it as an inferred
 strain. Tools for gene content estimation are often based on the
@@ -152,7 +152,7 @@ as the overall species depth [@plazaonateMSPminerAbundancebasedReconstitution201
 estimated from the depth of species marker genes
 [@blanco-miguezExtendingImprovingMetagenomic2023;@milaneseMicrobialAbundanceActivity2019b].
 Therefore, the depth ratio---the
-ratio of a given gene’s depth to the overall species depth---can be used
+ratio of a given gene's depth to the overall species depth in a sample---can be used
 as the key criterion for the assignment of genes to a species [@nayfachIntegratedMetagenomicsPipeline2016a].
 
 However, gene content estimation using pangenome profiles faces four key
@@ -174,7 +174,7 @@ Significant progress towards (1) has been recently achieved by expanding
 pangenome reference databases to include metagenome assembled genomes
 (MAGs), substantially improving their coverage for human gut species
 [@almeidaUnifiedCatalog2042021].
-However, MAGs can contain cross-species contamination and genome assembly
+Unfortunately, MAGs can contain cross-species contamination and genome assembly
 errors such as gene fragmentation.
 The frequency and types of these errors
 varies depending on the source and quality of the MAGs, as well as whether they
@@ -234,7 +234,7 @@ than one strain (gray markers). Traditional, single-sample analysis
 estimates gene content by selecting genes with a minimum depth (red,
 horizontal line, which is chosen based on the species's depth). As a
 result, samples with low depth, cross-mapping, and strain mixing all
-lead to decreased accuracy (indicated with red x’s). Only gene content
+lead to decreased accuracy (indicated with red x's). Only gene content
 estimation in a strain-pure, high-depth sample without cross-mapping
 (green check) accurately reflects the strain of interest. **(C)**
 Relationship between gene depth and species depth for each of the three
@@ -323,7 +323,7 @@ user-provided input.
 
 ## StrainPGC accurately estimates gene content of strains in a complex synthetic community
 
-![**Figure 2: Evaluation of StrainPGC’s gene content estimation
+![**Figure 2: Evaluation of StrainPGC's gene content estimation
 performance on a highly diverse, synthetic community [@jinCulturingComplexGut2023].**
 **(A)** Schematic diagram of our procedure for benchmarking gene content
 estimates using a synthetic community constructed to reflect the species
@@ -336,7 +336,7 @@ tree on the left, colored by phylum, scale bar in units of substitutions
 per position). **(B)** Core genome depths of 87 detectable benchmarking
 species span more than two orders of magnitude. Points represent
 individual species, are colored by phylum, and are placed based on that
-species’s maximum depth across samples (x-axis) and total depth summed
+species's maximum depth across samples (x-axis) and total depth summed
 over all samples combined (y-axis). Species are closer to the 1-to-1
 diagonal (dashed line) when the sample with the highest depth
 contributes more of their total depth. Some species are represented by
@@ -352,7 +352,7 @@ that index. The relationship between accuracy and sequencing depth is
 shown in Supplementary Figure S1.
 ](fig/benchmarking_figure.dpi200.png)
 
-In order to evaluate StrainPGC’s performance, we ran our workflow on
+In order to evaluate StrainPGC's performance, we ran our workflow on
 publicly available metagenomes from a diverse, synthetic bacterial
 community grown _in vitro_ under five different experimental conditions
 (276 metagenomes in total) [@jinCulturingComplexGut2023]. The initial inoculum of this
@@ -373,7 +373,7 @@ compared the EggNOG OGs annotations between these. In this benchmark,
 StrainPGC had a median precision of 0.96 (IQR: 0.90–0.98; Fig. 1C), a
 recall of 0.88 (0.82–0.93), and an F1 score of 0.91 (0.87–0.94).
 
-We next compared StrainPGC’s performance to two alternative,
+We next compared StrainPGC's performance to two alternative,
 state-of-the-art methods: PanPhlAn [@beghiniIntegratingTaxonomicFunctional2021], which is widely
 used and operates on single samples, and StrainPanDA [@huStrainPanDALinkedReconstruction2022], a
 recently published tool that harnesses information across multiple
@@ -398,8 +398,8 @@ a median of just 49% of PanPhlAn's and 60% of StrainPanDA's FPR.
 
 For all three tools, species
 with higher estimated depth had better performance on this benchmark
-(Spearman’s correlation between maximum species depth across samples and
-F1 score: Spearman’s ⍴ = 0.30, 0.55, and 0.33 for StrainPGC, PanPhlAn,
+(Spearman's correlation between maximum species depth across samples and
+F1 score: Spearman's ⍴ = 0.30, 0.55, and 0.33 for StrainPGC, PanPhlAn,
 and StrainPanDA, respectively; Supplementary Figure S1). Interestingly,
 StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.53, and 0.56, respectively).
@@ -498,7 +498,7 @@ the HMP2 and other cohorts [@lloyd-priceStrainsFunctionsDynamics2017].
 Concordant with this level of strain diversity, estimated genotypes for
 inferred strains were often distinct from the closest reference strain.
 Using SNP profiles in strain-pure samples, we estimated each inferred
-strain’s genotypes as the consensus allele, masking ambiguous positions.
+strain's genotypes as the consensus allele, masking ambiguous positions.
 Among inferred strains with ≥ 100 genotyped positions, 68% had a
 genotype dissimilarity of greater than 0.05 to the closest reference.
 Representing the strain diversity of each species with a UPGMA tree, we
@@ -531,7 +531,7 @@ high-quality reference genome (Fig. 3F). As would be expected, strains
 with more dissimilar SNP genotypes were often those with dissimilar gene
 content as well. For instance, across the 28 inferred strains of _E.
 coli_, we found a significant correlation between the gene
-content dissimilarity and the genotype dissimilarity (Spearman’s ⍴ =
+content dissimilarity and the genotype dissimilarity (Spearman's ⍴ =
 0.44, p = 0.018; Fig. 3F). This suggests that the increased diversity
 captured by StrainPGC facilitates expanded analyses of intraspecific
 gene content variation in the gut microbiome.
@@ -593,7 +593,7 @@ Based on these de novo prevalence estimates, we assigned genes to the
 estimated gene content that fell into each prevalence class for each
 inferred strain (Fig. 4B). Computing the median first within and then
 across species, genes in the core fraction made up 70% (IQR: 63–76%) of
-each strain’s estimated gene content, shell fraction 25% (19–28%), and
+each strain's estimated gene content, shell fraction 25% (19–28%), and
 cloud fraction 5% (4–9%), in general agreement with reference genomes
 (Supplementary Figure S2).
 Certain categories of functional annotations were more common in each
@@ -629,7 +629,7 @@ chance (three or more shared annotations 2.4x more common, p < 1e-2;
 Fig. 4F). This supports our interpretation of StrainPGC–enabled gene
 co-occurrence clustering across genomes as evidence of related
 biochemical function or linked transmission, which may help to generate
-testable hypotheses about relationships between genes in a species’
+testable hypotheses about relationships between genes in a species'
 pangenome.
 
 Overall, large surveys of gene content estimated by StrainPGC have the
@@ -641,7 +641,7 @@ analyses.
 ![**Figure 5: Different donors in a fecal microbiota transplant (FMT)
 trial [@smithStrainresolvedAnalysisRandomized2022] have engrafting _E. coli_ strains that differ in
 their functional potential. (A)** _E. coli_ strains found in repeated
-sampling of two independent donors’ fecal materials (boxed panels) and
+sampling of two independent donors' fecal materials (boxed panels) and
 in the fecal time series of their respective recipients. Columns in each
 panel represent individual samples, colors represent _E. coli_ strains
 inferred from StrainFacts, and the height of colored bars indicates
@@ -703,7 +703,7 @@ subsequent follow-up sampling (Fig. 5A). Likewise, strain-9 engrafted
 frequently for recipients of D97. These two strains had a SNP genotype
 dissimilarity of 0.23, similar to the median dissimilarity across all pairs
 of UCFMT strains of 0.25 (IQR: 0.13 – 0.31). Approximately 80% of each
-strain’s gene content was shared with the other, while 18% and 24% was
+strain's gene content was shared with the other, while 18% and 24% was
 private to strain-6 and strain-9, respectively (Fig. 5C; Supplementary
 Table 2). Cross-referencing co-occurrence clusters with the estimated
 gene content of these strains, about 60% of clusters in each were
@@ -1078,7 +1078,7 @@ procedure), translated them with codon table 11, and annotated them with
 EggNOG mapper version 2.1.10. The ground-truth annotations used to
 assess performance were defined as the complete set of all EggNOG OGs
 assigned to all genes in the ground-truth genome. These were compared to
-the complete set of OG annotations in each inferred strain’s estimated
+the complete set of OG annotations in each inferred strain's estimated
 gene content.
 
 In order to select which inferred strain to compare to each benchmark
@@ -1127,7 +1127,7 @@ estimated as the product of the estimated species depth and estimated
 strain fraction. All strains with depth > 0.1x were considered to be
 "present" in a sample. The number of strains in each subject was
 calculated as the total number of strains present in any of that
-subject’s samples. For shared-strain analysis (Fig. 3C), samples with
+subject's samples. For shared-strain analysis (Fig. 3C), samples with
 fewer than 10 strains present of any species were excluded from
 analysis, as this removed several samples with anomalously low
 diversity.
@@ -1180,7 +1180,7 @@ Biohub San Francisco, Gladstone Institutes, and the Sam Simeon Fund. BJS
 was supported by a Computational Innovation Postdoctoral Fellowship from
 the Noyce Initiative for Digital Transformation in Computational Biology
 and Health Data Science. JA was supported by funding from the Kenneth
-Rainin Foundation and the Crohn’s and Colitis Foundation. The authors
+Rainin Foundation and the Crohn's and Colitis Foundation. The authors
 thank Françoise Chanut for extensive editorial support.
 
 ## Author Contributions
