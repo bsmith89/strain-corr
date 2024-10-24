@@ -131,26 +131,28 @@ content between strains [@plazaonateMSPminerAbundancebasedReconstitution2019a]. 
 to study the functional consequences of strain-level variation in the
 gut microbiome.
 
-The most common way to study intraspecific variation _in situ_ is to
+The most common way to study microbial gene content _in situ_ is to
 quantify the gene families present in shotgun metagenomes—an approach
 referred to as "pangenome profiling". Pangenome profiling estimates the
-mean sequencing depth—sometimes called vertical coverage—of a gene
+mean sequencing depth---sometimes called vertical coverage---of a gene
 family as the mean number of reads aligning to each base of a
 representative sequence [@milaneseMicrobialAbundanceActivity2019b] (Fig. 1A). (For brevity, we
 use "gene" as short-hand for gene family and "depth" for mean sequencing
 depth throughout this paper.) Several existing tools, including PanPhlAn
-[@beghiniIntegratingTaxonomicFunctional2021] and MIDAS [@zhaoMIDAS2MetagenomicIntraspecies2023;@nayfachIntegratedMetagenomicsPipeline2016a] perform pangenome
+[@beghiniIntegratingTaxonomicFunctional2021] and MIDAS
+[@zhaoMIDAS2MetagenomicIntraspecies2023;@nayfachIntegratedMetagenomicsPipeline2016a] perform pangenome
 profiling. However, due to several sources of error in quantifying gene
 depth, a second algorithm is needed to infer which genes are actually
 present in a specific strain’s genome, a step that we call gene content
 estimation. Since this strain is never directly observed in
-isolation—indeed, it is only a hypothesis—we refer to it as an inferred
+isolation---indeed, it is only a hypothesis---we refer to it as an inferred
 strain. Tools for gene content estimation are often based on the
 assumption that all encoded genes will be at a similar depth: the same
 as the overall species depth [@plazaonateMSPminerAbundancebasedReconstitution2019a], which can be directly
 estimated from the depth of species marker genes
-[@blanco-miguezExtendingImprovingMetagenomic2023;@milaneseMicrobialAbundanceActivity2019b]. Therefore, the depth ratio—the
-ratio of a given gene’s depth to the overall species depth—can be used
+[@blanco-miguezExtendingImprovingMetagenomic2023;@milaneseMicrobialAbundanceActivity2019b].
+Therefore, the depth ratio---the
+ratio of a given gene’s depth to the overall species depth---can be used
 as the key criterion for the selection of genes [@nayfachIntegratedMetagenomicsPipeline2016a].
 
 However, gene content estimation using pangenome profiles faces four key
@@ -788,7 +790,8 @@ to be found in multiple samples. While StrainPGC is specifically
 designed to overcome the limitations of short-read, alignment-based
 pangenome profiling, in particular ambiguous mapping to homologous
 sequences both within and across species, systematic false positive and
-false negative gene assignments may still occur. As a result, we caution
+false negative gene assignments may still occur.
+As a result, we caution
 against over-interpreting analyses that rely on directly comparing the
 gene content of inferred strain with reference strains.
 Our approach leverages strain-pure samples and compares across multiple
@@ -927,7 +930,7 @@ Benchmark metagenomes were processed in the same way,
 except that human read removal was skipped because the data was
 collected _in vitro_.
 
-## Integrated analysis pipeline
+## Integrated analysis workflow
 
 ### Pangenome profiling
 
@@ -947,6 +950,9 @@ estimated completeness of > 90% and contamination of < 5%. OGFs
 found in > 95% of high-quality reference genomes were selected as
 species marker genes and were used for species depth estimation, quality
 control, and downstream analyses.
+
+A table of our marker genes for each of the TODO species analyzed in this study
+can be obtained from TODO. (TODO: Also download this for the workflow quickstart.)
 
 ### SNP profiling
 
@@ -1026,7 +1032,7 @@ StrainPGC estimates the depth of each species in each sample as the
 depth of species marker genes excluding those genes with the 15% highest
 and lowest depth. Species-free samples were defined as those with an
 estimated species depth of < 0.0001x. Genes were selected using a
-depth-ratio threshold of 0.2 and a correlation threshold of 0.4 in order
+depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
 to strike a balance between sensitivity and specificity.
 
 ### Gene family annotation
@@ -1095,15 +1101,15 @@ highest F1 score was used for performance comparisons.
 
 ### Inferred strain quality filtering
 
-For analysis of the HMP2 and UCFMT datasets—but not performance
-benchmarking—strains were filtered to remove those likely to be low
+For analysis of the HMP2 and UCFMT datasets---but not performance
+benchmarking---strains were filtered to remove those likely to be low
 accuracy. Strains with fewer than 100 unmasked positions in their
 consensus genotype were included in benchmarking but excluded from all
 other analyses. This criterion _a priori_ excludes 19 of the 627 species
 profiled in this work. For analyses of gene content, strains with an
 estimated depth of < 1x across all strain-pure samples were also
-excluded. Finally, strains with < 90% of species genes or with a
-standard deviation in the log10-transformed depth-ratio across selected
+excluded. Finally (TODO: look into this), strains with < 90% of species genes or with a
+standard deviation in the log10-transformed depth ratio across selected
 genes of > 0.75 were flagged as low quality and removed.
 
 ### Analysis of species and strain diversity
@@ -1151,19 +1157,12 @@ For analysis of the UCFMT _E. coli_ strains, shell genes and
 co-occurrence clusters were defined using the HMP2 inferred strains, not
 _de novo_.
 
-## Availability of software, code, metadata, and compute environments
+## Software availability
 
 StrainPGC is freely available at <https://github.com/bsmith89/StrainPGC>.
 Code and metadata needed to replicate our analyses and plots are
 available at
 <https://github.com/bsmith89/StrainPGC-manuscript>.
-
-# Additional Details
-
-## Data Access
-
-All reference genomes and metagenomic data analyzed for this study are
-available in public repositories as described in the methods.
 
 ## Competing Interests Statement
 
@@ -1198,6 +1197,8 @@ thank Françoise Chanut for extensive editorial support.
 -   KP: Conceptualization, Methodology, Investigation, Resources,
     Writing – Original Draft, Writing – Review & Editing,
     Supervision, Funding Acquisition
+
+(TODO: Drop bullets and put above in paragraph format.)
 
 # Supplementary Materials
 
