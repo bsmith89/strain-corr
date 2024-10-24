@@ -674,9 +674,11 @@ commensal and even probiotic strains [@blountUnexhaustedPotentialColi2015].
 
 Using 231 samples collected longitudinally from patients (189 samples)
 and donors (42 samples from three of four donors) in the UCFMT study, we
-identified and tracked strains using StrainFacts. For the two
-best-sampled donors, D44 and D97, we observed robust, repeated
-transmission of strains during FMT (Fig. 5A). Next, with StrainPGC, we
+identified and tracked strains using StrainFacts.
+Focusing on D44 and D97---the two donors with the most metagenomic samples and
+who contributed materials to the most recipients---we observed robust, repeated
+transmission of strains during FMT (Fig. 5A).
+Next, with StrainPGC, we
 obtained gene content estimates for inferred strains of _E. coli_; 18
 passed quality control. In order to examine their genetic
 relatedness—and to put them in the context of the earlier pangenome
