@@ -172,10 +172,15 @@ Significant progress towards (1) has been recently achieved by expanding
 pangenome reference databases to include metagenome assembled genomes
 (MAGs), substantially improving their coverage for human gut species
 [@almeidaUnifiedCatalog2042021].
-However, cross-species contamination and genome assembly errors like
-gene fragmentation, which are common in MAGs, can exacerbate
-cross-mapping (2), reducing the accuracy of pangenome profiling
-[@zhaoPitfallsGenotypingMicrobial2023]. Careful curation of the pangenome database is needed to
+However, MAGs can contain cross-species contamination and genome assembly
+errors such as gene fragmentation.
+The frequency and types of these errors
+varies depending on the source and quality of the MAGs, as well as whether they
+were assembled from short-read or long-read sequencing data.
+Both types of
+errors can exacerbate cross-mapping (2), potentially reducing the accuracy of
+pangenome profiling [@zhaoPitfallsGenotypingMicrobial2023].
+Careful curation of the pangenome database is needed to
 reduce the impact of these issues. One promising approach for dealing
 with low depth (3), is to combine data across multiple samples (Fig. 1C)
 [@carrReconstructingGenomicContent2013a;@plazaonateMSPminerAbundancebasedReconstitution2019a],
