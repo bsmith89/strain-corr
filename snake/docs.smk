@@ -5,7 +5,7 @@ rule sort_bib_from_raw:
         script="scripts/sort_bib.py",
         bib=["doc/bibliography_raw.bib"],
     conda:
-        "conda/pandoc.yaml"
+        "conda/biblib.yaml"
     shell:
         "python {input.script} {input.bib} > {output}"
 

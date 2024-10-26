@@ -1,0 +1,7 @@
+name: biblib
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - pip:
+    - biblib-simple
