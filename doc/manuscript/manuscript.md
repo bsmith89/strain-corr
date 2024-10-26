@@ -598,19 +598,32 @@ cloud fraction 5% (4–9%), in general agreement with reference genomes
 (Supplementary Figure S2).
 Certain categories of functional annotations were more common in each
 fraction (Fig. 4C). Core genes were enriched for COG categories with
-housekeeping functions, such as translation, cytoskeleton, and the
-transport and metabolism of nucleotides, amino acids, coenzymes, and
-lipids. The shell pangenome, on the other hand, was enriched in
-functional categories including carbohydrate and inorganic ion transport
-and metabolism, and extracellular structures. Finally, the cloud
+housekeeping functions while the cloud
 pangenome was enriched in functional categories including the mobilome,
-defense mechanisms, as well as genes without a COG category.
+and defense mechanisms.
 The COG category for DNA replication, recombination, and repair
-was also enriched in the cloud pangenome, likely due to frequent co-annotation
-with the mobilome.
+and genes without a COG category
+were also enriched in the cloud pangenome, possibly indicating
+that many of these genes are also related to the mobilome.
 Broadly, these patterns of
 enrichment confirm our expectations that core genes perform obligate
 functions and make up a plurality of genes for most strains.
+
+We also identified 200 genes that were annotated with antimicrobial resistance
+functions.
+Of these, 168 were in the cloud, 32 were in the shell, and none were in the
+core pangenome fraction.
+Across all 3511 high-quality strains, 482 (14%) of these had at least one gene
+with an AMR annotation.
+We also found differences across phyla in the fraction of strains with at least
+one annotation.
+For Bacteroidota, 37% of strains (271 of 727) had an AMR gene, as did 22% of
+Proteobacteria (41 of 189).
+However, only 9% of Firmicutes (7 of 80), 7% of Firmicutes_A (151 of 2232), 6%
+of Actinobacteria (4 of 64) and 4% of Firmicutes_C (6 of 141) had an
+annotation.
+These results are consistent with our expectation that resistance mechanisms
+are variable within species and more common in gram-negative bacteria.
 
 As an assembly-free approach, gene content estimation lacks synteny
 information, which can be useful for understanding biological phenomena
