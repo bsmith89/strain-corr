@@ -209,8 +209,8 @@ complete workflow (Fig. 1E), our method requires only shotgun
 metagenomes as input and outputs estimates of the gene content of
 individual strains.
 We apply this workflow to explore strains in
-the Human Microbiome Project 2 (HMP2) [@TODOLloyd-Price] and in a
-trial of fecal microbiota transplantation for ulcerative colitis (UCFMT) [@TODOSmith2021].
+the Human Microbiome Project 2 (HMP2) [@proctorIntegrativeHumanMicrobiome2019] and in a
+trial of fecal microbiota transplantation for ulcerative colitis (UCFMT) [@smithStrainresolvedAnalysisRandomized2022].
 We find novel diversity not captured in existing reference databases
 as well as widespread variation in gene content, including functions with likely
 clinical relevance.
@@ -294,7 +294,7 @@ Finally, two quality control statistics (described below) are calculated for
 each strain intended to flag those likely to be of low accuracy.
 
 While StrainPGC is designed to accept strain-pure samples identified using
-a variety of strain tracking approaches [@TODO-StrainTrackingApproaches], in
+a variety of strain tracking approaches, in
 this work we apply GT-Pro [@shiFastAccurateMetagenotyping2021],
 an assembly-free algorithm for tallying
 single-nucleotide polymorphisms (SNPs) in shotgun metagenomic reads,
@@ -789,7 +789,7 @@ of FMT.
 
 StrainPGC is an assembly-free method, and complements assembly-based
 methods---including novel, strain-aware approaches
-[@quinceDESMANNewTool2017;@quinceSTRONGTODO]---for
+[@quinceDESMANNewTool2017;@quinceSTRONGMetagenomicsStrain2021]---for
 gene content estimation.
 High-quality
 genome sequences enabled by laboratory isolation and culturing, as well
