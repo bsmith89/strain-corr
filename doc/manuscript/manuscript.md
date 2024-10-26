@@ -787,19 +787,27 @@ functional potential of two different strains of _E. coli_ that were
 successfully transferred from two different donors in a clinical trial
 of FMT.
 
-StrainPGC is an assembly-free method, and complements high-quality
+StrainPGC is an assembly-free method, and complements assembly-based
+methods---including novel, strain-aware approaches
+[@quinceDESMANNewTool2017;@quinceSTRONGTODO]---for
+gene content estimation.
+High-quality
 genome sequences enabled by laboratory isolation and culturing, as well
-as modern, long-read sequencing and de novo assembly from metagenomes,
-which remain the gold standard for comparative genomics. However, these
+as modern, long-read sequencing,
+reduce the risk of cross-mapping and
+remain the gold standard for comparative genomics. However, these
 methods are labor intensive, expensive, and often fail to capture
-low-abundance organisms [@chenAccurateCompleteGenomes2020]. Interestingly, DESMAN
-[@quinceDESMANNewTool2017], while based on de novo assembly, takes a conceptually
-similar approach to StrainPGC, combining strain tracking with gene
-content estimation. StrainPGC identified extensive, underexplored
-diversity in the well-studied HMP2, further suggesting that many strains
-are missed by culturing and assembly-based methods. Nonetheless, these
-technologies are important complements to our approach and contribute to
-the completeness of reference databases.
+low-abundance organisms [@chenAccurateCompleteGenomes2020].
+In contrast, StrainPGC offers a more accessible approach which can be applied
+to existing short-read metagenomic datasets.
+Our method identified extensive, underexplored
+diversity in the well-studied HMP2, demonstrating that many strains are missed
+by culturing and assembly-based methods.
+Nonetheless, both approaches are complementary: assembly-based methods
+contribute to the completeness and accuracy of reference databases, which in
+turn enhances the performance of reference-based methods like StrainPGC.
+Together, these diverse approaches enable comprehensive analysis of
+gene content variation in complex microbial communities.
 
 Given the enormous diversity of strains found across subjects in the
 HMP2, the StrainPGC approach may be most useful for analyzing FMT,
