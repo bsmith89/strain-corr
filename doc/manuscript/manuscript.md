@@ -326,11 +326,11 @@ user-provided input.
 ![**Figure 2: Evaluation of StrainPGC's gene content estimation
 performance on a highly diverse, synthetic community [@jinCulturingComplexGut2023].**
 **(A)** Schematic diagram of our procedure for benchmarking gene content
-estimates using a synthetic community constructed to reflect the species
+estimates using the hCom2 synthetic community constructed to reflect the species
 and strain diversity found in human gut microbiomes [@chengDesignConstructionVivo2022].
 StrainPGC and alternative tools were applied to pangenome profiles from
 different samples derived from the synthetic community, and estimates of
-gene content were compared to high-quality reference genomes for 105
+gene content were compared to high-quality reference genomes for 97
 strains. Strains were drawn from 95 species across 8 phyla (phylogenetic
 tree on the left, colored by phylum, scale bar in units of substitutions
 per position). **(B)** Core genome depths of 87 detectable benchmarking
@@ -352,16 +352,17 @@ that index. The relationship between accuracy and sequencing depth is
 shown in Supplementary Figure S1.
 ](fig/benchmarking_figure.dpi200.png)
 
-In order to evaluate StrainPGC's performance, we ran our workflow on
-publicly available metagenomes from a diverse, synthetic bacterial
-community grown _in vitro_ under five different experimental conditions
-(276 metagenomes in total) [@jinCulturingComplexGut2023]. The initial inoculum of this
-community was composed of 117 bacterial isolates spanning 8 phyla, each
-with a high-quality genome assembly, which we refer to as ground truth
-genomes (Fig. 2A). Most species were represented by a single strain,
-some by 2 or 3 strains, and one by 4 (Fig. 2B). We refer to the
-collection of ground-truth genomes and experimental metagenomes as the
-benchmarking dataset. We annotated predicted protein-coding genes in the
+In order to evaluate StrainPGC's performance, we ran our workflow on 276
+publicly available metagenomes derived from experimental manipulations of the
+hCom2 synthetic bacterial community [@jinCulturingComplexGut2023].
+The shared inoculum was composed of 117 bacterial isolates spanning 8 phyla,
+each with a high-quality genome assembly, which we refer to as ground truth
+genomes (Fig. 2A).
+Most species were represented by a single strain, some by 2 or 3 strains, and
+one by 4 (Fig. 2B).
+We refer to the collection of ground-truth genomes and experimental metagenomes
+as the hCom2 benchmark dataset.
+We annotated predicted protein-coding genes in the
 ground truth genomes with EggNOG OGs (Fig. 2A). After removing species
 that could not be genotyped by GT-Pro, or that were undetected in
 metagenomes, the benchmarking task amounted to 87 species encompassing
@@ -385,7 +386,7 @@ thereby comparing the core gene content estimation approaches on an
 paper. I don't mean it that way here. -->
 equal basis. However, since strains inferred using PanPhlAn and
 StrainPanDA do not have SNP genotypes to be used for matching, for each
-benchmark genome, we instead selected the inferred strain with the
+hCom2 genome, we instead selected the inferred strain with the
 highest F1 score, giving these two methods an advantage. Nonetheless,
 StrainPGC performed better on average than either alternative: a median
 increase of 0.069 in F1 score compared to PanPhlAn (IQR: 0.038–0.093; p
@@ -415,10 +416,10 @@ In real-world applications—where ground-truth gene content is not known
 a priori—it is beneficial to understand the confidence of StrainPGC
 estimates. We, therefore, calculated two scores to serve as proxies for
 accuracy and compared these to the performance we measured on the
-benchmarking datasets. First, we hypothesize that the fraction of
+hCom2 datasets. First, we hypothesize that the fraction of
 high-prevalence, species marker genes assigned to a given inferred
 strain reflects the overall completeness of the estimated gene content
-for that strain. Indeed, across benchmark genomes, we found a strong
+for that strain. Indeed, across strains in the hCom2 benchmark, we found a strong
 correlation between the fraction of species marker genes and the F1
 score (⍴ = 0.60, p < 1e-10). As expected, this appears to be driven
 primarily by a strong association with the recall (⍴ = 0.63, p <
@@ -947,12 +948,12 @@ the OGF at the chosen ANI threshold.
 
 All shotgun metagenomes analyzed in this work are publicly available as
 SRA BioProjects, including the HMP2 (PRJNA398089), UCFMT (PRJNA737472),
-and the synthetic community data (PRJNA885585) used for benchmarking.
+and the hCom2 samples used for benchmarking (PRJNA885585).
 The HMP2 metagenomes already had human reads removed and quality control
 procedures previously applied. UCFMT metagenomes were filtered for human
 reads, deduplicated, adapter trimmed, and quality trimmed, as previously described
 in [@smithStrainresolvedAnalysisRandomized2022].
-Benchmark metagenomes were processed in the same way,
+The hCom2 metagenomes were processed in the same way,
 except that human read removal was skipped because the data was
 collected _in vitro_.
 
@@ -1093,7 +1094,7 @@ identified SNPs were from the same species (TODO strains), or
 (2) the total species depth across metagenomes was less than TODO as estimated
 from mean marker gene depth (TODO strains).
 
-In the remaining TODO strain genomes we identified gene sequences with Prodigal v2.6.3
+In the remaining 97 strain genomes we identified gene sequences with Prodigal v2.6.3
 [@hyattGeneTranslationInitiation2012] (masking ambiguous bases and using the `meta`
 procedure), translated them with codon table 11, and annotated them with
 EggNOG mapper version 2.1.10. The ground-truth annotations used to
@@ -1230,7 +1231,7 @@ thank Françoise Chanut for extensive editorial support.
 
 ![**Figure S1: Relationship between sequencing depth and the accuracy of
 gene content estimation.** Points represent the performance of each tool
-(colors) on each of the 105 benchmark strains. The horizontal position
+(colors) on each of the 97 benchmark strains. The horizontal position
 reflects the estimated maximum depth for the genotype-matched strain
 across samples. Trend lines are a rolling average over the 10 nearest
 points.
