@@ -722,7 +722,7 @@ engraftment of particular microbial functions. To assess the sensitivity
 of our approach for comparing donor strains, we re-analyzed metagenomes
 from a previously published study of FMT for the treatment of ulcerative
 colitis [@smithStrainresolvedAnalysisRandomized2022]. We refer to these metagenomes as the UCFMT
-dataset. As a proof-of-concept, we focused on strains of _Escherichia
+dataset. As a proof-of-concept, we focused on strains of _E.
 coli_, a well-studied and highly prevalent member of the human gut
 microbiome with well-documented examples of not only pathogenic but also
 commensal and even probiotic strains [@blountUnexhaustedPotentialColi2015].
