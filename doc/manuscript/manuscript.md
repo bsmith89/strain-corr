@@ -658,7 +658,7 @@ However, only 9% of Firmicutes (7 of 80), 7% of Firmicutes_A (151 of 2232), 6%
 of Actinobacteria (4 of 64) and 4% of Firmicutes_C (6 of 141) had an
 annotation.
 These results are consistent with our expectation that resistance mechanisms
-are variable within species and more common in gram-negative bacteria.
+are highly variable within species and more common in gram-negative bacteria.
 
 As an assembly-free approach, gene content estimation lacks synteny
 information, which can be useful for understanding biological phenomena
