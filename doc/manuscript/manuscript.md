@@ -9,6 +9,7 @@ author:
     - Liron Zahavi
     - Saar Shoer
     - Jacqueline Moltzau-Anderson
+    - Eran Segal
     - Katherine S. Pollard
 
 link-citations: true
@@ -51,17 +52,23 @@ Additional submission details:
 
 (e.g. Coverletter?)
 
-Byron J. Smith1, Chunyu Zhao2, Veronika
-Dubinkina1, Xiaofan Jin1, Jacqueline
-Moltzau-Anderson2, Katherine S. Pollard1,3,4
+- Byron J. Smith 1
+- Chunyu Zhao 2
+- Veronika Dubinkina 1
+- Xiaofan Jin 3
+- Liron Zahavi 4,5
+- Saar Shoer 4,5
+- Jacqueline Moltzau-Anderson  2
+- Eran Segal 4,5
+- Katherine S. Pollard 1,3,7
 
-1 Gladstone Institute for Data Science and Biotechnology, San
-Francisco, USA
-2 Department of Gastroenterology, University of California,
-San Francisco, USA
-3 Chan Zuckerberg Biohub San Francisco, San Francisco, USA
-4 Department of Epidemiology and Biostatistics, University of
-California, San Francisco, USA
+1 Gladstone Institute for Data Science and Biotechnology, San Francisco, USA
+2 Chan Zuckerberg Biohub San Francisco, San Francisco, USA
+3 TODO
+4 Department of Computer Science and Applied Mathematics, Weizmann Institute of Science, Rehovot, Israel
+5 Department of Molecular Cell Biology, Weizmann Institute of Science, Rehovot, Israel
+6 Department of Gastroenterology, University of California, San Francisco, USA
+7 Department of Epidemiology and Biostatistics, University of California, San Francisco, USA
 
 ORCID:
 
@@ -73,7 +80,13 @@ ORCID:
 
 -   XJ: 0000-0002-0802-7692
 
+-   LZ: TODO
+
+-   SS: TODO
+
 -   JA: 0000-0003-1398-5980
+
+-   ES: TODO
 
 -   KP: 0000-0002-9870-6196
 
@@ -1225,13 +1238,19 @@ thank Françoise Chanut for extensive editorial support.
 -   XJ: Writing – Original Draft, Writing – Review & Editing,
     Visualization
 
+-   LZ: Writing – Review & Editing
+
+-   SS: Software, Validation, Writing – Review & Editing
+
 -   JA: Data Curation, Writing – Review & Editing
+
+-   ES: Supervision, Funding Acquisition, Writing – Review & Editing
 
 -   KP: Conceptualization, Methodology, Investigation, Resources,
     Writing – Original Draft, Writing – Review & Editing,
     Supervision, Funding Acquisition
 
-(TODO: Drop bullets and put above in paragraph format.)
+<!-- TODO: Drop bullets and put above in paragraph format. -->
 
 # Supplementary Materials
 
