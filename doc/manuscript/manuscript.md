@@ -871,6 +871,12 @@ and where fewer strain-pure samples have shared strains.
 This highlights an opportunity for the
 development of complementary tools that can handle extreme microbial diversity
 both within and across samples.
+With increasingly comprehensive pangenome reference databases,
+the accuracy of our approach will improve, expanding its application to other
+microbiomes beyond the human gut.
+Nonetheless, highly diverged strains may have elevated error rates due to database bias
+and it is prudent for users to ensure that their species of interest
+are sufficiently covered in reference sets.
 Another major barrier to interpreting gene content estimates by StrainPGC or other
 methods is the sparsity of robust genetic, biochemical, structural, and
 experimental characterization of gene products [@zhouCAFAChallengeReports2019]. While we
