@@ -511,7 +511,7 @@ estimate the distribution of strains based on SNP profiles. We defined
 detection as an estimated depth of ≥ 0.1x, a threshold chosen to balance
 false positives with the sensitivity of strain tracking. All species
 combined, a median of 59 strains were detected in each metagenomic
-sample (not shown) and 191.5 across all samples from each subject (Fig.
+sample and 191.5 across all samples from each subject (Fig.
 3A). This strain-level diversity was highly subject-specific; among
 inferred strains detected in two or more samples, 36% were detected in
 just one subject, and only 34% were detected in three or more (Fig. 3B).
