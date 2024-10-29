@@ -333,8 +333,9 @@ intended for studying the human gut microbiome.
 As with other tools, the computational resources required to run the full
 pipeline may be substantial and are dominated by the requirements for read alignment
 with Bowtie2 [@langmeadFastGappedreadAlignment2012].
-By comparison, even for large datasets, the StrainPGC core algorithm runs in
-seconds and requires less than a GB of RAM at peak.
+By comparison, even for large datasets, the StrainPGC core algorithm generates
+results for all strains of a species and requires only a few GBs of RAM at
+peak.
 Our analysis harnesses the comprehensive UHGG reference collection
 [@almeidaUnifiedCatalog2042021] and requires only raw metagenomic reads as
 user-provided input.
