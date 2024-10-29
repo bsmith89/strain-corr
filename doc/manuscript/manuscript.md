@@ -748,8 +748,15 @@ dissimilarity (r = 0.88, Fig. 5C).
 In recipients of donor D44, one strain, strain-6, stood out as
 frequently present both during six weeks of maintenance dosing and in
 subsequent follow-up sampling (Fig. 5A). Likewise, strain-9 engrafted
-frequently for recipients of D97. These two strains had a SNP genotype
-dissimilarity of 0.23, similar to the median dissimilarity across all pairs
+frequently for recipients of D97.
+Both strains were very closely related to isolate genomes represented in the UHGG
+reference collection:
+strain-6 matched GUT_GENOME288864 (GenBank accession GCA_009896305.1) with an
+identical genotype at all 74,229 shared SNP positions, and strain-9 matched
+GUT_GENOME140932 (GCA_000408385.1) with just 7 mismatches across 79,260 shared
+SNP positions.
+The two inferred strains had a SNP genotype
+dissimilarity to each other of 0.23, similar to the median dissimilarity across all pairs
 of UCFMT strains of 0.25 (IQR: 0.13 – 0.31). Approximately 80% of each
 strain's gene content was shared with the other, while 18% and 24% was
 private to strain-6 and strain-9, respectively (Fig. 5C; Supplementary
