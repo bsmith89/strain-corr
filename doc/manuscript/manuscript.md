@@ -224,11 +224,17 @@ both shared and strain-specific gene content. Four key challenges for
 pangenome profiling and gene content estimation are highlighted
 (brackets, see Introduction). **(B)** Limitations of gene content
 estimation using single samples. Depth is shown across five samples
-(scenarios described along the x-axis) for three genes: one gene is
-ubiquitous across strains ("core", square), another found in only the
-strain of interest ("strain-specific", triangle), and a third not
-present in the strain of interest but subject to cross-mapping ("not
-present", x-shape). Colors distinguish between strain-pure samples
+for three genes: one gene is
+ubiquitous across strains ("core"), another is found in only the
+strain of interest ("strain-specific"), and a third not
+present in the strain of interest but is susceptible to cross-mapping ("not
+present").
+Samples are separated along the x-axis and represent five characteristic scenarios:
+low species depth ("low depth"), a mixture of multiple strains ("strain mixture"), a
+sample exhibiting erroneous depth due to read mapping errors ("cross-mapping"),
+a sample representing an entirely different strain ("different strain"), and a
+high depth, strain-pure sample ("high depth").
+Colors distinguish between strain-pure samples
 (green markers) and samples with a different strain or a mixture of more
 than one strain (gray markers). Traditional, single-sample analysis
 estimates gene content by selecting genes with a minimum depth (red,
