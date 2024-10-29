@@ -417,20 +417,25 @@ had similarly high precision, and the superior performance of StrainPGC was driv
 primarily by a dramatic reduction in the false negative rate (FPR: 1 - recall):
 a median of just 49% of PanPhlAn's and 60% of StrainPanDA's FPR.
 
-For all three tools, species
+For all three tools, strains
 with higher estimated depth had better performance on this benchmark
-(Spearman's correlation between maximum species depth across samples and
-F1 score: Spearman's ⍴ = 0.30, 0.55, and 0.33 for StrainPGC, PanPhlAn,
-and StrainPanDA, respectively; Supplementary Figure S1). Interestingly,
-StrainPGC's precision was less tightly related to depth than either
-PanPhlAn or StrainPanDA (⍴ = 0.19, 0.53, and 0.56, respectively).
+(Spearman's correlation between maximum strain depth across samples and
+F1 score: Spearman's ⍴ = 0.29, 0.55, and 0.32 for StrainPGC, PanPhlAn,
+and StrainPanDA, respectively; Supplementary Figure S1).
+We also find a correlation between the number of strain-pure samples and
+F1 for all three tools (⍴ = 0.33, 0.42, and 0.34, respectively,
+Supplementary Figure TODO).
+Interestingly, StrainPGC's precision was less tightly related to depth than either
+PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
-these findings support the idea that use of the Pearson
-correlation across strain-pure samples as a filtering criterion for our gene content
-estimates allows StrainPGC to maintain high
-precision even while greatly increasing recall. In particular, we find our
-approach upholds this specificity even at low depths more effectively
-than existing methods (Supplementary Figure S1).
+these findings support the use of the Pearson
+correlation across strain-pure samples as a filtering criterion for gene content
+estimation, allowing StrainPGC to maintain high
+precision even while greatly increasing recall.
+In particular, we find our
+approach upholds this specificity---even at low depths---more effectively
+than existing methods and that performance was fairly stable for strains with >=5 samples,
+or when the sample with the maximum depth was at >=1x (Supplementary Figures S1).
 
 In real-world applications—where ground-truth gene content is not known
 a priori—it is beneficial to understand the confidence of StrainPGC
