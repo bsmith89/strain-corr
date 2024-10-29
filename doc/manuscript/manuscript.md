@@ -1136,11 +1136,11 @@ We benchmarked the performance of gene content estimates from StrainPGC, PanPhlA
 and StrainPanDA, using publicly available, high-quality strain genomes
 and metagenomes from experimental treatments of the hCOM2 synthetic community
 [@jinCulturingComplexGut2023].
-From the 117 inoculated strains, TODO were excluded from evaluation because either:
-(1) when running GT-Pro directly on their genome sequence, less than TODO% of
-identified SNPs were from the same species (TODO strains), or
-(2) the total species depth across metagenomes was less than TODO as estimated
-from mean marker gene depth (TODO strains).
+From the 117 inoculated strains, some genomes were excluded from evaluation because either:
+(1) when running GT-Pro directly on their genome sequence, less than 50% of
+identified SNPs were from the same species, or
+(2) the species had no depth across metagenomes, as estimated
+from mean marker gene depth.
 
 In the remaining 97 strain genomes we identified gene sequences with Prodigal v2.6.3
 [@hyattGeneTranslationInitiation2012] (masking ambiguous bases and using the `meta`
