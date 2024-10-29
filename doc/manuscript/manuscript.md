@@ -549,6 +549,13 @@ the GTDB taxonomy), followed by Bacteroidota (727), and Proteobacteria
 (189). Hence, StrainPGC resolved gene content for myriad strains across
 a diverse set of species found in the human gut.
 
+To further validate the performance of StrainPGC in this challenging
+dataset, we
+performed an _in silico_ spike-in experiment using five, novel
+_E. coli_ genomes that are not represented
+in the UHGG reference collection [@davidova-gerzovaHospitalCommunityWastewater2023],
+and found F1 scores equivalent to the hCom2 benchmark
+(see Supplementary Results TODO).
 Just like SNP genotypes, for most inferred strains, the estimated gene
 content was quite distinct from the closest reference. Measuring
 dissimilarity using the cosine dissimilarity after batch correction (see
