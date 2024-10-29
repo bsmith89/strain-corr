@@ -539,7 +539,9 @@ in reference databases.
 
 We next applied StrainPGC to estimate gene content for these strains.
 After quality control, we estimated gene content for 3511 inferred
-strains in 443 species across 12 phyla (Fig. 3E). While these were
+strains in 443 species across 12 phyla (Fig. 3E).
+Strains had a median of 9 strain-pure samples (IQR: 5 - 13).
+While these were
 primarily Bacteria, we were also able to estimate gene content for
 strains in three species of Archaea. The largest number of inferred
 strains were classified in the phylum Firmicutes\_A (2232 strains; an
@@ -547,7 +549,7 @@ additional 80 and 141 strains were also in "Firmicutes", and
 "Firmicutes\_B", respectively, which are classified as separate phyla in
 the GTDB taxonomy), followed by Bacteroidota (727), and Proteobacteria
 (189). Hence, StrainPGC resolved gene content for myriad strains across
-a diverse set of species found in the human gut.
+a diverse set of species found in the human gut (Supplementary Table S1).
 
 To further validate the performance of StrainPGC in this challenging
 dataset, we
