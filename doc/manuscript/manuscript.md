@@ -1107,7 +1107,8 @@ depth of species marker genes excluding those genes with the 15% highest
 and lowest depth. Species-free samples were defined as those with an
 estimated species depth of < 0.0001x. Genes were selected using a
 depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
-to strike a balance between sensitivity and specificity.
+to strike a balance between sensitivity and specificity, while slightly
+favoring false negatives over false positives (see Supplementary Figure TODO).
 
 ### Gene family annotation
 
