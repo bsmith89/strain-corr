@@ -1183,9 +1183,9 @@ consensus genotype were included in benchmarking but excluded from all
 other analyses. This criterion _a priori_ excludes 19 of the 627 species
 profiled in this work. For analyses of gene content, strains with an
 estimated depth of < 1x across all strain-pure samples were also
-excluded. Finally (TODO: look into this), strains with < 90% of species genes or with a
+excluded. Finally, strains with < 95% of species genes or with a
 standard deviation in the log10-transformed depth ratio across selected
-genes of > 0.75 were flagged as low quality and removed.
+genes of > 0.25 were flagged as low quality and removed.
 
 ### Analysis of species and strain diversity
 
