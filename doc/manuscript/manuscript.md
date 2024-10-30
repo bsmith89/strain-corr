@@ -298,9 +298,9 @@ genes, and a list of
 "strain-pure" samples for each of the desired strains.
 The StrainPGC algorithm can be summarized as follow:
 first, the overall species depth in
-each sample is estimated based on the the mean depth of the provided marker genes.
+each sample is estimated based on mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
-where the species is below a minimum detection limit (in this work TODOx).
+where the species is below a minimum detection limit (in this work 0.0001x).
 Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C).
 First, the depth ratio is the total gene depth divided by the total species
 depth across that strain's pure samples.
