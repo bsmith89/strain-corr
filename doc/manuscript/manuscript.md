@@ -243,10 +243,11 @@ strain of interest ("strain-specific"), and a third not
 present in the strain of interest but is susceptible to cross-mapping ("not
 present").
 Samples are separated along the x-axis and represent five characteristic scenarios:
-low species depth ("low depth"), a mixture of multiple strains ("strain mixture"), a
+a sample where the species is not deeply sequenced ("low depth"),
+a sample with multiple strains of the species ("strain mixture"), a
 sample exhibiting erroneous depth due to read mapping errors ("cross-mapping"),
-a sample representing an entirely different strain ("different strain"), and a
-high depth, strain-pure sample ("high depth").
+a sample with an entirely different strain of the species ("different strain"),
+and a high depth, strain-pure sample ("high depth").
 Colors distinguish between strain-pure samples
 (green markers) and samples with a different strain or a mixture of more
 than one strain (gray markers). Traditional, single-sample analysis
