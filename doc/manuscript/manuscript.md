@@ -321,7 +321,7 @@ followed by StrainFacts [@smithScalableMicrobialStrain2022a],
 which harnesses these SNP profiles
 to precisely identify individual strains within species and quantify their relative abundances.
 For each species, we consider samples estimated to be
->=95% the majority strain as pure.
+≥ 95% the majority strain as pure.
 Strains analyzed in this work are therefore defined based on their
 SNP-genotypes, with gene content estimated as a subsequent step.
 
@@ -434,8 +434,8 @@ estimation, allowing StrainPGC to maintain high
 precision even while greatly increasing recall.
 In particular, we find our
 approach upholds this specificity---even at low depths---more effectively
-than existing methods and that performance was fairly stable for strains with >=5 samples,
-or when the sample with the maximum depth was at >=1x (Supplementary Figures S1).
+than existing methods and that performance was fairly stable for strains with ≥ 5 samples,
+or when the sample with the maximum depth was at ≥ 1x (Supplementary Figures S1).
 
 In real-world applications—where ground-truth gene content is not known
 a priori—it is beneficial to understand the confidence of StrainPGC
