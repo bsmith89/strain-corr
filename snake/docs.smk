@@ -110,8 +110,9 @@ rule build_manuscript_docx:
             "fig/hmp2_diversity_figure.dpi200.png",
             "fig/pangenomics_figure.dpi200.png",
             "fig/ucfmt_figure.dpi200.png",
-            "fig/accuracy_by_depth_figure.dpi200.png",
+            "fig/accuracy_by_depth_and_number_figure.dpi200.png",
             "fig/genome_fraction_refs_figure.dpi200.png",
+            "fig/thresh_sensitivity_figure.dpi200.png",
         ],
     conda:
         "conda/pandoc.yaml"
@@ -160,10 +161,11 @@ rule compile_manuscript_submission:
         fig3="fig/hmp2_diversity_figure.pdf",
         fig4="fig/pangenomics_figure.pdf",
         fig5="fig/ucfmt_figure.pdf",
-        figS1="fig/accuracy_by_depth_figure.pdf",
+        figS1="fig/accuracy_by_depth_and_number_figure.pdf",
         figS2="fig/genome_fraction_refs_figure.pdf",
         tableS1="fig/hmp2_inferred_strains_supplementary_table1.tsv",
-        tableS2="fig/ucfmt_focal_strain_genes_supplementary_table2.tsv",
+        tableS3="fig/ucfmt_focal_strain_genes_supplementary_table3.tsv",
+        figS3="fig/thresh_sensitivity_figure.pdf",
     shell:
         """
         mkdir -p {output}
@@ -177,5 +179,6 @@ rule compile_manuscript_submission:
         cp {input.figS1} {output}/Supplementary_Figure_S1.pdf
         cp {input.figS2} {output}/Supplementary_Figure_S2.pdf
         cp {input.tableS1} {output}/Supplementary_Table_S1.tsv
-        cp {input.tableS2} {output}/Supplementary_Table_S2.tsv
+        cp {input.tableS3} {output}/Supplementary_Table_S3.tsv
+        cp {input.figS3} {output}/Supplementary_Figure_S3.tsv
         """

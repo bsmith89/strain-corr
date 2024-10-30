@@ -368,8 +368,8 @@ reflect better performance. The data are represented as two-dimensional
 histograms using a gray density scale to represent the number of strains
 falling in each (x, y) bin; density above the 1-to-1 diagonal (dotted
 line) indicates strains where StrainPGC outperformed the alternative on
-that index. The relationship between accuracy and sequencing depth is
-shown in Supplementary Figure S1.
+that index. The relationship between performance and strain sequencing depth
+or sample number are shown in Supplementary Figure S1.
 ](fig/benchmarking_figure.dpi200.png)
 
 In order to evaluate StrainPGC's performance, we ran our workflow on 276
@@ -424,7 +424,7 @@ F1 score: Spearman's ⍴ = 0.29, 0.55, and 0.32 for StrainPGC, PanPhlAn,
 and StrainPanDA, respectively; Supplementary Figure S1).
 We also find a correlation between the number of strain-pure samples and
 F1 for all three tools (⍴ = 0.33, 0.42, and 0.34, respectively,
-Supplementary Figure TODO).
+Supplementary Figure S1).
 Interestingly, StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
@@ -557,7 +557,7 @@ performed an _in silico_ spike-in experiment using five, novel
 _E. coli_ genomes that are not represented
 in the UHGG reference collection [@davidova-gerzovaHospitalCommunityWastewater2023],
 and found F1 scores equivalent to the hCom2 benchmark
-(see Supplementary Results TODO).
+(see Supplementary Table S2).
 Just like SNP genotypes, for most inferred strains, the estimated gene
 content was quite distinct from the closest reference. Measuring
 dissimilarity using the cosine dissimilarity after batch correction (see
@@ -760,7 +760,7 @@ dissimilarity to each other of 0.23, similar to the median dissimilarity across 
 of UCFMT strains of 0.25 (IQR: 0.13 – 0.31). Approximately 80% of each
 strain's gene content was shared with the other, while 18% and 24% was
 private to strain-6 and strain-9, respectively (Fig. 5C; Supplementary
-Table 2). Cross-referencing co-occurrence clusters with the estimated
+Table S3). Cross-referencing co-occurrence clusters with the estimated
 gene content of these strains, about 60% of clusters in each were
 shared, with 39% and 42% private, respectively (Fig. 5D). Of the 118
 shared clusters, 12 were found in no more than two additional UCFMT
@@ -775,7 +775,7 @@ Next we sought to understand functional gene differences between the two
 high-engraftment strains, in particular any that might result in
 disparate impacts on host health. We therefore examined the unshared
 gene content in order to identify plausible physiological differences
-(Supplementary Table 2). Strikingly, strain-9 had 12 genes annotated as
+(Supplementary Table S3). Strikingly, strain-9 had 12 genes annotated as
 related to antimicrobial resistance, suggesting potential resistance to
 17 different antibiotics, while strain-6 had none. Among gene
 co-occurrence clusters, one (labeled clust-861) is also found only in
@@ -1108,7 +1108,7 @@ and lowest depth. Species-free samples were defined as those with an
 estimated species depth of < 0.0001x. Genes were selected using a
 depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
 to strike a balance between sensitivity and specificity, while slightly
-favoring false negatives over false positives (see Supplementary Figure TODO).
+favoring false negatives over false positives (see Supplementary Figure S3).
 
 ### Gene family annotation
 
@@ -1283,13 +1283,21 @@ thank Françoise Chanut for extensive editorial support.
 
 # Supplementary Materials
 
-![**Figure S1: Relationship between sequencing depth and the accuracy of
+## Extended hCom2 benchmarking results
+
+![**Figure S1: Relationship between sequencing depth or number of samples and the accuracy of
 gene content estimation.** Points represent the performance of each tool
-(colors) on each of the 97 benchmark strains. The horizontal position
-reflects the estimated maximum depth for the genotype-matched strain
-across samples. Trend lines are a rolling average over the 10 nearest
-points.
-](fig/accuracy_by_depth_figure.dpi200.png)
+(colors) on each of the 97 benchmark strains.
+For the left column, the x-axis is the maximum estimated depth of the genotype-matched
+strain across strain-pure samples, and for the right column it is the total number of strain-pure
+samples identified for that strain.
+Trend lines are a rolling average over the 10 nearest
+points. The dotted vertical line indicates the 1x depth and
+5 strain-pure samples, after which the mean performance
+stabilizes for StrainPGC.
+](fig/accuracy_by_depth_and_number_figure.dpi200.png)
+
+## Extended pangenome results
 
 ![
 **Figure S2: Per-genome core, shell, and cloud gene fractions in
@@ -1305,10 +1313,77 @@ species marker genes in the estimated gene content, the log of the standard devi
 of gene depth ratio, and the number of unmasked, genotyped positions used for
 inter-strain comparisons.
 
-**Supplementary Table S2: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
+## Simulated _E. coli_ spike-in validation
+
+We performed an additional benchmarking study to validate our approach
+in datasets with substantially more strain-diversity, for strains with more
+divergence from the reference set, and with a limited number of strain-pure
+samples. To keep our metagenomic data as realistic as possible, we opted to
+construct samples with novel strains by "spiking" simulated reads from recently
+sequenced isolates into real metagenomes from the HMP2 study. Due to an
+abundance of studies with wild E. coli isolates, and our particular focus on
+this species throughout, we identified five novel E. coli genomes from a
+recently published project (https://doi.org/10.3389/fcimb.2023.1184081).
+
+These isolates varied greatly in their relatedness to the UHGG reference
+genomes, including very distantly related strains with a genotype dissimilarity of
+0.077. These strains are as novel relative
+to the reference database as would be expected for any E. coli found in the
+human gut; only 0.8% of UHGG genomes had a closest match genotype-dissimilarity
+of more than 0.077.
+
+We selected five HMP2 samples, all from one subject (C3022), where _E. coli_ was not
+detected. Into these, for each strain, we spiked-in simulated reads at 1x, 2x, 4x, 8x, and 16x
+depths. We combined all 25 of these
+additional, synthetic samples with the full HMP2 dataset, and then re-ran our integrated
+workflow. As in the hCom2 benchmark, after matching inferred strains to each of these ground-truth genomes
+based on genotype similarity, we compared our StrainPGC gene content estimates to the ground
+truth annotated on the spiked-in genomes.
+
+We found that the performance on these out-of-bag E. coli genomes is consistent
+with the overall performance on the hCom2 (synthetic community) benchmark.
+Specifically we found a mean F1 score across all strains of 0.92, equivalent to
+the F1 of 0.91 from the hCom2 benchmark.
+
+Interestingly, we do not find a negative relationship between the divergence of
+the benchmark genome and our performance. StrainPGC performance was nearly
+equivalent for the least diverged genome (F1 of 0.89) and most diverged (F1 of
+0.92). We conclude that it is reasonable to expect similar performance for
+other strains and datasets, even when the number of strains for a species is
+large and when strains are more diverged from the reference database.
+
+| GenBank Accession | Closest UHGG Reference | Closest Genotype Dissimilarity | Precision | Recall |   F1 |
+|-------------------|------------------------|-------------------------------:|----------:|-------:|-----:|
+| GCF_030198905.1   | GUT_GENOME144970       |                         0.0039 |      0.97 |   0.87 | 0.92 |
+| GCF_030202075.1   | GUT_GENOME140957       |                         0.0078 |      0.96 |   0.87 | 0.92 |
+| GCF_030204715.1   | GUT_GENOME144767       |                         0.0011 |      0.97 |   0.82 | 0.89 |
+| GCF_030205145.1   | GUT_GENOME144552       |                          0.030 |      0.96 |   0.87 | 0.91 |
+| GCF_030205875.1   | GUT_GENOME144360       |                          0.077 |      0.97 |   0.87 | 0.92 |
+
+Table: **Supplementary Table S2**: Performance on five _E. coli_ genomes in an _in silico_ spike-in experiment.
+
+
+
+## Extended results for donor-specific E. coli strains
+
+**Supplementary Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
 Includes a row for each gene family found in either high-engraftment strain. Columns include
 gene annotations, mean length across members of the gene family, co-occurence cluster assignment
 and the fraction of other co-occurence cluster members also found in each strain.
+
+## Sensitivity of StrainPGC performance to depth ratio and correlation score thresholds
+
+![
+**Figure S3: Threshold depth ratio and correlation score parameter search.**
+Mean performance across 97 hCom2 benchmark genomes at every combination of
+11 correlation score thresholds (x-axis) and 7 depth ratio thresholds (y-axis).
+Panels represent precision (A), recall (B), and F1 score (C).
+The maximum F1 score was achieved at a depth ratio threshold of 0.1 and
+correlation threshold of 0.35.
+The selected thresholds---0.2 and 0.4, respectively---are slightly more conservative
+but decrease the mean F1 score negligably from 0.827 to 0.822.
+](fig/thresh_sensitivity_figure.dpi200.png)
+
 
 ## References
 
