@@ -1027,8 +1027,12 @@ found in > 95% of high-quality reference genomes were selected as
 species marker genes and were used for species depth estimation, quality
 control, and downstream analyses.
 
-A table of our marker genes for each of the TODO species analyzed in this study
-can be obtained from TODO. (TODO: Also download this for the workflow quickstart.)
+A list of the marker genes used for each of the 627 species analyzed in this study
+can be obtained from TODO.
+
+<!--
+    (TODO: Also download from this source for the workflow quickstart.)
+-->
 
 ### SNP profiling
 
