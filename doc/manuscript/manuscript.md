@@ -1261,31 +1261,21 @@ thank Françoise Chanut for extensive editorial support.
 
 ## Author Contributions
 
--   BJS: Conceptualization, Methodology, Software, Formal Analysis,
-    Investigation, Writing – Original Draft, Writing – Review &
-    Editing, Visualization
-
--   CZ: Conceptualization, Methodology, Software, Writing – Original
-    Draft, Writing – Review & Editing
-
--   VD: Writing – Review & Editing, Visualization
-
--   XJ: Writing – Original Draft, Writing – Review & Editing,
-    Visualization
-
--   LZ: Writing – Review & Editing
-
--   SS: Software, Validation, Writing – Review & Editing
-
--   JA: Data Curation, Writing – Review & Editing
-
--   ES: Supervision, Funding Acquisition, Writing – Review & Editing
-
--   KP: Conceptualization, Methodology, Investigation, Resources,
-    Writing – Original Draft, Writing – Review & Editing,
-    Supervision, Funding Acquisition
-
-<!-- TODO: Drop bullets and put above in paragraph format. -->
+BJS: Conceptualization, Methodology, Software, Formal Analysis,
+Investigation, Writing – Original Draft, Writing – Review &
+Editing, Visualization;
+CZ: Conceptualization, Methodology, Software, Writing – Original
+Draft, Writing – Review & Editing;
+VD: Writing – Review & Editing, Visualization;
+XJ: Writing – Original Draft, Writing – Review & Editing,
+Visualization;
+LZ: Writing – Review & Editing;
+SS: Software, Validation, Writing – Review & Editing;
+JA: Data Curation, Writing – Review & Editing;
+ES: Supervision, Funding Acquisition, Writing – Review & Editing;
+KP: Conceptualization, Methodology, Investigation, Resources,
+Writing – Original Draft, Writing – Review & Editing,
+Supervision, Funding Acquisition.
 
 # Supplementary Materials
 
