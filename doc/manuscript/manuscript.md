@@ -58,13 +58,13 @@ Additional submission details:
 - Xiaofan Jin 3
 - Liron Zahavi 4,5
 - Saar Shoer 4,5
-- Jacqueline Moltzau-Anderson  2
+- Jacqueline Moltzau-Anderson  6
 - Eran Segal 4,5
 - Katherine S. Pollard 1,3,7
 
 1 Gladstone Institute for Data Science and Biotechnology, San Francisco, USA
 2 Chan Zuckerberg Biohub San Francisco, San Francisco, USA
-3 TODO
+3 Department of Biomedical Engineering, University of Calgary, Calgary, AB, Canada
 4 Department of Computer Science and Applied Mathematics, Weizmann Institute of Science, Rehovot, Israel
 5 Department of Molecular Cell Biology, Weizmann Institute of Science, Rehovot, Israel
 6 Department of Gastroenterology, University of California, San Francisco, USA
@@ -80,7 +80,7 @@ ORCID:
 
 -   XJ: 0000-0002-0802-7692
 
--   LZ: TODO
+-   LZ: 0000-0001-8867-1287
 
 -   SS: 0000-0003-0883-1434
 
