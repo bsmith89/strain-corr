@@ -408,7 +408,7 @@ recently published tool that harnesses information across multiple
 samples and applies non-negative matrix factorization to jointly
 estimate gene content and strain depth (Fig. 2C). For all three methods,
 we used the same reference database (UHGG) and pangenome profiles as input,
-thereby comparing the core gene content estimation approaches on an
+thereby comparing the gene content estimation approaches on an
 equal basis.
 However, since strains inferred using PanPhlAn and
 StrainPanDA do not have SNP genotypes to be used for matching, for each
