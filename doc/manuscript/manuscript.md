@@ -99,7 +99,8 @@ ORCID:
 # Abstract:
 
 Metagenomics has greatly expanded our understanding of the human gut
-microbiome by revealing vast diversity within and across individuals.
+microbiome by revealing a vast diversity of bacterial species within and across
+individuals.
 Even within a single species, different strains can have highly
 divergent gene content, affecting traits such as antibiotic resistance,
 metabolism, and virulence. Methods that harness metagenomic data to
@@ -108,7 +109,8 @@ understanding the causes and consequences of this intraspecific
 diversity. The enormous size of pangenome references, strain mixing
 within samples, and inconsistent sequencing depth present challenges for
 existing tools that analyze samples one at a time. To address this gap,
-we updated the MIDAS pangenome profiler and developed StrainPGC, an
+we updated the MIDAS pangenome profiler, now released as version 3, and
+developed StrainPGC, an
 approach to strain-specific gene content estimation that combines strain
 tracking and correlations across multiple samples. We validate our integrated analysis
 using a complex synthetic community of strains from the human gut and find that
@@ -221,10 +223,13 @@ the interpretation of strain-specific gene content. As part of a
 complete workflow, our method requires only shotgun
 metagenomes as input and outputs estimates of the gene content of
 individual strains.
-We apply this workflow to explore strains in
-the Human Microbiome Project 2 (HMP2) [@proctorIntegrativeHumanMicrobiome2019] and in a
-trial of fecal microbiota transplantation for ulcerative colitis (UCFMT) [@smithStrainresolvedAnalysisRandomized2022].
-We find novel diversity not captured in existing reference databases
+After validating our workflow with a complex synthetic community (hCom2)
+[@jinCulturingComplexGut2023],
+we use it to explore strains in the Human Microbiome Project 2 (HMP2)
+[@proctorIntegrativeHumanMicrobiome2019]
+and in a trial of fecal microbiota transplantation for ulcerative colitis
+(UCFMT) [@smithStrainresolvedAnalysisRandomized2022].
+We find novel strain diversity not captured in existing reference databases
 as well as widespread variation in gene content, including functions with likely
 clinical relevance.
 
@@ -298,7 +303,7 @@ takes in pangenome profiles and two other inputs, a list of species marker
 genes, and a list of
 "strain-pure" samples for each of the desired strains.
 The StrainPGC algorithm can be summarized as follow:
-first, the overall species depth in
+first, the species depth in
 each sample is estimated based on mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
 where the species is below a minimum detection limit (in this work 0.0001x).
@@ -404,9 +409,8 @@ samples and applies non-negative matrix factorization to jointly
 estimate gene content and strain depth (Fig. 2C). For all three methods,
 we used the same reference database (UHGG) and pangenome profiles as input,
 thereby comparing the core gene content estimation approaches on an
-<!-- FIXME: "core gene content" has a very different meaning elsewhere in this
-paper. I don't mean it that way here. -->
-equal basis. However, since strains inferred using PanPhlAn and
+equal basis.
+However, since strains inferred using PanPhlAn and
 StrainPanDA do not have SNP genotypes to be used for matching, for each
 hCom2 genome, we instead selected the inferred strain with the
 highest F1 score, giving these two methods an advantage. Nonetheless,
@@ -821,7 +825,7 @@ strain-specific gene content estimation using metagenomic data. The key
 innovations of StrainPGC are the use of depth correlation information
 and selection of strain-pure samples. Together, these innovations enable
 StrainPGC to outperform PanPhlAn and StrainPanDA in a benchmark based on
-a complex community modeled after the human gut microbiome. Combining
+a complex, synthetic community modeled after the human gut microbiome. Combining
 the updated MIDAS v3 and StrainPGC in our workflow, we estimated gene
 content for thousands of strains in the HMP2 metagenome collection,
 substantially expanding on the diversity found in reference genome
@@ -1142,7 +1146,7 @@ We benchmarked the performance of gene content estimates from StrainPGC, PanPhlA
 and StrainPanDA, using publicly available, high-quality strain genomes
 and metagenomes from experimental treatments of the hCOM2 synthetic community
 [@jinCulturingComplexGut2023].
-From the 117 inoculated strains, some genomes were excluded from evaluation because either:
+From the 117 inoculated strains, we excluded genomes from evaluation if:
 (1) when running GT-Pro directly on their genome sequence, less than 50% of
 identified SNPs were from the same species, or
 (2) the species had no depth across metagenomes, as estimated
