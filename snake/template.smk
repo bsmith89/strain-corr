@@ -45,7 +45,7 @@ rule initialize_project_config:
     input:
         "build/initialize_project_git_config.flag",
     params:
-        local_config_files=config['local_config_files']
+        local_config_files=config["local_config_files"],
     shell:
         dd(
             """

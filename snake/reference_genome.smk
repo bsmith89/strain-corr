@@ -108,7 +108,7 @@ rule combine_project_genome_gtpro_species_lines_counts_no_species:
         """
 
 
-rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
+rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule
     output:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:

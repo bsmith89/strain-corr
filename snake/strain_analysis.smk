@@ -437,7 +437,8 @@ localrules:
 
 
 rule collect_ecoli_spikein_benchmark_results:
-    output: "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag"
+    output:
+        "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag",
     input:
         [
             f"data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.{spikein_genome}.eggnog-reconstruction_accuracy.tsv"
@@ -449,6 +450,7 @@ rule collect_ecoli_spikein_benchmark_results:
                 "Escherichia-coli-GCF_030205875-1",
             ]
         ],
+
 
 rule collect_spgc_manuscript_analysis_files:
     input:

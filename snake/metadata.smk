@@ -86,7 +86,7 @@ def all_species_group_genomes(group):
     genome_group_list = config["genome_group"][group]
     d = config["genome"].loc[genome_group_list]
     d = d[d.species_id != "UNKNOWN"]
-    return d['species_id'].reset_index().values
+    return d["species_id"].reset_index().values
 
 
 rule debug_species_group_genomes:
