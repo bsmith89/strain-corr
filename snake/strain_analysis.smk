@@ -170,19 +170,6 @@ rule compare_spgc_and_ref_dissimilarities:
         "{input.script} {input.meta} {input.geno_pdist} {input.uhgg_pdist} {input.eggnog_pdist} {output}"
 
 
-# NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
-# TODO (2024-10-22): Drop dependence on this everywhere? But what about the prevalence comparison between SPGC gene content and references?
-rule calculate_gene_prevalence_in_ref_genomes:
-    output:
-        "{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.prevalence.tsv",
-    input:
-        script="scripts/strain_gene_to_prevalence.py",
-        gene="{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
-        filt="{stem}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos0.tsv",  # NOTE (2024-10-19): Requiring this file means having to calculate npositions which required all GT-Pro-ing
-    params:
-        pseudo=0,
-    shell:
-        "{input.script} {input.gene} {input.filt} {params.pseudo} {output}"
 
 
 # TODO: Make this the input for strain marker gene indicator.
