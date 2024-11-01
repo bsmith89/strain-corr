@@ -168,7 +168,7 @@ rule aggregate_strain_emapper_output_by_unit:
         "{input.script} {input.data} {wildcards.unit} {wildcards.strain} {output}"
 
 
-rule aggregate_midasdb_reference_gene_by_annotation:
+rule aggregate_midasdb_reference_gene_by_emapper_annotation:
     output:
         "data/species/sp-{species}/{stemB}.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
     wildcard_constraints:
@@ -181,6 +181,19 @@ rule aggregate_midasdb_reference_gene_by_annotation:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
+
+
+rule aggregate_midasdb_reference_gene_by_amr_annotation:
+    output:
+        "data/species/sp-{species}/{stemB}.gene{centroid}_{dbv}.amr-strain_gene.tsv",
+    input:
+        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
+        uhgg="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
+        mapping="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}_x_amr.tsv",
+    group:
+        "assess_gene_inference_benchmark"
+    shell:
+        "{input.script} {input.uhgg} {input.mapping} accession_no {output}"
 
 
 rule dbCAN_annotate_translated_orfs:
@@ -208,7 +221,7 @@ rule dbCAN_annotate_translated_orfs:
         """
 
 
-rule aggregate_uhgg_strain_gene_by_annotation:
+rule aggregate_uhgg_strain_gene_by_emapper_annotation:
     output:
         "data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.{unit}-strain_gene.tsv",
     wildcard_constraints:
@@ -222,3 +235,18 @@ rule aggregate_uhgg_strain_gene_by_annotation:
         "assess_gene_inference_benchmark"
     shell:
         "{input.script} {input.uhgg} {input.mapping} {wildcards.unit} {output}"
+
+
+rule aggregate_uhgg_strain_gene_by_amr_annotation:
+    output:
+        "data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.amr-strain_gene.tsv",
+    wildcard_constraints:
+        centroidB="95|90|85|90|75",
+    input:
+        script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
+        uhgg="data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv",
+        mapping="data/species/sp-{species}/midasdb_{dbv}.gene{centroidB}_x_amr.tsv",
+    group:
+        "assess_gene_inference_benchmark"
+    shell:
+        "{input.script} {input.uhgg} {input.mapping} accession_no {output}"

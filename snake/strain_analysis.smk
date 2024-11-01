@@ -343,7 +343,17 @@ localrules:
 # Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
 #
 # I can just add that rule to the end of the list.
-ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples > aggregate_strain_metagenotype > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_sfacts_outputs > export_sfacts_comm
+ruleorder: alias_sfacts_outputs > run_spgc
+ruleorder: alias_sfacts_outputs > identify_strain_samples
+ruleorder: alias_sfacts_outputs > aggregate_strain_metagenotype
+ruleorder: alias_sfacts_outputs > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance
+ruleorder: alias_sfacts_outputs > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_sfacts_outputs > extract_strain_gene_hits_from_spgc_netcdf
+ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_emapper_annotation
+ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_amr_annotation
+ruleorder: alias_sfacts_outputs > assess_infered_strain_accuracy_emapper_unit
+# ruleorder: alias_sfacts_outputs > collect_xjin_threshold_grid_for_one_species
 
 
 # That forces the aliasing to the end of the computation.
@@ -381,13 +391,15 @@ localrules:
 # I can just add that rule to the end of the list.
 ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes
 ruleorder: alias_spgc_analysis_outputs > cluster_genes_based_on_cooccurence_in_spgc_strains
-ruleorder: alias_spgc_analysis_outputs > aggregate_uhgg_strain_gene_by_annotation
+ruleorder: alias_spgc_analysis_outputs > aggregate_uhgg_strain_gene_by_emapper_annotation
+ruleorder: alias_spgc_analysis_outputs > aggregate_uhgg_strain_gene_by_amr_annotation
 ruleorder: alias_spgc_analysis_outputs > count_pangenome_fractions_across_genomes
 ruleorder: alias_spgc_analysis_outputs > match_strains_to_genomes_based_on_genotype
 ruleorder: alias_spgc_analysis_outputs > export_gene_depth_table_from_netcdf
 ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_uhgg_best_hit
 ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_emapper_unit
 ruleorder: alias_spgc_analysis_outputs > collect_xjin_benchmark_accuracy_grid_for_one_species
+ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_emapper_unit_with_known_strain_samples
 
 
 rule collect_analysis_files:
