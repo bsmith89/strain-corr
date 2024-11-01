@@ -449,11 +449,27 @@ localrules:
     collect_analysis_files,
 
 
+rule collect_ecoli_spikein_benchmark_results:
+    output: "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag"
+    input:
+        [
+            f"data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.{spikein_genome}.eggnog-reconstruction_accuracy.tsv"
+            for spikein_genome in [
+                "Escherichia-coli-GCF_030198905-1",
+                "Escherichia-coli-GCF_030202075-1",
+                "Escherichia-coli-GCF_030204715-1",
+                "Escherichia-coli-GCF_030205145-1",
+                "Escherichia-coli-GCF_030205875-1",
+            ]
+        ],
+
 rule collect_spgc_manuscript_analysis_files:
     input:
         "data/group/xjin/r.proc.gene99_v20-v23-agg75.BENCHMARK_GRID.flag",
         "data/group/hmp2/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag.SELECT_SPECIES.flag",
         "data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag",
+        "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag",
 
 
 localrules:
