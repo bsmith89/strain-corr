@@ -149,7 +149,7 @@ quantify the gene families present in shotgun metagenomes—an approach
 referred to as "pangenome profiling". Pangenome profiling estimates the
 mean sequencing depth---sometimes called vertical coverage---of a gene
 family as the mean number of reads aligning to each base of a
-representative sequence [@milaneseMicrobialAbundanceActivity2019b] (Fig. 1A). (For brevity, we
+representative sequence [@milaneseMicrobialAbundanceActivity2019b]. (For brevity, we
 use "gene" as short-hand for gene family and "depth" for mean sequencing
 depth throughout this paper.) Several existing tools, including PanPhlAn
 [@beghiniIntegratingTaxonomicFunctional2021] and MIDAS
@@ -169,7 +169,7 @@ ratio of a given gene's depth to the overall species depth in a sample---can be 
 as the key criterion for the assignment of genes to a species [@nayfachIntegratedMetagenomicsPipeline2016a].
 
 However, gene content estimation using pangenome profiles faces four key
-challenges (Fig. 1A, B):
+challenges:
 
 1.  an incomplete set of representative gene sequences in pangenome
     reference databases,
@@ -197,12 +197,12 @@ errors can exacerbate cross-mapping (2), potentially reducing the accuracy of
 pangenome profiling [@zhaoPitfallsGenotypingMicrobial2023].
 Careful curation of the pangenome database is needed to
 reduce the impact of these issues. One promising approach for dealing
-with low depth (3), is to combine data across multiple samples (Fig. 1C)
+with low depth (3), is to combine data across multiple samples
 [@carrReconstructingGenomicContent2013a;@plazaonateMSPminerAbundancebasedReconstitution2019a],
 taking advantage of increased depth from
 pooling reads. As a bonus, the correlation between the species depth and
 gene depth can be used as an additional criterion to better exclude
-genes with cross-mapping (2; Fig 1D). However, combining samples can
+genes with cross-mapping (2). However, combining samples can
 exacerbate the impacts of strain mixing (4). Methods are needed for
 strain-aware gene content estimation that benefit from the increased
 sensitivity and specificity of multiple samples while also accounting
@@ -213,12 +213,12 @@ a computational method designed to accurately estimate the gene content
 of individual microbial strains.
 StrainPGC leverages modern strain tracking tools to separate samples into
 strain-pure subsets in order to combine data from pangenome profiling
-(Fig. 1C, D) across multiple metagenomes.
+across multiple metagenomes.
 We also describe changes
 in MIDAS v3, including updates to its pangenome database and profiling
 pipeline to reduce cross-mapping, improve quantification, and facilitate
 the interpretation of strain-specific gene content. As part of a
-complete workflow (Fig. 1E), our method requires only shotgun
+complete workflow, our method requires only shotgun
 metagenomes as input and outputs estimates of the gene content of
 individual strains.
 We apply this workflow to explore strains in
@@ -227,6 +227,10 @@ trial of fecal microbiota transplantation for ulcerative colitis (UCFMT) [@smith
 We find novel diversity not captured in existing reference databases
 as well as widespread variation in gene content, including functions with likely
 clinical relevance.
+
+# Results
+
+## Updated pangenome profiling and strain-specific gene content estimation
 
 ![**Figure 1: Conceptual overview of strain-resolved gene content reconstruction
 using StrainPGC**. **(A)** Schematic representation of pangenome
@@ -276,9 +280,6 @@ workflow to infer gene content across strains using only shotgun
 metagenomic reads as input.
 ](fig/concept_diagram_figure.dpi200.png)
 
-# Results
-
-## Updated pangenome profiling and strain-specific gene content estimation
 
 MIDAS v3 represents a major upgrade to the pangenome profiling pipeline intended
 improve the completeness, curation, and interpretability of gene abundance estimates.
