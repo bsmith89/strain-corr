@@ -82,6 +82,13 @@ def species_group_genomes(species, group):
     return strain_list
 
 
+def all_species_group_genomes(group):
+    genome_group_list = config["genome_group"][group]
+    d = config["genome"].loc[genome_group_list]
+    d = d[d.species_id != "UNKNOWN"]
+    return d['species_id'].reset_index().values
+
+
 rule debug_species_group_genomes:
     output:
         "data/group/{group}/species/sp-{species}/genomes.list",
