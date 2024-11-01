@@ -57,7 +57,7 @@ def accuracy_stats(truth, predicted):
         f1 = np.nan
         jaccard = np.nan
 
-    return precision, recall, f1, jaccard
+    return n_tp, n_fp, n_fn, precision, recall, f1, jaccard
 
 
 if __name__ == "__main__":
@@ -77,8 +77,13 @@ if __name__ == "__main__":
     out = dict()
     for strain in tqdm(infer_genes.columns):
         predicted = set(idxwhere(infer_genes[strain] == 1))
-        precision, recall, f1, jaccard = accuracy_stats(truth, predicted)
+        n_tp, n_fp, n_fn, precision, recall, f1, jaccard = accuracy_stats(
+            truth, predicted
+        )
         out[strain] = dict(
+            n_tp=n_tp,
+            n_fp=n_fp,
+            n_fn=n_fn,
             precision=precision,
             recall=recall,
             f1=f1,
@@ -87,5 +92,5 @@ if __name__ == "__main__":
 
     out = pd.DataFrame(out).T.rename_axis(index="strain")
     out.sort_values("f1", ascending=False)[
-        ["f1", "precision", "recall", "jaccard"]
+        ["n_tp", "n_fp", "n_fn", "f1", "precision", "recall", "jaccard"]
     ].to_csv(outpath, sep="\t")
