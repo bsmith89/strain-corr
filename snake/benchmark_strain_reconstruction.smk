@@ -106,6 +106,25 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
+rule collect_xjin_threshold_grid_for_all_species:
+    output:
+        touch(
+            "data/group/xjin/r.proc.gtpro.{sfacts_params}.gene{gene_params}.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag"
+        ),
+    input:
+        bench=lambda w: [
+            f"data/group/xjin/species/sp-{species}/r.proc.gtpro.{w.sfacts_params}.gene{w.gene_params}.spgc_specgene-ref-filt-p95_ss-all_t-10_thresh-corr{corr_thresh}-depth{depth_thresh}.{genome}.{unit}-reconstruction_accuracy.tsv"
+            for (genome, species), corr_thresh, depth_thresh, unit in product(
+                all_species_group_genomes("xjin"),
+                ["0", "50", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550"],
+                ["50", "100", "150", "200", "250", "300", "350"],
+                ["eggnog"],
+            )
+        ],
+    shell:
+        "echo {input} > {output}"
+
+
 rule collect_xjin_benchmark_accuracy_grid_for_one_species:
     output:
         touch(
