@@ -580,7 +580,7 @@ from HMP2 is very similar to prevalence in reference genomes. Combining
 genes from all species, the 2D histogram shows the joint distribution of
 prevalence estimated from reference genomes (x-axis) and inferred
 strains (y-axis). These independent estimates are highly concordant,
-with higher density along the 1-to-1 diagonal (dotted line). Dashed
+with higher density along the diagonal. Dashed
 horizontal lines represent the thresholds defining core, shell, and
 cloud prevalence classes based on inferred strains. **(B)** Fraction of
 shell versus core genes in inferred strains. For each species (circle),
