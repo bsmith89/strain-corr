@@ -1057,11 +1057,7 @@ species marker genes and were used for species depth estimation, quality
 control, and downstream analyses.
 
 A list of the marker genes used for each of the 627 species analyzed in this study
-can be obtained from TODO.
-
-<!--
-    (TODO: Also download from this source for the workflow quickstart.)
--->
+are distributed with the StrainPGC software.
 
 ### SNP profiling
 
