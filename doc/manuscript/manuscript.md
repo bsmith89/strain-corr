@@ -45,6 +45,7 @@ TODO: Bold Figure N, Table N in captions
 TODO: Table caption (or just footnotes?) to below tables.
 TODO: Add line numbers
 TODO: All main-text figures to EPS for upload.
+TODO: Include R2R as a DOCX / Supplementary file
 
 -->
 
@@ -291,7 +292,7 @@ metagenomic reads as input.
 
 
 MIDAS v3 represents a major upgrade to the pangenome profiling pipeline intended
-improve the completeness, curation, and interpretability of gene abundance estimates.
+to improve the completeness, curation, and interpretability of gene abundance estimates.
 We updated the pangenome database construction and gene annotation process
 as well as the profiling algorithm, and describe these in
 the Methods section below.
@@ -307,7 +308,7 @@ takes in pangenome profiles and two other inputs, a list of species marker
 genes, and a list of
 "strain-pure" samples for each of the desired strains.
 The StrainPGC algorithm can be summarized as follow:
-first, the species depth in
+First, the species depth in
 each sample is estimated based on mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
 where the species is below a minimum detection limit (in this work 0.0001x).
@@ -1269,7 +1270,7 @@ _de novo_.
 
 StrainPGC is freely available at <https://github.com/bsmith89/StrainPGC>.
 Code and metadata needed to replicate our analyses and plots are
-included as Supplementary Code S1 and are also available at
+included as Supplementary Code and are also available at
 <https://github.com/bsmith89/StrainPGC-manuscript>.
 
 ## Competing Interests Statement
