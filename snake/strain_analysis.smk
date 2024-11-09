@@ -177,11 +177,6 @@ rule calculate_gene_prevalence_in_high_quality_ref_genomes:
     output:
         "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv",
     input:
-        # TODO: Combine the functionality of
-        # "scripts/extract_metadata_midasdb_v15.py",
-        # "scripts/filter_ref_strains_v15.py", and
-        # "scripts/strain_gene_to_prevalence.py"
-        # into one script.
         script="scripts/midas_strain_gene_to_reference_prevalence.py",
         meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
