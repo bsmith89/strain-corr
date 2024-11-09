@@ -1,11 +1,28 @@
-# sMWAS: Strain-level correlations with host phenotypes
+# Analysis code and metadata for: "Accurate estimation of intraspecific microbial gene content variation in metagenomic data with MIDAS v3 and StrainPGC"
 
-TODO:
+For the tools---[StrainPGC](https://github.com/bsmith89/StrainPGC) and
+[MIDAS](https://github.com/czbiohub-sf/MIDAS)---see their respective GitHub repositories.
 
-- [ ] Implement a deconvolution evaluation tool that measures
-    - how well the entropy of the metagenotype and the community are associated
-    - whether high-coverage strains have lower entropy
-    - whether comparisons between subjects look more different than within
-- [ ] TODO
-- [x] Export de-identified subject metadata from ucfmt2 database.
-    - see ucfmt2 project repository: lib.project_data.load_subject_table(con=con) where con=sqlite3.connect('sdata/database.db')
+The StrainPGC repository includes a user-friendly version of our integrated workflow.
+
+Our complete analysis workflow and the downstream analyses for this paper are implemented as a Snakemake pipeline:
+
+![The Workflow](doc/static/filegraph.svg)
+
+Code to reproduce our main text analyses and figures (as well as supplementary
+results) are then integrated into analysis notebooks:
+
+- Performance benchmarking in a synthetic community
+    - [`nb/analyze_benchmarking_results.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_benchmarking_results.ipynb)
+- Performance benchmarking with E. coli spike-in genomes
+    - [`nb/analyze_spikein_benchmark.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_spikein_benchmark.ipynb)
+- Distribution of strains in HMP2
+    - [`nb/analyze_distribution_of_hmp2_strains.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_distribution_of_hmp2_strains.ipynb)
+- Diversity of inferred strains
+    - [`nb/analyze_hmp2_strain_diversity.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_hmp2_strain_diversity.ipynb)
+- Gene prevalence in inferred strains
+    - [`nb/analyze_pangenome_fractions_hmp2_strains.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_pangenome_fractions_hmp2_strains.ipynb)
+- Co-occurrence clustering
+    - [`nb/analyze_gene_clusters_in_hmp2_strains.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_gene_clusters_in_hmp2_strains.ipynb)
+- Tracking and comparison of E. coli strain gene content in UCFMT
+    - [`nb/analyze_ucfmt_donor_strains_102506.ipynb`](https://github.com/bsmith89/StrainPGC-manuscript/blob/with-results/nb/analyze_ucfmt_donor_strains_102506.ipynb)
