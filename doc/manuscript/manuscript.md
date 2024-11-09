@@ -58,9 +58,9 @@ Additional submission details:
 - Xiaofan Jin 3
 - Liron Zahavi 4,5
 - Saar Shoer 4,5
-- Jacqueline Moltzau-Anderson  6
+- Jacqueline Moltzau-Anderson  6,7
 - Eran Segal 4,5
-- Katherine S. Pollard 1,3,7
+- Katherine S. Pollard 1,3,8
 
 1 Gladstone Institute for Data Science and Biotechnology, San Francisco, USA
 2 Chan Zuckerberg Biohub San Francisco, San Francisco, USA
@@ -68,7 +68,8 @@ Additional submission details:
 4 Department of Computer Science and Applied Mathematics, Weizmann Institute of Science, Rehovot, Israel
 5 Department of Molecular Cell Biology, Weizmann Institute of Science, Rehovot, Israel
 6 Department of Gastroenterology, University of California, San Francisco, USA
-7 Department of Epidemiology and Biostatistics, University of California, San Francisco, USA
+7 Benioff Center for Microbiome Medicine, Department of Medicine, University of California San Francisco, San Francisco, CA, USA
+8 Department of Epidemiology and Biostatistics, University of California, San Francisco, USA
 
 ORCID:
 
