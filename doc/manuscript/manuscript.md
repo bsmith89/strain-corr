@@ -321,7 +321,7 @@ each strain intended to flag those likely to be of low accuracy.
 
 While StrainPGC is designed to accept strain-pure samples identified using
 a variety of strain tracking approaches, in
-this work we apply GT-Pro [@shiFastAccurateMetagenotyping2021],
+this work we apply GT-Pro [@shiFastAccurateMetagenotyping2022],
 an assembly-free algorithm for tallying
 single-nucleotide polymorphisms (SNPs) in shotgun metagenomic reads,
 followed by StrainFacts [@smithScalableMicrobialStrain2022a],
@@ -543,8 +543,19 @@ suggest that inferring strains from publicly available metagenome
 collections will reveal novel intraspecific diversity not already found
 in reference databases.
 
-We next applied StrainPGC to estimate gene content for these strains.
-After quality control, we estimated gene content for 3511 inferred
+To further evaluate the expected performance of StrainPGC in real-world
+scenarios, we performed an _in silico_ experiment, using five
+_E. coli_ genomes not in the UHGG reference collection
+[@davidova-gerzovaHospitalCommunityWastewater2023], spiking-in
+simulated reads to the HMP2 dataset.
+These benchmark genomes represent a range of divergence from the closest
+reference genome similar to what we found for the inferred strains.
+We observed F1 scores equivalent to the hCom2 benchmark
+(Supplementary Text and Supplementary Table S2).
+
+Having in this way validated its performance in the HMP2 dataset,
+we next applied StrainPGC to the novel, inferred strains.
+After quality control, we estimated gene content for 3511
 strains in 443 species across 12 phyla (Fig. 3E).
 Strains had a median of 9 strain-pure samples (IQR: 5 - 13).
 While these were
@@ -557,13 +568,6 @@ the GTDB taxonomy), followed by Bacteroidota (727), and Proteobacteria
 (189). Hence, StrainPGC resolved gene content for myriad strains across
 a diverse set of species found in the human gut (Supplementary Table S1).
 
-To further validate the performance of StrainPGC in this challenging
-dataset, we
-performed an _in silico_ spike-in experiment using five, novel
-_E. coli_ genomes that are not represented
-in the UHGG reference collection [@davidova-gerzovaHospitalCommunityWastewater2023],
-and found F1 scores equivalent to the hCom2 benchmark
-(see Supplementary Table S2).
 Just like SNP genotypes, for most inferred strains, the estimated gene
 content was quite distinct from the closest reference. Measuring
 dissimilarity using the cosine dissimilarity after batch correction (see
@@ -882,21 +886,36 @@ the accuracy of our approach will improve, expanding its application to other
 microbiomes beyond the human gut.
 Nonetheless, highly diverged strains may have elevated error rates due to database bias
 and it is prudent for users to ensure that their species of interest
-are sufficiently covered in reference sets.
+are sufficiently covered in reference sets
+[@zhaoPitfallsGenotypingMicrobial2023;@hovhannisyanCROSSMAPPEREstimatingCrossmapping2020].
 Another major barrier to interpreting gene content estimates by StrainPGC or other
 methods is the sparsity of robust genetic, biochemical, structural, and
 experimental characterization of gene products [@zhouCAFAChallengeReports2019]. While we
 augmented available annotations by leveraging co-occurrence clusters to
-investigate epistatic and evolutionary relationships between genes—as
-others have done previously [@minotGeneshotGenelevelMetagenomics2021]—laboratory-based
+investigate epistatic and evolutionary relationships between genes---as
+others have done previously [@minotGeneshotGenelevelMetagenomics2021]---laboratory-based
 characterization is still vital.
 
 Packaged as stand-alone software tools and integrated into an automated
 workflow, MIDAS v3 and StrainPGC together facilitate the broad
 exploration of strain-specific gene content in metagenome collections.
-Future studies can expand surveys across additional metagenomic
-datasets, look for associations between microbial strains and disease,
-and identify determinants of success for FMT.
+This enables expanding surveys across additional metagenomic
+datasets, looking for associations between microbial strains and disease,
+and identifying determinants of success for FMT.
+Important future work also includes
+specializing our end-to-end workflow for environments beyond the human gut,
+integrating additional analyses comparing inferred strains to the reference collection,
+and further refining pangenome profiles based on horizontal coverage.
+We designed StrainPGC as part of a modular workflow that may include gene and
+strain information from any context.
+In particular, our references can be replaced with
+databases targeting different environments using
+previously released protocols
+[@zhaoGenotypingMicrobialCommunities2022;@shiFastAccurateMetagenotyping2022].
+Thus, while
+we chose to focus on the human gut microbiome in this initial study, we expect
+that StrainPGC will be a broadly useful approach to associate genes with
+strains using metagenomic data from diverse environments.
 
 # Methods
 
@@ -1041,7 +1060,7 @@ can be obtained from TODO.
 ### SNP profiling
 
 SNP profiles were obtained from metagenomes using GT-Pro v1.0.1
-[@shiFastAccurateMetagenotyping2021] and the default database, which was built using UHGG v1.0.
+[@shiFastAccurateMetagenotyping2022] and the default database, which was built using UHGG v1.0.
 GT-Pro was run on preprocessed reads, and counts from forward and
 reverse reads were summed. The resulting SNP profile matrix, a
 three-dimensional array of counts indexed by sample, genotyped position,

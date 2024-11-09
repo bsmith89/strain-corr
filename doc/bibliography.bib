@@ -658,6 +658,59 @@
     integration,pediatric Crohn’s disease},
   file         = {/Users/bsmith/Zotero/storage/3CFCELAS/S1931312824003597.html},
 }
+@article{hovhannisyanCROSSMAPPEREstimatingCrossmapping2020,
+  title        = {{{CROSSMAPPER}}: Estimating Cross-Mapping Rates and
+    Optimizing Experimental Design in Multi-Species Sequencing Studies},
+  shorttitle   = {{{CROSSMAPPER}}},
+  author       = {Hovhannisyan, Hrant and Hafez, Ahmed and Llorens,
+    Carlos and Gabaldón, Toni},
+  date         = {2020-02-01},
+  journaltitle = {Bioinformatics},
+  shortjournal = {Bioinformatics},
+  volume       = 36,
+  number       = 3,
+  pages        = {925--927},
+  issn         = {1367-4803},
+  doi          = {10.1093/bioinformatics/btz626},
+  url          = {https://doi.org/10.1093/bioinformatics/btz626},
+  urldate      = {2024-11-08},
+  abstract     = {Numerous sequencing studies, including
+    transcriptomics of host-pathogen systems, sequencing of hybrid
+    genomes, xenografts, mixed species systems, metagenomics and
+    meta-transcriptomics, involve samples containing genetic material
+    from divergent organisms. A crucial step in these studies is
+    identifying from which organism each sequencing read originated,
+    and the experimental design should be directed to minimize biases
+    caused by cross-mapping of reads to incorrect source genomes.
+    Additionally, pooling of sufficiently different genetic material
+    into a single sequencing library could significantly reduce
+    experimental costs but requires careful planning and assessment of
+    the impact of cross-mapping. Having these applications in mind we
+    designed Crossmapper, the first to our knowledge tool able to
+    assess cross-mapping prior to sequencing, therefore allowing
+    optimization of experimental design.Using any combination of
+    reference genomes, Crossmapper performs read simulation and
+    back-mapping of those reads to the pool of references, quantifies
+    and reports the cross-mapping rates for each organism. Crossmapper
+    performs these analyses with numerous user-specified parameters,
+    including, among others, read length, read layout, coverage,
+    mapping parameters, genomic or transcriptomic data. Additionally,
+    it outputs the results in highly interactive and publication-ready
+    reports. This allows the user to perform multiple comparisons at
+    once and choose the experimental setup minimizing cross-mapping
+    rates. Moreover, Crossmapper can be used for resource optimization
+    in sequencing facilities by pooling different samples into one
+    sequencing library.Crossmapper is a command line tool implemented
+    in Python 3.6 and available as a conda package, allowing
+    effortless installation. The source code, detailed information and
+    a step-by-step tutorial is available at our GitHub page
+    https://github.com/Gabaldonlab/crossmapper.Supplementary data are
+    available at Bioinformatics online.},
+  file         = {/Users/bsmith/Zotero/storage/HZBR2LUD/Hovhannisyan
+    et al. - 2020 - CROSSMAPPER estimating cross-mapping rates and
+    optimizing experimental design in multi-species
+    sequ.pdf;/Users/bsmith/Zotero/storage/867PGCSQ/5544929.html},
+}
 @article{huStrainPanDALinkedReconstruction2022,
   title        = {{{StrainPanDA}}: {{Linked}} Reconstruction of Strain
     Composition and Gene Content Profiles via Pangenome‐based
@@ -1750,12 +1803,12 @@
     - Prokka rapid prokaryotic genome
     annotation.pdf;/Users/bsmith/Zotero/storage/67PRAR5S/2390517.html},
 }
-@article{shiFastAccurateMetagenotyping2021,
+@article{shiFastAccurateMetagenotyping2022,
   title        = {Fast and Accurate Metagenotyping of the Human Gut
     Microbiome with {{GT-Pro}}},
   author       = {Shi, Zhou Jason and Dimitrov, Boris and Zhao, Chunyu
     and Nayfach, Stephen and Pollard, Katherine S.},
-  date         = {2021-12-23},
+  date         = {2022-04},
   journaltitle = {Nature Biotechnology},
   shortjournal = {Nat Biotechnol},
   volume       = 40,
@@ -1765,7 +1818,7 @@
   issn         = {1546-1696},
   doi          = {10.1038/s41587-021-01102-3},
   url          = {https://www.nature.com/articles/s41587-021-01102-3},
-  urldate      = {2022-01-31},
+  urldate      = {2024-11-08},
   abstract     = {Single nucleotide polymorphisms (SNPs) in
     metagenomics are used to quantify population structure, track
     strains and identify genetic determinants of microbial phenotypes.
@@ -1789,6 +1842,9 @@
     2022 - Fast and accurate metagenotyping of the human gut
     .pdf;/Users/bsmith/Zotero/storage/E66VGRXT/Shi et al_2021_Fast and
     accurate metagenotyping of the human gut microbiome with
+    GT-Pro.pdf;/Users/bsmith/Zotero/storage/U4IAC5LW/Shi et al. - 2022
+    - Fast and accurate metagenotyping of the human gut microbiome
+    with
     GT-Pro.pdf;/Users/bsmith/Zotero/storage/ADHXHNRR/s41587-021-01102-3.html},
 }
 @article{smithScalableMicrobialStrain2022a,
@@ -1968,6 +2024,59 @@
     modulation,immunoglobulin A,strains},
   file         = {/Users/bsmith/Zotero/storage/REHLMQR4/Yang et al. -
     2020 - Fecal IgA Levels Are Determined by Strain-Level Di.pdf},
+}
+@article{zhaoGenotypingMicrobialCommunities2022,
+  title        = {Genotyping {{Microbial Communities}} with
+    {{MIDAS2}}: {{From Metagenomic Reads}} to {{Allele Tables}}},
+  shorttitle   = {Genotyping {{Microbial Communities}} with {{MIDAS2}}},
+  author       = {Zhao, Chunyu and Goldman, Miriam and Smith, Byron J.
+    and Pollard, Katherine S.},
+  date         = 2022,
+  journaltitle = {Current Protocols},
+  volume       = 2,
+  number       = 12,
+  pages        = {e604},
+  issn         = {2691-1299},
+  doi          = {10.1002/cpz1.604},
+  url          = {https://onlinelibrary.wiley.com/doi/abs/10.1002/cpz1.604},
+  urldate      = {2024-11-08},
+  abstract     = {The Metagenomic Intra-Species Diversity Analysis
+    System 2 (MIDAS2) is a scalable pipeline that identifies single
+    nucleotide variants and gene copy number variants in metagenomes
+    using comprehensive reference databases built from public
+    microbial genome collections (metagenotyping). MIDAS2 is the first
+    metagenotyping tool with functionality to control metagenomic read
+    mapping filters and to customize the reference database to the
+    microbial community, features that improve the precision and
+    recall of detected variants. In this article we present four basic
+    protocols for the most common use cases of MIDAS2, along with
+    supporting protocols for installation and use. In addition, we
+    provide in-depth guidance on adjusting command line parameters,
+    editing the reference database, optimizing hardware utilization,
+    and understanding the metagenotyping results. All the steps of
+    metagenotyping, from raw sequencing reads to population genetic
+    analysis, are demonstrated with example data in two downloadable
+    sequencing libraries of single-end metagenomic reads representing
+    a mixture of multiple bacterial species. This set of protocols
+    empowers users to accurately genotype hundreds of species in
+    thousands of samples, providing rich genetic data for studying the
+    evolution and strain-level ecology of microbial communities. ©
+    2022 The Authors. Current Protocols published by Wiley Periodicals
+    LLC. Basic Protocol 1: Species prescreening Basic Protocol 2:
+    Download MIDAS reference database Basic Protocol 3: Population
+    single nucleotide variant calling Basic Protocol 4: Pan-genome
+    copy number variant calling Support Protocol 1: Installing MIDAS2
+    Support Protocol 2: Command line inputs Support Protocol 3:
+    Metagenotyping with a custom collection of genomes Support
+    Protocol 4: Metagenotyping with advanced parameters},
+  langid       = {english},
+  keywords     = {copy number
+    variant,genotyping,microbiome,MIDAS2,single nucleotide
+    variant,strain},
+  file         = {/Users/bsmith/Zotero/storage/CBEEQ5QA/Zhao et al. -
+    2022 - Genotyping Microbial Communities with MIDAS2 From
+    Metagenomic Reads to Allele
+    Tables.pdf;/Users/bsmith/Zotero/storage/RPQVZMRC/cpz1.html},
 }
 @article{zhaoMIDAS2MetagenomicIntraspecies2023,
   title        = {{{MIDAS2}}: {{Metagenomic Intra-species Diversity
