@@ -155,7 +155,6 @@ rule compile_manuscript_submission:
         directory("build/submission"),
     input:
         docx="build/manuscript.docx",
-        coverletter="doc/manuscript/coverletter-genome-research.docx",
         fig1="fig/concept_diagram_figure.pdf",
         fig2="fig/benchmarking_figure.pdf",
         fig3="fig/hmp2_diversity_figure.pdf",
@@ -170,7 +169,6 @@ rule compile_manuscript_submission:
         """
         mkdir -p {output}
         cp {input.docx} {output}/manuscript.docx
-        cp {input.coverletter} {output}/coverletter.docx
         cp {input.fig1} {output}/Figure_1.pdf
         cp {input.fig2} {output}/Figure_2.pdf
         cp {input.fig3} {output}/Figure_3.pdf
