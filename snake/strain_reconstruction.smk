@@ -18,7 +18,8 @@ rule select_species_core_genes_from_reference_by_filtered_set_prevalence:
         species_gene="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list",
     input:
         script="scripts/select_high_prevalence_species_genes2.py",
-        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.prevalence.tsv",
+        prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv",
+        # NOTE (2024-10-22): Changed from prevalence="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.prevalence.tsv",
     params:
         threshold=lambda w: float(w.prevalence) / 100,
     shell:
@@ -89,6 +90,33 @@ rule calculate_species_depth_directly:
     shell:
         """
         spgc estimate_species_depth --trim-frac-species-genes {params.trim_frac_species_genes} {input.depth} {input.species_genes} {output}
+        """
+
+
+# See matching rule in snake/gtpro.smk
+rule estimate_all_species_depths_in_group_spgc:
+    output:
+        "data/group/{group}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.all_species_depth.tsv",
+    input:
+        species=lambda w: [
+            f"data/group/{w.group}/species/sp-{species}/{w.stem}.gene{w.centroidA}_{w.dbv}-{w.btp}-agg{w.centroidB}.spgc_specgene-{w.specgene_params}.species_depth.tsv"
+            for species in config["species_group"][w.group]
+        ],
+    params:
+        header="sample	species_id	depth",
+        species_list=lambda w: config["species_group"][w.group],
+        species_pattern="data/group/{group}/species/sp-$species/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv",
+    shell:
+        """
+        (
+            echo "{params.header}"
+            for species in {params.species_list}
+            do
+                file={params.species_pattern}
+                echo $file >&2
+                awk -v species=$species -v OFS='\t' '{{print $1,species,$2}}' $file
+            done
+        ) > {output}
         """
 
 

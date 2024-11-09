@@ -1,0 +1,6 @@
+name: art_read_sim
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - art

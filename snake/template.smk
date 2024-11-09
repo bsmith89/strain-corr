@@ -44,10 +44,12 @@ rule initialize_project_config:
         touch("build/initialize_project_config.flag"),
     input:
         "build/initialize_project_git_config.flag",
+    params:
+        local_config_files=config["local_config_files"],
     shell:
         dd(
             """
-        echo 'Add local configuration to {config.local_config_files}'
+        echo 'Add local configuration to {params.local_config_files}'
         echo 'Or by creating/relinking profile/default/'
         echo 'Remember to symlink data directories to the correct fs. (e.g. raw/, ref/, data/, etc.)'
         """

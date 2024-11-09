@@ -48,7 +48,7 @@ rule start_shell_any_conda:
     conda:
         lambda w: f"conda/{w.conda}.yaml"
     shell:
-        "bash; echo 'Rule always fails due to MissingOutputException.'"
+        "bash -i; echo 'Rule always fails due to MissingOutputException.'"
 
 
 rule start_shell:
@@ -130,5 +130,15 @@ rule config_debug:
         """
         echo "{wildcards.config_key}"
         echo "{params.meta}"
+        false  # Recipe never succeeds.
+        """
+
+
+rule default_resources_debug:
+    output:
+        "debug_default_resources",
+    shell:
+        """
+        echo "{resources}"
         false  # Recipe never succeeds.
         """

@@ -14,7 +14,7 @@ rule run_midas_species:
         pmem=1_000 // 4,
     shell:
         """
-        midas2 run_species \
+        midas run_species \
                 --midasdb_dir {input.midasdb_dir} \
                 --midasdb_name newdb \
                 -1 {input.r1} -2 {input.r2} \
@@ -44,7 +44,7 @@ rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
         directory("data/hash/{hash}/pangenomes99_v20.bt2.d"),
     input:
         species_list="data/hash/{hash}/species.list",
-        midasdb_dir="ref/midasdb_uhgg_v20_all",
+        midasdb_dir=ancient("ref/midasdb_uhgg_v20_all"),
     conda:
         "conda/midas3.yaml"
     threads: 96
@@ -54,7 +54,7 @@ rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
         pmem=lambda w, threads: 480_000 // threads,
     shell:
         """
-        midas2 build_bowtie2db \
+        midas build_bowtie2db \
                 --bt2_indexes_dir {output} \
                 --bt2_indexes_name pangenomes \
                 --midasdb_name newdb \
@@ -65,6 +65,7 @@ rule build_midas3_pangenomes_bowtie_index:  # Hub-rule
                 --prune_centroids \
                 --remove_singleton
         """
+
 
 rule run_midas_genes_align_only:  # Hub-rule
     output:
@@ -87,7 +88,7 @@ rule run_midas_genes_align_only:  # Hub-rule
         pmem=lambda w, threads: 80_000 // threads,
     shell:
         """
-        midas2 run_genes --num_cores {threads} \
+        midas run_genes --num_cores {threads} \
                 -1 {input.r1} -2 {input.r2} \
                 --sample_name {wildcards.mgen} \
                 --midasdb_name newdb \
@@ -103,5 +104,6 @@ rule run_midas_genes_align_only:  # Hub-rule
                 {params.outdir}
         ln {params.outbam} {output.bam}
         """
+
 
 # This comment is only needed to get the last rule off the bottom of the file.

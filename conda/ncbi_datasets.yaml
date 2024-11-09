@@ -1,0 +1,5 @@
+name: ncbi_datasets
+channels:
+  - conda-forge
+dependencies:
+  - ncbi-datasets-cli

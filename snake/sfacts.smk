@@ -47,6 +47,7 @@ rule subset_metagenotype:
                 {output}
         """
 
+
 rule fit_sfacts:
     output:
         fit="{stem}.fit-sfacts{strategy}-s{strain_exponent}-seed{seed}.world.nc",
@@ -81,6 +82,7 @@ rule fit_sfacts:
                 -- {input.mgen} {output.fit}
         """
 
+
 rule export_sfacts_comm:
     output:
         "{stem}.comm.tsv",
@@ -99,7 +101,7 @@ rule calculate_all_strain_depths:  # Hub-rule
         "data/group/{group}/r.{proc}.gtpro.{stem}.strain_depth.tsv",
     input:
         script="scripts/merge_all_strains_depth.py",
-        species="data/group/{group}/r.{proc}.gtpro.species_depth.tsv",
+        species="data/group/{group}/r.{proc}.gtpro.all_species_depth.tsv",
         strains=lambda w: [
             f"data/group/{w.group}/species/sp-{species}/r.{w.proc}.gtpro.{w.stem}.comm.tsv"
             for species in config["species_group"][w.group]

@@ -1,18 +1,18 @@
 [submodule "include/StrainFacts"]
 	path = include/StrainFacts
 	url = https://github.com/bsmith89/StrainFacts
-[submodule "include/MIDAS2"]
-	path = include/MIDAS2
-	url = git@github.com:bsmith89/MIDAS2.git
 [submodule "include/StrainFinder"]
 	path = include/StrainFinder
-	url = https://github.com/cssmillie/StrainFinder
+	url = git@github.com:bsmith89/StrainFinder.git
 [submodule "include/StrainPanDA"]
 	path = include/StrainPanDA
-	url = https://github.com/xbiome/StrainPanDA.git
+	url = git@github.com:bsmith89/StrainPanDA.git
 [submodule "include/panphlan"]
 	path = include/panphlan
 	url = https://github.com/SegataLab/panphlan
 [submodule "include/StrainPGC"]
 	path = include/StrainPGC
 	url = git@github.com:bsmith89/StrainPGC.git
+[submodule "include/MIDAS"]
+	path = include/MIDAS
+	url = https://github.com/bsmith89/MIDAS

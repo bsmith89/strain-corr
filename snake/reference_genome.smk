@@ -96,7 +96,7 @@ rule gtpro_species_lines_counts:
 
 rule combine_project_genome_gtpro_species_lines_counts_no_species:
     output:
-        "data/group/{group}/strain_genomes.{stem}.gtpro_species_tally.tsv"
+        "data/group/{group}/strain_genomes.{stem}.gtpro_species_tally.tsv",
     input:
         strain=lambda w: [
             f"data/genome/{genome}.{w.stem}.gtpro_species_tally.tsv"
@@ -108,7 +108,7 @@ rule combine_project_genome_gtpro_species_lines_counts_no_species:
         """
 
 
-rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
+rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule
     output:
         "data/group/{group}/species/sp-{species}/strain_genomes.gtpro.tsv.bz2",
     input:
@@ -133,7 +133,7 @@ rule combine_strain_genome_gtpro_data_loadable:  # Hub-rule?
         """
 
 
-rule combine_midasdb_reference_genome_gtpro_data_loadable:  # Hub-rule?
+rule combine_midasdb_reference_genome_gtpro_data_loadable:  # Hub-rule
     output:
         "data/species/sp-{species}/midasdb_{dbv}.gtpro.tsv.bz2",
     input:

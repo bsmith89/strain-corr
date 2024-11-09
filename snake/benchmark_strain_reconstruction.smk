@@ -45,6 +45,7 @@ use rule compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance as
         spgc_agg_mgtp="data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc",
         ref_geno="data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc",  # TODO: Confirm this is built correctly.
 
+
 rule match_strains_to_genomes_based_on_genotype:
     output:
         "data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.geno_matching_stats.tsv",
@@ -105,6 +106,38 @@ use rule assess_infered_strain_accuracy_uhgg_tiles as assess_infered_strain_accu
         truth="data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv",  # FIXME: convert to a strain_gene.tsv
 
 
+rule collect_xjin_threshold_grid_for_all_species:
+    output:
+        touch(
+            "data/group/xjin/r.proc.gtpro.{sfacts_params}.gene{gene_params}.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag"
+        ),
+    input:
+        bench=lambda w: [
+            f"data/group/xjin/species/sp-{species}/r.proc.gtpro.{w.sfacts_params}.gene{w.gene_params}.spgc_specgene-ref-filt-p95_ss-all_t-10_thresh-corr{corr_thresh}-depth{depth_thresh}.{genome}.{unit}-reconstruction_accuracy.tsv"
+            for (genome, species), corr_thresh, depth_thresh, unit in product(
+                all_species_group_genomes("xjin"),
+                [
+                    "0",
+                    "50",
+                    "100",
+                    "150",
+                    "200",
+                    "250",
+                    "300",
+                    "350",
+                    "400",
+                    "450",
+                    "500",
+                    "550",
+                ],
+                ["50", "100", "150", "200", "250", "300", "350"],
+                ["eggnog"],
+            )
+        ],
+    shell:
+        "echo {input} > {output}"
+
+
 rule collect_xjin_benchmark_accuracy_grid_for_one_species:
     output:
         touch(
@@ -158,10 +191,10 @@ rule collect_xjin_benchmark_spgc_strain_match:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/{w.stem}.geno_matching_stats.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -180,10 +213,10 @@ rule collect_xjin_benchmark_strain_meta:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.gtpro.sfacts-fit.{w.pang_stem}.spgc-fit.strain_meta-s95-d100-a0-pos100-std25.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -201,10 +234,10 @@ rule collect_xjin_benchmark_species_depth:
     input:
         sfacts_match=lambda w: [
             "data/group/xjin/species/sp-{species}/r.proc.{w.pang_stem}.spgc_specgene-ref-filt-p95.species_depth.tsv".format(
-            species=config["genome"].loc[genome].species_id, w=w
-        )
-        for genome in config["genome_group"]["xjin"]
-        if config["genome"].loc[genome].species_id != "UNKNOWN"
+                    species=config["genome"].loc[genome].species_id, w=w
+                )
+                for genome in config["genome_group"]["xjin"]
+            if config["genome"].loc[genome].species_id != "UNKNOWN"
         ],
     shell:
         "echo {input} > {output}"
@@ -217,9 +250,7 @@ localrules:
 # TODO: Make this rule work
 rule collect_xjin_benchmark_grid_files:
     output:
-        touch(
-            "data/group/xjin/r.proc.gtpro.sfacts-fit.{gene_stem}.spgc-fit.BENCHMARK_GRID.flag"
-        ),
+        touch("data/group/xjin/r.proc.{gene_stem}.BENCHMARK_GRID.flag"),
     input:
         "data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag",
         "data/group/xjin/r.proc.{gene_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag",

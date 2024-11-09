@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # It's NOT gene_id.
     # On the other hand, the gene_table does use that
     # name for its index, regardless of what centroid_NN was being used by SPGC.
-    agg = pd.read_table(agg_inpath, index_col=0).squeeze()
+    agg = pd.read_table(agg_inpath, index_col=0).squeeze(axis=1)
     result = (
         gene_table.astype(bool).join(agg).groupby(agg_column).any().astype(int)
     ).rename_axis(index="gene_id") # Here "gene_id" is the generic name for annotation.

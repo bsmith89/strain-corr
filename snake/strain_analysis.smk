@@ -53,8 +53,6 @@ rule collect_filtering_metadata:
     input:
         script="scripts/filter_spgc_strains.py",
         meta="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv",
-        # spgc="data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.nc",
-        # sample_to_strain="data/group/{group}/{stem}.spgc_ss-{ss}.strain_samples.tsv",
     params:
         min_species_genes_frac=95 / 100,
         min_total_depth=100 / 100,
@@ -65,8 +63,10 @@ rule collect_filtering_metadata:
         "{input.script} {input.meta} {params.min_species_genes_frac} {params.min_total_depth} {params.gene_count_outlier_alpha} {params.max_log_gene_depth_ratio_std} {params.min_geno_positions} {output}"
 
 
-# FIXME: This is generic to either v15 or v20, but points at v15 only for
-# npositions data because it should be the same as v20 and I don't want to re-run it.
+# FIXME: This is generic to either v15 or v20,
+# # NOTE (2024-06-10): This is now no longer true. The script name should also probably be updated.
+# # but points at v15 only for
+# # npositions data because it should be the same as v20 and I don't want to re-run it.
 rule collect_metadata_for_uhgg_ref_strains_new:
     output:
         meta="data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv",
@@ -74,9 +74,8 @@ rule collect_metadata_for_uhgg_ref_strains_new:
         script="scripts/extract_metadata_midasdb_v15.py",
         meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
         genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
-        pos="data/species/sp-{species}/midasdb_v15.gtpro.geno.npositions.tsv",
+        pos="data/species/sp-{species}/midasdb_v20.gtpro.geno.npositions.tsv",
         genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
-        # FIXME: Rename the above.
     shell:
         "{input.script} {input.meta} {input.genome_to_species} {input.pos} {input.genes} {wildcards.species} {output}"
 
@@ -171,18 +170,33 @@ rule compare_spgc_and_ref_dissimilarities:
         "{input.script} {input.meta} {input.geno_pdist} {input.uhgg_pdist} {input.eggnog_pdist} {output}"
 
 
-# NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
-rule calculate_gene_prevalence_in_ref_genomes:
+
+
+# TODO: Make this the input for strain marker gene indicator.
+rule calculate_gene_prevalence_in_high_quality_ref_genomes:
     output:
-        "{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.prevalence.tsv",
+        "data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv",
     input:
-        script="scripts/strain_gene_to_prevalence.py",
-        gene="{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
-        filt="{stem}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos0.tsv",
+        script="scripts/midas_strain_gene_to_reference_prevalence.py",
+        meta="ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv",
+        genome_to_species="ref/midasdb_uhgg_{dbv}/genomes.tsv",
+        genes="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
     params:
+        complete_thresh=90 / 100,
+        contam_thresh=5 / 100,
         pseudo=0,
     shell:
-        "{input.script} {input.gene} {input.filt} {params.pseudo} {output}"
+        """
+        {input.script} \
+            {input.meta} \
+            {input.genome_to_species} \
+            {input.genes} \
+            {wildcards.species} \
+            {params.complete_thresh} \
+            {params.contam_thresh} \
+            {params.pseudo} \
+            {output}
+        """
 
 
 # NOTE: Split from `compile_spgc_to_ref_strain_report_new`:
@@ -311,7 +325,17 @@ localrules:
 # Consider starting rule output with a unique prefix, constrain your wildcards, or use the ruleorder directive.
 #
 # I can just add that rule to the end of the list.
-ruleorder: alias_sfacts_outputs > export_sfacts_comm > identify_strain_samples > aggregate_strain_metagenotype > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_sfacts_outputs > export_sfacts_comm
+ruleorder: alias_sfacts_outputs > run_spgc
+ruleorder: alias_sfacts_outputs > identify_strain_samples
+ruleorder: alias_sfacts_outputs > aggregate_strain_metagenotype
+ruleorder: alias_sfacts_outputs > compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance
+ruleorder: alias_sfacts_outputs > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_sfacts_outputs > extract_strain_gene_hits_from_spgc_netcdf
+ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_emapper_annotation
+ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_amr_annotation
+ruleorder: alias_sfacts_outputs > assess_infered_strain_accuracy_emapper_unit
+# ruleorder: alias_sfacts_outputs > collect_xjin_threshold_grid_for_one_species
 
 
 # That forces the aliasing to the end of the computation.
@@ -347,7 +371,17 @@ localrules:
 # strain_gene.prevalence_class_fraction-hmp2.tsv.
 #
 # I can just add that rule to the end of the list.
-ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes > cluster_genes_based_on_cooccurence_in_spgc_strains > aggregate_uhgg_strain_gene_by_annotation > count_pangenome_fractions_across_genomes > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_spgc_analysis_outputs > calculate_gene_prevalence_in_spgc_genomes
+ruleorder: alias_spgc_analysis_outputs > cluster_genes_based_on_cooccurence_in_spgc_strains
+ruleorder: alias_spgc_analysis_outputs > aggregate_uhgg_strain_gene_by_emapper_annotation
+ruleorder: alias_spgc_analysis_outputs > aggregate_uhgg_strain_gene_by_amr_annotation
+ruleorder: alias_spgc_analysis_outputs > count_pangenome_fractions_across_genomes
+ruleorder: alias_spgc_analysis_outputs > match_strains_to_genomes_based_on_genotype
+ruleorder: alias_spgc_analysis_outputs > export_gene_depth_table_from_netcdf
+ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_uhgg_best_hit
+ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_emapper_unit
+ruleorder: alias_spgc_analysis_outputs > collect_xjin_benchmark_accuracy_grid_for_one_species
+ruleorder: alias_spgc_analysis_outputs > assess_infered_strain_accuracy_emapper_unit_with_known_strain_samples
 
 
 rule collect_analysis_files:
@@ -397,11 +431,29 @@ localrules:
     collect_analysis_files,
 
 
+rule collect_ecoli_spikein_benchmark_results:
+    output:
+        "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag",
+    input:
+        [
+            f"data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.{spikein_genome}.eggnog-reconstruction_accuracy.tsv"
+            for spikein_genome in [
+                "Escherichia-coli-GCF_030198905-1",
+                "Escherichia-coli-GCF_030202075-1",
+                "Escherichia-coli-GCF_030204715-1",
+                "Escherichia-coli-GCF_030205145-1",
+                "Escherichia-coli-GCF_030205875-1",
+            ]
+        ],
+
+
 rule collect_spgc_manuscript_analysis_files:
     input:
-        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.BENCHMARK_GRID.flag",
+        "data/group/xjin/r.proc.gene99_v20-v23-agg75.BENCHMARK_GRID.flag",
         "data/group/hmp2/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag.SELECT_SPECIES.flag",
         "data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag",
+        "data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag",
+        "data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag",
 
 
 localrules:

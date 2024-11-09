@@ -11,6 +11,7 @@ from lib.snake import (
     single_param_wc,
     endswith_period_or_slash_wc,
     curl_recipe,
+    curl_unzip_recipe,
     nested_defaultdict,
     nested_dictlookup,
     get_checkpoint_by_path,

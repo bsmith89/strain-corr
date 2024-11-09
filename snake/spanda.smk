@@ -42,7 +42,7 @@ rule run_spanda_decompose_new:
         max_strains=lambda w: int(w.nstrain),
         expect_strains=lambda w: int(w.nstrain),
         libstrainpandar="include/StrainPanDA/src/strainpandar",
-    singularity:
+    container:
         config["container"]["spanda"]
     threads: 1
     resources:
