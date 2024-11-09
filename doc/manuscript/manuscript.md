@@ -143,12 +143,13 @@ understanding of the extent and importance of this intraspecific
 diversity. Widely used tools for analyzing metagenomic data can
 accurately quantify the abundance of species present in a microbial
 community, but often fall short in characterizing variation in gene
-content between strains [@plazaonateMSPminerAbundancebasedReconstitution2019a]. As a result, it is challenging
+content between strains [@plazaonateMSPminerAbundancebasedReconstitution2019a].
+As a result, it is challenging
 to study the functional consequences of strain-level variation in the
 gut microbiome.
 
 The most common way to study microbial gene content _in situ_ is to
-quantify the gene families present in shotgun metagenomes—an approach
+quantify the gene families present in shotgun metagenomes, an approach
 referred to as "pangenome profiling". Pangenome profiling estimates the
 mean sequencing depth---sometimes called vertical coverage---of a gene
 family as the mean number of reads aligning to each base of a
@@ -218,7 +219,7 @@ StrainPGC leverages modern strain tracking tools to separate samples into
 strain-pure subsets in order to combine data from pangenome profiling
 across multiple metagenomes.
 We also describe changes
-in MIDAS v3, including updates to its pangenome database and profiling
+in MIDAS v3, including updates to the pangenome database (MIDASDB) and profiling
 pipeline to reduce cross-mapping, improve quantification, and facilitate
 the interpretation of strain-specific gene content. As part of a
 complete workflow, our method requires only shotgun
@@ -308,10 +309,10 @@ first, the species depth in
 each sample is estimated based on mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
 where the species is below a minimum detection limit (in this work 0.0001x).
-Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C).
-First, the depth ratio is the total gene depth divided by the total species
-depth across that strain's pure samples.
-Second, the correlation score is the Pearson
+Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C):
+(1) the depth ratio is the total gene depth divided by the total species
+depth across that strain's pure samples;
+(2) the correlation score is the Pearson
 coefficient between the gene's depth and the overall species depth across both
 this strain's pure samples and the species-free samples.
 For each strain, genes passing a minimum threshold for both of these
@@ -343,10 +344,10 @@ pipeline may be substantial and are dominated by the requirements for read align
 with Bowtie2 [@langmeadFastGappedreadAlignment2012].
 By comparison, even for large datasets, the StrainPGC core algorithm generates
 results for all strains of a species and requires only a few GBs of RAM at
-peak.
-Our analysis harnesses the comprehensive UHGG reference collection
-[@almeidaUnifiedCatalog2042021] and requires only raw metagenomic reads as
-user-provided input.
+peak (see GitHub README for details).
+Our analysis harnesses the comprehensive Unified Human Gastrointestinal Genome (UHGG)
+reference collection [@almeidaUnifiedCatalog2042021] and requires only raw
+metagenomic reads as user-provided input.
 
 
 ## StrainPGC accurately estimates gene content of strains in a complex synthetic community
@@ -442,10 +443,10 @@ precision even while greatly increasing recall.
 In particular, we find our
 approach upholds this specificity---even at low depths---more effectively
 than existing methods and that performance was fairly stable for strains with ≥ 5 samples,
-or when the sample with the maximum depth was at ≥ 1x (Supplementary Figures S1).
+or when at least one sample had depth ≥ 1x (Supplementary Figures S1).
 
-In real-world applications—where ground-truth gene content is not known
-a priori—it is beneficial to understand the confidence of StrainPGC
+In real-world applications---where ground-truth gene content is not known
+a priori---it is beneficial to understand the confidence of StrainPGC
 estimates. We, therefore, calculated two scores to serve as proxies for
 accuracy and compared these to the performance we measured on the
 hCom2 datasets. First, we hypothesize that the fraction of
@@ -828,10 +829,11 @@ Here we have described updates to the MIDAS v3 pangenome database and
 profiling software, as well as StrainPGC, a novel tool for accurate,
 strain-specific gene content estimation using metagenomic data. The key
 innovations of StrainPGC are the use of depth correlation information
-and selection of strain-pure samples. Together, these innovations enable
+and selection of strain-pure samples.
+Together, these innovations enable
 StrainPGC to outperform PanPhlAn and StrainPanDA in a benchmark based on
-a complex, synthetic community modeled after the human gut microbiome. Combining
-the updated MIDAS v3 and StrainPGC in our workflow, we estimated gene
+a complex, synthetic community modeled after the human gut microbiome.
+Combining the updated MIDAS v3 and StrainPGC in our workflow, we estimated gene
 content for thousands of strains in the HMP2 metagenome collection,
 substantially expanding on the diversity found in reference genome
 collections and enabling analyses of intraspecific variation without
@@ -1034,14 +1036,17 @@ collected _in vitro_.
 
 ### Pangenome profiling
 
-For the work presented here, we ran MIDAS v3 as follows. Using Bowtie2
+For the work presented here, we ran MIDAS v3
+Using Bowtie2
 v2.5.1 throughout, a single reference index was built for 627 species
 using `midas build_bowtie2db --prune_centroids
 --remove_singleton`. Paired-end reads for each sample were aligned to
 this index using ` midas run_genes --aln_speed sensitive
---aln_extra_flags '--mm --ignore-quals' --total_depth 0`. Mean
-mapping depth was calculated using `samtools depth` and summed up at
-the 75% ANI OGF level.
+--aln_extra_flags '--mm --ignore-quals' --total_depth 0`.
+To maximize our sensitivity to divergent strains and at low abundance we did
+not use any of MIDAS's default filters in calculating depths.
+Instead, mean mapping depth was calculated using `samtools depth` and summed up
+at the 75% ANI OGF level.
 
 ### Reference genomes and species marker genes
 
@@ -1305,16 +1310,16 @@ Supervision, Funding Acquisition.
 
 ## Extended hCom2 benchmarking results
 
-![**Figure S1: Relationship between sequencing depth or number of samples and the accuracy of
-gene content estimation.** Points represent the performance of each tool
-(colors) on each of the 97 benchmark strains.
-For the left column, the x-axis is the maximum estimated depth of the genotype-matched
-strain across strain-pure samples, and for the right column it is the total number of strain-pure
-samples identified for that strain.
-Trend lines are a rolling average over the 10 nearest
-points. The dotted vertical line indicates the 1x depth and
-5 strain-pure samples, after which the mean performance
-stabilizes for StrainPGC.
+![**Figure S1: Relationship between sequencing depth or number of samples and
+the accuracy of gene content estimation.**
+Points represent the performance of each tool (colors) on each of the 97
+benchmark strains.
+For the left column, the x-axis is the maximum estimated depth of the
+genotype-matched strain across strain-pure samples, and for the right column it
+is the total number of strain-pure samples identified for that strain.
+Trend lines are a rolling average over the 10 nearest points.
+The dotted vertical line indicates the 1x depth and 5 strain-pure samples,
+after which the mean performance stabilizes for StrainPGC.
 ](fig/accuracy_by_depth_and_number_figure.dpi200.png)
 
 ## Extended pangenome results
@@ -1338,36 +1343,39 @@ inter-strain comparisons.
 We performed an additional benchmarking study to validate our approach
 in datasets with substantially more strain-diversity, for strains with more
 divergence from the reference set, and with a limited number of strain-pure
-samples. To keep our metagenomic data as realistic as possible, we opted to
+samples. To keep the simulated metagenomeic data as realistic as possible, we opted to
 construct samples with novel strains by "spiking" simulated reads from recently
 sequenced isolates into real metagenomes from the HMP2 study. Due to an
-abundance of studies with wild E. coli isolates, and our particular focus on
-this species throughout, we identified five novel E. coli genomes from a
-recently published project (https://doi.org/10.3389/fcimb.2023.1184081).
-
+abundance of studies with wild _E. coli_ isolates, and our particular focus on
+this species throughout, we identified five novel _E. coli_ genomes from a
+recently published project [@davidova-gerzovaHospitalCommunityWastewater2023].
 These isolates varied greatly in their relatedness to the UHGG reference
 genomes, including very distantly related strains with a genotype dissimilarity of
 0.077. These strains are as novel relative
-to the reference database as would be expected for any E. coli found in the
+to the reference database as would be expected for _E. coli_ found in the
 human gut; only 0.8% of UHGG genomes had a closest match genotype-dissimilarity
 of more than 0.077.
 
-We selected five HMP2 samples, all from one subject (C3022), where _E. coli_ was not
-detected. Into these, for each strain, we spiked-in simulated reads at 1x, 2x, 4x, 8x, and 16x
-depths. We combined all 25 of these
-additional, synthetic samples with the full HMP2 dataset, and then re-ran our integrated
-workflow. As in the hCom2 benchmark, after matching inferred strains to each of these ground-truth genomes
-based on genotype similarity, we compared our StrainPGC gene content estimates to the ground
-truth annotated on the spiked-in genomes.
+We selected five HMP2 samples, all from one subject (C3022), where _E. coli_
+was not detected.
+Into these, we spiked-in simulated reads at 1x, 2x, 4x, 8x,
+and 16x depths with a separate set of reads for each strain.
+We combined all 25 of these additional, synthetic samples with the full HMP2
+dataset, and then re-ran our integrated workflow.
+We matched the inferred strains to each of the ground-truth genomes based on
+genotype similarity
+and evaluated the StrainPGC gene content estimates as in the hCom2 benchmark.
 
-We found that the performance on these out-of-bag E. coli genomes is consistent
+We found that the performance of StrainPGC in these simulations with
+non-reference _E. coli_ genomes is consistent
 with the overall performance on the hCom2 (synthetic community) benchmark.
-Specifically we found a mean F1 score across all strains of 0.92, equivalent to
-the F1 of 0.91 from the hCom2 benchmark.
-
+This is despite the fact that the metagenomes were much more complex and
+some strains were more dissimilar to the closest reference genome.
+Specifically, we found a median F1 score across all strains of 0.92, equivalent to
+the median F1 of 0.91 from the hCom2 benchmark.
 Interestingly, we do not find a negative relationship between the divergence of
-the benchmark genome and our performance. StrainPGC performance was nearly
-equivalent for the least diverged genome (F1 of 0.89) and most diverged (F1 of
+the benchmark genome and performance. StrainPGC performance was nearly
+equivalent for the least diverged (F1 of 0.89) and most diverged genomes (F1 of
 0.92). We conclude that it is reasonable to expect similar performance for
 other strains and datasets, even when the number of strains for a species is
 large and when strains are more diverged from the reference database.
@@ -1383,8 +1391,7 @@ large and when strains are more diverged from the reference database.
 Table: **Supplementary Table S2**: Performance on five _E. coli_ genomes in an _in silico_ spike-in experiment.
 
 
-
-## Extended results for donor-specific E. coli strains
+## Extended results for donor-specific _E. coli_ strains
 
 **Supplementary Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
 Includes a row for each gene family found in either high-engraftment strain. Columns include
@@ -1395,13 +1402,14 @@ and the fraction of other co-occurence cluster members also found in each strain
 
 ![
 **Figure S3: Threshold depth ratio and correlation score parameter search.**
-Mean performance across 97 hCom2 benchmark genomes at every combination of
+Median performance across 97 hCom2 benchmark genomes at every combination of
 11 correlation score thresholds (x-axis) and 7 depth ratio thresholds (y-axis).
-Panels represent precision (A), recall (B), and F1 score (C).
-The maximum F1 score was achieved at a depth ratio threshold of 0.1 and
-correlation threshold of 0.35.
-The selected thresholds---0.2 and 0.4, respectively---are slightly more conservative
-but decrease the mean F1 score negligably from 0.827 to 0.822.
+Panels represent median precision (A), recall (B), and F1 score (C).
+The best performance (F1 score) was achieved at a depth ratio threshold of 0.1 and
+correlation threshold of 0.40.
+We used a slightly more conservative depth threshold of 0.2
+throughout the rest of this work,
+which decreased the median F1 score negligably from 0.916 to 0.908.
 ](fig/thresh_sensitivity_figure.dpi200.png)
 
 
