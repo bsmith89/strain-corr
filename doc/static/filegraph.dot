@@ -1,0 +1,2410 @@
+digraph snakemake_dag {
+    graph[bgcolor=white, margin=0];
+    node[shape=box, style=rounded, fontname=sans,                 fontsize=10, penwidth=2];
+    edge[penwidth=2, color=grey];
+0 [ shape=none, margin=0, label=<<table border="2" color="#57D9C4" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_spgc_manuscript_analysis_files</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag.SELECT_SPECIES.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/ucfmt/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.gene99_v20-v23-agg75.BENCHMARK_GRID.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag</font></td>
+</tr>
+<hr/>
+<tr><td align="right">  </td> </tr>
+</table>>]
+1 [ shape=none, margin=0, label=<<table border="2" color="#5797D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_grid_files</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.gtpro.sfacts-fit.STRAIN_MATCH_BENCHMARK_GRID.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{gene_stem}.ACCURACY_BENCHMARK_GRID.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{gene_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{gene_stem}.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{gene_stem}.BENCHMARK_GRID.flag</font></td></tr>
+</table>>]
+2 [ shape=none, margin=0, label=<<table border="2" color="#57D9D4" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_spgc_strain_match</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/{stem}.STRAIN_MATCH_BENCHMARK_GRID.flag</font></td></tr>
+</table>>]
+3 [ shape=none, margin=0, label=<<table border="2" color="#57CCD9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_sfacts_outputs</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stemA}.gtpro.sfacts-fit.{stemB}</font></td></tr>
+</table>>]
+4 [ shape=none, margin=0, label=<<table border="2" color="#57D973" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">match_strains_to_genomes_based_on_genotype</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.genome_pdist-mask10-pseudo10.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/match_strains_to_genomes.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stemA}.gtpro.{sfacts_params}.geno_matching_stats.tsv</font></td></tr>
+</table>>]
+5 [ shape=none, margin=0, label=<<table border="2" color="#D9B957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compute_benchmark_and_spgc_pairwise_genotype_masked_hamming_distance</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/strain_genomes.gtpro.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/calculate_ref_and_spgc_pairwise_genotype_masked_hamming_distance.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stemA}.gtpro.{sfacts_params}.spgc_ss-all.genome_pdist-mask{thresh}-pseudo{pseudo}.pkl</font></td></tr>
+</table>>]
+6 [ shape=none, margin=0, label=<<table border="2" color="#D98757" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_strain_metagenotype</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_strain_metagenotypes_across_strain_samples.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro.{strain_fit_params}.spgc_ss-all.strain_samples.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro.{strain_fit_params}.spgc_ss-all.mgtp.nc</font></td></tr>
+</table>>]
+7 [ shape=none, margin=0, label=<<table border="2" color="#D9A757" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">load_metagenotype_from_merged_gtpro</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro.tsv.bz2</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro.mgtp.nc</font></td></tr>
+</table>>]
+8 [ shape=none, margin=0, label=<<table border="2" color="#578ED9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">merge_both_reads_species_count_data</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/sum_merged_gtpro_tables.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r1.{stemB}.gtpro.tsv.bz2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r2.{stemB}.gtpro.tsv.bz2</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r.{stemB}.gtpro.tsv.bz2</font></td></tr>
+</table>>]
+9 [ shape=none, margin=0, label=<<table border="2" color="#A3D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">concatenate_mgen_group_one_read_count_data_from_one_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/select_gtpro_species_lines.sh</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/{r12}.{stemB}.gtpro.tsv.bz2.args</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species,[^./]+}/{r12,r[12]}.{stemB}.gtpro.tsv.bz2</font></td></tr>
+</table>>]
+10 [ shape=none, margin=0, label=<<table border="2" color="#57CED9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">concatenate_mgen_group_one_read_count_data_from_one_species_helper</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/{stem}.gtpro.tsv.bz2.args</font></td></tr>
+</table>>]
+11 [ shape=none, margin=0, label=<<table border="2" color="#57D5D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">gtpro_finish_processing_reads</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro.snp_dict.db</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro_raw.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro_parse.tsv.bz2</font></td></tr>
+</table>>]
+12 [ shape=none, margin=0, label=<<table border="2" color="#D6D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">run_gtpro</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.gtpro_raw.gz</font></td></tr>
+</table>>]
+13 [ shape=none, margin=0, label=<<table border="2" color="#5782D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_cleaned_reads</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/{mgen,[^./]+}/{r,r|r1|r2|r3}.proc.fq.gz</font></td></tr>
+</table>>]
+14 [ shape=none, margin=0, label=<<table border="2" color="#579BD9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">quality_trim_reads</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r1{stemB}fq.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r2{stemB}fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r1{stemB}qtrim.fq.gz</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r2{stemB}qtrim.fq.gz</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r3{stemB}qtrim.fq.gz</font></td></tr>
+</table>>]
+15 [ shape=none, margin=0, label=<<table border="2" color="#D97B57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">trim_adapters</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/illumina_adapters.fn</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.deadapt.fq.gz</font></td></tr>
+</table>>]
+16 [ shape=none, margin=0, label=<<table border="2" color="#5FD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_illumina_adapters</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/illumina_adapters.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/illumina_adapters.fn</font></td></tr>
+</table>>]
+17 [ shape=none, margin=0, label=<<table border="2" color="#57D96F" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">download_illumina_adapters</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left">  </td></tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/illumina_adapters.fn</font></td></tr>
+</table>>]
+18 [ shape=none, margin=0, label=<<table border="2" color="#57D9BF" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">deduplicate_reads</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/fastuniq_wrapper.sh</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r1{stemB}fq.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r2{stemB}fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r1{stemB}dedup.fq.gz</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/r2{stemB}dedup.fq.gz</font></td></tr>
+</table>>]
+19 [ shape=none, margin=0, label=<<table border="2" color="#57B0D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_raw_read_unsafe_r1</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/{mgen,[^./]+}/r1.fq.gz</font></td></tr>
+</table>>]
+20 [ shape=none, margin=0, label=<<table border="2" color="#57B9D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_xjin_mgen</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/internal/unpublished/CZBMI-Biofilm_BeadExperiment/biofilmBeadExpV2/{stem}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/mgen/xjin/{stem}</font></td></tr>
+</table>>]
+21 [ shape=none, margin=0, label=<<table border="2" color="#83D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_raw_read_unsafe_r2</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/{mgen,[^./]+}/r2.fq.gz</font></td></tr>
+</table>>]
+22 [ shape=none, margin=0, label=<<table border="2" color="#5770D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_gtpro_db</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/gt-pro-db</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro</font></td></tr>
+</table>>]
+23 [ shape=none, margin=0, label=<<table border="2" color="#57C7D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">load_gtpro_snp_dict</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro.snp_dict.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro.snp_dict.db</font></td></tr>
+</table>>]
+24 [ shape=none, margin=0, label=<<table border="2" color="#5759D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_gtpro_snps_dict</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/gt-pro-db/variants_main.covered.hq.snp_dict.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/gtpro.snp_dict.tsv</font></td></tr>
+</table>>]
+25 [ shape=none, margin=0, label=<<table border="2" color="#D99B57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">identify_strain_samples</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.comm.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.spgc_ss-all.strain_samples.tsv</font></td></tr>
+</table>>]
+26 [ shape=none, margin=0, label=<<table border="2" color="#57C9D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">export_sfacts_comm</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.world.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.comm.tsv</font></td></tr>
+</table>>]
+27 [ shape=none, margin=0, label=<<table border="2" color="#57D98A" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">fit_sfacts</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">meta/sfacts/strategy{strategy}.args</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.mgtp.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fit-sfacts{strategy}-s{strain_exponent,[0-9]+}-seed{seed,[0-9]+}.loss_history</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fit-sfacts{strategy}-s{strain_exponent,[0-9]+}-seed{seed,[0-9]+}.world.nc</font></td></tr>
+</table>>]
+28 [ shape=none, margin=0, label=<<table border="2" color="#68D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">subset_metagenotype</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.mgtp.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.ss-g{num_positions,[0-9]+}-block{block_number,[0-9]+}-seed{seed,[0-9]+}.mgtp.nc</font></td></tr>
+</table>>]
+29 [ shape=none, margin=0, label=<<table border="2" color="#57D97A" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">filter_metagenotype</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.mgtp.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.filt-poly{poly,[0-9]+}-cvrg{cvrg,[0-9]+}.mgtp.nc</font></td></tr>
+</table>>]
+30 [ shape=none, margin=0, label=<<table border="2" color="#88D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">combine_strain_genome_gtpro_data_loadable</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/strain_genomes.gtpro.tsv.bz2</font></td></tr>
+</table>>]
+31 [ shape=none, margin=0, label=<<table border="2" color="#D1D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">genome_fasta_to_fastq</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/genome/{stemB}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/genome/{stemB}.fq.gz</font></td></tr>
+</table>>]
+32 [ shape=none, margin=0, label=<<table border="2" color="#57D95C" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">tile_reference_genome</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/tile_fasta.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.tiles-l{length,[0-9]+}-o{overlap,[0-9]+}.fn</font></td></tr>
+</table>>]
+33 [ shape=none, margin=0, label=<<table border="2" color="#98D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">normalize_genome_sequence</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.norm.fn</font></td></tr>
+</table>>]
+34 [ shape=none, margin=0, label=<<table border="2" color="#C8D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_project_reference_genome</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/genome/{genome,[^.]+}.fn</font></td></tr>
+</table>>]
+35 [ shape=none, margin=0, label=<<table border="2" color="#5CD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_xjin_genomes_data</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/microbial_genomes/fischbachBiohubStrains/Hybrid_Closed_Genomes/{stem}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/genomes/xjin/{stem}</font></td></tr>
+</table>>]
+36 [ shape=none, margin=0, label=<<table border="2" color="#57B7D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_species_depth</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{pang_stem}.SPECIES_DEPTH_BENCHMARK_GRID.flag</font></td></tr>
+</table>>]
+37 [ shape=none, margin=0, label=<<table border="2" color="#D9C057" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">calculate_species_depth_directly</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.depth2.tsv.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.spgc_specgene-{specgene_params}.species_gene.list</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{centroidA}_{dbv}-{btp}-agg{centroidB}.spgc_specgene-{specgene_params}.species_depth.tsv</font></td></tr>
+</table>>]
+38 [ shape=none, margin=0, label=<<table border="2" color="#57D97F" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">export_gene_depth_table_from_netcdf</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/export_gene_depth_table_from_netcdf.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.depth2.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.depth2.tsv.gz</font></td></tr>
+</table>>]
+39 [ shape=none, margin=0, label=<<table border="2" color="#57C2D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">load_one_species_pangenome2_depth_into_netcdf_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/merge_pangenomes_depth_v20.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{centroidA,99|95|90|85|80|75}_{dbv}-{bowtie_params}-agg{centroidB,99|95|90|85|80|75}.depth2.nc</font></td></tr>
+</table>>]
+40 [ shape=none, margin=0, label=<<table border="2" color="#57D986" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">profile_pangenome_mapping_tally_aggregated_by_gene</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.pangenome{mapping_params}.bam</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.pangenome{mapping_params}.gene_mapping_tally.tsv.lz4</font></td></tr>
+</table>>]
+41 [ shape=none, margin=0, label=<<table border="2" color="#57D9A6" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">run_midas_genes_align_only</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/pangenomes99_v20.bt2.d</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/species.list</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/{mgen}/r1.{proc}.fq.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/{mgen}/r2.{proc}.fq.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20_all</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/reads/{mgen,[^./]+}/r.{proc}.pangenomes99_v20-v23.bam</font></td></tr>
+</table>>]
+42 [ shape=none, margin=0, label=<<table border="2" color="#76D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">write_species_list</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left">  </td></tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/species.list</font></td></tr>
+</table>>]
+43 [ shape=none, margin=0, label=<<table border="2" color="#91D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_full_midasdb_v20_dir</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/midas2-db/midas2db-uhgg-v2</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20_all</font></td></tr>
+</table>>]
+44 [ shape=none, margin=0, label=<<table border="2" color="#D9A957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">build_midas3_pangenomes_bowtie_index</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/species.list</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20_all</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/hash/{hash}/pangenomes99_v20.bt2.d</font></td></tr>
+</table>>]
+45 [ shape=none, margin=0, label=<<table border="2" color="#57B5D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_arbitrary_v20_midas_db_file</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/midas2-db/midas2db-uhgg-v2/{stem}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/{stem}</font></td></tr>
+</table>>]
+46 [ shape=none, margin=0, label=<<table border="2" color="#57D998" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">select_species_core_genes_from_reference_by_filtered_set_prevalence</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/select_high_prevalence_species_genes2.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb.gene{centroid}_{dbv}.spgc_specgene-ref-filt-p{prevalence}.species_gene.list</font></td></tr>
+</table>>]
+47 [ shape=none, margin=0, label=<<table border="2" color="#5772D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">calculate_gene_prevalence_in_high_quality_ref_genomes</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/genomes.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/midas_strain_gene_to_reference_prevalence.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.ref_prevalence.tsv</font></td></tr>
+</table>>]
+48 [ shape=none, margin=0, label=<<table border="2" color="#D9CC57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">ref_gene_copy_number_to_presence_table</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/gene{centroid}_{dbv}.reference_copy_number.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/gene_copy_number_nc_to_strain_gene_tsv.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+49 [ shape=none, margin=0, label=<<table border="2" color="#57D98D" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">convert_midasdb_species_gene_info_to_reference_genome_table_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/convert_gene_info_to_genome_table.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/gene{centroid}_v20.reference_copy_number.nc</font></td></tr>
+</table>>]
+50 [ shape=none, margin=0, label=<<table border="2" color="#57D9D6" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_accuracy_grid_for_all_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/{stem}.ACCURACY_BENCHMARK_GRID.flag</font></td></tr>
+</table>>]
+51 [ shape=none, margin=0, label=<<table border="2" color="#57BCD9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_accuracy_grid_for_one_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.ACCURACY_BENCHMARK_GRID_ONE_SPECIES.flag</font></td></tr>
+</table>>]
+52 [ shape=none, margin=0, label=<<table border="2" color="#57D97D" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">assess_infered_strain_accuracy_uhgg_best_hit</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/{stemA}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.{stemB}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/genome/{strain}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best-c{centroidB}.uhggtop-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/assess_gene_content_reconstruction_accuracy.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stemA}.gene{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.{stemB}.{strain,[^.]+}.uhggtop-reconstruction_accuracy.tsv</font></td></tr>
+</table>>]
+53 [ shape=none, margin=0, label=<<table border="2" color="#86D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_spgc_gene_hits_for_benchmarking</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.gene{pangenome_params}.spgc-fit.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+54 [ shape=none, margin=0, label=<<table border="2" color="#6CD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">extract_strain_gene_hits_from_spgc_netcdf</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/extract_strain_gene_hits_from_spgc_netcdf.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}.spgc_{spgc_params}.nc</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}.spgc_{spgc_params}.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+55 [ shape=none, margin=0, label=<<table border="2" color="#57D9AA" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">run_spgc</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{proc_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.depth2.tsv.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{proc_stem}.gtpro.{sfacts_stem}.spgc_ss-all.strain_samples.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.spgc_specgene-{specgene}.species_gene.list</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{proc_stem}.gtpro.{sfacts_stem}.gene{centroidA}_{dbv}-{pang_stem}-agg{centroidB}.spgc_specgene-{specgene}_ss-all_t-10_thresh-corr{cthresh}-depth{dthresh}.nc</font></td></tr>
+</table>>]
+56 [ shape=none, margin=0, label=<<table border="2" color="#D9A057" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggreggate_top_blastn_hits_by_midasdb_centroid_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/identify_strain_genes_from_top_blastn_hits.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_v20-blastn.gene_matching-best.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species,[^./]+}/genome/{stemB}.midas_uhgg_pangenome_v20-blastn.gene_matching-best-c{centroid}.uhggtop-strain_gene.tsv</font></td></tr>
+</table>>]
+57 [ shape=none, margin=0, label=<<table border="2" color="#D9C257" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">assign_matching_genes_based_on_best_blastn_hit</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species,[^./]+}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.gene_matching-best.tsv</font></td></tr>
+</table>>]
+58 [ shape=none, margin=0, label=<<table border="2" color="#D99257" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">blastn_genome_against_midasdb_uhgg_new</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene99_{dbv}.centroids.fn</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species}/genome/{stemB}.prodigal-single.cds.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/species/sp-{species,[^./]+}/genome/{stemB}.midas_uhgg_pangenome_{dbv}-blastn.tsv</font></td></tr>
+</table>>]
+59 [ shape=none, margin=0, label=<<table border="2" color="#71D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">fetch_prodigal_cds</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn.fai</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.prodigal{params}.bed</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.prodigal{params,[^./]+}.cds.fn</font></td></tr>
+</table>>]
+60 [ shape=none, margin=0, label=<<table border="2" color="#577BD9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">convert_prodigal_gff_to_bed</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.prodigal{params}.gff</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.prodigal{params,[^./]+}.bed</font></td></tr>
+</table>>]
+61 [ shape=none, margin=0, label=<<table border="2" color="#57D9CD" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">find_genes_reference</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/{stem}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/{stem}.prodigal-single.gff</font></td></tr>
+</table>>]
+62 [ shape=none, margin=0, label=<<table border="2" color="#D96757" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">build_samtools_index</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn.fai</font></td></tr>
+</table>>]
+63 [ shape=none, margin=0, label=<<table border="2" color="#57D95F" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_midas_uhgg_pangenome_cds_new</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/pangenomes/{species}/centroids.ffn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb.gene99_{dbv}.centroids.fn</font></td></tr>
+</table>>]
+64 [ shape=none, margin=0, label=<<table border="2" color="#57D95A" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">assess_infered_strain_accuracy_emapper_unit</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species}/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/assess_gene_content_reconstruction_accuracy.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stemA}.gene{pangenome_params}.{stemB}.{strain,[^.]+}.{unit,eggnog|top_eggnog|cog|ko}-reconstruction_accuracy.tsv</font></td></tr>
+</table>>]
+65 [ shape=none, margin=0, label=<<table border="2" color="#8DD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_uhgg_strain_gene_by_emapper_annotation</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroidB}_x_{unit}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/{stemA}/species/sp-{species}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB}.{stemC}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_uhgg_strain_gene_by_annotation.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/{stemA}/species/sp-{species,[^./]+}/{stemB}.gene{centroidA}_{dbv}-{pang_params}-agg{centroidB,95|90|85|90|75}.{stemC}.{unit,eggnog|top_eggnog|cog|ko}-strain_gene.tsv</font></td></tr>
+</table>>]
+66 [ shape=none, margin=0, label=<<table border="2" color="#57D9C6" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_gene99_annotations_to_higher_centroid_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene99_x_{unit}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_gene99_annotations_to_higher_centroid.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.emapper.gene{centroid,95|90|85|80|75}_x_{unit}.tsv</font></td></tr>
+</table>>]
+67 [ shape=none, margin=0, label=<<table border="2" color="#5789D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">parse_midasdb_emapper_annotations_to_gene99_x_unit_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/parse_emapper_output_to_gene_x_{unit}.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.emapper.gene99_x_{unit}.tsv</font></td></tr>
+</table>>]
+68 [ shape=none, margin=0, label=<<table border="2" color="#D97057" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_strain_emapper_output_by_unit</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/genome/{strain}.prodigal-single.cds.emapper.gene_x_{unit}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_emapper_output_by_unit.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/genome/{strain,[^.]+}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv</font></td></tr>
+</table>>]
+69 [ shape=none, margin=0, label=<<table border="2" color="#D95957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">parse_strain_emapper_annotations_to_gene_x_unit</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/genome/{genome}.prodigal-single.cds.emapper.d/proteins.emapper.annotations</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/parse_emapper_output_to_gene_x_{unit}.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/genome/{genome}.prodigal-single.cds.emapper.gene_x_{unit}.tsv</font></td></tr>
+</table>>]
+70 [ shape=none, margin=0, label=<<table border="2" color="#B4D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">eggnog_mapper_translated_orfs</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/eggnog_mapper_db</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.tran.fa</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.emapper.d/proteins.emapper.annotations</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.emapper.d/proteins.emapper.hits</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.emapper.d/proteins.emapper.seed_orthologs</font></td></tr>
+</table>>]
+71 [ shape=none, margin=0, label=<<table border="2" color="#57C0D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">translate_nucleotide_to_protein</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.tran.fa</font></td></tr>
+</table>>]
+72 [ shape=none, margin=0, label=<<table border="2" color="#D9A557" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_eggnog_mapper_db</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/scratch/vdubinki/eggnog_mapper_data</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/eggnog_mapper_db</font></td></tr>
+</table>>]
+73 [ shape=none, margin=0, label=<<table border="2" color="#57D958" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_spgc_depth_only_gene_hits_for_benchmarking</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.gene{pangenome_params}.spgc-depth{thresh}.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+74 [ shape=none, margin=0, label=<<table border="2" color="#57D996" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">convert_spanda_genes_table_to_strain_gene_format</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.spanda{spanda_params}.genefamily_strain.csv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{pangenome_params}.spanda{spanda_params}.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+75 [ shape=none, margin=0, label=<<table border="2" color="#5760D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">run_spanda_decompose_new</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}.spanda_counts.csv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.panphlan_pangenome.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.genefamily_strain.csv</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.pangenomes{centroidA}_{dbv}-{bowtie_params}-agg{centroidB}.spanda-s{nstrain}.strain_sample.csv</font></td></tr>
+</table>>]
+76 [ shape=none, margin=0, label=<<table border="2" color="#9DD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">construct_spanda_count_matrix_from_spgc_mapping_xjin_benchmark_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/merge_pangenomes_tallies_for_spanda.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.pangenomes{centroidA}_v20-{pang_params}.spanda_counts.csv</font></td></tr>
+</table>>]
+77 [ shape=none, margin=0, label=<<table border="2" color="#D98E57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">construct_panphlan_pangenome_metadata_from_midas_uhgg_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/construct_panphlan_pangenome_from_midas_v20.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb.gene{centroid}_v20.panphlan_pangenome.tsv</font></td></tr>
+</table>>]
+78 [ shape=none, margin=0, label=<<table border="2" color="#D4D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">convert_panphlan_genes_table_to_strain_gene_format</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.pangenomes{pangenome_params}.panphlan_hit.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{pangenome_params}.panphlan.uhgg-strain_gene.tsv</font></td></tr>
+</table>>]
+79 [ shape=none, margin=0, label=<<table border="2" color="#57D7D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">run_panphlan_on_spgc_mapping_xjin_benchmark_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroidB}_v20.panphlan_pangenome.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_depth.tsv</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_hit.tsv</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/species/sp-{species,[^./]+}/{stem}.pangenome{centroidA}_v20-{bowtie_params}-agg{centroidB}.panphlan_thresh.tsv</font></td></tr>
+</table>>]
+80 [ shape=none, margin=0, label=<<table border="2" color="#D9D557" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_benchmark_strain_meta</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.{pang_stem}.spgc-fit.STRAIN_META_BENCHMARK_GRID.flag</font></td></tr>
+</table>>]
+81 [ shape=none, margin=0, label=<<table border="2" color="#57A0D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_spgc_analysis_outputs</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stemA}.gtpro.sfacts-fit.gene99_{dbv}-{btv}-agg75.spgc-fit.{stemB}</font></td></tr>
+</table>>]
+82 [ shape=none, margin=0, label=<<table border="2" color="#D9AB57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_filtering_metadata</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/filter_spgc_strains.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv</font></td></tr>
+</table>>]
+83 [ shape=none, margin=0, label=<<table border="2" color="#5774D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compile_spgc_strain_metadata</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stemA}.gtpro.{stemB}.spgc_ss-{ss_params}.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/compile_spgc_results_metadata.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stemA}.gtpro.{stemB}.gene{gene_params}.spgc_specgene-{specgene_params}_ss-{ss_params}_t-{t}_thresh-{thresh_params}.strain_meta.tsv</font></td></tr>
+</table>>]
+84 [ shape=none, margin=0, label=<<table border="2" color="#57D9CA" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">construct_group_files_for_all_select_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/{stem}.SELECT_SPECIES.flag</font></td></tr>
+</table>>]
+85 [ shape=none, margin=0, label=<<table border="2" color="#57D99A" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_analysis_files</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gene99_v20-v23-agg75.spgc_specgene-ref-filt-p95.species_depth.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.comm.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-strain_gene.prevalence.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.strain_diss_spgc_and_ref.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.strain_meta_spgc_and_ref.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.gene_clust-t10.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.prevalence.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.prevalence_class_fraction.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.geno_uhgg-v20_pdist-mask10-pseudo10.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/r.proc.gtpro.sfacts-fit.spgc_ss-all.strain_samples.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene75_v20.eggnog-strain_gene.prevalence.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_cog.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_cog_category.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_eggnog.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_go.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_kegg_module.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.emapper.gene75_x_ko.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gene75_meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gene75_x_amr.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gene75_x_genomad_plasmid.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gene75_x_genomad_virus.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/cog-20.meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.all_analysis_files.flag</font></td></tr>
+</table>>]
+86 [ shape=none, margin=0, label=<<table border="2" color="#57D971" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">dummy_operation_on_reads</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.noop.fq.gz</font></td></tr>
+</table>>]
+87 [ shape=none, margin=0, label=<<table border="2" color="#9AD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_hmp2_raw_data</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/data/HMP2/ftp.broadinstitute.org/raw/HMP2/MGX/2018-05-04/{stem}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/mgen/hmp2/{stem}</font></td></tr>
+</table>>]
+88 [ shape=none, margin=0, label=<<table border="2" color="#63D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">combine_all_ref_and_spgc_metadata_and_clustering</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.coclust-10.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.gene{centroidB}.strain_meta-complete90-contam5-pos0.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/combine_all_ref_and_spgc_metadata_and_clustering.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta_spgc_and_ref.tsv</font></td></tr>
+</table>>]
+89 [ shape=none, margin=0, label=<<table border="2" color="#57D991" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_filtering_metadata_for_uhgg_ref_strains_new</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/filter_ref_strains_v15.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos{pos}.tsv</font></td></tr>
+</table>>]
+90 [ shape=none, margin=0, label=<<table border="2" color="#A8D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_metadata_for_uhgg_ref_strains_new</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gtpro.geno.npositions.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/genomes.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_{dbv}/metadata/genomes-all_metadata.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/extract_metadata_midasdb_v15.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_{dbv}.gene{centroid}.strain_meta.tsv</font></td></tr>
+</table>>]
+91 [ shape=none, margin=0, label=<<table border="2" color="#D9D257" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">count_ref_geno_positions</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.gtpro.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/count_ref_geno_positions.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_{dbv}.gtpro.geno.npositions.tsv</font></td></tr>
+</table>>]
+92 [ shape=none, margin=0, label=<<table border="2" color="#57D9D1" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">combine_midasdb_reference_genome_gtpro_data_loadable</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_{dbv}.gtpro.tsv.bz2</font></td></tr>
+</table>>]
+93 [ shape=none, margin=0, label=<<table border="2" color="#D96257" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">cocluster_reference_and_spgc_genomes_based_on_genotype_dissimilarity</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/cluster_from_cdmat_pkl.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-{diss_params}.coclust-{thresh}.tsv</font></td></tr>
+</table>>]
+94 [ shape=none, margin=0, label=<<table border="2" color="#575BD9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compute_reference_and_spgc_pairwise_genotype_masked_hamming_distance</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.spgc_ss-{ss}.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v15.gtpro.mgtp.nc</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/calculate_ref_and_spgc_pairwise_genotype_masked_hamming_distance.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gtpro.{fit}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask{thresh}-pseudo{pseudo}.pkl</font></td></tr>
+</table>>]
+95 [ shape=none, margin=0, label=<<table border="2" color="#57D9CF" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compare_spgc_and_ref_dissimilarities</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.eggnog-strain_gene.gene_batch_corrected_cosine_pdist.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta_spgc_and_ref.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.uhgg-strain_gene.gene_batch_corrected_cosine_pdist.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.spgc_ss-{ss}.geno_uhgg-{dbv}_pdist-mask10-pseudo10.pkl</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/compare_spgc_and_ref_dissimilarities.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_diss_spgc_and_ref.tsv</font></td></tr>
+</table>>]
+96 [ shape=none, margin=0, label=<<table border="2" color="#579ED9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.strain_meta-s95-d100-a0-pos100-std25.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group}/species/sp-{species}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroidB}_{dbv}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.gene75.strain_meta-complete90-contam5-pos0.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/compute_reference_and_spgc_pairwise_batch_corrected_gene_content_dissimilarities.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{group,[^./]+}/species/sp-{species,[^./]+}/{stem}.gtpro.{fit}.gene{centroidA}_{dbv}-{pang}-agg{centroidB}.spgc_specgene-{specgene}_ss-{ss}_t-{t}_thresh-{thresh}.{unit}-strain_gene.gene_batch_corrected_cosine_pdist.pkl</font></td></tr>
+</table>>]
+97 [ shape=none, margin=0, label=<<table border="2" color="#D96957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_midasdb_reference_gene_by_emapper_annotation</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_{dbv}.emapper.gene{centroid}_x_{unit}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_uhgg_strain_gene_by_annotation.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/{stemB}.gene{centroid}_{dbv}.{unit,eggnog|top_eggnog|cog|ko|amr}-strain_gene.tsv</font></td></tr>
+</table>>]
+98 [ shape=none, margin=0, label=<<table border="2" color="#5795D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">cluster_genes_based_on_cooccurence_in_spgc_strains</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{stem}.strain_meta-s95-d100-a0-pos100-std25.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{stem}.uhgg-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/cluster_genes_based_on_cooccurence.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/{stem}.uhgg-strain_gene.gene_clust-t10.tsv</font></td></tr>
+</table>>]
+99 [ shape=none, margin=0, label=<<table border="2" color="#57D9D8" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">parse_midasdb_emapper_annotations_to_gene99_x_cog_category_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/cog-20.meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/parse_emapper_output_to_gene_x_cog_category_v20.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.emapper.gene99_x_cog_category.tsv</font></td></tr>
+</table>>]
+100 [ shape=none, margin=0, label=<<table border="2" color="#B6D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">download_cog_definitions</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left">  </td></tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/cog-20.meta.tsv</font></td></tr>
+</table>>]
+101 [ shape=none, margin=0, label=<<table border="2" color="#57D9B4" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">calculate_gene_prevalence_in_spgc_genomes</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/strain_gene_to_prevalence.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}.spgc{stemB}.strain_meta-s95-d100-a0-pos100-std25.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}.spgc{stemB}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}.spgc{stemB}.{unit}-strain_gene.prevalence.tsv</font></td></tr>
+</table>>]
+102 [ shape=none, margin=0, label=<<table border="2" color="#D98957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">count_pangenome_fractions_across_genomes</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/count_pangenome_fractions_across_genomes.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.{unit}-strain_gene.prevalence.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}.{unit}-strain_gene.prevalence_class_fraction.tsv</font></td></tr>
+</table>>]
+103 [ shape=none, margin=0, label=<<table border="2" color="#D96457" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">calculate_gene_prevalence_in_ref_genomes</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/strain_gene_to_prevalence.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stem}/midasdb_{dbv}.gene{centroid}.strain_meta-complete90-contam5-pos0.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stem}/midasdb.gene{centroid}_{dbv}.{unit}-strain_gene.prevalence.tsv</font></td></tr>
+</table>>]
+104 [ shape=none, margin=0, label=<<table border="2" color="#57D981" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">aggregate_gene_annotations_to_higher_centroid_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species}/midasdb_v20.gene_x_{unit}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/aggregate_gene_annotations_to_higher_centroid.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.gene{centroid}_x_{unit}.tsv</font></td></tr>
+</table>>]
+105 [ shape=none, margin=0, label=<<table border="2" color="#5767D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">parse_resfinder_annotations_to_gene_x_accession_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/resfinder.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/parse_resfinder_annotations_to_gene_x_accession.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_{dbv}.gene_x_amr.tsv</font></td></tr>
+</table>>]
+106 [ shape=none, margin=0, label=<<table border="2" color="#D97757" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">parse_genomad_annotations_to_gene_x_accession_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/genomad_{annot}.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/parse_genomad_annotations_to_gene_x_accession_v20.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.gene_x_genomad_{annot}.tsv</font></td></tr>
+</table>>]
+107 [ shape=none, margin=0, label=<<table border="2" color="#57D963" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">compile_gene_metadata_v20</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/cog-20.meta.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/annotation/eggnog.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/midasdb_uhgg_v20/pangenomes/{species}/genes_info.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/compile_midasdb_gene_metadata_v20.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.gene{centroid,99|95|90|85|80|75}_meta.tsv</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-{species,[^./]+}/midasdb_v20.gene{centroid,99|95|90|85|80|75}_x_cog_category.tsv</font></td></tr>
+</table>>]
+108 [ shape=none, margin=0, label=<<table border="2" color="#57D99F" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">filter_out_host</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.1.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.2.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.3.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.4.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.rev.1.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.rev.2.bt2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/filter_out_mapping_reads.sh</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">sdata/{stemA}/r1{stemB}fq.gz</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">sdata/{stemA}/r2{stemB}fq.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/{stemA}/r1{stemB}hfilt.fq.gz</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/{stemA}/r2{stemB}hfilt.fq.gz</font></td></tr>
+</table>>]
+109 [ shape=none, margin=0, label=<<table border="2" color="#57D99D" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_raw_read_r1</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">sdata/reads/{mgen,[^./]+}/r1.fq.gz</font></td></tr>
+</table>>]
+110 [ shape=none, margin=0, label=<<table border="2" color="#6AD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_ucfmt_raw_data</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">/pollard/ucfmt/raw_data_archive/{stem}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">sraw/mgen/ucfmt/{stem}</font></td></tr>
+</table>>]
+111 [ shape=none, margin=0, label=<<table border="2" color="#66D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_raw_read_r2</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">sdata/reads/{mgen,[^./]+}/r2.fq.gz</font></td></tr>
+</table>>]
+112 [ shape=none, margin=0, label=<<table border="2" color="#78D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">alias_GRCh38_index_file</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.{suffix}</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">ref/GRCh38.{suffix}</font></td></tr>
+</table>>]
+113 [ shape=none, margin=0, label=<<table border="2" color="#D9D057" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">unpack_GRCh38_index</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.1.bt2</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.2.bt2</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.3.bt2</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.4.bt2</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.rev.1.bt2</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.rev.2.bt2</font></td></tr>
+</table>>]
+114 [ shape=none, margin=0, label=<<table border="2" color="#5769D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">download_GRCh38_index</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left">  </td></tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/ref/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz</font></td></tr>
+</table>>]
+115 [ shape=none, margin=0, label=<<table border="2" color="#D9C557" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_ecoli_spikein_benchmark_results</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.Escherichia-coli-GCF_030198905-1.eggnog-reconstruction_accuracy.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.Escherichia-coli-GCF_030202075-1.eggnog-reconstruction_accuracy.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.Escherichia-coli-GCF_030204715-1.eggnog-reconstruction_accuracy.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.Escherichia-coli-GCF_030205145-1.eggnog-reconstruction_accuracy.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.Escherichia-coli-GCF_030205875-1.eggnog-reconstruction_accuracy.tsv</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/r.proc.gtpro.sfacts-fit.gene99_v20-v23-agg75.spgc-fit.eggnog-reconstruction_accuracy.tsv.SPIKEIN_BENCHMARK.flag</font></td></tr>
+</table>>]
+116 [ shape=none, margin=0, label=<<table border="2" color="#D96B57" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">assess_infered_strain_accuracy_emapper_unit_with_known_strain_samples</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/{stemA}.gene{pangenome_params}.{stemB}.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">data/species/sp-102506/genome/{strain}.prodigal-single.cds.emapper.{unit}-strain_gene.tsv</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">scripts/assess_gene_content_reconstruction_accuracy.py</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/hmp2_spikein_benchmark/species/sp-102506/{stemA}.gene{pangenome_params}.{stemB}.{strain,[^.]+}.{unit,eggnog|top_eggnog|cog|ko}-reconstruction_accuracy.tsv</font></td></tr>
+</table>>]
+117 [ shape=none, margin=0, label=<<table border="2" color="#D9B757" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">spikein_simulated_benchmark_isolate_to_mgen_read_tally</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/sim_{genome}_len150_seed{seed}_cov{cov}/{stemB}.gene_mapping_tally.tsv.lz4</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/{mgen}/{stemB}.gene_mapping_tally.tsv.lz4</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/{mgen,[^./]+}_spikein_{genome}_seed{seed}_cov{cov}/{stemB}.gene_mapping_tally.tsv.lz4</font></td></tr>
+</table>>]
+118 [ shape=none, margin=0, label=<<table border="2" color="#57A9D9" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">simulate_reads_from_ncbi_genome</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">data/genome/{genome}.fn</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/sim_{genome}_len150_seed{seed}_cov{cov}/r1.fq.gz</font></td></tr>
+<tr>
+<td align="left"><font face="monospace">data/reads/sim_{genome}_len150_seed{seed}_cov{cov}/r2.fq.gz</font></td></tr>
+</table>>]
+119 [ shape=none, margin=0, label=<<table border="2" color="#8FD957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">link_project_reference_genome_no_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/genome/{genome,[^.]+}.fn</font></td></tr>
+</table>>]
+120 [ shape=none, margin=0, label=<<table border="2" color="#D97957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">download_genbank_genome_from_assembly_accession</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left">  </td></tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">raw/genomes/ncbi/{genome}/assembly.fa</font></td></tr>
+</table>>]
+121 [ shape=none, margin=0, label=<<table border="2" color="#96D957" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">spikein_simulated_benchmark_isolate_to_mgen_gtpro</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">scripts/sum_merged_gtpro_parsed_samples.py</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/sim_{genome}_len150_seed{seed}_cov{cov}/{stemB}.gtpro_parse.tsv.bz2</font></td>
+</tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/{mgen}/{stemB}.gtpro_parse.tsv.bz2</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">{stemA}/reads/{mgen,[^./]+}_spikein_{genome}_seed{seed}_cov{cov}/{stemB}.gtpro_parse.tsv.bz2</font></td></tr>
+</table>>]
+122 [ shape=none, margin=0, label=<<table border="2" color="#D97457" cellspacing="3" cellborder="0">
+<tr><td>
+<b><font point-size="18">collect_xjin_threshold_grid_for_all_species</font></b>
+</td></tr>
+<hr/>
+<tr><td align="left"> <b><font point-size="14">&#8618; input</font></b> </td></tr>
+<tr>
+<td align="left"><font face="monospace">&lt;input function&gt;</font></td>
+</tr>
+<hr/>
+<tr><td align="right"> <b><font point-size="14">output &rarr;</font></b> </td> </tr>
+<tr>
+<td align="left"><font face="monospace">data/group/xjin/r.proc.gtpro.{sfacts_params}.gene{gene_params}.SPGC_THRESHOLD_GRID_ALL_SPECIES.flag</font></td></tr>
+</table>>]
+	115 -> 0
+	85 -> 0
+	1 -> 0
+	84 -> 0
+	122 -> 0
+	36 -> 1
+	50 -> 1
+	80 -> 1
+	2 -> 1
+	3 -> 2
+	4 -> 3
+	6 -> 3
+	26 -> 3
+	94 -> 3
+	64 -> 3
+	25 -> 3
+	5 -> 4
+	6 -> 4
+	7 -> 5
+	6 -> 5
+	7 -> 6
+	25 -> 6
+	30 -> 7
+	8 -> 7
+	92 -> 7
+	9 -> 8
+	10 -> 9
+	11 -> 10
+	121 -> 10
+	23 -> 11
+	12 -> 11
+	13 -> 12
+	22 -> 12
+	31 -> 12
+	14 -> 13
+	86 -> 13
+	118 -> 14
+	15 -> 14
+	16 -> 15
+	18 -> 15
+	17 -> 16
+	19 -> 18
+	21 -> 18
+	108 -> 18
+	20 -> 19
+	87 -> 19
+	20 -> 21
+	87 -> 21
+	24 -> 23
+	26 -> 25
+	27 -> 26
+	28 -> 27
+	29 -> 28
+	7 -> 29
+	11 -> 30
+	32 -> 31
+	33 -> 32
+	34 -> 33
+	120 -> 34
+	35 -> 34
+	37 -> 36
+	46 -> 37
+	38 -> 37
+	39 -> 38
+	117 -> 39
+	45 -> 39
+	40 -> 39
+	41 -> 40
+	43 -> 41
+	13 -> 41
+	44 -> 41
+	42 -> 41
+	43 -> 44
+	42 -> 44
+	47 -> 46
+	45 -> 47
+	48 -> 47
+	49 -> 48
+	45 -> 49
+	51 -> 50
+	52 -> 51
+	64 -> 51
+	74 -> 52
+	53 -> 52
+	73 -> 52
+	78 -> 52
+	56 -> 52
+	54 -> 53
+	55 -> 54
+	46 -> 55
+	25 -> 55
+	38 -> 55
+	45 -> 56
+	57 -> 56
+	58 -> 57
+	59 -> 58
+	63 -> 58
+	60 -> 59
+	62 -> 59
+	34 -> 59
+	61 -> 60
+	34 -> 61
+	34 -> 62
+	45 -> 63
+	68 -> 64
+	65 -> 64
+	74 -> 65
+	53 -> 65
+	66 -> 65
+	73 -> 65
+	78 -> 65
+	54 -> 65
+	99 -> 66
+	45 -> 66
+	67 -> 66
+	45 -> 67
+	69 -> 68
+	70 -> 69
+	71 -> 70
+	72 -> 70
+	59 -> 71
+	54 -> 73
+	75 -> 74
+	76 -> 75
+	77 -> 75
+	45 -> 76
+	40 -> 76
+	45 -> 77
+	79 -> 78
+	40 -> 79
+	77 -> 79
+	81 -> 80
+	65 -> 81
+	96 -> 81
+	88 -> 81
+	82 -> 81
+	102 -> 81
+	98 -> 81
+	55 -> 81
+	116 -> 81
+	95 -> 81
+	54 -> 81
+	101 -> 81
+	83 -> 82
+	55 -> 83
+	6 -> 83
+	85 -> 84
+	81 -> 85
+	107 -> 85
+	66 -> 85
+	45 -> 85
+	3 -> 85
+	103 -> 85
+	100 -> 85
+	104 -> 85
+	37 -> 85
+	19 -> 86
+	21 -> 86
+	93 -> 88
+	89 -> 88
+	82 -> 88
+	90 -> 89
+	45 -> 90
+	48 -> 90
+	91 -> 90
+	7 -> 91
+	94 -> 93
+	7 -> 94
+	6 -> 94
+	88 -> 95
+	94 -> 95
+	96 -> 95
+	89 -> 96
+	65 -> 96
+	48 -> 96
+	82 -> 96
+	97 -> 96
+	54 -> 96
+	66 -> 97
+	48 -> 97
+	54 -> 98
+	82 -> 98
+	45 -> 99
+	100 -> 99
+	65 -> 101
+	54 -> 101
+	82 -> 101
+	54 -> 102
+	101 -> 102
+	97 -> 103
+	89 -> 103
+	105 -> 104
+	45 -> 104
+	106 -> 104
+	45 -> 105
+	45 -> 106
+	45 -> 107
+	100 -> 107
+	111 -> 108
+	112 -> 108
+	109 -> 108
+	110 -> 109
+	110 -> 111
+	113 -> 112
+	114 -> 113
+	81 -> 115
+	68 -> 116
+	65 -> 116
+	40 -> 117
+	119 -> 118
+	120 -> 119
+	11 -> 121
+	3 -> 122
+}            
