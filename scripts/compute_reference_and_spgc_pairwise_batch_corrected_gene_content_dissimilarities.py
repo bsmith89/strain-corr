@@ -31,7 +31,10 @@ if __name__ == "__main__":
     spgc_strain_filt_list = idxwhere(spgc_filt.passes_filter)
     ref_strain_filt_list = idxwhere(ref_filt.passes_filter)
 
-    correction = spgc_gene.loc[spgc_strain_filt_list].mean() - ref_gene.loc[ref_strain_filt_list].mean()
+    correction = (
+        spgc_gene.loc[spgc_strain_filt_list].mean()
+        - ref_gene.loc[ref_strain_filt_list].mean()
+    )
 
     data = pd.concat(
         [spgc_gene - correction, ref_gene],

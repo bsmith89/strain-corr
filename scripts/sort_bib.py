@@ -19,16 +19,19 @@ import sys
 import itertools
 from biblib import bib
 
+
 def entries(path):
     with open(path) as f:
         db = bib.Parser().parse(f, log_fp=sys.stderr).get_entries()
     for entry in db.values():
         yield entry
 
+
 def get_key(entry):
     return entry.key
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     entries_chain = itertools.chain(*[entries(path) for path in sys.argv[1:]])
     sorted_entries = sorted(entries_chain, key=lambda e: get_key(e))
     for entry in sorted_entries:

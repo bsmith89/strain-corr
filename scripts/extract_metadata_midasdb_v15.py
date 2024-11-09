@@ -17,7 +17,9 @@ if __name__ == "__main__":
     )
     assert genes.isin([0, 1]).values.all()
     genome_to_species = pd.read_table(
-        genome_to_species_inpath, index_col="genome", dtype=str,
+        genome_to_species_inpath,
+        index_col="genome",
+        dtype=str,
     ).species
     genome_meta = (
         pd.read_table(

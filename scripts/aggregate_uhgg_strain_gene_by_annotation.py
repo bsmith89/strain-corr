@@ -22,5 +22,7 @@ if __name__ == "__main__":
     agg = pd.read_table(agg_inpath, index_col=0).squeeze(axis=1)
     result = (
         gene_table.astype(bool).join(agg).groupby(agg_column).any().astype(int)
-    ).rename_axis(index="gene_id") # Here "gene_id" is the generic name for annotation.
+    ).rename_axis(
+        index="gene_id"
+    )  # Here "gene_id" is the generic name for annotation.
     result.to_csv(outpath, sep="\t")

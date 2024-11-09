@@ -10,7 +10,6 @@ import pandas as pd
 from warnings import warn
 
 
-
 if __name__ == "__main__":
     spgc_agg_mgtp_inpath = sys.argv[1]
     ref_geno_inpath = sys.argv[2]
@@ -53,7 +52,9 @@ if __name__ == "__main__":
         len(ref_positions - spgc_positions),
     )
     if len(spgc_positions - ref_positions) == 0:
-        warn("Are you sure you passed a reference genotype? Not all positions are found in ref.")
+        warn(
+            "Are you sure you passed a reference genotype? Not all positions are found in ref."
+        )
 
     geno = sf.Genotype.concat(
         dict(

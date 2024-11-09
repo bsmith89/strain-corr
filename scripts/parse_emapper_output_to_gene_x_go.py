@@ -41,10 +41,5 @@ if __name__ == "__main__":
         .rename_axis(index="centroid_99")
         .replace({"-": np.nan})
     )
-    gene_x_unit = (
-        eggnog.GOs.dropna()
-        .str.split(",")
-        .explode()
-        .rename("go")
-    )
+    gene_x_unit = eggnog.GOs.dropna().str.split(",").explode().rename("go")
     gene_x_unit.to_csv(sys.argv[2], sep="\t")

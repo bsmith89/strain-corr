@@ -40,12 +40,14 @@ if __name__ == "__main__":
             ref=ref_gene.reindex(index=gene_list, columns=ref_list, fill_value=0).apply(
                 prevalence, pseudo=1, axis=1
             ),
-            spgc=spgc_gene.reindex(index=gene_list, columns=spgc_list, fill_value=0).apply(
-                prevalence, pseudo=1, axis=1
-            ),
+            spgc=spgc_gene.reindex(
+                index=gene_list, columns=spgc_list, fill_value=0
+            ).apply(prevalence, pseudo=1, axis=1),
         )
     ).assign(log_ratio=lambda x: np.log(x.spgc) - np.log(x.ref))
-    gene_list = idxwhere(np.abs(prevalence_pc.log_ratio) < np.abs(np.log(maximum_prevalence_ratio)))
+    gene_list = idxwhere(
+        np.abs(prevalence_pc.log_ratio) < np.abs(np.log(maximum_prevalence_ratio))
+    )
 
     assert len(gene_list) > 0
 

@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
     data = xr.load_dataarray(inpath)
     data = data.to_pandas().T.rename_axis(index="gene")
-    data.to_csv(outpath, sep='\t')
+    data.to_csv(outpath, sep="\t")

@@ -42,8 +42,9 @@ if __name__ == "__main__":
         .replace({"-": np.nan})
         .assign(eggNOG_OGs=lambda x: x.eggNOG_OGs.str.split(","))
         .explode("eggNOG_OGs")
-        .assign(annot_lvl=lambda x: x.eggNOG_OGs.str.split("@").str[1])
-        [lambda x: x.annot_lvl == x.max_annot_lvl]
+        .assign(annot_lvl=lambda x: x.eggNOG_OGs.str.split("@").str[1])[
+            lambda x: x.annot_lvl == x.max_annot_lvl
+        ]
     )
     gene_x_eggnog = eggnog.eggNOG_OGs.dropna().rename("top_eggnog")
     gene_x_eggnog.to_csv(sys.argv[2], sep="\t")

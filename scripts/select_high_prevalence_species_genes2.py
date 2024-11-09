@@ -13,7 +13,9 @@ if __name__ == "__main__":
     outpath = sys.argv[3]
 
     info("Loading reference table.")
-    prevalence = pd.read_table(prevalence_inpath, names=["gene_id", "prevalence"], index_col="gene_id").prevalence
+    prevalence = pd.read_table(
+        prevalence_inpath, names=["gene_id", "prevalence"], index_col="gene_id"
+    ).prevalence
 
     high_prevalence_genes = idxwhere((prevalence > threshold))
     # Write output.

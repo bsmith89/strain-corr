@@ -21,12 +21,14 @@ if __name__ == "__main__":
     uhgg_pdmat = load_dmat_as_pickle(uhgg_pdmat_inpath)
     eggnog_pdmat = load_dmat_as_pickle(eggnog_pdmat_inpath)
 
-    ref_list = idxwhere(meta.genome_type.isin(['MAG', 'Isolate']) & meta.passes_filter)
+    ref_list = idxwhere(meta.genome_type.isin(["MAG", "Isolate"]) & meta.passes_filter)
 
     # Find closest reference genotype distance for each genome (excluding self).
     geno_pdmat_mask_self = geno_pdmat + np.eye(*geno_pdmat.shape)
 
-    if len(ref_list) >= 2:  # Otherwise the sole reference doesn't have anything to be compared to.
+    if (
+        len(ref_list) >= 2
+    ):  # Otherwise the sole reference doesn't have anything to be compared to.
         ref_nearest_neighbor = geno_pdmat_mask_self.loc[ref_list].idxmin()
         # Query the closest genotype and gene content distance.
         ref_nn_geno_diss = (
@@ -71,10 +73,8 @@ if __name__ == "__main__":
     data = meta[[]].assign(
         ref_nn_genome_id=ref_nearest_neighbor,
         min_ref_geno_diss=ref_nn_geno_diss,
-
         ref_nn_uhgg_diss=ref_nn_uhgg_diss,
         min_ref_uhgg_diss=minimum_ref_uhgg_diss,
-
         ref_nn_eggnog_diss=ref_nn_eggnog_diss,
         min_ref_eggnog_diss=minimum_ref_eggnog_diss,
     )

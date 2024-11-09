@@ -43,7 +43,9 @@ if __name__ == "__main__":
         .dropna(subset=[agg_column])[[agg_column, annot_name]]
         .value_counts()
     )
-    out_of = gene_agg[agg_column].value_counts().rename('tally').rename_axis('centroid_75')
+    out_of = (
+        gene_agg[agg_column].value_counts().rename("tally").rename_axis("centroid_75")
+    )
     vote_share = count_votes / out_of
 
     result = (

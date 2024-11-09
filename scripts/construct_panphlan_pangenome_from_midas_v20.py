@@ -11,9 +11,9 @@ if __name__ == "__main__":
 
     centroid_col = f"centroid_{centroid}"
 
-    gene_info = (pd.read_table(gene_info_path).assign(
-        genome_id=lambda x: x.gene_id.str.rsplit("_", n=1).str[0]
-        )
+    gene_info = (
+        pd.read_table(gene_info_path)
+        .assign(genome_id=lambda x: x.gene_id.str.rsplit("_", n=1).str[0])
         .assign(
             dummy_contig="dummy_contig",  # Probably doesn't matter, right?
             dummy_left=0,  # And right will be the length of the gene?

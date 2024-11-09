@@ -348,6 +348,8 @@ ruleorder: alias_sfacts_outputs > extract_strain_gene_hits_from_spgc_netcdf
 ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_emapper_annotation
 ruleorder: alias_sfacts_outputs > aggregate_uhgg_strain_gene_by_amr_annotation
 ruleorder: alias_sfacts_outputs > assess_infered_strain_accuracy_emapper_unit
+
+
 # ruleorder: alias_sfacts_outputs > collect_xjin_threshold_grid_for_one_species
 
 

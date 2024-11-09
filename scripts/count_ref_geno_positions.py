@@ -25,4 +25,6 @@ if __name__ == "__main__":
     ref_positions = (~ref_geno.data.to_pandas().isna()).sum(1)
 
     # Write output
-    ref_positions.to_frame("num_geno_positions").rename_axis('genome_id').to_csv(outpath, sep='\t')
+    ref_positions.to_frame("num_geno_positions").rename_axis("genome_id").to_csv(
+        outpath, sep="\t"
+    )

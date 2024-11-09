@@ -41,10 +41,7 @@ if __name__ == "__main__":
     #     )
     # )
 
-    strain_meta = (
-        pd.read_table(meta_inpath, index_col="genome_id")
-        .rename(str)
-    )
+    strain_meta = pd.read_table(meta_inpath, index_col="genome_id").rename(str)
 
     # Fit a heavy-tailed model (t-dist with df=2) to the data
     observed_gene_counts = strain_meta[

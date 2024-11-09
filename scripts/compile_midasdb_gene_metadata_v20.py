@@ -20,11 +20,9 @@ if __name__ == "__main__":
     gene_meta_outpath = sys.argv[4]
     gene_x_cog_outpath = sys.argv[5]
 
-    gene_info = pd.read_table(
-        gene_info_inpath, index_col="gene_id", encoding="latin1"
-    )
+    gene_info = pd.read_table(gene_info_inpath, index_col="gene_id", encoding="latin1")
 
-    gene_nlength = gene_info.groupby('centroid_75').gene_length.mean()
+    gene_nlength = gene_info.groupby("centroid_75").gene_length.mean()
 
     gene_annotation = (
         pd.read_table(

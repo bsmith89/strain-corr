@@ -10,9 +10,7 @@ from warnings import warn
 def classify_gene_prevalence(x, core_vs_shell, shell_vs_cloud):
     assert core_vs_shell > shell_vs_cloud
     if core_vs_shell == shell_vs_cloud:
-        warn(
-            "Core/shell and shell/cloud thresholds are equal."
-        )
+        warn("Core/shell and shell/cloud thresholds are equal.")
     tag = np.where(
         x >= core_vs_shell, "core", np.where(x >= shell_vs_cloud, "shell", "cloud")
     )
@@ -41,8 +39,10 @@ if __name__ == "__main__":
         shell=lambda x: x.label == "shell",
         cloud=lambda x: x.label == "cloud",
     )[["core", "shell", "cloud"]]
-    gene = pd.read_table(gene_presence_inpath, index_col="gene_id").rename_axis(columns="strain").loc[
-        prevalence_class_dummy.index
-    ]
+    gene = (
+        pd.read_table(gene_presence_inpath, index_col="gene_id")
+        .rename_axis(columns="strain")
+        .loc[prevalence_class_dummy.index]
+    )
     result = gene.T @ prevalence_class_dummy
-    result.to_csv(outpath, sep='\t')
+    result.to_csv(outpath, sep="\t")

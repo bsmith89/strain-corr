@@ -38,7 +38,9 @@ if __name__ == "__main__":
         d = d.groupby(gene_groupby.loc[sample_gene_list]).sum()
         d = d.reindex(output_gene_list, fill_value=0)
         data[i] = d.values
-    data = pd.DataFrame(data, index=list(sample_paths), columns=output_gene_list).rename_axis(index="sample", columns="gene_id")
+    data = pd.DataFrame(
+        data, index=list(sample_paths), columns=output_gene_list
+    ).rename_axis(index="sample", columns="gene_id")
 
     info("Writing output.")
     data.stack().to_xarray().to_netcdf(outpath)

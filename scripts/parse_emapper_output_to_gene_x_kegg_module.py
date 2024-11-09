@@ -60,4 +60,4 @@ if __name__ == "__main__":
     )
 
     # Output
-    gene_x_annot['annot_list'].rename(OUTPUT_ANNOT_NAME).to_csv(sys.argv[2], sep="\t")
+    gene_x_annot["annot_list"].rename(OUTPUT_ANNOT_NAME).to_csv(sys.argv[2], sep="\t")

@@ -37,7 +37,7 @@ if __name__ == "__main__":
         pd.DataFrame(
             squareform(original_cdmat), index=original_labels, columns=original_labels
         )
-        #.loc[labels, labels]
+        # .loc[labels, labels]
     )
 
     linkage = linkage(cdmat, method="average")

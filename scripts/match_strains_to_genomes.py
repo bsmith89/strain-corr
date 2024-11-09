@@ -18,5 +18,10 @@ if __name__ == "__main__":
     spgc_list = list(spgc_mgtp.sample.astype(str).values)
     ref_list = list(set(dmat.index) - set(spgc_list))
 
-    result = dmat.loc[ref_list, spgc_list].stack().rename_axis(['genome_id', 'strain']).rename("genotype_dissimilarity")
+    result = (
+        dmat.loc[ref_list, spgc_list]
+        .stack()
+        .rename_axis(["genome_id", "strain"])
+        .rename("genotype_dissimilarity")
+    )
     result.to_csv(outpath, sep="\t")
