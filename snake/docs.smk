@@ -178,5 +178,5 @@ rule compile_manuscript_submission:
         cp {input.figS2} {output}/Supplementary_Figure_S2.pdf
         cp {input.tableS1} {output}/Supplementary_Table_S1.tsv
         cp {input.tableS3} {output}/Supplementary_Table_S3.tsv
-        cp {input.figS3} {output}/Supplementary_Figure_S3.tsv
+        cp {input.figS3} {output}/Supplementary_Figure_S3.pdf
         """
