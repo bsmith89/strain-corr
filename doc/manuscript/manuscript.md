@@ -24,6 +24,8 @@ https://genome.cshlp.org/site/misc/ifora_mspreparation.xhtml
 
 Manual rendering checklist:
 
+TODO: Include the StrainPGC-manuscript-v0.3.zip as Supplementary_Code.
+TODO: Convert Supplementary Table S1 and S3 to XLSX and integrate their captions.
 TODO: Replace title/authors with cover-page from static DOCX
 TODO: Rename supplementary figures (e.g. TODO) in both
 captions and inlined citations. (Find/Replace works well. Be sure catch both Figure and Fig)
@@ -1267,7 +1269,7 @@ _de novo_.
 
 StrainPGC is freely available at <https://github.com/bsmith89/StrainPGC>.
 Code and metadata needed to replicate our analyses and plots are
-available at
+included as Supplementary Code S1 and are also available at
 <https://github.com/bsmith89/StrainPGC-manuscript>.
 
 ## Competing Interests Statement
@@ -1327,13 +1329,6 @@ using reference genomes for comparison to StrainPGC-based gene content
 estimates.
 ](fig/genome_fraction_refs_figure.dpi200.png)
 
-**Supplementary Table S1: Details about all inferred strains in HMP2.**
-Includes columns representing: the number of genes in estimate gene content, number of samples included as
-strain-pure, total species depth across strain pure samples, the fraction of
-species marker genes in the estimated gene content, the log of the standard deviation
-of gene depth ratio, and the number of unmasked, genotyped positions used for
-inter-strain comparisons.
-
 ## Simulated _E. coli_ spike-in validation
 
 We performed an additional benchmarking study to validate our approach
@@ -1387,13 +1382,6 @@ large and when strains are more diverged from the reference database.
 Table: **Supplementary Table S2**: Performance on five _E. coli_ genomes in an _in silico_ spike-in experiment.
 
 
-## Extended results for donor-specific _E. coli_ strains
-
-**Supplementary Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
-Includes a row for each gene family found in either high-engraftment strain. Columns include
-gene annotations, mean length across members of the gene family, co-occurence cluster assignment
-and the fraction of other co-occurence cluster members also found in each strain.
-
 ## Sensitivity of StrainPGC performance to depth ratio and correlation score thresholds
 
 ![
@@ -1408,6 +1396,19 @@ throughout the rest of this work,
 which decreased the median F1 score negligably from 0.916 to 0.908.
 ](fig/thresh_sensitivity_figure.dpi200.png)
 
+## Extended Results
+
+**Supplementary Table S1: Details about all inferred strains in HMP2.**
+Includes columns representing: the number of genes in estimate gene content, number of samples included as
+strain-pure, total species depth across strain pure samples, the fraction of
+species marker genes in the estimated gene content, the log of the standard deviation
+of gene depth ratio, and the number of unmasked, genotyped positions used for
+inter-strain comparisons.
+
+**Supplementary Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
+Includes a row for each gene family found in either high-engraftment strain. Columns include
+gene annotations, mean length across members of the gene family, co-occurence cluster assignment
+and the fraction of other co-occurence cluster members also found in each strain.
 
 ## References
 
