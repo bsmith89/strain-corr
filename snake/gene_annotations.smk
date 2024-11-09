@@ -172,7 +172,7 @@ rule aggregate_midasdb_reference_gene_by_emapper_annotation:
     output:
         "data/species/sp-{species}/{stemB}.gene{centroid}_{dbv}.{unit}-strain_gene.tsv",
     wildcard_constraints:
-        unit="eggnog|top_eggnog|cog|ko",
+        unit="eggnog|top_eggnog|cog|ko|amr",
     input:
         script="scripts/aggregate_uhgg_strain_gene_by_annotation.py",
         uhgg="data/species/sp-{species}/midasdb.gene{centroid}_{dbv}.uhgg-strain_gene.tsv",
