@@ -555,8 +555,9 @@ _E. coli_ genomes not in the UHGG reference collection
 simulated reads to the HMP2 dataset.
 These benchmark genomes represent a range of divergence from the closest
 reference genome similar to what we found for the inferred strains.
-We observed F1 scores equivalent to the hCom2 benchmark
-(Supplementary Text and Supplementary Table S2).
+Despite this additional complexity and reference bias,
+we observed F1 scores equivalent to those in the hCom2 benchmark
+(Supplementary Material and Supplementary Table S2).
 
 Having in this way validated its performance in the HMP2 dataset,
 we next applied StrainPGC to the novel, inferred strains.
@@ -890,7 +891,7 @@ both within and across samples.
 With increasingly comprehensive pangenome reference databases,
 the accuracy of our approach will improve, expanding its application to other
 microbiomes beyond the human gut.
-Nonetheless, highly diverged strains may have elevated error rates due to database bias
+Nonetheless, highly diverged strains may have elevated error rates due to reference database bias
 and it is prudent for users to ensure that their species of interest
 are sufficiently covered in reference sets
 [@zhaoPitfallsGenotypingMicrobial2023;@hovhannisyanCROSSMAPPEREstimatingCrossmapping2020].
