@@ -20,6 +20,27 @@ tblPrefix: [table, tables]
 ---
 
 <!--
+
+Final Requests from Editor:
+
+TODO: Please modify E notation to scientific notation in the text (e.g., 1e-5,
+1e-10). (I think this means A × 10^B)
+TODO: Please remove the words "interestingly", "strikingly", "dramatic",
+"dramatically" and allow the readers to arrive at their own conclusions.
+TODO: Please convert X, x, and/or * to multiplication symbols (×) where you
+mean coverage, concentration, fold, or times (e.g., 0.1x, 1x).
+TODO: Please modify:
+    Pearson correlation to Pearson's correlation
+    Fisher exact test to Fisher's exact test
+    Bowtie2 to Bowtie 2
+    samtools to SAMtools
+    non-parametric to nonparametric
+    log10 (subscript 10)
+    t-test (italicize the first t)
+TODO: Please increase the font size of the smallest text in Figures 1-4, all
+text must be legible upon reduction, including axes labels and keys.
+
+
 https://genome.cshlp.org/site/misc/ifora_mspreparation.xhtml
 
 Manual rendering checklist:
