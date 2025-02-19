@@ -717,7 +717,7 @@ in the fecal time series of their respective recipients. Columns in each
 panel represent individual samples, colors represent _E. coli_ strains
 inferred from StrainFacts, and the height of colored bars indicates
 strain abundance normalized to total _E. coli_ abundance in the sample.
-For donors, samples are ordered arbitrarily. Recipient samples are
+For donors, samples are in arbitrary order. Recipient samples are
 ordered by collection day and include samples at baseline (labeled "B")
 collected before initial FMT treatment, samples collected before each of
 up to six maintenance FMT doses (labeled "M1" to "M6"), and up to three
