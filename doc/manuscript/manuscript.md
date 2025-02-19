@@ -21,12 +21,6 @@ tblPrefix: [table, tables]
 
 <!--
 
-Final Requests from Editor:
-
-TODO: Please increase the font size of the smallest text in Figures 1-4, all
-text must be legible upon reduction, including axes labels and keys.
-
-
 https://genome.cshlp.org/site/misc/ifora_mspreparation.xhtml
 
 Manual rendering checklist:
