@@ -23,8 +23,6 @@ tblPrefix: [table, tables]
 
 Final Requests from Editor:
 
-TODO: Please modify E notation to scientific notation in the text (e.g., 1e-5,
-1e-10). (I think this means A × 10^B)
 TODO: Please remove the words "interestingly", "strikingly", "dramatic",
 "dramatically" and allow the readers to arrive at their own conclusions.
 TODO: Please modify:
@@ -440,8 +438,8 @@ hCom2 genome, we instead selected the inferred strain with the
 highest F1 score, giving these two methods an advantage. Nonetheless,
 StrainPGC performed better on average than either alternative: a median
 increase of 0.069 in F1 score compared to PanPhlAn (IQR: 0.038–0.093; p
-< 1e-10 by Wilcoxon, non-parametric, paired, t-test) and 0.042
-relative to StrainPanDA (IQR: 0.022–0.079; p < 1e-10).
+< 1 × 10^-10^ by Wilcoxon, nonparametric, paired, t-test) and 0.042
+relative to StrainPanDA (IQR: 0.022–0.079; p < 1 × 10^-10^).
 All three tools
 had similarly high precision, and the superior performance of StrainPGC was driven
 primarily by a dramatic reduction in the false negative rate (FPR: 1 - recall):
@@ -476,20 +474,20 @@ high-prevalence, species marker genes assigned to a given inferred
 strain reflects the overall completeness of the estimated gene content
 for that strain. Indeed, across strains in the hCom2 benchmark, we found a strong
 correlation between the fraction of species marker genes and the F1
-score (⍴ = 0.60, p < 1e-10). As expected, this appears to be driven
+score (⍴ = 0.60, p < 1 × 10^-10^). As expected, this appears to be driven
 primarily by a strong association with the recall (⍴ = 0.63, p <
-1e-10); a weaker correlation was found with the precision (⍴ = 0.34, p
-< 1e-3). Second, for strains suffering from low signal-to-noise, such
+1 × 10^-10^); a weaker correlation was found with the precision (⍴ = 0.34, p
+< 1 × 10^-3^). Second, for strains suffering from low signal-to-noise, such
 as those at low sequencing depths, the depth ratio of assigned genes
 will be more variable. We, therefore, calculated a noise index
 reflecting: the standard deviation across all assigned genes of the
 log10-transformed depth ratio. For this score, we found a negative
-correlation with the F1 score (⍴ = -0.68, p < 1e-10), this time
-driven by an association with the precision (⍴ = -0.58, p < 1e-9) as
-well as recall (⍴ = -0.53, p < 1e-8). In our benchmark, the 22
+correlation with the F1 score (⍴ = -0.68, p < 1 × 10^-10^), this time
+driven by an association with the precision (⍴ = -0.58, p < 1 × 10^-9^) as
+well as recall (⍴ = -0.53, p < 1 × 10^-8^). In our benchmark, the 22
 strains with < 95% species marker genes or a noise index > 0.25
 had substantially lower F1 scores than those that passed this quality
-control (median of 0.83 versus 0.92, p < 1e-5 by MWU test). We
+control (median of 0.83 versus 0.92, p < 1 × 10^-5^ by MWU test). We
 propose using these two criteria together in order to exclude inferred
 strains with lower accuracy gene content estimates.
 
@@ -548,7 +546,7 @@ just one subject, and only 34% were detected in three or more (Fig. 3B).
 Strain sharing was dramatically more common in pairs of samples from the
 same subject than in pairs of samples from different subjects (mean of
 36.7 shared, detected strains from same subject vs. 0.7 from different
-subjects, p < 1e-10 by MWU; Fig. 3C), consistent with prior studies of
+subjects, p < 1 × 10^-10^ by MWU; Fig. 3C), consistent with prior studies of
 the HMP2 and other cohorts [@lloyd-priceStrainsFunctionsDynamics2017].
 
 Concordant with this level of strain diversity, estimated genotypes for
@@ -654,7 +652,7 @@ species, IQR: 12–28, 7 phyla). For each species, we calculated the
 prevalence and distribution of genes across strains. Gene prevalence
 estimates based on inferred strains were highly correlated with the
 prevalence observed in high-quality reference genomes (r = 0.84, p <
-1e-10; Fig. 4A), supporting the consistency of our estimates with the
+1 × 10^-10^; Fig. 4A), supporting the consistency of our estimates with the
 existing reference database.
 
 Based on these de novo prevalence estimates, we assigned genes to the
@@ -706,9 +704,9 @@ members, a median of 681.5 per species (Fig. 4D). Genes in the same
 cluster were more likely to have related annotations; clusters having
 three or more genes in the same KEGG module were 12.7× more common than
 expected by random chance (n = 100 permutations of cluster labels within
-species, p < 1e-2; Fig. 4E). Likewise, phage- or plasmid-associated
+species, p < 1 × 10^-2^; Fig. 4E). Likewise, phage- or plasmid-associated
 genes were more frequently found in the same clusters than expected by
-chance (three or more shared annotations 2.4× more common, p < 1e-2;
+chance (three or more shared annotations 2.4× more common, p < 1 × 10^-2^;
 Fig. 4F). This supports our interpretation of StrainPGC–enabled gene
 co-occurrence clustering across genomes as evidence of related
 biochemical function or linked transmission, which may help to generate
