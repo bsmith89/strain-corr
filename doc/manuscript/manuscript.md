@@ -23,8 +23,6 @@ tblPrefix: [table, tables]
 
 Final Requests from Editor:
 
-TODO: Please remove the words "interestingly", "strikingly", "dramatic",
-"dramatically" and allow the readers to arrive at their own conclusions.
 TODO: Please increase the font size of the smallest text in Figures 1-4, all
 text must be legible upon reduction, including axes labels and keys.
 
@@ -434,7 +432,7 @@ increase of 0.069 in F1 score compared to PanPhlAn (IQR: 0.038–0.093; p
 relative to StrainPanDA (IQR: 0.022–0.079; p < 1 × 10^-10^).
 All three tools
 had similarly high precision, and the superior performance of StrainPGC was driven
-primarily by a dramatic reduction in the false negative rate (FPR: 1 - recall):
+primarily by a large reduction in the false negative rate (FPR: 1 - recall):
 a median of just 49% of PanPhlAn's and 60% of StrainPanDA's FPR.
 
 For all three tools, strains
@@ -445,7 +443,7 @@ and StrainPanDA, respectively; Supplementary Figure S1).
 We also find a correlation between the number of strain-pure samples and
 F1 for all three tools (⍴ = 0.33, 0.42, and 0.34, respectively,
 Supplementary Figure S1).
-Interestingly, StrainPGC's precision was less tightly related to depth than either
+StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
 these findings support the use of the Pearson's
@@ -535,7 +533,7 @@ sample and 191.5 across all samples from each subject (Fig.
 3A). This strain-level diversity was highly subject-specific; among
 inferred strains detected in two or more samples, 36% were detected in
 just one subject, and only 34% were detected in three or more (Fig. 3B).
-Strain sharing was dramatically more common in pairs of samples from the
+Strain sharing was much more common in pairs of samples from the
 same subject than in pairs of samples from different subjects (mean of
 36.7 shared, detected strains from same subject vs. 0.7 from different
 subjects, p < 1 × 10^-10^ by MWU; Fig. 3C), consistent with prior studies of
@@ -800,7 +798,7 @@ Next we sought to understand functional gene differences between the two
 high-engraftment strains, in particular any that might result in
 disparate impacts on host health. We therefore examined the unshared
 gene content in order to identify plausible physiological differences
-(Supplementary Table S3). Strikingly, strain-9 had 12 genes annotated as
+(Supplementary Table S3). Strain-9 had 12 genes annotated as
 related to antimicrobial resistance, suggesting potential resistance to
 17 different antibiotics, while strain-6 had none. Among gene
 co-occurrence clusters, one (labeled clust-861) is also found only in
@@ -1375,7 +1373,7 @@ This is despite the fact that the metagenomes were much more complex and
 some strains were more dissimilar to the closest reference genome.
 Specifically, we found a median F1 score across all strains of 0.92, equivalent to
 the median F1 of 0.91 from the hCom2 benchmark.
-Interestingly, we do not find a negative relationship between the divergence of
+We do not find a negative relationship between the divergence of
 the benchmark genome and performance. StrainPGC performance was nearly
 equivalent for the least diverged (F1 of 0.89) and most diverged genomes (F1 of
 0.92). We conclude that it is reasonable to expect similar performance for
