@@ -25,14 +25,6 @@ Final Requests from Editor:
 
 TODO: Please remove the words "interestingly", "strikingly", "dramatic",
 "dramatically" and allow the readers to arrive at their own conclusions.
-TODO: Please modify:
-    Pearson correlation to Pearson's correlation
-    Fisher exact test to Fisher's exact test
-    Bowtie2 to Bowtie 2
-    samtools to SAMtools
-    non-parametric to nonparametric
-    log10 (subscript 10)
-    t-test (italicize the first t)
 TODO: Please increase the font size of the smallest text in Figures 1-4, all
 text must be legible upon reduction, including axes labels and keys.
 
@@ -332,7 +324,7 @@ where the species is below a minimum detection limit (in this work 0.0001×).
 Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C):
 (1) the depth ratio is the total gene depth divided by the total species
 depth across that strain's pure samples;
-(2) the correlation score is the Pearson
+(2) the correlation score is the Pearson's
 coefficient between the gene's depth and the overall species depth across both
 this strain's pure samples and the species-free samples.
 For each strain, genes passing a minimum threshold for both of these
@@ -361,7 +353,7 @@ into a complete Snakemake [@molderSustainableDataAnalysis2021a] workflow (Fig. 1
 intended for studying the human gut microbiome.
 As with other tools, the computational resources required to run the full
 pipeline may be substantial and are dominated by the requirements for read alignment
-with Bowtie2 [@langmeadFastGappedreadAlignment2012].
+with Bowtie 2 [@langmeadFastGappedreadAlignment2012].
 By comparison, even for large datasets, the StrainPGC core algorithm generates
 results for all strains of a species and requires only a few GBs of RAM at
 peak (see GitHub README for details).
@@ -438,7 +430,7 @@ hCom2 genome, we instead selected the inferred strain with the
 highest F1 score, giving these two methods an advantage. Nonetheless,
 StrainPGC performed better on average than either alternative: a median
 increase of 0.069 in F1 score compared to PanPhlAn (IQR: 0.038–0.093; p
-< 1 × 10^-10^ by Wilcoxon, nonparametric, paired, t-test) and 0.042
+< 1 × 10^-10^ by Wilcoxon, nonparametric, paired, _t_-test) and 0.042
 relative to StrainPanDA (IQR: 0.022–0.079; p < 1 × 10^-10^).
 All three tools
 had similarly high precision, and the superior performance of StrainPGC was driven
@@ -456,7 +448,7 @@ Supplementary Figure S1).
 Interestingly, StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
-these findings support the use of the Pearson
+these findings support the use of the Pearson's
 correlation across strain-pure samples as a filtering criterion for gene content
 estimation, allowing StrainPGC to maintain high
 precision even while greatly increasing recall.
@@ -481,7 +473,7 @@ primarily by a strong association with the recall (⍴ = 0.63, p <
 as those at low sequencing depths, the depth ratio of assigned genes
 will be more variable. We, therefore, calculated a noise index
 reflecting: the standard deviation across all assigned genes of the
-log10-transformed depth ratio. For this score, we found a negative
+log~10~-transformed depth ratio. For this score, we found a negative
 correlation with the F1 score (⍴ = -0.68, p < 1 × 10^-10^), this time
 driven by an association with the precision (⍴ = -0.58, p < 1 × 10^-9^) as
 well as recall (⍴ = -0.53, p < 1 × 10^-8^). In our benchmark, the 22
@@ -627,7 +619,7 @@ shell, and cloud prevalence classes. Dots representing each COG category
 red and blue indicating enrichment and depletion, respectively. Dot size
 reflects the number of genes in that prevalence class that are in the
 given functional category. All enrichments/depletions shown are
-significant (Two-tailed Fisher Exact Test; p < 0.05), except for
+significant (Two-tailed Fisher's Exact Test; p < 0.05), except for
 those marked with a black cross. COG categories A, B, and Y are omitted,
 as these had very few members (173, 74, and 0 genes, respectively).
 **(D)** Gene co-occurrence clusters based on estimated gene content. The
@@ -696,7 +688,7 @@ are highly variable within species and more common in gram-negative bacteria.
 As an assembly-free approach, gene content estimation lacks synteny
 information, which can be useful for understanding biological phenomena
 such as operonic co-regulation and horizontal gene transfer. To get
-around this limitation, we clustered genes based on the Pearson
+around this limitation, we clustered genes based on the Pearson's
 correlation of their presence and absence across inferred strains in the
 HMP2. For the 44 species with more than 20 high-quality inferred
 strains, we identified 36,208 co-occurring gene clusters with 2 or more
@@ -1030,7 +1022,7 @@ than 10 reference genomes, we remove representative sequences where
 their 75% ANI clusters had only one member, as these are more likely to
 be spurious gene calls or contamination resulting from chimeric
 assembly. Finally, an alignment index is constructed from the remaining
-representative sequences, and reads are mapped using Bowtie2
+representative sequences, and reads are mapped using Bowtie 2
 [@langmeadFastGappedreadAlignment2012].
 
 Pangenome profiling with MIDAS v3 proceeds through four stages: (1)
@@ -1058,7 +1050,7 @@ collected _in vitro_.
 ### Pangenome profiling
 
 For the work presented here, we ran MIDAS v3
-Using Bowtie2
+Using Bowtie 2
 v2.5.1 throughout, a single reference index was built for 627 species
 using `midas build_bowtie2db --prune_centroids
 --remove_singleton`. Paired-end reads for each sample were aligned to
@@ -1066,7 +1058,7 @@ this index using ` midas run_genes --aln_speed sensitive
 --aln_extra_flags '--mm --ignore-quals' --total_depth 0`.
 To maximize our sensitivity to divergent strains and at low abundance we did
 not use any of MIDAS's default filters in calculating depths.
-Instead, mean mapping depth was calculated using `samtools depth` and summed up
+Instead, mean mapping depth was calculated using `SAMtools depth` and summed up
 at the 75% ANI OGF level.
 
 ### Reference genomes and species marker genes
@@ -1236,7 +1228,7 @@ other analyses. This criterion _a priori_ excludes 19 of the 627 species
 profiled in this work. For analyses of gene content, strains with an
 estimated depth of < 1× across all strain-pure samples were also
 excluded. Finally, strains with < 95% of species genes or with a
-standard deviation in the log10-transformed depth ratio across selected
+standard deviation in the log~10~-transformed depth ratio across selected
 genes of > 0.25 were flagged as low quality and removed.
 
 ### Analysis of species and strain diversity
