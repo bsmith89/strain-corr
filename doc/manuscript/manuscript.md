@@ -27,8 +27,6 @@ TODO: Please modify E notation to scientific notation in the text (e.g., 1e-5,
 1e-10). (I think this means A × 10^B)
 TODO: Please remove the words "interestingly", "strikingly", "dramatic",
 "dramatically" and allow the readers to arrive at their own conclusions.
-TODO: Please convert X, x, and/or * to multiplication symbols (×) where you
-mean coverage, concentration, fold, or times (e.g., 0.1x, 1x).
 TODO: Please modify:
     Pearson correlation to Pearson's correlation
     Fisher exact test to Fisher's exact test
@@ -332,7 +330,7 @@ The StrainPGC algorithm can be summarized as follow:
 First, the species depth in
 each sample is estimated based on mean depth of the provided marker genes.
 Next, based on this depth, "species-free" samples are identified as those
-where the species is below a minimum detection limit (in this work 0.0001x).
+where the species is below a minimum detection limit (in this work 0.0001×).
 Then, separately for each strain, two statistics are calculated for each gene (Fig. 1C):
 (1) the depth ratio is the total gene depth divided by the total species
 depth across that strain's pure samples;
@@ -420,7 +418,7 @@ ground truth genomes with EggNOG OGs (Fig. 2A). After removing species
 that could not be genotyped by GT-Pro, or that were undetected in
 metagenomes, the benchmarking task amounted to 87 species encompassing
 97 strains and with highly disparate depths (estimated maximum sample
-depth interquartile range of 2.7–22.4x) (Fig. 2B). We applied StrainPGC
+depth interquartile range of 2.7–22.4×) (Fig. 2B). We applied StrainPGC
 to estimate gene content across inferred strains, matched each ground
 truth strain to a single inferred strain based on SNP genotypes, and
 compared the EggNOG OGs annotations between these. In this benchmark,
@@ -467,7 +465,7 @@ precision even while greatly increasing recall.
 In particular, we find our
 approach upholds this specificity---even at low depths---more effectively
 than existing methods and that performance was fairly stable for strains with ≥ 5 samples,
-or when at least one sample had depth ≥ 1x (Supplementary Figures S1).
+or when at least one sample had depth ≥ 1× (Supplementary Figures S1).
 
 In real-world applications---where ground-truth gene content is not known
 a priori---it is beneficial to understand the confidence of StrainPGC
@@ -540,7 +538,7 @@ this paper.
 First, to explore the strain-level diversity that might be discovered in
 publicly available datasets, we used StrainFacts to identify and
 estimate the distribution of strains based on SNP profiles. We defined
-detection as an estimated depth of ≥ 0.1x, a threshold chosen to balance
+detection as an estimated depth of ≥ 0.1×, a threshold chosen to balance
 false positives with the sensitivity of strain tracking. All species
 combined, a median of 59 strains were detected in each metagenomic
 sample and 191.5 across all samples from each subject (Fig.
@@ -706,11 +704,11 @@ HMP2. For the 44 species with more than 20 high-quality inferred
 strains, we identified 36,208 co-occurring gene clusters with 2 or more
 members, a median of 681.5 per species (Fig. 4D). Genes in the same
 cluster were more likely to have related annotations; clusters having
-three or more genes in the same KEGG module were 12.7x more common than
+three or more genes in the same KEGG module were 12.7× more common than
 expected by random chance (n = 100 permutations of cluster labels within
 species, p < 1e-2; Fig. 4E). Likewise, phage- or plasmid-associated
 genes were more frequently found in the same clusters than expected by
-chance (three or more shared annotations 2.4x more common, p < 1e-2;
+chance (three or more shared annotations 2.4× more common, p < 1e-2;
 Fig. 4F). This supports our interpretation of StrainPGC–enabled gene
 co-occurrence clustering across genomes as evidence of related
 biochemical function or linked transmission, which may help to generate
@@ -1161,7 +1159,7 @@ StrainPGC estimates the depth of each species in each sample as the
 15%-trimmed mean depth across all species marker genes, i.e., the mean
 depth of species marker genes excluding those genes with the 15% highest
 and lowest depth. Species-free samples were defined as those with an
-estimated species depth of < 0.0001x. Genes were selected using a
+estimated species depth of < 0.0001×. Genes were selected using a
 depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
 to strike a balance between sensitivity and specificity, while slightly
 favoring false negatives over false positives (see Supplementary Figure S3).
@@ -1238,7 +1236,7 @@ accuracy. Strains with fewer than 100 unmasked positions in their
 consensus genotype were included in benchmarking but excluded from all
 other analyses. This criterion _a priori_ excludes 19 of the 627 species
 profiled in this work. For analyses of gene content, strains with an
-estimated depth of < 1x across all strain-pure samples were also
+estimated depth of < 1× across all strain-pure samples were also
 excluded. Finally, strains with < 95% of species genes or with a
 standard deviation in the log10-transformed depth ratio across selected
 genes of > 0.25 were flagged as low quality and removed.
@@ -1250,7 +1248,7 @@ the UHGG <https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/human-
 
 For the analysis of strain distribution in the HMP2, strain depth was
 estimated as the product of the estimated species depth and estimated
-strain fraction. All strains with depth > 0.1x were considered to be
+strain fraction. All strains with depth > 0.1× were considered to be
 "present" in a sample. The number of strains in each subject was
 calculated as the total number of strains present in any of that
 subject's samples. For shared-strain analysis (Fig. 3C), samples with
@@ -1339,7 +1337,7 @@ For the left column, the x-axis is the maximum estimated depth of the
 genotype-matched strain across strain-pure samples, and for the right column it
 is the total number of strain-pure samples identified for that strain.
 Trend lines are a rolling average over the 10 nearest points.
-The dotted vertical line indicates the 1x depth and 5 strain-pure samples,
+The dotted vertical line indicates the 1× depth and 5 strain-pure samples,
 after which the mean performance stabilizes for StrainPGC.
 ](fig/accuracy_by_depth_and_number_figure.dpi200.png)
 
@@ -1372,8 +1370,8 @@ of more than 0.077.
 
 We selected five HMP2 samples, all from one subject (C3022), where _E. coli_
 was not detected.
-Into these, we spiked-in simulated reads at 1x, 2x, 4x, 8x,
-and 16x depths with a separate set of reads for each strain.
+Into these, we spiked-in simulated reads at 1×, 2×, 4×, 8×,
+and 16× depths with a separate set of reads for each strain.
 We combined all 25 of these additional, synthetic samples with the full HMP2
 dataset, and then re-ran our integrated workflow.
 We matched the inferred strains to each of the ground-truth genomes based on
