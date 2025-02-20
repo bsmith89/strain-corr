@@ -162,8 +162,8 @@ rule compile_manuscript_submission:
         fig5="fig/ucfmt_figure.pdf",
         figS1="fig/accuracy_by_depth_and_number_figure.pdf",
         figS2="fig/genome_fraction_refs_figure.pdf",
-        tableS1="fig/hmp2_inferred_strains_supplementary_table1.tsv",
-        tableS3="fig/ucfmt_focal_strain_genes_supplementary_table3.tsv",
+        tableS1="fig/hmp2_inferred_strains_supplementary_table1.tsv",  # TODO: XLSX
+        tableS3="fig/ucfmt_focal_strain_genes_supplementary_table3.tsv",  # TODO: XLSX
         figS3="fig/thresh_sensitivity_figure.pdf",
     shell:
         """
