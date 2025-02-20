@@ -46,7 +46,7 @@ TODO: Bold Figure N, Table N in captions
 TODO: Table caption (or just footnotes?) to below tables.
 TODO: Add line numbers
 TODO: All main-text figures to EPS for upload.
-TODO: Include R2R as a DOCX / Supplementary file
+TODO: If resubmission: Include R2R as a DOCX / Supplementary file
 
 -->
 
