@@ -174,9 +174,9 @@ rule compile_manuscript_submission:
         cp {input.fig3} {output}/Figure_3.pdf
         cp {input.fig4} {output}/Figure_4.pdf
         cp {input.fig5} {output}/Figure_5.pdf
-        cp {input.figS1} {output}/Supplementary_Figure_S1.pdf
-        cp {input.figS2} {output}/Supplementary_Figure_S2.pdf
-        cp {input.tableS1} {output}/Supplementary_Table_S1.tsv
-        cp {input.tableS3} {output}/Supplementary_Table_S3.tsv
-        cp {input.figS3} {output}/Supplementary_Figure_S3.pdf
+        cp {input.figS1} {output}/Supplemental_Figure_S1.pdf
+        cp {input.figS2} {output}/Supplemental_Figure_S2.pdf
+        cp {input.tableS1} {output}/Supplemental_Table_S1.tsv
+        cp {input.tableS3} {output}/Supplemental_Table_S3.tsv
+        cp {input.figS3} {output}/Supplemental_Figure_S3.pdf
         """

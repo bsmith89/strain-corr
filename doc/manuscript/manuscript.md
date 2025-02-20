@@ -25,12 +25,12 @@ https://genome.cshlp.org/site/misc/ifora_mspreparation.xhtml
 
 Manual rendering checklist:
 
-TODO: Include the StrainPGC-manuscript-v0.3.zip as Supplementary_Code.
-TODO: Convert Supplementary Table S1 and S3 to XLSX and integrate their captions.
+TODO: Include the StrainPGC-manuscript-v0.4.zip as Supplemental_Code.
+TODO: Convert Supplemental Table S1 and S3 to XLSX and integrate their captions.
 TODO: Replace title/authors with cover-page from static DOCX
 TODO: Rename supplementary figures (e.g. TODO) in both
 captions and inlined citations. (Find/Replace works well. Be sure catch both Figure and Fig)
-TODO: Rename supplementary filenames: "Supplemental_Fig_S1.pdf", "Supplemental_Table_S1.xls"
+TODO: Rename supplementary filenames: "Supplemental_Figure_S1.pdf", "Supplemental_Table_S1.xls"
 TODO: Add page-break after abstract
 TODO: Figure placement (one of): Move figures up or down to minimize
 whitespace, OR move all figure legends to after the references and remove the
@@ -382,7 +382,7 @@ histograms using a gray density scale to represent the number of strains
 falling in each (x, y) bin; density above the 1-to-1 diagonal (dotted
 line) indicates strains where StrainPGC outperformed the alternative on
 that index. The relationship between performance and strain sequencing depth
-or sample number are shown in Supplementary Figure S1.
+or sample number are shown in Supplemental Figure S1.
 ](fig/benchmarking_figure.dpi200.png)
 
 In order to evaluate StrainPGC's performance, we ran our workflow on 276
@@ -433,10 +433,10 @@ For all three tools, strains
 with higher estimated depth had better performance on this benchmark
 (Spearman's correlation between maximum strain depth across samples and
 F1 score: Spearman's ⍴ = 0.29, 0.55, and 0.32 for StrainPGC, PanPhlAn,
-and StrainPanDA, respectively; Supplementary Figure S1).
+and StrainPanDA, respectively; Supplemental Figure S1).
 We also find a correlation between the number of strain-pure samples and
 F1 for all three tools (⍴ = 0.33, 0.42, and 0.34, respectively,
-Supplementary Figure S1).
+Supplemental Figure S1).
 StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
@@ -447,7 +447,7 @@ precision even while greatly increasing recall.
 In particular, we find our
 approach upholds this specificity---even at low depths---more effectively
 than existing methods and that performance was fairly stable for strains with ≥ 5 samples,
-or when at least one sample had depth ≥ 1× (Supplementary Figures S1).
+or when at least one sample had depth ≥ 1× (Supplemental Figures S1).
 
 In real-world applications---where ground-truth gene content is not known
 a priori---it is beneficial to understand the confidence of StrainPGC
@@ -558,7 +558,7 @@ These benchmark genomes represent a range of divergence from the closest
 reference genome similar to what we found for the inferred strains.
 Despite this additional complexity and reference bias,
 we observed F1 scores equivalent to those in the hCom2 benchmark
-(Supplementary Material and Supplementary Table S2).
+(Supplemental Material and Supplemental Table S2).
 
 Having in this way validated its performance in the HMP2 dataset,
 we next applied StrainPGC to the novel, inferred strains.
@@ -573,7 +573,7 @@ additional 80 and 141 strains were also in "Firmicutes", and
 "Firmicutes\_B", respectively, which are classified as separate phyla in
 the GTDB taxonomy), followed by Bacteroidota (727), and Proteobacteria
 (189). Hence, StrainPGC resolved gene content for myriad strains across
-a diverse set of species found in the human gut (Supplementary Table S1).
+a diverse set of species found in the human gut (Supplemental Table S1).
 
 Just like SNP genotypes, for most inferred strains, the estimated gene
 content was quite distinct from the closest reference. Measuring
@@ -604,7 +604,7 @@ x and y values are the median gene content in the core and shell
 classes, respectively. The remaining gene content is composed of cloud
 genes and is indicated by the dotted diagonal lines. Markers are colored
 by phylum. Analogous results calculated using reference genomes are
-shown in Supplementary Figure S2. **(C)** Enrichment (red) or depletion
+shown in Supplemental Figure S2. **(C)** Enrichment (red) or depletion
 (blue) in genes of various functional categories in each of the core,
 shell, and cloud prevalence classes. Dots representing each COG category
 (rows) and prevalence class (columns) are colored by odds ratio, with
@@ -647,7 +647,7 @@ inferred strain (Fig. 4B). Computing the median first within and then
 across species, genes in the core fraction made up 70% (IQR: 63–76%) of
 each strain's estimated gene content, shell fraction 25% (19–28%), and
 cloud fraction 5% (4–9%), in general agreement with reference genomes
-(Supplementary Figure S2).
+(Supplemental Figure S2).
 Certain categories of functional annotations were more common in each
 fraction (Fig. 4C). Core genes were enriched for COG categories with
 housekeeping functions while the cloud
@@ -776,7 +776,7 @@ The two inferred strains had a SNP genotype
 dissimilarity to each other of 0.23, similar to the median dissimilarity across all pairs
 of UCFMT strains of 0.25 (IQR: 0.13 – 0.31). Approximately 80% of each
 strain's gene content was shared with the other, while 18% and 24% was
-private to strain-6 and strain-9, respectively (Fig. 5C; Supplementary
+private to strain-6 and strain-9, respectively (Fig. 5C; Supplemental
 Table S3). Cross-referencing co-occurrence clusters with the estimated
 gene content of these strains, about 60% of clusters in each were
 shared, with 39% and 42% private, respectively (Fig. 5D). Of the 118
@@ -792,7 +792,7 @@ Next we sought to understand functional gene differences between the two
 high-engraftment strains, in particular any that might result in
 disparate impacts on host health. We therefore examined the unshared
 gene content in order to identify plausible physiological differences
-(Supplementary Table S3). Strain-9 had 12 genes annotated as
+(Supplemental Table S3). Strain-9 had 12 genes annotated as
 related to antimicrobial resistance, suggesting potential resistance to
 17 different antibiotics, while strain-6 had none. Among gene
 co-occurrence clusters, one (labeled clust-861) is also found only in
@@ -1144,7 +1144,7 @@ and lowest depth. Species-free samples were defined as those with an
 estimated species depth of < 0.0001×. Genes were selected using a
 depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
 to strike a balance between sensitivity and specificity, while slightly
-favoring false negatives over false positives (see Supplementary Figure S3).
+favoring false negatives over false positives (see Supplemental Figure S3).
 
 ### Gene family annotation
 
@@ -1272,7 +1272,7 @@ _de novo_.
 
 StrainPGC is freely available at <https://github.com/bsmith89/StrainPGC>.
 Code and metadata needed to replicate our analyses and plots are
-included as Supplementary Code and are also available at
+included as Supplemental Code and are also available at
 <https://github.com/bsmith89/StrainPGC-manuscript>.
 
 ## Competing Interests Statement
@@ -1307,7 +1307,7 @@ KP: Conceptualization, Methodology, Investigation, Resources,
 Writing – Original Draft, Writing – Review & Editing,
 Supervision, Funding Acquisition.
 
-# Supplementary Materials
+# Supplemental Materials
 
 ## Extended hCom2 benchmarking results
 
@@ -1382,7 +1382,7 @@ large and when strains are more diverged from the reference database.
 | GCF_030205145.1   | GUT_GENOME144552       |                          0.030 |      0.96 |   0.87 | 0.91 |
 | GCF_030205875.1   | GUT_GENOME144360       |                          0.077 |      0.97 |   0.87 | 0.92 |
 
-Table: **Supplementary Table S2**: Performance on five _E. coli_ genomes in an _in silico_ spike-in experiment.
+Table: **Supplemental Table S2**: Performance on five _E. coli_ genomes in an _in silico_ spike-in experiment.
 
 
 ## Sensitivity of StrainPGC performance to depth ratio and correlation score thresholds
@@ -1401,14 +1401,14 @@ which decreased the median F1 score negligably from 0.916 to 0.908.
 
 ## Extended Results
 
-**Supplementary Table S1: Details about all inferred strains in HMP2.**
+**Supplemental Table S1: Details about all inferred strains in HMP2.**
 Includes columns representing: the number of genes in estimate gene content, number of samples included as
 strain-pure, total species depth across strain pure samples, the fraction of
 species marker genes in the estimated gene content, the log of the standard deviation
 of gene depth ratio, and the number of unmasked, genotyped positions used for
 inter-strain comparisons.
 
-**Supplementary Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
+**Supplemental Table S3: Details about gene content of _E. coli_ strain-6 vs. strain-9 in UCFMT.**
 Includes a row for each gene family found in either high-engraftment strain. Columns include
 gene annotations, mean length across members of the gene family, co-occurence cluster assignment
 and the fraction of other co-occurence cluster members also found in each strain.
