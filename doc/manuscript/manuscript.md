@@ -382,7 +382,7 @@ histograms using a gray density scale to represent the number of strains
 falling in each (x, y) bin; density above the 1-to-1 diagonal (dotted
 line) indicates strains where StrainPGC outperformed the alternative on
 that index. The relationship between performance and strain sequencing depth
-or sample number are shown in Supplemental Figure S1.
+or sample number are shown in Supplemental Fig. S1.
 ](fig/benchmarking_figure.dpi200.png)
 
 In order to evaluate StrainPGC's performance, we ran our workflow on 276
@@ -433,10 +433,10 @@ For all three tools, strains
 with higher estimated depth had better performance on this benchmark
 (Spearman's correlation between maximum strain depth across samples and
 F1 score: Spearman's ⍴ = 0.29, 0.55, and 0.32 for StrainPGC, PanPhlAn,
-and StrainPanDA, respectively; Supplemental Figure S1).
+and StrainPanDA, respectively; Supplemental Fig. S1).
 We also find a correlation between the number of strain-pure samples and
 F1 for all three tools (⍴ = 0.33, 0.42, and 0.34, respectively,
-Supplemental Figure S1).
+Supplemental Fig. S1).
 StrainPGC's precision was less tightly related to depth than either
 PanPhlAn or StrainPanDA (⍴ = 0.19, 0.54, and 0.55, respectively).
 Since we controlled for the upstream pangenome profiling,
@@ -447,7 +447,7 @@ precision even while greatly increasing recall.
 In particular, we find our
 approach upholds this specificity---even at low depths---more effectively
 than existing methods and that performance was fairly stable for strains with ≥ 5 samples,
-or when at least one sample had depth ≥ 1× (Supplemental Figures S1).
+or when at least one sample had depth ≥ 1× (Supplemental Fig. S1).
 
 In real-world applications---where ground-truth gene content is not known
 a priori---it is beneficial to understand the confidence of StrainPGC
@@ -604,7 +604,7 @@ x and y values are the median gene content in the core and shell
 classes, respectively. The remaining gene content is composed of cloud
 genes and is indicated by the dotted diagonal lines. Markers are colored
 by phylum. Analogous results calculated using reference genomes are
-shown in Supplemental Figure S2. **(C)** Enrichment (red) or depletion
+shown in Supplemental Fig. S2. **(C)** Enrichment (red) or depletion
 (blue) in genes of various functional categories in each of the core,
 shell, and cloud prevalence classes. Dots representing each COG category
 (rows) and prevalence class (columns) are colored by odds ratio, with
@@ -647,7 +647,7 @@ inferred strain (Fig. 4B). Computing the median first within and then
 across species, genes in the core fraction made up 70% (IQR: 63–76%) of
 each strain's estimated gene content, shell fraction 25% (19–28%), and
 cloud fraction 5% (4–9%), in general agreement with reference genomes
-(Supplemental Figure S2).
+(Supplemental Fig. S2).
 Certain categories of functional annotations were more common in each
 fraction (Fig. 4C). Core genes were enriched for COG categories with
 housekeeping functions while the cloud
@@ -1144,7 +1144,7 @@ and lowest depth. Species-free samples were defined as those with an
 estimated species depth of < 0.0001×. Genes were selected using a
 depth ratio threshold of 0.2 and a correlation threshold of 0.4 in order
 to strike a balance between sensitivity and specificity, while slightly
-favoring false negatives over false positives (see Supplemental Figure S3).
+favoring false negatives over false positives (see Supplemental Fig. S3).
 
 ### Gene family annotation
 
